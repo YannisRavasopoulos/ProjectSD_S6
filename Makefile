@@ -4,17 +4,18 @@
 BUILD_DIR := build
 
 PLANTUML_FILES := $(wildcard uml/*.plantuml)
-PLANTUML_PNGS := $(patsubst uml/%.plantuml,images/%.png,$(PLANTUML_FILES))
+PLANTUML_PNGS := $(patsubst uml/%.plantuml,$(BUILD_DIR)/images/%.png,$(PLANTUML_FILES))
 
-all: $(PLANTUML_PNGS) project.pdf
+all:
 
 clean:
-	rm -f $(PLANTUML_PNGS)
 	rm -rf $(BUILD_DIR)
 
-images/%.png: uml/%.plantuml
+report:
+	$(MAKE) $(BUILD_DIR)/project.pdf
+
+$(BUILD_DIR)/images/%.png: uml/%.plantuml
 	plantuml -tpng $< -o ../$(dir $@)
 
-project.pdf: tex/project.tex $(PLANTUML_PNGS)
-	mkdir -p $(BUILD_DIR)
-	lualatex -output-directory=$(BUILD_DIR) $<
+$(BUILD_DIR)/project.pdf: tex/project.tex $(PLANTUML_PNGS)
+	cd $(BUILD_DIR) && lualatex ../$<
