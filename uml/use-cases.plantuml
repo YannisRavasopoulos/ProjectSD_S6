@@ -1,0 +1,16 @@
+@startuml
+
+left to right direction
+
+actor "User"
+actor "Driver"
+actor "Property Owner"
+actor "Carpooler"
+
+usecase "Find Parking"
+usecase "Find Ride"
+
+usecase "Park"
+usecase "Report Parking"
+
+@enduml

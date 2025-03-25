@@ -1,0 +1,128 @@
+@startuml
+object User {
+    id
+    name
+}
+
+object Driver {
+}
+
+Driver --down|> User
+
+object Vehicle {
+    licensePlate
+    description
+}
+
+Driver --up Vehicle: "Drives"
+
+object ParkingSpaceOwner {
+
+}
+
+ParkingSpaceOwner --down|> User
+
+object ParkingSpace {
+    location
+    price
+}
+
+ParkingSpaceOwner --up ParkingSpace: "Owns"
+
+object ParkingSpot {
+    status
+}
+
+ParkingSpace *--up ParkingSpot
+
+Vehicle --up ParkingSpot: "Parks"
+
+object Carpooler {
+}
+
+Carpooler --down|> User
+
+object Ride {
+    arrivalTime
+    destination
+    fee
+}
+
+Carpooler --up Ride: "Wants"
+
+Driver --up Ride: "Offers"
+
+Driver --right[hidden] Carpooler
+
+object Payment {
+    amount
+}
+
+Driver --left Payment: "Makes Payment"
+ParkingSpaceOwner --right Payment: "Receives Payment"
+
+object Reward {
+    title
+    couponCode
+}
+
+Reward --left Driver: "Receives"
+
+Reward --right Carpooler: "Receives"
+
+object Rating {
+    stars
+    comment
+}
+
+Ride --up[hidden] Rating
+
+Rating -- Driver: "Receives"
+
+Rating -- Carpooler: "Posts"
+
+object Report {
+    reason
+}
+
+Report --right User: "Files/Receives"
+
+object Pickup {
+    location
+    time
+}
+
+Driver -- Pickup: "Arranges"
+Carpooler -- Pickup: "Accepts"
+
+Reward --up[hidden] Ride
+Pickup --up[hidden] Reward
+
+object Route {
+    roadGraph
+}
+
+Driver -- Route: "Makes"
+
+User --up[hidden] Pickup
+User --up[hidden] Route
+
+object Location {
+    address
+    coordinates
+}
+
+Location --o ParkingSpace
+Location --o Ride
+Location --o Pickup
+Location --o Route
+
+object Area {
+    id
+    name
+    metrics
+}
+
+Location --* Area
+
+@enduml
