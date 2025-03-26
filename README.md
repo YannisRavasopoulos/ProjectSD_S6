@@ -5,4 +5,4 @@
 
 ## Build Report
 
-Run `make report`, you will find the report in `build/project.pdf`
+Run `make report`

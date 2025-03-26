@@ -1,1 +1,5 @@
-build/
+*.aux
+*.log
+*.toc
+*.fls
+*fdb_latexmk
