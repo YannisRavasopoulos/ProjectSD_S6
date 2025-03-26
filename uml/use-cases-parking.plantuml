@@ -1,12 +1,17 @@
 @startuml
 
+actor "User"
 actor "Driver"
 actor "Parking Space Owner"
 actor "Parking Status Provider"
 
+"Driver" --|> "User"
+"Parking Space Owner" --|> "User"
+
 left to right direction
 
 rectangle "Parking Subsystem" {
+    usecase "Report Parking"
     usecase "Update Parking Status"
     usecase "Park"
     usecase "Unpark"
@@ -20,6 +25,8 @@ rectangle "Parking Subsystem" {
     usecase "Pay for Parking"
     usecase "Find my Car"
 }
+
+"User" -- "Report Parking"
 
 "Update Parking Status" -- "Parking Status Provider"
 

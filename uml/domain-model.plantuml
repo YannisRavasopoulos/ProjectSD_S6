@@ -10,8 +10,6 @@ object Driver {
 Driver --down|> User
 
 object Vehicle {
-    licensePlate
-    description
 }
 
 Driver --up Vehicle: "Drives"
@@ -45,7 +43,6 @@ Carpooler --down|> User
 object Ride {
     arrivalTime
     destination
-    fee
 }
 
 Carpooler --up Ride: "Wants"
@@ -62,8 +59,6 @@ Driver --left Payment: "Makes Payment"
 ParkingSpaceOwner --right Payment: "Receives Payment"
 
 object Reward {
-    title
-    couponCode
 }
 
 Reward --left Driver: "Receives"
@@ -120,9 +115,15 @@ Location --o Route
 object Area {
     id
     name
-    metrics
 }
 
 Location --* Area
+
+object Activity {
+
+}
+User --right Activity: "Creates"
+
+Activity --up Ride: "Requires"
 
 @enduml
