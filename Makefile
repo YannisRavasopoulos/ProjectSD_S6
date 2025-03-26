@@ -11,8 +11,9 @@ all:
 clean:
 	rm -rf $(BUILD_DIR)
 
-report:
-	$(MAKE) $(BUILD_DIR)/project.pdf
+report: $(BUILD_DIR)/project.pdf
+
+uml: $(PLANTUML_PNGS)
 
 $(BUILD_DIR)/images/%.png: uml/%.plantuml
 	plantuml -tpng $< -o ../$(dir $@)

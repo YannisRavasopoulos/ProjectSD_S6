@@ -1,0 +1,47 @@
+@startuml
+
+actor "Driver"
+actor "Parking Space Owner"
+actor "Parking Status Provider"
+
+left to right direction
+
+rectangle "Parking Subsystem" {
+    usecase "Update Parking Status"
+    usecase "Park"
+    usecase "Unpark"
+    usecase "Find Parking"
+    usecase "Register Parking Space"
+    usecase "Edit Parking Space"
+    usecase "Share Parking Spot"
+    usecase "View Parking History"
+    usecase "View Saved Parking Spaces"
+    usecase "Save Parking Space"
+    usecase "Pay for Parking"
+    usecase "Find my Car"
+}
+
+"Update Parking Status" -- "Parking Status Provider"
+
+"Driver" -- "View Saved Parking Spaces"
+"Driver" -- "Save Parking Space"
+"Driver" -- "View Parking History"
+"Driver" -- "Share Parking Spot"
+"Driver" -- "Find Parking"
+"Driver" -- "Park"
+"Driver" -- "Unpark"
+"Driver" -- "Pay for Parking"
+"Driver" -- "Find my Car"
+
+"Parking Space Owner" -- "Register Parking Space"
+"Parking Space Owner" -- "Edit Parking Space"
+
+"Save Parking Space" .> "Find Parking": <<extend>>
+"Pay for Parking" .> "Find Parking": <<extend>>
+
+"Park" .> "Update Parking Status": <<extend>>
+"Unpark" .> "Update Parking Status": <<extend>>
+
+"Register Parking Space" .> "Edit Parking Space": <<include>>
+
+@enduml
