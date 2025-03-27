@@ -38,7 +38,6 @@ rectangle "Common Subsystem" {
 "Carpooler" -- "Rate Driver"
 
 "Create Activity" .> "Edit Activity": <<include>>
-"Edit Activity" .> "Find Ride": <<extend>>
 "Accept Pickup" .> "Find Ride": <<extend>>
 
 @enduml
