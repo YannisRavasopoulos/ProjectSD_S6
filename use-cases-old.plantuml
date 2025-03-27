@@ -1,0 +1,89 @@
+@startuml
+
+"User" --down[hidden] "Driver"
+"Driver" --down[hidden] "Property Owner"
+"Property Owner" --down[hidden] "Carpooler"
+
+actor "Driver"
+actor "Property Owner"
+actor "Carpooler"
+actor "User"
+actor "Carpooling Driver"
+
+rectangle "System" {
+    rectangle "Parking Subsystem" {
+        usecase "Find Parking Spot"
+        usecase "Schedule Parking Spot"
+        usecase "Pay for Parking"
+        usecase "Request for Parking"
+        usecase "Rate Parking Space"
+        usecase "Park"
+        usecase "Unpark"
+        usecase "Share Parking Spot"
+        usecase "Find my Car"
+        usecase "Report Illegal Parking"
+        usecase "Register Parking Space"
+        usecase "View Parking History"
+        usecase "View Saved Parking Spaces"
+        usecase "Save Parking Space"
+    }
+
+    rectangle "Carpooling Subsystem" {
+        usecase "Report Driver"
+        usecase "Looking for Ride"
+        usecase "Offer Ride Share"
+        usecase "Estimate Cost"
+        usecase "Pickup"
+        usecase "Confirm Pickup"
+        usecase "Offer to Pay for Gas"
+    }
+
+    usecase "Edit Profile"
+    usecase "Get Reward"
+}
+
+
+"Driver" -- "Find Parking Spot"
+"Driver" -- "Schedule Parking Spot"
+"Driver" -- "Pay for Parking"
+"Driver" -- "Share Parking Spot"
+"Driver" -- "Request for Parking"
+"Driver" -- "Rate Parking Space"
+"Driver" -- "Find my Car"
+"Driver" -- "Park"
+"Driver" -- "Unpark"
+"Driver" -- "View Parking History"
+"Driver" -- "View Saved Parking Spaces"
+"Driver" -- "Save Parking Space"
+
+"Pickup" <. "Offer Ride Share" : "extend"
+"Confirm Pickup" <. "Looking for Ride" : "extend"
+"Offer to Pay for Gas" <. "Confirm Pickup" : "extend"
+"Estimate Cost" <. "Looking for Ride" : "include"
+"Estimate Cost" <. "Offer Ride Share" : "include"
+"Park" <. "Find Parking Spot" : "extend"
+"Pay for Parking" <. "Park" : "extend"
+"Share Parking Spot" <. "Park" : "extend"
+"Unpark" <. "Park" : "extend"
+
+"Carpooling Driver" -- "Offer Ride Share"
+"Carpooling Driver" -- "Pickup"
+
+"Property Owner" -- "Register Parking Space"
+
+"User" -- "Edit Profile"
+"User" -- "Get Reward"
+"User" -- "Report Illegal Parking"
+
+"Carpooler" -- "Report Driver"
+"Carpooler" -- "Looking for Ride"
+"Carpooler" -- "Offer to Pay for Gas"
+"Carpooler" -- "Confirm Pickup"
+
+"Carpooling Driver" --|> "Driver"
+"Driver" --|> "User"
+"Property Owner" --|> "User"
+"Carpooler" --|> "User"
+
+
+@enduml
