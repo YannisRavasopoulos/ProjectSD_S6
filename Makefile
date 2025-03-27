@@ -3,7 +3,7 @@
 
 PLANTUML_FILES := $(wildcard uml/*.plantuml)
 PLANTUML_PNGS := $(patsubst uml/%.plantuml,images/%.png,$(PLANTUML_FILES))
-TEX_FILES := $(wildcard tex/use-cases/*.tex)
+TEX_FILES := $(wildcard tex/use-cases/*.tex) $(wildcard tex/*.tex)
 
 all:
 
