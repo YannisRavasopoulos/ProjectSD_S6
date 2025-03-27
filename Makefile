@@ -3,6 +3,7 @@
 
 PLANTUML_FILES := $(wildcard uml/*.plantuml)
 PLANTUML_PNGS := $(patsubst uml/%.plantuml,images/%.png,$(PLANTUML_FILES))
+TEX_FILES := $(wildcard tex/use-cases/*.tex)
 
 all:
 
@@ -16,5 +17,5 @@ uml: $(PLANTUML_PNGS)
 images/%.png: uml/%.plantuml
 	plantuml -tpng $< -o ../$(dir $@)
 
-project.pdf: tex/project.tex $(PLANTUML_PNGS)
+project.pdf: tex/project.tex $(PLANTUML_PNGS) $(TEX_FILES)
 	latexmk --lualatex $<
