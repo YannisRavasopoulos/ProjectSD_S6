@@ -17,5 +17,8 @@ uml: $(PLANTUML_PNGS)
 images/%.png: uml/%.plantuml
 	plantuml -tpng $< -o ../$(dir $@)
 
-project.pdf: tex/project.tex $(PLANTUML_PNGS) $(TEX_FILES)
-	latexmk --lualatex $<
+project.pdf: $(PLANTUML_PNGS) $(TEX_FILES)
+	latexmk --lualatex tex/project.tex
+
+project.docx: $(PLANTUML_PNGS) $(TEX_FILES)
+	pandoc -s tex/project.tex -o project.docx
