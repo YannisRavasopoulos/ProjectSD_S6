@@ -12,7 +12,6 @@ left to right direction
 rectangle "Parking Subsystem" {
     usecase "Report Parking"
     usecase "Park"
-    usecase "Unpark"
     usecase "Find Parking"
     usecase "Register Parking Space"
     usecase "Edit Parking Space"
@@ -21,8 +20,8 @@ rectangle "Parking Subsystem" {
     usecase "View Saved Parking Spaces"
     usecase "Save Parking Space"
     usecase "Pay for Parking"
-    usecase "Find my Car"
     usecase "Manage Parking Spaces"
+    usecase "Unpark"
 }
 
 "User" -- "Report Parking"
@@ -33,20 +32,17 @@ rectangle "Parking Subsystem" {
 "Driver" -- "Share Parking Spot"
 "Driver" -- "Find Parking"
 "Driver" -- "Park"
-"Driver" -- "Unpark"
 "Driver" -- "Pay for Parking"
-"Driver" -- "Find my Car"
 
 "Parking Space Owner" -- "Register Parking Space"
 "Parking Space Owner" -- "Edit Parking Space"
 "Parking Space Owner" -- "Manage Parking Spaces"
 
-"Save Parking Space" .> "Find Parking": "<<extend>>"
-"Pay for Parking" .> "Find Parking": "<<extend>>"
+"Find Parking" <. "Save Parking Space": "<<extend>>"
+"Find Parking" <. "Pay for Parking": "<<extend>>"
 
-"Share Parking Spot" .> "Park": "<<extend>>"
-"View Parking History" .> "Park": "<<extend>>"
-"Unpark" .> "Park": "<<extend>>"
+"Park" <. "Share Parking Spot": "<<extend>>"
+"Park" <. "View Parking History": "<<extend>>"
 
 "Manage Parking Spaces" <. "Edit Parking Space": "<<extend>>"
 "Manage Parking Spaces" <. "Register Parking Space": "<<extend>>"
