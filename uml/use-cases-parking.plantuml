@@ -3,16 +3,14 @@
 actor "User"
 actor "Driver"
 actor "Parking Space Owner"
-actor "Parking Status Provider"
 
-"Driver" --|> "User"
-"Parking Space Owner" --|> "User"
+"Driver" -up-|> "User"
+"Parking Space Owner" -up-|> "User"
 
 left to right direction
 
 rectangle "Parking Subsystem" {
     usecase "Report Parking"
-    usecase "Update Parking Status"
     usecase "Park"
     usecase "Unpark"
     usecase "Find Parking"
@@ -27,8 +25,6 @@ rectangle "Parking Subsystem" {
 }
 
 "User" -- "Report Parking"
-
-"Update Parking Status" -- "Parking Status Provider"
 
 "Driver" -- "View Saved Parking Spaces"
 "Driver" -- "Save Parking Space"
@@ -46,8 +42,9 @@ rectangle "Parking Subsystem" {
 "Save Parking Space" .> "Find Parking": <<extend>>
 "Pay for Parking" .> "Find Parking": <<extend>>
 
-"Park" .> "Update Parking Status": <<extend>>
-"Unpark" .> "Update Parking Status": <<extend>>
+"Share Parking Spot" .> "Park": <<extend>>
+"View Parking History" .> "Park": <<extend>>
+"Unpark" .> "Park": <<extend>>
 
 "Register Parking Space" .> "Edit Parking Space": <<include>>
 
