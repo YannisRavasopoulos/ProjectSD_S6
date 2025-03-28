@@ -9,6 +9,7 @@
 \usepackage{xcolor} % Colors for code highlighting
 \usepackage{fancyhdr} % For headers and footers
 \usepackage{bookmark}
+\usepackage{nameref}
 % \usepackage{draftwatermark} % For watermarks
 
 \usepackage{amsmath} % For mathematical equations
@@ -262,65 +263,43 @@
 
 \section{Use Cases}
 
-Σε κάθε use case θεωρούμε ότι ο χρήστης έχει ήδη συνδεθεί στην εφαρμογή και
-έχει επιλέξει την κατάλληλη λειτουργία.
+% Carpooling (Aggelos-Yannis)
+% \include{tex/use-cases/create-activity}
+% \include{tex/use-cases/edit-activity}
+% \include{tex/use-cases/find-ride}
 
-\include{tex/use-cases/redeem-reward}
-\include{tex/use-cases/edit-profile}
-\include{tex/use-cases/report-user}
-\include{tex/use-cases/create-activity}
-\include{tex/use-cases/edit-activity}
+% \subsection{Report Parking}
 
-\subsection{Arrange Pickup}
-TODO
+% Ο χρήστης επιθυμεί να αναφέρει παράνομη ή ανεπιθύμητη στάθμευση.
 
-\subsection{Accept Pickup}
-TODO
+% \subsubsection{Βασική Ροή}
 
-\include{tex/use-cases/find-ride}
+% \begin{enumerate}
+%     \item Ο χρήστης ανοίγει την εφαρμογή και επιλέγει "Report Parking".
+%     \item Η εφαρμογή εμφανίζει την φόρμα αναφοράς.
+%     \item Ο χρήστης συμπληρώνει την φόρμα με τα στοιχεία της αναφοράς
+%           και επιλέγει "Submit".
+%     \item Το σύστημα αποθηκεύει την αναφορά και ενημερώνει τον χρήστη.
+%     \item Το σύστημα εκτελεί έλεγχο για την εγκυρότητα των στοιχείων.
+%     \item Διαπιστώνεται η εγκυρότητα της αναφοράς και ενημερώνεται η τροχαία
+% \end{enumerate}
 
-\subsection{Rate Driver}
-TODO
+% \subsubsection{Εναλλακτική Ροή}
 
-\subsection{Register Parking Space}
-TODO
+% \begin{enumerate}
+%     \item[6] Διαπιστώνεται η μη εγκυρότητα της αναφοράς και μεταφέρεται στο αρχείο.
+% \end{enumerate}
 
-\subsection{Edit Parking Space}
-TODO
+% \subsubsection{Εναλλακτική Ροή}
 
-\subsection{Find Parking}
-TODO
+% \begin{enumerate}
+%     \item[2] Ο χρήστης ακυρώνει την αναφορά.
+%     \item[3] Η εφαρμογή επιστρέφει στην αρχική οθόνη.
+% \end{enumerate}
 
-\include{tex/use-cases/report-parking}
-
-\subsection{Save Parking Space}
-TODO
-
-\subsection{Pay for Parking}
-TODO
-
-\subsection{Park}
-TODO
-
-\subsection{Unpark}
-TODO
-
-\subsection{Share Parking Spot}
-TODO
-
-\subsection{View Parking History}
-TODO
-
-\subsection{View Saved Parking Spaces}
-TODO
-
-\subsection{Find my Car}
-TODO
-
-\include{tex/use-cases/park}
-
-\subsection{Pay for Parking}
-TODO
+\include{tex/use-cases/misc}
+\include{tex/use-cases/find-parking}
+\include{tex/use-cases/manage-parking-spaces}
 
 \begin{figure}
     \centering

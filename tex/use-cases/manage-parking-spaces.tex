@@ -1,0 +1,164 @@
+\subsection{Manage Parking Spaces}
+\label{uc:manage-parking-spaces}
+
+Ο χρήστης επιθυμεί να διαχειριστεί τα \textit{ParkingSpaces} που έχει δηλώσει
+ή να δηλώσει καινούρια.
+
+\subsubsection{Βασική Ροή: Αλλαγή στοιχείων κάποιου \textit{ParkingSpace}}
+
+\begin{enumerate}
+    \item[1] Ο χρήστης επιλέγει "Manage Parking Spaces".
+    \item[2] Η εφαρμογή εμφανίζει μια λίστα με τα \textit{ParkingSpaces} που έχει
+        δηλώσει ο χρήστης.
+    \item[3] Ο χρήστης επιλέγει το \textit{ParkingSpace} που θέλει να διαχειριστεί.
+    \item[4] Η εφαρμογή εμφανίζει τα στοιχεία του \textit{ParkingSpace} καθώς και
+        στατιστικά σχετικά με τις ενοικιάσεις.
+    \item[5] Ο χρήστης επιλέγει "Edit" για να τροποποιήσει τα στοιχεία του
+        \textit{ParkingSpace}.
+    \item[6] Καλείται η περίπτωση χρήσης \nameref{uc:edit-parking-space}
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Έξοδος}
+
+\begin{enumerate}
+    \item[3] Ο χρήστης επιλέγει το πλήκτρο επιστροφής.
+    \item[4] Η εφαρμογή επιστρέφει στην κεντρική οθόνη.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Δεν υπάρχουν δηλωμένα \textit{ParkingSpaces}}
+
+\begin{enumerate}
+    \item[2] Η εφαρμογή εμφανίζει μήνυμα ότι δεν υπάρχουν δηλωμένα
+        \textit{ParkingSpaces}.
+    \item[3] Ο χρήστης επιλέγει "+".
+    \item[4] Καλείται η περίπτωση χρήσης \nameref{uc:register-parking-space}
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Δήλωση \textit{ParkingSpace}}
+
+\begin{enumerate}
+    \item[3] Ο χρήστης επιλέγει "+".
+    \item[4] Καλείται η περίπτωση χρήσης \nameref{uc:register-parking-space}.
+\end{enumerate}
+
+\newpage
+
+\subsection{Register Parking Space}
+\label{uc:register-parking-space}
+
+Ο χρήστης επιθυμεί να δηλώσει ένα \textit{ParkingSpace} προς ενοικίαση.
+
+\subsubsection{Βασική Ροή: Δήλωση \textit{ParkingSpace}}
+
+\begin{enumerate}
+    \item[1] Η εφαρμογή εμφανίζει την φόρμα δήλωσης.
+    \item[2] Ο χρήστης συμπληρώνει τα στοιχεία του \textit{ParkingSpace},
+        ενδεικτικά ώρες λειτουργίας, τιμή ενοικίασης και διεύθυνση.
+    \item[3] Ο χρήστης επισυνάπτει φωτογραφίες του \textit{ParkingSpace} και έγγραφα
+        για να πιστοποιήσει την ιδιοκτησία του.
+    \item[4] Ο χρήστης επιλέγει "Submit".
+    \item[5] Η εφαρμογή ελέγχει την εγκυρότητα των στοιχείων.
+    \item[6] Η εφαρμογή αποθηκεύει τα στοιχεία του \textit{ParkingSpace}.
+    \item[7] Η εφαρμογή εμφανίζει μήνυμα σχετικά με την επιτυχία της διαδικασίας.
+    \item[8] Η εφαρμογή επιστρέφει στην οθόνη \nameref{uc:manage-parking-spaces}.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Ακύρωση}
+
+\begin{enumerate}
+    \item[4] Ο χρήστης επιλέγει "Cancel".
+    \item[5] Η εφαρμογή επιστρέφει στην οθόνη \nameref{uc:manage-parking-spaces}.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Απόρριψη Δήλωσης 1}
+
+\begin{enumerate}
+    \item[6] Το σύστημα απορρίπτει την δήλωση \textit{ParkingSpace}.
+    \item[7] Η εφαρμογή εμφανίζει μήνυμα απόρριψης και ζητάει από τον χρήστη να
+        διορθώσει τα στοιχεία.
+    \item[8] Ο χρήστης διορθώνει τα στοιχεία και επιλέγει "Submit".
+    \item[9] Συνέχεια από το βήμα 7 της βασικής ροής.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Απόρριψη Δήλωσης 2}
+
+\begin{enumerate}
+    \item[6] Το σύστημα απορρίπτει την δήλωση \textit{ParkingSpace}.
+    \item[7] Η εφαρμογή εμφανίζει μήνυμα απόρριψης και ζητάει από τον χρήστη να
+        διορθώσει τα στοιχεία.
+    \item[8] Ο χρήστης επιλέγει "Cancel".
+    \item[9] Η εφαρμογή επιστρέφει στην οθόνη \nameref{uc:manage-parking-spaces}.
+\end{enumerate}
+
+\newpage
+
+\subsection{Edit Parking Space}
+\label{uc:edit-parking-space}
+
+Ο χρήστης επιθυμεί να αλλάξει τα στοιχεία του \textit{ParkingSpace} που έχει
+δηλώσει.
+
+\subsubsection{Βασική Ροή}
+
+\begin{enumerate}
+    \item[1] Η εφαρμογή εμφανίζει μια φόρμα με τα επεξεργάσιμα στοιχεία του
+        \textit{ParkingSpace}.
+    \item[2] Ο χρήστης αλλάζει τα στοιχεία του \textit{ParkingSpace} και
+        επιλέγει "Confirm".
+    \item[3] Το σύστημα αποθηκεύει τις αλλαγές.
+    \item[4] Η εφαρμογή επιστρέφει στην οθόνη \nameref{uc:manage-parking-spaces}.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Διαγραφή \textit{ParkingSpace} 1}
+
+\begin{enumerate}
+    \item[2] Ο χρήστης επιλέγει "Delete".
+    \item[3] Η εφαρμογή ζητάει επιβεβαίωση διαγραφής.
+    \item[4] Ο χρήστης επιλέγει "Confirm".
+    \item[5] Το σύστημα αφαιρεί το \textit{ParkingSpace} από την λίστα των
+        διαθέσιμων \textit{ParkingSpaces} και το διαγράφει.
+    \item[6] Η εφαρμογή επιστρέφει στην οθόνη \nameref{uc:manage-parking-spaces}.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Διαγραφή \textit{ParkingSpace} 2}
+
+\begin{enumerate}
+    \item[2] Ο χρήστης επιλέγει "Delete".
+    \item[3] Η εφαρμογή ζητάει επιβεβαίωση διαγραφής.
+    \item[4] Ο χρήστης επιλέγει "Cancel".
+    \item[5] Η εφαρμογή επιστρέφει στην οθόνη \nameref{uc:edit-parking-space}.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Απενεργοποίηση \textit{ParkingSpace}}
+
+\begin{enumerate}
+    \item[2] Ο χρήστης επιλέγει "απενεργοποίηση".
+    \item[3] Το σύστημα αφαιρεί το \textit{ParkingSpace} από την λίστα των
+        διαθέσιμων \textit{ParkingSpaces}.
+    \item[4] Η εφαρμογή επιστρέφει στην οθόνη \nameref{uc:edit-parking-space}.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Ενεργοποίηση \textit{ParkingSpace}}
+
+\begin{enumerate}
+    \item[2] Ο χρήστης επιλέγει "ενεργοποίηση".
+    \item[3] Το σύστημα προσθέτει το \textit{ParkingSpace} στην λίστα των
+        διαθέσιμων \textit{ParkingSpaces}.
+    \item[4] Η εφαρμογή επιστρέφει στην οθόνη \nameref{uc:edit-parking-space}.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Ακύρωση}
+
+\begin{enumerate}
+    \item[3] Ο χρήστης επιλέγει "Cancel".
+    \item[4] Η εφαρμογή επιστρέφει στην οθόνη \nameref{uc:manage-parking-spaces}.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Σφάλμα}
+
+\begin{enumerate}
+    \item[3] Η εφαρμογή εμφανίζει μήνυμα σφάλματος και ζητάει από τον χρήστη να
+        διορθώσει τα στοιχεία.
+    \item[4] Ο χρήστης διορθώνει τα στοιχεία και επιλέγει "Confirm".
+    \item[5] Συνέχεια από το βήμα 3 της βασικής ροής.
+\end{enumerate}

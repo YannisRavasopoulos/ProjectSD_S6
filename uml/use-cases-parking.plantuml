@@ -22,6 +22,7 @@ rectangle "Parking Subsystem" {
     usecase "Save Parking Space"
     usecase "Pay for Parking"
     usecase "Find my Car"
+    usecase "Manage Parking Spaces"
 }
 
 "User" -- "Report Parking"
@@ -38,14 +39,16 @@ rectangle "Parking Subsystem" {
 
 "Parking Space Owner" -- "Register Parking Space"
 "Parking Space Owner" -- "Edit Parking Space"
+"Parking Space Owner" -- "Manage Parking Spaces"
 
-"Save Parking Space" .> "Find Parking": <<extend>>
-"Pay for Parking" .> "Find Parking": <<extend>>
+"Save Parking Space" .> "Find Parking": "<<extend>>"
+"Pay for Parking" .> "Find Parking": "<<extend>>"
 
-"Share Parking Spot" .> "Park": <<extend>>
-"View Parking History" .> "Park": <<extend>>
-"Unpark" .> "Park": <<extend>>
+"Share Parking Spot" .> "Park": "<<extend>>"
+"View Parking History" .> "Park": "<<extend>>"
+"Unpark" .> "Park": "<<extend>>"
 
-"Register Parking Space" .> "Edit Parking Space": <<include>>
+"Manage Parking Spaces" <. "Edit Parking Space": "<<extend>>"
+"Manage Parking Spaces" <. "Register Parking Space": "<<extend>>"
 
 @enduml
