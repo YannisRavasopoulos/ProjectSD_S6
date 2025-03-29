@@ -20,11 +20,9 @@ rectangle "Carpooling Subsystem" {
 
 rectangle "Common Subsystem" {
     usecase "Redeem Reward"
-    usecase "Edit Profile"
     usecase "Report User"
 }
 
-"User" -- "Edit Profile"
 "User" -- "Redeem Reward"
 "User" -- "Report User"
 
