@@ -1,12 +1,20 @@
 # ParkOut
 
-- [tex/](tex/) contains the LaTeX source code for the project report.
-- [uml/](uml/) contains the UML source code for the project diagrams.
+## Project Structure
 
-## Generate Report PDF
+- `tex/`
+  Contains the LaTeX source code for technical documents.
+- `uml/`
+  Contains the UML source files for the project diagrams.
+- `images/`
+    Contains the images used in the technical documents.
 
-Run `make report`
+## Generating the PDFS
+
+Run `make project-description.pdf` to generate the project description.
+Run `make use-cases.pdf` to generate the use case diagrams.
+Run `make domain-model.pdf` to generate the domain model.
 
 ## TODOs
 
-- Separate manage account into usecases
+- Refactor the "manage account" functionality into separate use cases.
