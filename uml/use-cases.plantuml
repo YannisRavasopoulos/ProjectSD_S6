@@ -1,0 +1,36 @@
+@startuml
+
+actor "User"
+actor "Driver"
+actor "Carpooler"
+
+"Carpooler" --|> "User"
+"Driver" --|> "User"
+
+left to right direction
+
+rectangle "System" {
+    usecase "Manage Activities"
+    usecase "Create Activity"
+    usecase "Edit Activity"
+
+    usecase "Manage Account"
+    usecase "View History"
+    usecase "View Rating"
+}
+
+"User" -- "Manage Activities"
+"User" -- "Create Activity"
+"User" -- "Edit Activity"
+
+"User" -- "Manage Account"
+"User" -- "View History"
+"User" -- "View Rating"
+
+"Manage Activities" <.-left- "Create Activity": "<<extend>>"
+"Manage Activities" <.-right- "Edit Activity": "<<extend>>"
+
+"Manage Account" <.-left- "View History": "<<extend>>"
+"Manage Account" <.-right- "View Rating": "<<extend>>"
+
+@enduml

@@ -1,0 +1,17 @@
+ usecase "Rate User"
+    usecase "Report User"
+    usecase "Redeem Reward"
+
+    usecase "Find Ride"
+    usecase "Arrange Pickup"
+    usecase "Accept Pickup"
+    usecase "Offer Ride"
+
+"Driver" -- "Arrange Pickup"
+"Carpooler" -- "Find Ride"
+"Carpooler" -- "Accept Pickup"
+"Carpooler" -- "Rate User"
+"Accept Pickup" .> "Find Ride": "<<extend>>"
+
+"User" -- "Redeem Reward"
+"User" -- "Report User"
