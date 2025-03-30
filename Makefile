@@ -3,7 +3,6 @@
 
 PLANTUML_FILES := $(wildcard uml/*.plantuml)
 PLANTUML_PNGS := $(patsubst uml/%.plantuml,images/uml/%.png,$(PLANTUML_FILES))
-USE_CASE_TEX_FILES := $(wildcard tex/use-cases/*.tex)
 
 all:
 
@@ -20,7 +19,7 @@ images/uml/%.png: uml/%.plantuml
 project-description.pdf: tex/project-description.tex
 	latexmk --lualatex $<
 
-use-cases.pdf: tex/use-cases.tex $(USE_CASE_TEX_FILES) images/uml/use-cases.png
+use-cases.pdf: tex/use-cases.tex images/uml/use-cases.png
 	latexmk --lualatex $<
 
 domain-model.pdf: tex/domain-model.tex images/uml/domain-model.png

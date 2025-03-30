@@ -21,6 +21,11 @@ rectangle "System" {
     usecase "Rate User"
     usecase "Report User"
     usecase "Redeem Reward"
+
+    usecase "Find Ride"
+    usecase "Arrange Pickup"
+    usecase "Accept Pickup"
+    usecase "Offer Ride"
 }
 
 "User" -- "Manage Activities"
