@@ -2,7 +2,7 @@
 .PHONY: all clean
 
 PLANTUML_FILES := $(wildcard uml/*.plantuml)
-PLANTUML_PNGS := $(patsubst uml/%.plantuml,images/%.png,$(PLANTUML_FILES))
+PLANTUML_PNGS := $(patsubst uml/%.plantuml,images/uml/%.png,$(PLANTUML_FILES))
 TEX_FILES := $(wildcard tex/use-cases/*.tex) $(wildcard tex/*.tex)
 
 all:
@@ -14,7 +14,7 @@ report: project.pdf
 
 uml: $(PLANTUML_PNGS)
 
-images/%.png: uml/%.plantuml
+images/uml/%.png: uml/%.plantuml
 	plantuml -tpng $< -o ../$(dir $@)
 
 project.pdf: $(PLANTUML_PNGS) $(TEX_FILES)

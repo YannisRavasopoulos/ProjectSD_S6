@@ -6,3 +6,7 @@
 ## Build Report
 
 Run `make report`
+
+## TODOs
+
+- Separate manage account into usecases
