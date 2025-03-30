@@ -30,10 +30,6 @@ Driver --up Ride: "Offers"
 
 Driver --right[hidden] Carpooler
 
-object Payment {
-    amount
-}
-
 object Reward {
 }
 

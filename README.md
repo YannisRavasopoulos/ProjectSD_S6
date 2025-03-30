@@ -12,9 +12,5 @@
 ## Generating the PDFS
 
 Run `make project-description.pdf` to generate the project description.
-Run `make use-cases.pdf` to generate the use case diagrams.
-Run `make domain-model.pdf` to generate the domain model.
-
-## TODOs
-
-- Refactor the "manage account" functionality into separate use cases.
+Run `make use-cases.pdf` to generate the use case description.
+Run `make domain-model.pdf` to generate the domain model description.

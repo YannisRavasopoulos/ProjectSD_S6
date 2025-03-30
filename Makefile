@@ -20,8 +20,8 @@ images/uml/%.png: uml/%.plantuml
 project-description.pdf: tex/project-description.tex
 	latexmk --lualatex $<
 
-use-cases.pdf: tex/use-cases.tex $(USE_CASE_TEX_FILES)
+use-cases.pdf: tex/use-cases.tex $(USE_CASE_TEX_FILES) images/uml/use-cases.png
 	latexmk --lualatex $<
 
-domain-model.pdf: tex/domain-model.tex
+domain-model.pdf: tex/domain-model.tex images/uml/domain-model.png
 	latexmk --lualatex $<
