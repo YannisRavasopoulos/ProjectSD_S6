@@ -1,6 +1,3 @@
- usecase "Rate User"
-    usecase "Report User"
-    usecase "Redeem Reward"
 
     usecase "Find Ride"
     usecase "Arrange Pickup"

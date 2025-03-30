@@ -17,6 +17,10 @@ rectangle "System" {
     usecase "Manage Account"
     usecase "View History"
     usecase "View Rating"
+
+    usecase "Rate User"
+    usecase "Report User"
+    usecase "Redeem Reward"
 }
 
 "User" -- "Manage Activities"
@@ -26,6 +30,11 @@ rectangle "System" {
 "User" -- "Manage Account"
 "User" -- "View History"
 "User" -- "View Rating"
+
+"User" -- "Rate User"
+"User" -- "Report User"
+"User" -- "Redeem Reward"
+
 
 "Manage Activities" <.-left- "Create Activity": "<<extend>>"
 "Manage Activities" <.-right- "Edit Activity": "<<extend>>"
