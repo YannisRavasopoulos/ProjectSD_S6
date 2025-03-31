@@ -88,7 +88,7 @@ object Area {
     name
 }
 
-Location --* Area
+Location --o Area
 
 object Activity {
 
@@ -96,5 +96,11 @@ object Activity {
 User --right Activity: "Creates"
 
 Activity --up Ride: "Requires"
+
+object InstaRide {
+
+}
+
+InstaRide --|> Ride
 
 @enduml

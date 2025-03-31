@@ -26,6 +26,8 @@ rectangle "System" {
     usecase "Arrange Pickup"
     usecase "Accept Pickup"
     usecase "Offer Ride"
+
+    usecase "Manage Ride"
 }
 
 "User" -- "Manage Activities"
@@ -41,7 +43,9 @@ rectangle "System" {
 "User" -- "Redeem Reward"
 
 "Carpooler" -- "Find Ride"
+"Carpooler" -- "Accept Pickup"
 "Driver" -- "Arrange Pickup"
+"Driver" -- "Offer Ride"
 
 "Find Ride" <.-- "Arrange Pickup": "<<extend>>"
 
@@ -50,5 +54,13 @@ rectangle "System" {
 
 "Manage Account" <.-left- "View History": "<<extend>>"
 "Manage Account" <.-right- "View Rating": "<<extend>>"
+
+"Arrange Pickup" <. "Accept Pickup": "<<extend>>"
+
+"Offer Ride" .> "Arrange Pickup": "<<include>>"
+
+"Manage Ride" <. "Redeem Reward": "<<extend>>"
+"Manage Ride" <. "Report User": "<<extend>>"
+"Manage Ride" <. "Rate User": "<<extend>>"
 
 @enduml
