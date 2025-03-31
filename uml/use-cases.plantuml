@@ -40,6 +40,10 @@ rectangle "System" {
 "User" -- "Report User"
 "User" -- "Redeem Reward"
 
+"Carpooler" -- "Find Ride"
+"Driver" -- "Arrange Pickup"
+
+"Find Ride" <.-- "Arrange Pickup": "<<extend>>"
 
 "Manage Activities" <.-left- "Create Activity": "<<extend>>"
 "Manage Activities" <.-right- "Edit Activity": "<<extend>>"
