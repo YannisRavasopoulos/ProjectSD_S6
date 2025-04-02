@@ -10,8 +10,8 @@ actor "Carpooler"
 left to right direction
 
 rectangle "System" {
-    usecase "Manage Activities"
     usecase "Create Activity"
+    usecase "Manage Activities"
     usecase "Edit Activity"
 
     usecase "Manage Account"
@@ -59,8 +59,10 @@ rectangle "System" {
 
 "Offer Ride" .> "Arrange Pickup": "<<include>>"
 
-"Manage Ride" <. "Redeem Reward": "<<extend>>"
-"Manage Ride" <. "Report User": "<<extend>>"
-"Manage Ride" <. "Rate User": "<<extend>>"
+"Manage Ride" <.-left- "Redeem Reward": "<<extend>>"
+"Manage Ride" <.-left- "Report User": "<<extend>>"
+"Manage Ride" <.-right- "Rate User": "<<extend>>"
+
+User -- "Manage Ride"
 
 @enduml

@@ -83,13 +83,6 @@ Location --o Ride
 Location --o Pickup
 Location --o Route
 
-object Area {
-    id
-    name
-}
-
-Location --o Area
-
 object Activity {
 
 }
