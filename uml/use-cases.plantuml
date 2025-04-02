@@ -61,7 +61,7 @@ rectangle "System" {
 
 "Manage Ride" <.-left- "Redeem Reward": "<<extend>>"
 "Manage Ride" <.-left- "Report User": "<<extend>>"
-"Manage Ride" <.-right- "Rate User": "<<extend>>"
+"Manage Ride" -right-.> "Rate User": "<<include>>"
 
 User -- "Manage Ride"
 

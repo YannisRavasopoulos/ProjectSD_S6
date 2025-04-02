@@ -1,7 +1,0 @@
-
-
-"Driver" -- "Arrange Pickup"
-"Carpooler" -- "Find Ride"
-"Carpooler" -- "Accept Pickup"
-"Carpooler" -- "Rate User"
-"Accept Pickup" .> "Find Ride": "<<extend>>"
