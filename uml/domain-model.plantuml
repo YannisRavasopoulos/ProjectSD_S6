@@ -44,9 +44,7 @@ object Rating {
 
 Ride --up[hidden] Rating
 
-Rating -- Driver: "Receives"
-
-Rating -- Carpooler: "Posts"
+Rating -- User: "Posts/Receives"
 
 object Report {
     reason
