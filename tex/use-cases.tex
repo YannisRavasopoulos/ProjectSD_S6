@@ -343,9 +343,16 @@ TODO
     \item[11] Το σύστημα ανανεώνει την βαθμολογία του οδηγού.
     \item[12] Το σύστημα υπολογίζει τους πόντους και τους προσθέτει στο προφίλ του οδηγού.
     \item[13] Ο οδηγός φτάνει στον προορισμό του και επιλέγει "End Ride"
-    \item[14] H εφαρμογή εμφανίζει το πλαίσιο βαθμολόγησης.
-    \item[15] Ο οδηγός επιλέγει βαθμολογία και αφήνει σχόλια.
-    \item[16] To σύστημα ανανεώνει την βαθμολογία των Carpoolers.
+    \item[14] Συνέχεια από το βήμα 1 του use case "Rate User"
+    \item[15] To σύστημα ανανεώνει την βαθμολογία των Carpoolers.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Ακύρωση από τον οδηγό}
+
+\begin{enumerate}
+    \item[4] O οδηγός επιλέγει "Cancel Ride".
+    \item[5] Το σύστημα αφαιρεί το "Ride" από την λίστα των pending Rides.
+    \item[6] Το σύστημα στέλνει κατάλληλη ειδοποίηση σε τυχόν Carpoolers.
 \end{enumerate}
 
 \subsubsection{Εναλλακτική Ροή: Επιβίβαση Carpooler}
@@ -357,21 +364,8 @@ TODO
     \item[4] O Carpooler φτάνει στον προορισμό του και επιλέγει "Confirm Drop Off".
     \item[5] Το σύστημα επαληθεύει την αποβίβαση.
     \item[6] Το σύστημα επιβεβαιώνει την τοποθεσία της αποβίβασης.
-    \item[7] Η εφαρμογή εμφανίζει το πλαίσιο βαθμολόγησης.
-    \item[8] Ο Carpooler επιλέγει βαθμολογία και αφήνει σχόλια.
-    \item[9] Το σύστημα ανανεώνει τους πόντους του χρήστη.
-\end{enumerate}
-
-\subsubsection{Εναλλακτική Ροή: Ακύρωση από τον οδηγό}
-
-\begin{enumerate}
-    \item[1] Ο οδηγός επιλέγει "Manage Ride".
-    \item[2] Η εφαρμογή εμφανίζει τα pending και ongoing Rides, τους χρήστες που συμμετέχουν και άλλες
-        πληροφορίες.
-    \item[3] Ο οδηγός επιλέγει ένα "Ride".
-    \item[4] O οδηγός επιλέγει "Cancel Ride".
-    \item[5] Το σύστημα αφαιρεί το "Ride" από την λίστα των pending Rides.
-    \item[6] Το σύστημα στέλνει κατάλληλη ειδοποίηση σε τυχόν Carpoolers.
+    \item[7] Συνέχεια από το βήμα 1 του use case "Rate User"
+    \item[8] Το σύστημα ανανεώνει τους πόντους του χρήστη.
 \end{enumerate}
 
 \subsubsection{Εναλλακτική Ροή: Ακύρωση από τον Carpooler}
@@ -384,6 +378,20 @@ TODO
     \item[4] Ο Carpooler επιλέγει "Cancel Ride".
     \item[5] Το σύστημα αφαιρεί τον Carpooler από το Ride.
     \item[6] Το σύστημα στέλνει κατάλληλη ειδοποίηση στον Οδηγό.
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Εξαργύρωση πόντων}
+
+\begin{enumerate}
+    \item[16] Ο οδηγός επιλέγει "Redeem Reward".
+    \item[17] Συνέχεια από το βήμα 1 του use case "Redeem Reward".
+\end{enumerate}
+
+\subsubsection{Εναλλακτική Ροή: Αναφορά Χρήστη}
+
+\begin{enumerate}
+    \item[16] Ο οδηγός επιλέγει "Report User".
+    \item[17] Συνέχεια από το βήμα 1 του use case "Report User".
 \end{enumerate}
 
 \newpage
