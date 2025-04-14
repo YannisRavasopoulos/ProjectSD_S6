@@ -1,5 +1,3 @@
-# ParkOut
-
 ## Project Structure
 
 - `tex/`
