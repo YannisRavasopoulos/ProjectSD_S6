@@ -2,17 +2,17 @@
 
 ## Project Structure
 
-## Frontend
+## Mobile
 
-- Everything is in [frontend](frontend/)
-- For features use frontend/feature-name branch
+- Everything is in [mobile](mobile)
+- For features use mobile/feature-name branch
 
 ## Backend
 
 - [Spring Boot](https://spring.io/guides/gs/spring-boot)
-- Everything is in [backend/](backend/)
-- For features use frontend/feature-name branch
+- Everything is in [backend/](backend)
+- For features use backend/feature-name branch
 
 ## Reports
 
-- Everything is in [reports](reports/)
+- Everything is in [reports/](reports)
