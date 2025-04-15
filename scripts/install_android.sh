@@ -9,12 +9,14 @@ sudo apt-get update && sudo apt-get install wget unzip xz-utils openjdk-17-jre-h
 echo "Downloading Flutter SDK"
 wget "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.29.3-stable.tar.xz" -O "flutter.tar.xz"
 tar -xf "flutter.tar.xz"
+rm "flutter.tar.xz"
 mv flutter $FLUTTER_PATH
 chown -R $USER:$USER $FLUTTER_PATH
 
 echo "Downloading Android SDK"
 wget "https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip" -O "cmdline-tools.zip"
 unzip "cmdline-tools.zip"
+rm "cmdline-tools.zip"
 mkdir -p $ANDROID_PATH/cmdline-tools
 mv cmdline-tools $ANDROID_PATH/cmdline-tools/latest
 
