@@ -1,29 +1,65 @@
 #!/bin/bash
 
-ANDROID_PATH="$HOME/android"
-FLUTTER_PATH="$HOME/flutter"
+# Exit on error
+set -e
 
-echo "Installing dependencies"
-sudo apt-get update && sudo apt-get install wget unzip xz-utils openjdk-17-jre-headless git -y
+# Declare variables
+ANDROID_HOME="$HOME/android"
+ANDROID_URL="https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip"
+TEMP_ZIP="cmdline-tools.zip"
 
-echo "Downloading Flutter SDK"
-wget "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.29.3-stable.tar.xz" -O "flutter.tar.xz"
-tar -xf "flutter.tar.xz"
-rm "flutter.tar.xz"
-mv flutter $FLUTTER_PATH
-chown -R $USER:$USER $FLUTTER_PATH
+# Check if Android SDK is already installed
+if [ -d "$ANDROID_HOME" ]; then
+    echo "Android SDK is already installed at $ANDROID_HOME"
+    echo "If you want to reinstall, please remove the existing installation first."
+    exit 1
+fi
 
-echo "Downloading Android SDK"
-wget "https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip" -O "cmdline-tools.zip"
-unzip "cmdline-tools.zip"
-rm "cmdline-tools.zip"
-mkdir -p $ANDROID_PATH/cmdline-tools
-mv cmdline-tools $ANDROID_PATH/cmdline-tools/latest
+# Create temp directory
+TMP_DIR=$(mktemp -d)
+cd "$TMP_DIR"
 
-echo "export PATH=\"$ANDROID_PATH/cmdline-tools/latest/bin:\$PATH\"" >>  $HOME/.bashrc
-echo "export PATH=\"$FLUTTER_PATH/bin:\$PATH\"" >> $HOME/.bashrc
+echo "Downloading Android SDK..."
+if ! wget "$ANDROID_URL" -O "$TEMP_ZIP"; then
+    echo "Error: Failed to download Android SDK"
+    rm -rf "$TMP_DIR"
+    exit 1
+fi
 
-# JAVA_HOME path may be different if not on ubuntu
-echo "export JAVA_HOME=\"/usr/lib/jvm/java-17-openjdk-amd64\"" >> $HOME/.bashrc
+echo "Extracting Android SDK..."
+if ! unzip "$TEMP_ZIP"; then
+    echo "Error: Failed to unzip Android SDK"
+    rm -rf "$TMP_DIR"
+    exit 1
+fi
 
-echo "CLOSE YOUR TERMINAL APP AND RE-OPEN IT"
+echo "Installing Android SDK..."
+
+mkdir -p "$ANDROID_HOME/cmdline-tools" || {
+    echo "Error: Failed to create directory structure"
+    rm -rf "$TMP_DIR"
+    exit 1
+}
+
+if ! mv cmdline-tools "$ANDROID_HOME/cmdline-tools/latest"; then
+    echo "Error: Failed to move cmdline-tools"
+    rm -rf "$TMP_DIR"
+    exit 1
+fi
+
+# Clean up
+rm -rf "$TMP_DIR"
+
+# Add PATH only if it doesn't exist already
+if ! grep -q "$ANDROID_HOME/cmdline-tools/latest/bin" "$HOME/.bashrc"; then
+    echo "export PATH=\"$ANDROID_HOME/cmdline-tools/latest/bin:\$PATH\"" >> "$HOME/.bashrc"
+fi
+
+PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+
+echo "Installing Android SDK components"
+yes | sdkmanager "platform-tools"
+yes | sdkmanager "emulator"
+
+echo "Installation completed successfully!"
+echo "Please restart your terminal."

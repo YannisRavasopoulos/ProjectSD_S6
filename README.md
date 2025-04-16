@@ -8,9 +8,12 @@
 
 ### Install dependencies
 
+`unzip`, `xz`, `wget`, `grep` and `openjdk-17` are required.
+
 ```bash
+$ ./scripts/install_flutter.sh
 $ ./scripts/install_android.sh
-$ ./scripts/config_android.sh
+$ ./scripts/config_flutter.sh
 ```
 
 ### Run the app
