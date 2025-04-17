@@ -3,6 +3,14 @@
 # Exit on error
 set -e
 
+# Check for required dependencies
+for cmd in unzip xz wget grep; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        echo "Error: $cmd is required but not installed."
+        exit 1
+    fi
+done
+
 # Declare variables
 ANDROID_HOME="$HOME/android"
 ANDROID_URL="https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip"

@@ -2,6 +2,14 @@
 
 set -e  # Exit on any error
 
+# Check for required dependencies
+for cmd in unzip xz wget grep; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        echo "Error: $cmd is required but not installed."
+        exit 1
+    fi
+done
+
 FLUTTER_HOME="$HOME/flutter"
 FLUTTER_URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.29.3-stable.tar.xz"
 
