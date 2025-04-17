@@ -1,0 +1,319 @@
+~ CRUD HTTP Methods (Where the URL + Method combo defines a unique endpoint):
+Create = POST
+Read = GET
+Update = PUT (gia olo to resource) or PATCH (mono specific fields)
+Delete = DELETE
+
+~ An API endpoint is a URL that acts as the point of contact between an API client and an API server. API clients send requests to API endpoints in order to access the API’s functionality and data.
+
+~Concept:
+An API endpoint is like a specific menu item in a restaurant:
+
+You (client) → Ask for "Spaghetti Carbonara" (send request to endpoint)
+Kitchen (server) → Prepares the dish (processes data)
+Waiter → Brings your order (returns response)
+
+Client → Endpoint (URL) → Server → Database → Response
+
+Endpoints are always:
+-Externally accessible (via HTTP/HTTPS)
+-Have a method+path combo (GET /users)
+-Return structured responses (JSON/XML)
+
+------------------------
+
+~~~~ Authentication & Users ~~~~~~
+
+POST /auth/signup → Create user (role: driver/carpooler).
+
+POST /auth/login → Return JWT(*) token.
+
+GET /users/{userId} → Fetch profile.
+
+PUT /users/{userId} → Update profile.
+
+*JSON Web Token:
+JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed.
+
+-------------------------------------------
+
+~~~~~ Ride Management ~~~~~~
+POST /rides → Create ride (driver).
+
+GET /rides?origin=... → Search rides (carpooler).
+
+PUT /rides/{rideId} → Edit ride (driver).
+
+POST /rides/{rideId}/book → Book seat (carpooler).
+
+POST /rides/{rideId}/complete → Mark ride complete (driver).
+
+------------------------------------------
+
+~~~~~ Rewards & Coupons ~~~~~~
+GET /users/{userId}/points → Check points.
+
+POST /coupons/redeem → Redeem points for coupon.
+
+Ratings & Reports
+POST /users/{userId}/rate → Rate a user.
+
+POST /users/{userId}/report → Report a user.
+
+----------------------------------------
+
+~~~~ Activities (Recurring Rides) ~~~~
+POST /activities → Create recurring ride (driver).
+
+PUT /activities/{activityId} → Edit activity.
+
+System Automation
+POST /rides/{rideId}/match → Auto-match riders (internal).
+
+POST /bookings/{bookingId}/confirm → Confirm pickup (internal).
+
+-------------------------------------------------------------
+-------------------------------------------------------------
+
+Meaning of all this:
+
+We’re designing the "language" (APIs) that lets your app’s frontend (mobile app) talk to the backend (server). This ensures:
+
+Drivers can create rides.
+
+Carpoolers can find/book rides.
+
+Rewards are tracked and redeemed.
+
+Everyone gets real-time updates.
+
+Without these APIs, your app is just a pretty screen with no functionality!
+
+
+-------------------------------------------------------------------------
+
+What is a "Resource"?
+A resource is any "thing" your app manages. Think of it like an object in the database:
+
+Users (Drivers/Carpoolers) → /users
+
+Rides (Trips) → /rides
+
+Coupons → /coupons
+
+Each resource has:
+
+A unique ID (e.g., rideId).
+
+Actions you can do (GET, POST, etc.).
+
+(path: series of resources seperated by "\")
+
+---------------------------------------------------------------------
+
+
+What Do All These / Mean?
+The slashes (/) organize resources like folders in a file system.
+
+Example:
+
+PATCH /rides/{rideId}/status
+rides: The "folder" for all ride-related actions.
+
+{rideId}: A specific ride (e.g., ride123).
+
+status: The part of the ride you’re updating.
+
+Translation:
+"Hey server, update the status of the ride with ID ride123."
+
+
+-----------------------------------------------------------------
+
+Real-Life Analogy:
+
+Imagine your app is a restaurant:
+
+GET /menu → Ask for the menu (read).
+
+POST /order → Place an order (create).
+
+PATCH /order/123 → Change your order (update).
+
+DELETE /order/123 → Cancel your order (delete).
+
+-----------------------------------------------------------------------
+
+plantuml code for api_diagram_v0:
+
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+    RoundCorner 10
+}
+
+rectangle "Authentication & Users" as auth {
+    rectangle "POST /auth/signup\nCreate user (role: driver/carpooler)" as signup #lightblue
+    rectangle "POST /auth/login\nReturn JWT token" as login #lightblue
+    rectangle "GET /users/{userId}\nFetch profile" as get_user #lightblue
+    rectangle "PUT /users/{userId}\nUpdate profile" as update_user #lightblue
+}
+
+rectangle "Ride Management" as rides {
+    rectangle "POST /rides\nCreate ride (driver)" as create_ride #lightgreen
+    rectangle "GET /rides?origin=...\nSearch rides (carpooler)" as search_rides #lightgreen
+    rectangle "PUT /rides/{rideId}\nEdit ride (driver)" as edit_ride #lightgreen
+    rectangle "POST /rides/{rideId}/book\nBook seat (carpooler)" as book_ride #lightgreen
+    rectangle "POST /rides/{rideId}/complete\nMark ride complete (driver)" as complete_ride #lightgreen
+}
+
+rectangle "Rewards & Coupons" as rewards {
+    rectangle "GET /users/{userId}/points\nCheck points" as check_points #lightpink
+    rectangle "POST /coupons/redeem\nRedeem points for coupon" as redeem_coupon #lightpink
+}
+
+rectangle "Ratings & Reports" as ratings {
+    rectangle "POST /users/{userId}/rate\nRate a user" as rate_user #lightsalmon
+    rectangle "POST /users/{userId}/report\nReport a user" as report_user #lightsalmon
+}
+
+rectangle "Activities" as activities {
+    rectangle "POST /activities\nCreate recurring ride (driver)" as create_activity #lightyellow
+    rectangle "PUT /activities/{activityId}\nEdit activity" as edit_activity #lightyellow
+}
+
+rectangle "System Automation" as system {
+    rectangle "POST /rides/{rideId}/match\nAuto-match riders (internal)" as auto_match #plum
+    rectangle "POST /bookings/{bookingId}/confirm\nConfirm pickup (internal)" as confirm_pickup #plum
+}
+
+' Add some connections to show relationships
+signup --> get_user
+login --> get_user
+create_ride --> search_rides
+edit_ride --> search_rides
+search_rides --> book_ride
+book_ride --> complete_ride
+complete_ride --> check_points
+check_points --> redeem_coupon
+get_user --> rate_user
+get_user --> report_user
+create_ride --> create_activity
+create_activity --> edit_activity
+book_ride --> auto_match
+auto_match --> confirm_pickup
+
+note top of auth
+  <b>Authentication & User Management</b>
+  Handles user registration, login,
+  and profile management
+end note
+
+note top of rides
+  <b>Ride Management</b>
+  Core functionality for creating,
+  searching, and managing rides
+end note
+
+note right of rewards
+  <b>Rewards System</b>
+  Points tracking and
+  coupon redemption
+end note
+@enduml
+
+
+-------------------------------
+
+Possible tools that we eill need:
+
+1. Maps & Navigation
+
+	Google Maps Platform or Mapbox:
+
+	Directions API: Calculate routes, ETAs, and distances.
+
+	Places API: Autocomplete addresses and search pickup/dropoff points.
+
+	Distance Matrix API: Estimate travel time and distance for fare calculation.
+
+	Maps SDK: Embed interactive maps in the app.
+
+2. User Authentication & Security
+
+	Firebase Authentication or Auth0:
+
+	Handle email, phone, Google, Apple, or social logins.
+
+	Secure user sessions and JWT token management.
+
+	Jumio (Optional): For ID verification (e.g., driver license checks).
+
+3. Real-Time Data & Backend
+
+	Firebase Realtime Database or Firestore:
+
+	Sync ride data (driver/passenger locations, ride status) in real time.
+
+	Custom REST/GraphQL API (using Node.js, Kotlin, or Django) to manage:
+
+	Ride matching algorithms.
+
+	Points/coupon logic (awarding, redeeming, expiration).
+
+	User profiles and ride history.
+
+4. Payments & Monetization
+
+	Stripe or Braintree:
+
+	Integrate coupons/points for discounts (via Stripe Promotions API).
+
+	Voucherify (Optional): Manage dynamic coupon campaigns and redemption rules.
+
+5. Notifications
+
+	Firebase Cloud Messaging (FCM) + Apple Push Notification Service (APNs):
+
+	Send ride updates (driver arrival, booking confirmations).
+
+	Notify users about coupon expiration or earned points.
+
+6. Communication
+
+	Twilio or SendGrid:
+
+	SMS/email verification (OTP for signup).
+
+	Transactional emails (ride receipts, coupon codes).
+
+	WebSocket or Pusher: In-app chat between drivers/passengers.
+
+7. Analytics & Monitoring
+
+	Firebase Analytics + Crashlytics:
+
+	Track user behavior (e.g., coupon redemption rates).
+
+	Monitor app performance and crashes.
+
+	Mixpanel: Advanced user segmentation for monetization strategies.
+
+8. Social & Referrals
+
+	Facebook SDK or Twitter API:
+
+	Social sharing (invite friends for referral points).
+
+	Social login integration.
+
+9. Additional Services
+
+	Cloudflare: DDoS protection and API security.
+
+	OpenCage Geocoder: Convert coordinates to readable addresses.
+
+	Algorithmia (Optional): ML-based ride recommendations (future scalability).
