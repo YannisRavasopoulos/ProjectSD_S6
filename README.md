@@ -8,23 +8,24 @@
 
 ### Install dependencies
 
-`unzip`, `xz`, `wget`, `grep` and `openjdk-17` are required.
+First make sure you have plenty of space available. 20GB should do.
+Also make sure `unzip`, `xz`, `wget`, `grep` and `openjdk-21` are installed. Make sure java-17 is the default java version.
 
-```bash
-$ ./scripts/install_flutter.sh
-$ ./scripts/install_android.sh
-$ ./scripts/config_flutter.sh
-```
+1. Open your terminal.
 
-### Run the app
+2. Install the Flutter SDK: run `./scripts/install_flutter.sh`
 
-```bash
-$ cd frontend/
-$ flutter pub get
-$ flutter emulators --launch flutter_emulator
-$ flutter run
-```
+3. Install the Android SDK: run `./scripts/install_android_sdk.sh`
 
+4. Restart your terminal
+
+5. Configure Flutter for Android development: run `./scripts/config_flutter.sh`
+
+6. Open VSCode and install the Flutter and Dart extensions.
+
+7. Click this the plus icon on the bottom right.
+
+8. Select "Create Android Emulator".
 
 ## Backend
 
