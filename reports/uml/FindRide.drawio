@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.14">
   <diagram name="Page-1" id="xmjsmFQEz73UxvJd8QAu">
-    <mxGraphModel dx="2066" dy="1125" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1196" dy="1159" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -507,6 +507,105 @@
               <mxPoint x="1110" y="1480" />
               <mxPoint x="800" y="1440" />
             </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-2" value="Εμφάνισε&lt;br&gt;ειδοποίηση&lt;br&gt;αποδοχής" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1005" y="1820" width="83.75" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-4" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="940" y="1790" as="sourcePoint" />
+            <mxPoint x="1020" y="1820" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="970" y="1780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-6" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1098.75" y="1880" as="sourcePoint" />
+            <mxPoint x="1160" y="1880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-7" value="Arrange Pickup" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1175.63" y="1850" width="128.12" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-8" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1323.75" y="1880" as="sourcePoint" />
+            <mxPoint x="1374" y="1880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-10" value="Έλεγχος αποτυχίας" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1393.75" y="1830" width="70" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-11" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1470" y="1840" as="sourcePoint" />
+            <mxPoint x="1520" y="1790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-12" value="Εμφάνισε&lt;br&gt;ειδοποίηση αποτυχίας" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1530" y="1710" width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-13" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1650" y="1760" as="sourcePoint" />
+            <mxPoint x="1710" y="1760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-14" value="Μήνυμα αποτυχίας Arrange Pickup" style="shape=umlBoundary;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="1720" width="100" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-15" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1480" y="1879.5" as="sourcePoint" />
+            <mxPoint x="1560" y="1879.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-16" value="Αποτυχία" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-45;" vertex="1" parent="1">
+          <mxGeometry x="1450" y="1790" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-17" value="Επιτυχία" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1490" y="1880" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-18" value="Εμφάνισε&lt;br&gt;ειδοποίηση επιτυχίας" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="1835" width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-19" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1700" y="1885" as="sourcePoint" />
+            <mxPoint x="1760" y="1885" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-20" value="Μήνυμα επιτυχίας Arrange Pickup" style="shape=umlBoundary;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1780" y="1845" width="100" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-21" value="Εμφάνισε&lt;br&gt;πληροφορίες pickup" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="1980" width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-22" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1700" y="2030" as="sourcePoint" />
+            <mxPoint x="1760" y="2030" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-23" value="Σελιδα περεταίρω πληροφοριών pickup" style="shape=umlBoundary;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1780" y="1990" width="100" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-24" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1800" y="1940" as="sourcePoint" />
+            <mxPoint x="1680" y="1990" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-25" value="Λίστα πληροφοριών διοργανωμένου pickup" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="1970" width="130" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="VpCjR_LkkgQVyu6OYKBy-26" value="" style="endArrow=none;html=1;rounded=0;entryX=-0.011;entryY=0.513;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="VpCjR_LkkgQVyu6OYKBy-21">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1520" y="2020" as="sourcePoint" />
+            <mxPoint x="1570" y="1970" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
