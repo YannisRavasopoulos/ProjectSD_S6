@@ -14,9 +14,8 @@ rectangle "System" {
     usecase "Manage Activities"
     usecase "Edit Activity"
 
-    usecase "Manage Account"
-    usecase "View History"
-    usecase "View Rating"
+    usecase "Edit Profile"
+    usecase "View Past Rides"
 
     usecase "Rate User"
     usecase "Report User"
@@ -34,9 +33,8 @@ rectangle "System" {
 "User" -- "Create Activity"
 "User" -- "Edit Activity"
 
-"User" -- "Manage Account"
-"User" -- "View History"
-"User" -- "View Rating"
+"User" -- "Edit Profile"
+"User" -- "View Past Rides"
 
 "User" -- "Rate User"
 "User" -- "Report User"
@@ -51,9 +49,6 @@ rectangle "System" {
 
 "Manage Activities" <.-left- "Create Activity": "<<extend>>"
 "Manage Activities" <.-right- "Edit Activity": "<<extend>>"
-
-"Manage Account" <.-left- "View History": "<<extend>>"
-"Manage Account" <.-right- "View Rating": "<<extend>>"
 
 "Arrange Pickup" <. "Accept Pickup": "<<extend>>"
 

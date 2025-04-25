@@ -1,76 +1,89 @@
 @startuml
+left to right direction
+
 object User {
     id
+    username
+    email
+    password
     name
 }
 
 object Driver {
 }
 
-Driver --down|> User
-
-object Vehicle {
-}
-
-Driver --up Vehicle: "Drives"
+Driver --|> User
 
 object Carpooler {
 }
 
-Carpooler --down|> User
+Carpooler --|> User
 
 object Ride {
+    id
+    date
+    time
+    duration
     arrivalTime
     destination
 }
 
-Carpooler --up Ride: "Wants"
-
-Driver --up Ride: "Offers"
-
-Driver --right[hidden] Carpooler
-
-object Reward {
+object Vehicle {
 }
 
-Reward --left Driver: "Receives"
+Driver --> Vehicle : "Drives"
 
-Reward --right Carpooler: "Receives"
+Carpooler --> Ride : "Wants"
+Driver --> Ride : "Offers"
+
+object RideHistory {
+    contents
+}
+
+User --> RideHistory : "has"
 
 object Rating {
     stars
     comment
 }
 
-Ride --up[hidden] Rating
-
-Rating -- User: "Posts/Receives"
+User --> Rating : "gives"
+Ride --> Rating : "receives"
+Rating --> User : "posts/receives"
 
 object Report {
+    id
     reason
+    description
 }
 
-Report --right User: "Files/Receives"
+User --> Report : "creates"
+Report --> User : "targets"
+
+object ReportArchive {
+}
+
+ReportArchive --> Report : "archives"
 
 object Pickup {
     location
     time
 }
 
-Driver -- Pickup: "Arranges"
-Carpooler -- Pickup: "Accepts"
+Driver --> Pickup : "arranges"
+Carpooler --> Pickup : "accepts"
 
-Reward --up[hidden] Ride
-Pickup --up[hidden] Reward
+object Reward {
+}
+
+Reward --> Driver : "receives"
+Reward --> Carpooler : "receives"
 
 object Route {
     roadGraph
 }
 
-Driver -- Route: "Makes"
-
-User --up[hidden] Pickup
-User --up[hidden] Route
+Driver --> Route : "makes"
 
 object Location {
     address
@@ -82,16 +95,108 @@ Location --o Pickup
 Location --o Route
 
 object Activity {
-
 }
-User --right Activity: "Creates"
 
-Activity --up Ride: "Requires"
+User --> Activity : "creates"
+Activity --> Ride : "requires"
 
 object InstaRide {
-
 }
 
 InstaRide --|> Ride
+
+object ProfilePage {
+}
+
+ProfilePage --> User : "displays"
+
+object ReportUserPage {
+}
+
+ReportUserPage --> User : "reports"
+
+object PastRidesPage {
+}
+
+PastRidesPage --> Ride : "lists"
+
+object RideDetailsPage {
+}
+
+RideDetailsPage --> Ride : "details"
+
+object RatingPage {
+}
+
+RatingPage --> Rating : "manages"
+
+object PopupMessage {
+    message
+}
+
+object ConfirmationDialog {
+    choices
+}
+
+PastRidesPage --> PopupMessage
+RideDetailsPage --> PopupMessage
+ReportUserPage --> PopupMessage
+ProfilePage --> PopupMessage
+
+PastRidesPage --> ConfirmationDialog
+RideDetailsPage --> ConfirmationDialog
+ReportUserPage --> ConfirmationDialog
+ProfilePage --> ConfirmationDialog
+
+object MainPage {
+
+}
+
+object ManageRidePage {
+
+}
+
+object AccountPage {
+
+}
+
+object OfferRidePage {
+
+}
+
+object RewardsPage {
+
+}
+
+object FindRidePage {
+
+}
+
+object PickupDetailsPage {
+
+}
+
+object ActivitiesPage {
+
+}
+
+
+object Page {
+
+}
+
+MainPage --|> Page
+ManageRidePage --|> Page
+AccountPage --|> Page
+OfferRidePage --|> Page
+RewardsPage --|> Page
+FindRidePage --|> Page
+PickupDetailsPage --|> Page
+ActivitiesPage --|> Page
+PastRidesPage --|> Page
+RideDetailsPage --|> Page
+ReportUserPage --|> Page
+ProfilePage --|> Page
+
 
 @enduml
