@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.14">
   <diagram name="Page-1" id="xmjsmFQEz73UxvJd8QAu">
-    <mxGraphModel dx="1426" dy="1125" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2066" dy="1125" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -81,7 +81,7 @@
         <mxCell id="42Qcf_KdivL-CxCC4_jz-8" value="Insta-Ride" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=-10;" parent="1" vertex="1">
           <mxGeometry x="770" y="780" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="42Qcf_KdivL-CxCC4_jz-9" value="Εμφάνισε" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="42Qcf_KdivL-CxCC4_jz-9" value="Εμφάνισε&lt;br&gt;μενού επιλογών" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="670" y="840" width="100" height="90" as="geometry" />
         </mxCell>
         <mxCell id="42Qcf_KdivL-CxCC4_jz-10" value="Χάρτης περιοχής ..." style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -167,10 +167,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="42Qcf_KdivL-CxCC4_jz-29" value="Εμφάνισε" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="42Qcf_KdivL-CxCC4_jz-29" value="Εμφάνισε&lt;br&gt;Ειδοποίηση" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="575.63" y="1200" width="83.75" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="42Qcf_KdivL-CxCC4_jz-30" value="&lt;div&gt;Εμφάνισε Επιλογές&lt;/div&gt;" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="42Qcf_KdivL-CxCC4_jz-30" value="&lt;div&gt;Εμφάνισε Επιλογές&lt;br&gt;Οδηγών&lt;/div&gt;" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="610" y="1355" width="83.75" height="90" as="geometry" />
         </mxCell>
         <mxCell id="42Qcf_KdivL-CxCC4_jz-31" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
@@ -350,10 +350,10 @@
         <mxCell id="42Qcf_KdivL-CxCC4_jz-78" value="Manage Activities" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1173.75" y="620" width="130" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-16" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-16" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="990" y="810" as="sourcePoint" />
-            <mxPoint x="720" y="980" as="targetPoint" />
+            <mxPoint x="730" y="990" as="targetPoint" />
             <Array as="points">
               <mxPoint x="980" y="850" />
               <mxPoint x="1070" y="890" />
@@ -362,31 +362,31 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-17" value="Επιλογή Activity" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=0;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-17" value="Επιλογή Activity" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=0;" parent="1" vertex="1">
           <mxGeometry x="990" y="820" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-19" value="Προεπισκόπιση&lt;br&gt;επιλεγμένου Activity" style="shape=umlBoundary;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-19" value="Προεπισκόπιση&lt;br&gt;επιλεγμένου Activity" style="shape=umlBoundary;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="450" y="1000" width="120" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-21" value="Activities Χρήστη" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-21" value="Activities Χρήστη" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="840" y="1000" width="90" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-22" value="" style="endArrow=none;html=1;rounded=0;exitX=0.996;exitY=0.488;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="NABKonEqtzCEHzalsWoi-18" target="NABKonEqtzCEHzalsWoi-21">
+        <mxCell id="NABKonEqtzCEHzalsWoi-22" value="" style="endArrow=none;html=1;rounded=0;exitX=0.996;exitY=0.488;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="NABKonEqtzCEHzalsWoi-18" target="NABKonEqtzCEHzalsWoi-21" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="646.02" y="1110" as="sourcePoint" />
             <mxPoint x="840" y="1060" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-23" value="OPTIONAL: Ακύρωση&lt;br&gt;-&lt;br&gt;&quot;Cancel&quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-23" value="OPTIONAL: Ακύρωση&lt;br&gt;-&lt;br&gt;&quot;Cancel&quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="310" y="1720" width="60" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-25" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-25" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="654.38" y="1044.5" as="sourcePoint" />
             <mxPoint x="594.38" y="1044.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-26" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-26" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="280" y="650" as="sourcePoint" />
             <mxPoint x="430" y="1040" as="targetPoint" />
@@ -397,10 +397,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-27" value="&quot;Confirm&quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-27" value="&quot;Confirm&quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="340" y="1040" width="110" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-34" value="" style="endArrow=none;html=1;rounded=0;curved=1;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-34" value="" style="endArrow=none;html=1;rounded=0;curved=1;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="650" y="1020" as="sourcePoint" />
             <mxPoint x="555" y="940" as="targetPoint" />
@@ -409,7 +409,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-35" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-35" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="820" y="1090" as="sourcePoint" />
             <mxPoint x="1140" y="1160" as="targetPoint" />
@@ -418,7 +418,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-36" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;curved=1;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-36" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;curved=1;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="820" y="1090" as="sourcePoint" />
             <mxPoint x="649" y="1020" as="targetPoint" />
@@ -428,16 +428,16 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-18" value="Εμφάνισε" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="675" y="1000" width="70" height="80" as="geometry" />
+        <mxCell id="NABKonEqtzCEHzalsWoi-18" value="Εμφάνισε&lt;br&gt;προεπισκόπιση" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="675" y="1000" width="95" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-37" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-37" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1170" y="1220" as="sourcePoint" />
             <mxPoint x="870" y="1260" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-38" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-38" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1180" y="1720" as="sourcePoint" />
             <mxPoint x="1232" y="1670" as="targetPoint" />
@@ -446,46 +446,46 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-39" value="Εμφάνισε" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-39" value="Εμφάνισε&lt;br&gt;ειδοποίηση&lt;br&gt;απόρριψης" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1210" y="1570" width="83.75" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-40" value="Μήνυμα Απόρριψης απο οδηγό" style="shape=umlBoundary;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-40" value="Μήνυμα Απόρριψης απο οδηγό" style="shape=umlBoundary;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1390" y="1585" width="100" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-41" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-41" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1313.75" y="1624.5" as="sourcePoint" />
             <mxPoint x="1373.75" y="1624.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-42" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-42" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1520" y="1624.5" as="sourcePoint" />
             <mxPoint x="1580" y="1624.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-43" value="Αφαίρεση απο τη λίστα" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-43" value="Αφαίρεση απο τη λίστα" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1600" y="1575" width="83.75" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-44" value="Λίστα διαθέσιμων Οδηγών" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-44" value="Λίστα διαθέσιμων Οδηγών" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1603.75" y="1460" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-45" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="NABKonEqtzCEHzalsWoi-44">
+        <mxCell id="NABKonEqtzCEHzalsWoi-45" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="NABKonEqtzCEHzalsWoi-44" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1644" y="1580" as="sourcePoint" />
             <mxPoint x="1650" y="1540" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-46" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="NABKonEqtzCEHzalsWoi-47">
+        <mxCell id="NABKonEqtzCEHzalsWoi-46" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="NABKonEqtzCEHzalsWoi-47" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="950" y="1400" as="sourcePoint" />
             <mxPoint x="700" y="1405" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-47" value="Λίστα διαθέσιμων Οδηγών" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-47" value="Λίστα διαθέσιμων Οδηγών" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="955" y="1365" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-48" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-48" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1020" y="1540" as="sourcePoint" />
             <mxPoint x="720" y="1450" as="targetPoint" />
@@ -497,7 +497,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="NABKonEqtzCEHzalsWoi-49" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" edge="1" parent="1">
+        <mxCell id="NABKonEqtzCEHzalsWoi-49" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1590" y="1600" as="sourcePoint" />
             <mxPoint x="730" y="1430" as="targetPoint" />
