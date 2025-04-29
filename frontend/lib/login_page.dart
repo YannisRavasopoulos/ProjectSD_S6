@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/password_field.dart';
+import 'package:frontend/user_model.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,20 +28,17 @@ class LoginPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
-              const TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Username or Email',
-                ),
-              ),
+              const TextField(decoration: InputDecoration(labelText: 'Email')),
               const SizedBox(height: 16),
               const PasswordField(),
               SizedBox(height: 4),
               Text('Forgot your password?'),
               SizedBox(height: 32),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // TODO: login logic
                   print('Log In');
+                  // UserModel.login()
                 },
                 child: const Text('Log In'),
               ),
