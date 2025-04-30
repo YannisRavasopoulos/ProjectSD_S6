@@ -1,106 +1,128 @@
-Backend API Documentation
-This backend service provides JWT-based authentication with FastAPI. It includes user signup, signin, and token validation functionality.
+# Backend API Documentation
 
-File Structure
-backend/
-├── main.py            # FastAPI application and route definitions
-├── jwtsign.py         # JWT token generation and validation logic
-├── jwtvalidate.py     # Bearer token authentication middleware
-├── requirements.txt   # Python dependencies
-└── README.md          # This documentation
-Key Features
-User registration (signup) with email and password
+A secure and efficient backend service providing JWT-based authentication with FastAPI. This API includes user registration, authentication, and token validation functionality.
 
-User authentication (signin) with JWT generation
+## File Structure
 
-Secure endpoints with JWT validation
+    backend/
+    ├── main.py            # FastAPI application and route definitions
+    ├── jwtsign.py         # JWT token generation and validation logic
+    ├── jwtvalidate.py     # Bearer token authentication middleware
+    ├── requirements.txt   # Python dependencies
+    └── README.md          # This documentation
 
-Password hashing for security
+## Key Features
 
-Token expiration handling
+- User registration (signup) with email and password
+  `pip install -r requirements.txtuvicorn main:app --reload`
+- User authentication (signin) with JWT generation
+- Secure endpoints with JWT validation
+- Password hashing for security
+- Token expiration handling
 
-Installation & Setup
-Clone the repository (if you haven't already)
+## Installation & Setup
 
-bash
-git clone <repository-url>
-cd backend
-Set up a virtual environment (recommended)
+1. Clone the repository (if you haven't already)
 
-bash
-python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
-Install dependencies
+    ```bash
+    git clone <repository-url>
+    cd backend
+    ```
 
-bash
-pip install -r requirements.txt
-Run the development server
+2. Set up a virtual environment (recommended)
 
-bash
-uvicorn main:app --reload
-When finished, deactivate the virtual environment
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows use: venv\Scripts\activate
+    ```
 
-bash
-deactivate
+3. Install dependencies
 
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-API Endpoints
-Authentication
-POST /signup - Register a new user
+4. Run the development server
 
-json
-{
-  "name": "string",
-  "email": "string",
-  "password": "string"
-}
-POST /signin - Authenticate and get JWT token
+    ```bash
+    uvicorn main:app --reload
+    ```
 
-json
-{
-  "email": "string",
-  "password": "string"
-}
-Protected Routes
-POST /secure - Test endpoint requiring valid JWT
+5. When finished, deactivate the virtual environment
 
-Requires Authorization: Bearer <token> header
+    ```bash
+    deactivate
+    ```
 
-Development Workflow
-Activate virtual environment:
+## API Endpoints
 
-bash
-source venv/bin/activate
-Start the development server:
+### Authentication
 
-bash
-uvicorn main:app --reload
-The API will be available at:
+- `POST /signup` - Register a new user
 
-http://localhost:8000
-Access interactive documentation at:
+    ```json
+    {
+      "name": "string",
+      "email": "string",
+      "password": "string"
+    }
+    ```
 
-http://localhost:8000/docs
-When done working:
+- `POST /signin` - Authenticate and get JWT token
 
-bash
-deactivate
-Dependencies
-Python 3.7+
+    ```json
+    {
+      "email": "string",
+      "password": "string"
+    }
+    ```
 
-FastAPI
+### Protected Routes
 
-PyJWT
+- `POST /secure` - Test endpoint requiring valid JWT
 
-Uvicorn
+    Requires Authorization: Bearer <token> header
 
-All dependencies are listed in requirements.txt and will be installed automatically with pip install -r requirements.txt.
+## Development Workflow
 
-Security Notes
-Passwords are hashed before storage
+1. Activate virtual environment:
 
-JWT tokens expire after 1 hour
+    ```bash
+    source venv/bin/activate
+    ```
 
-Always use HTTPS in production
+2. Start the development server:
 
-The JWT secret is randomly generated on each startup (for development)
+    ```bash
+    uvicorn main:app --reload
+    ```
+
+3. The API will be available at:
+
+    http://localhost:8000
+
+4. Access interactive documentation at:
+
+    http://localhost:8000/docs
+
+5. When done working:
+
+    ```bash
+    deactivate
+    ```
+
+## Dependencies
+
+- Python 3.7+
+- FastAPI
+- PyJWT
+- Uvicorn
+
+All dependencies are listed in requirements.txt and will be installed automatically with `pip install -r requirements.txt`.
+
+## Security Notes
+
+- Passwords are hashed before storage
+- JWT tokens expire after 1 hour
+- Always use HTTPS in production
+- The JWT secret is randomly generated on each startup (for development)
