@@ -12,6 +12,13 @@ class LoopApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Loop App', home: LoginView());
+    return MaterialApp(
+      title: 'Loop App',
+      home: LoginView(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        visualDensity: VisualDensity.comfortable,
+      ),
+    );
   }
 }

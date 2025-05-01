@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
 
 class PasswordField extends StatefulWidget {
-  const PasswordField({super.key});
+  final ValueChanged<String>? onChanged;
+  final TextEditingController? controller;
+
+  const PasswordField({Key? key, this.onChanged, this.controller})
+    : super(key: key);
 
   @override
   _PasswordFieldState createState() => _PasswordFieldState();
 }
 
 class _PasswordFieldState extends State<PasswordField> {
-  bool _isObscured = true;
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _isObscured = !_isObscured;
-    });
-  }
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      obscureText: _isObscured,
+      obscureText: _obscureText,
       decoration: InputDecoration(
         labelText: 'Password',
         suffixIcon: IconButton(
-          icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off),
-          onPressed: _togglePasswordVisibility,
+          icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+          onPressed: () {
+            setState(() {
+              _obscureText = !_obscureText;
+            });
+          },
         ),
       ),
+      onChanged: widget.onChanged,
     );
   }
 }
