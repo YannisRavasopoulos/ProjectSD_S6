@@ -30,17 +30,16 @@ class LoginView extends StatelessWidget {
 
     final success = await viewModel.login();
     if (success) {
-      // Navigate to the next screen
       print('ok');
       // Navigator.pushReplacementNamed(
       //   context,
       //   '/home',
       // );
     } else {
-      // Show error message
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(viewModel.errorMessage)));
+      // Hide the current snackbar if it exists
+      var messenger = ScaffoldMessenger.of(context);
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(viewModel.errorMessage)));
     }
   }
 
@@ -56,7 +55,7 @@ class LoginView extends StatelessWidget {
             return SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 32),
                   Text(
@@ -75,10 +74,6 @@ class LoginView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // Text(
-                      //   viewModel.errorMessage,
-                      //   style: TextStyle(color: Colors.red),
-                      // ),
                       TextButton(
                         onPressed: () => onForgotPasswordPressed(context),
                         child: Text('Forgot your password?'),

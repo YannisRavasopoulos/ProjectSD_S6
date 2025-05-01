@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:frontend/data/user.dart';
 import 'package:frontend/data/service/authentication_service.dart';
 import 'package:frontend/data/service/user_service.dart';
 
@@ -22,13 +20,25 @@ class LoginViewModel extends ChangeNotifier {
   String get password => passwordController.text;
 
   Future<bool> login() async {
-    isLoading = true;
-    notifyListeners();
-
     try {
+      isLoading = true;
+      notifyListeners();
+
+      if (email.isEmpty) {
+        errorMessage = 'Email cannot be empty';
+        return false;
+      }
+
+      if (password.isEmpty) {
+        errorMessage = 'Password cannot be empty';
+        return false;
+      }
+
+      // TODO: authentication happens here
       await Future.delayed(const Duration(seconds: 2));
-      final token = await authenticationService.login(email, password);
-      final user = await userService.getUser(token);
+      // final token = await authenticationService.login(email, password);
+      // final user = await userService.getUser(token);
+
       return true;
     } catch (e) {
       errorMessage = e.toString();
