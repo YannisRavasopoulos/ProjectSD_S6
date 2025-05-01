@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/login_view.dart';
+import 'package:frontend/ui/login/login_view.dart';
 
 void main() {
   runApp(const LoopApp());

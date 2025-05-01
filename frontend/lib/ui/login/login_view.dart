@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/password_field.dart';
+import 'package:frontend/ui/login/password_field.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
