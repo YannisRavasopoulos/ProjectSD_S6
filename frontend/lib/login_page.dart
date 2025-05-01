@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/password_field.dart';
-import 'package:frontend/user_model.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

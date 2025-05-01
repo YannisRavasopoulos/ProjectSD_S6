@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {},
+  "extensions": {
+    "recommendations": [
+      "aaron-bond.better-comments",
+      "streetsidesoftware.code-spell-checker",
+      "Dart-Code.dart-code",
+      "hediet.vscode-drawio",
+      "Dart-Code.flutter",
+      "donjayamanne.githistory",
+      "github.vscode-github-actions",
+      "GitHub.copilot",
+      "GitHub.copilot-chat",
+      "codezombiech.gitignore",
+      "streetsidesoftware.code-spell-checker-greek",
+      "ms-vsliveshare.vsliveshare",
+      "DavidAnson.vscode-markdownlint",
+      "42Crunch.vscode-openapi",
+      "esbenp.prettier-vscode",
+      "mtxr.sqltools",
+      "mtxr.sqltools-driver-pg",
+      "vscode-icons-team.vscode-icons",
+      "tomoki1207.pdf",
+      "redhat.vscode-yaml",
+      "James-Yu.latex-workshop"
+    ]
+  }
+}
