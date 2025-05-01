@@ -37,7 +37,7 @@ class AuthenticationService {
     );
 
     if (response.statusCode == 200) {
-      return JsonWebToken.fromJson(jsonDecode(response.body));
+      return JsonWebToken(jsonDecode(response.body)['token']);
     } else {
       throw AuthenticationException('Failed to login');
     }
