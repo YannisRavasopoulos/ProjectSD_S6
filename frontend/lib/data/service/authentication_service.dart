@@ -7,10 +7,6 @@ import 'package:http/http.dart' as http;
 
 /// This class is responsible for handling authentication-related tasks.
 class AuthenticationService {
-  static final loginUri = Uri.https(apiDomain, '/auth/login');
-  static final logoutUri = Uri.https(apiDomain, '/auth/logout');
-  static final refreshUri = Uri.https(apiDomain, '/auth/refresh');
-
   final http.Client client;
 
   /// Creates an instance of [AuthenticationService] with an optional HTTP client.
@@ -31,13 +27,13 @@ class AuthenticationService {
   /// - [password]: The user's password
   Future<JsonWebToken> login(String username, String password) async {
     final response = await client.post(
-      loginUri,
+      Uri.https(apiDomain, '/auth/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': username, 'password': password}),
     );
 
     if (response.statusCode == 200) {
-      return JsonWebToken(jsonDecode(response.body)['token']);
+      return JsonWebToken.fromJson(jsonDecode(response.body));
     } else {
       throw AuthenticationException('Failed to login');
     }
@@ -54,7 +50,10 @@ class AuthenticationService {
   /// Parameters:
   /// - [token]: The current JWT to refresh
   Future<JsonWebToken> refresh(JsonWebToken token) async {
-    final response = await http.post(refreshUri, headers: token.makeHeaders());
+    final response = await http.post(
+      Uri.https(apiDomain, '/auth/refresh'),
+      headers: token.makeHeaders(),
+    );
 
     if (response.statusCode == 200) {
       return JsonWebToken.fromJson(jsonDecode(response.body));
@@ -72,7 +71,10 @@ class AuthenticationService {
   /// Parameters:
   /// - [token]: The JWT to invalidate
   Future<void> logout(JsonWebToken token) async {
-    final response = await http.post(logoutUri, headers: token.makeHeaders());
+    final response = await http.post(
+      Uri.https(apiDomain, '/auth/logout'),
+      headers: token.makeHeaders(),
+    );
 
     if (response.statusCode != 200) {
       throw AuthenticationException('Failed to logout');
