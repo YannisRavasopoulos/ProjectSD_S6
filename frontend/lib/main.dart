@@ -14,11 +14,17 @@ class LoopApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Loop App',
-      home: LoginView(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         visualDensity: VisualDensity.comfortable,
       ),
+      initialRoute: isLoggedIn ? '/home' : '/login',
+      routes: {
+        '/login': (context) => LoginView(),
+        // '/home': (context) => HomeView(),
+        // '/forgot-password': (context) => ForgotPasswordView(),
+        // '/sign-up': (context) => SignUpView(),
+      },
     );
   }
 }

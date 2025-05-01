@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:frontend/data/service/authentication_service.dart';
 import 'package:frontend/data/service/user_service.dart';
@@ -36,8 +34,8 @@ class LoginViewModel extends ChangeNotifier {
 
       // TODO: authentication happens here
       await Future.delayed(const Duration(seconds: 2));
-      // final token = await authenticationService.login(email, password);
-      // final user = await userService.getUser(token);
+      final token = await authenticationService.login(email, password);
+      final user = await userService.getUser(token);
 
       return true;
     } catch (e) {

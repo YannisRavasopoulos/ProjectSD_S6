@@ -15,26 +15,17 @@ class LoginView extends StatelessWidget {
   );
 
   void onForgotPasswordPressed(BuildContext context) {
-    // TODO
-    print('Forgot password pressed');
+    Navigator.pushNamed(context, '/forgot-password');
   }
 
   void onSignUpPressed(BuildContext context) {
-    // TODO
-    print('Sign up pressed');
+    Navigator.pushNamed(context, '/sign-up');
   }
 
   void onLoginPressed(BuildContext context) async {
-    // TODO
-    print('Login pressed');
-
     final success = await viewModel.login();
     if (success) {
-      print('ok');
-      // Navigator.pushReplacementNamed(
-      //   context,
-      //   '/home',
-      // );
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
       // Hide the current snackbar if it exists
       var messenger = ScaffoldMessenger.of(context);
