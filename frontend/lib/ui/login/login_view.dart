@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/service/authentication_service.dart';
 import 'package:frontend/data/service/user_service.dart';
-import 'package:frontend/ui/login/sign_in_button.dart';
+import 'package:frontend/ui/login/loading_button.dart';
 import 'package:frontend/ui/login/login_viewmodel.dart';
 import 'package:frontend/ui/login/password_field.dart';
 import 'package:frontend/ui/login/wrapper.dart';
@@ -70,9 +70,13 @@ class LoginView extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 32),
-                SignInButton(
-                  isLoading: viewModel.isLoading,
-                  onPressed: () => onLoginPressed(context),
+                SizedBox(
+                  width: 200,
+                  child: LoadingButton(
+                    isLoading: viewModel.isLoading,
+                    onPressed: () => onLoginPressed(context),
+                    child: Text('Sign In'),
+                  ),
                 ),
                 SizedBox(height: 16),
                 Row(
