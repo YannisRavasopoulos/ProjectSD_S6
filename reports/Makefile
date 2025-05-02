@@ -5,21 +5,27 @@ USE_CASES := edit-profile.md rate-user.md report-user.md view-past-rides.md
 
 all:
 
-report.md: $(USE_CASES)
-	cat $^ > $@
+use-cases.md: $(USE_CASES)
+	sed -e '$$s/$$/\n/' -s $(USE_CASES) > use-cases.md
 
 clean:
-	latexmk --lualatex project-description.tex -C
-	latexmk --lualatex use-cases.tex -C
-	latexmk --lualatex domain-model.tex -C
+	rm -f use-cases.md
 
-# images/uml/%.png: uml/%.plantuml
-# 	plantuml -tpng $< -o ../$(dir $@)
+# rm -f use-cases.tex`
+# latexmk --lualatex project-description.tex -C
+# latexmk --lualatex use-cases-old.tex -C
+# latexmk --lualatex domain-model.tex -C
+# # images/uml/%.png: uml/%.plantuml
+# # 	plantuml -tpng $< -o ../$(dir $@)
 
-# project-description.pdf: tex/project-description.tex
+# # project-description.pdf: tex/project-description.tex
+# # 	latexmk --lualatex $<
+
+# use-cases.pdf: use-cases-old.tex
 # 	latexmk --lualatex $<
 
-use-cases.pdf: report.md
-	pandoc $< -o $@ --pdf-engine=lualatex
-# domain-model.pdf: tex/domain-model.tex images/uml/domain-model.png
-# 	latexmk --lualatex $<
+# use-cases.tex: report.md
+# 	pandoc report.md -o $@
+
+# # domain-model.pdf: tex/domain-model.tex images/uml/domain-model.png
+# # 	latexmk --lualatex $<
