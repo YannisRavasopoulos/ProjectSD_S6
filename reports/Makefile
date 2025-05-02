@@ -6,7 +6,11 @@ USE_CASES := edit-profile.md rate-user.md report-user.md view-past-rides.md
 all:
 
 use-cases.md: $(USE_CASES)
-	sed -e '$$s/$$/\n/' -s $(USE_CASES) > use-cases.md
+	echo "# Use Cases" > use-cases.md
+	echo "" >> use-cases.md
+	echo "![image](./use-cases.drawio.png)" >> use-cases.md
+	echo "" >> use-cases.md
+	sed -e '$$s/$$/\n/' -s $(USE_CASES) >> use-cases.md
 
 clean:
 	rm -f use-cases.md

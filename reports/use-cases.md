@@ -1,3 +1,7 @@
+# Use Cases
+
+![image](./use-cases.drawio.png)
+
 ## Edit Profile
 
 ### Περιγραφή
