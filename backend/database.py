@@ -1,11 +1,13 @@
+import os
 from sqlalchemy import (
     create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint,
     CheckConstraint, Enum, JSON, TIMESTAMP, Table
 )
-from sqlalchemy.dialects.postgresql import JSONB, ENUM, GEOGRAPHY
+from sqlalchemy.dialects.postgresql import JSONB, ENUM
 import enum
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
+
 
 Base = declarative_base()
 
@@ -19,7 +21,7 @@ class RideType(enum.Enum):
     activity = "activity"
 
 # Database connection
-SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:kostasaggelos@localhost:5432/loopDB"
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://loop_app:kostasaggelos@localhost:5432/loop_app")
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -37,7 +39,7 @@ class User(Base):
     name = Column(Text, nullable=False)
     email = Column(String(255), unique=True, nullable=False)  # Added email
     hashed_password = Column(String(255), nullable=False)  # Added password
-    role = Column(ENUM(UserRole, name="user_role"), nullable=False)
+    role = Column(ENUM(UserRole, name="user_role"), nullable=True, default="carpooler")  # Role is now optional
 
 # VEHICLES
 class Vehicle(Base):
@@ -53,7 +55,7 @@ class Location(Base):
     __tablename__ = "locations"
     id = Column(Integer, primary_key=True)
     address = Column(Text)
-    coordinates = Column(GEOGRAPHY("POINT", 4326))
+    #coordinates = Column(Geography("POINT", srid=4326))  # Use Geography from geoalchemy2
 
 # ROUTES
 class Route(Base):

@@ -5,13 +5,18 @@ services:
     image: postgres:13
     container_name: loop_postgres
     environment:
-      POSTGRES_DB: loopDB
+      POSTGRES_DB: loop_app
       POSTGRES_USER: loop_app
       POSTGRES_PASSWORD: kostasaggelos
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U loop_app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app:
     build: .
@@ -19,9 +24,10 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
-      DATABASE_URL: "postgresql://loop_app:kostasaggelos@postgres:5432/loopDB"
+      DATABASE_URL: "postgresql://loop_app:kostasaggelos@postgres:5432/loop_app"
     volumes:
       - .:/code
 
