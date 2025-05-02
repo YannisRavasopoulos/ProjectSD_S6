@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, Query
+from fastapi import FastAPI, Depends, Query, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from jwtsign import sign, decode, signup, signin, SignUpSchema, SignInSchema
