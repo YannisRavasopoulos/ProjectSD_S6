@@ -12,6 +12,7 @@ class SignUpSchema(BaseModel):
     name: str
     email: str
     password: str
+    role: str  # Default to carpooler if not specified
 
 class SignInSchema(BaseModel):
     email: str
@@ -39,12 +40,12 @@ def decode(token):
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-def signup(name, email, password, db: Session = Depends(get_db)):
+def signup(name, email, password, role, db: Session = Depends(get_db)):
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     existing_user = db.query(User).filter(User.email == email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    new_user = User(name=name, email=email, hashed_password=hashed_password, role="carpooler")
+    new_user = User(name=name, email=email, hashed_password=hashed_password, role=role)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

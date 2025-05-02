@@ -1,17 +1,19 @@
-version: '3.8'
-
 services:
   postgres:
-    image: postgres:13
+    image: postgis/postgis:13-3.3  # Use PostGIS image instead of plain PostgreSQL
     container_name: loop_postgres
     environment:
       POSTGRES_DB: loopDB
       POSTGRES_USER: loop_app
       POSTGRES_PASSWORD: kostasaggelos
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U loop_app -d loopDB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   app:
     build: .
@@ -19,7 +21,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: "postgresql://loop_app:kostasaggelos@postgres:5432/loopDB"
     volumes:

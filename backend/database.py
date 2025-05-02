@@ -2,7 +2,8 @@ from sqlalchemy import (
     create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint,
     CheckConstraint, Enum, JSON, TIMESTAMP, Table
 )
-from sqlalchemy.dialects.postgresql import JSONB, ENUM, GEOGRAPHY
+from sqlalchemy.dialects.postgresql import JSONB, ENUM
+from sqlalchemy import Column, Integer, String, Text, Float
 import enum
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
@@ -19,7 +20,7 @@ class RideType(enum.Enum):
     activity = "activity"
 
 # Database connection
-SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:kostasaggelos@localhost:5432/loopDB"
+SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:kostasaggelos@postgres:5432/loopDB"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -53,7 +54,8 @@ class Location(Base):
     __tablename__ = "locations"
     id = Column(Integer, primary_key=True)
     address = Column(Text)
-    coordinates = Column(GEOGRAPHY("POINT", 4326))
+    latitude = Column(Float)  # Stores latitude value
+    longitude = Column(Float)  # Stores longitude value
 
 # ROUTES
 class Route(Base):

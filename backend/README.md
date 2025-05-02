@@ -14,11 +14,12 @@ A secure and efficient backend service providing JWT-based authentication with F
 ## Key Features
 
 - User registration (signup) with email and password
-  `pip install -r requirements.txtuvicorn main:app --reload`
 - User authentication (signin) with JWT generation
 - Secure endpoints with JWT validation
 - Password hashing for security
 - Token expiration handling
+- Containerized PostgreSQL database
+- Dockerized application environment
 
 ## Installation & Setup
 
@@ -54,6 +55,41 @@ A secure and efficient backend service providing JWT-based authentication with F
     deactivate
     ```
 
+## Docker Setup (Recommended)
+
+### Prerequisites
+- Docker Engine
+- Docker Compose
+
+1. Clone the repository
+
+    ```bash
+    git clone <repository-url>
+    cd backend
+    ```
+
+2. Start the service
+
+    ```bash
+    docker-compose up -d --build
+    ```
+
+3. Access the API 
+    Interctive docs: http://localhost:8000/docs (GUI)
+
+4. Management commands
+    
+    ```bash
+    # View logs
+    docker-compose logs -f
+
+    # Stop services
+    docker-compose down
+
+    # Full cleanup (including volumes)
+    docker-compose down -v
+    ```
+
 ## API Endpoints
 
 ### Authentication
@@ -65,6 +101,7 @@ A secure and efficient backend service providing JWT-based authentication with F
       "name": "string",
       "email": "string",
       "password": "string"
+      "role": "string"
     }
     ```
 
