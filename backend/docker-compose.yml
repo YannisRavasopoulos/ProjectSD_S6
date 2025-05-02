@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: loop_postgres
+    environment:
+      POSTGRES_DB: loopDB
+      POSTGRES_USER: loop_app
+      POSTGRES_PASSWORD: kostasaggelos
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: loop_app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: "postgresql://loop_app:kostasaggelos@postgres:5432/loopDB"
+    volumes:
+      - .:/code
+
+volumes:
+  postgres_data:

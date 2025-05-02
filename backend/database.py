@@ -19,7 +19,7 @@ class RideType(enum.Enum):
     activity = "activity"
 
 # Database connection
-SQLALCHEMY_DATABASE_URL = "postgresql://user:password@localhost/dbname"
+SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:kostasaggelos@localhost:5432/loopDB"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
