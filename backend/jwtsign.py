@@ -2,8 +2,10 @@ import time
 import jwt
 import secrets
 import hashlib
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from database import get_db, User  # Import the database session and User model
 
 # Define schemas first
 class SignUpSchema(BaseModel):
@@ -19,8 +21,6 @@ class SignInSchema(BaseModel):
 JWT_SECRET = secrets.token_hex(32)
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION = 3600
-
-userlist = []
 
 def sign(email):
     payload = {
@@ -39,23 +39,25 @@ def decode(token):
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-def signup(name, email, password):
+def signup(name, email, password, db: Session = Depends(get_db)):
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    for user in userlist:
-        if user.email == email:
-            raise HTTPException(status_code=400, detail="Email already registered")
-    user = SignUpSchema(name=name, email=email, password=hashed_password)
-    userlist.append(user)
-    token = sign(user.email)
+    existing_user = db.query(User).filter(User.email == email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    new_user = User(name=name, email=email, hashed_password=hashed_password, role="carpooler")
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    token = sign(new_user.email)
     return token
 
-def signin(email, password):
+def signin(email, password, db: Session = Depends(get_db)):
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    for user in userlist:
-        if user.email == email:
-            if user.password == hashed_password:
-                token = sign(user.email)
-                return token
-            else:
-                raise HTTPException(status_code=400, detail="Incorrect password")
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        if user.hashed_password == hashed_password:
+            token = sign(user.email)
+            return token
+        else:
+            raise HTTPException(status_code=400, detail="Incorrect password")
     raise HTTPException(status_code=400, detail="Email not registered")
