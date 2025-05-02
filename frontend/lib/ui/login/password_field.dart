@@ -4,8 +4,7 @@ class PasswordField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final TextEditingController? controller;
 
-  const PasswordField({Key? key, this.onChanged, this.controller})
-    : super(key: key);
+  const PasswordField({super.key, this.onChanged, this.controller});
 
   @override
   _PasswordFieldState createState() => _PasswordFieldState();

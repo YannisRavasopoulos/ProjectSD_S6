@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:frontend/config.dart';
 import 'package:frontend/data/json_web_token.dart';
-import 'package:frontend/data/user.dart';
+import 'package:frontend/data/model/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
