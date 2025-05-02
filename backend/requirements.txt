@@ -2,3 +2,4 @@ fastapi
 pydantic
 pyjwt
 uvicorn
+SQLAlchemy==2.0.40
