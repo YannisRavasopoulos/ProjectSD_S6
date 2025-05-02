@@ -18,13 +18,7 @@ class LoadingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: isLoading ? null : onPressed,
-      style:
-          style ??
-          FilledButton.styleFrom(
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 16),
-          ),
+      style: style,
       child: SizedBox(
         height: 24, // Fixed height for both CircularProgressIndicator and Text
         child: Center(

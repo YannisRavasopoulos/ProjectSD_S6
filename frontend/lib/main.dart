@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/login/forgot_password_view.dart';
 import 'package:frontend/ui/login/login_view.dart';
+import 'package:frontend/ui/login/sign_up_view.dart';
 
 void main() {
   runApp(const LoopApp());
@@ -24,7 +25,7 @@ class LoopApp extends StatelessWidget {
         '/login': (context) => LoginView(),
         // '/home': (context) => HomeView(),
         '/forgot-password': (context) => ForgotPasswordView(),
-        // '/sign-up': (context) => SignUpView(),
+        '/sign-up': (context) => SignUpView(),
       },
     );
   }

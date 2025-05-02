@@ -15,15 +15,15 @@ class LoginView extends StatelessWidget {
     UserService(client: http.Client()),
   );
 
-  void onForgotPasswordPressed(BuildContext context) {
+  void _onForgotPasswordPressed(BuildContext context) {
     Navigator.pushNamed(context, '/forgot-password');
   }
 
-  void onSignUpPressed(BuildContext context) {
+  void _onSignUpPressed(BuildContext context) {
     Navigator.pushNamed(context, '/sign-up');
   }
 
-  void onLoginPressed(BuildContext context) async {
+  void _onLoginPressed(BuildContext context) async {
     final success = await viewModel.login();
     if (success) {
       Navigator.pushReplacementNamed(context, '/home');
@@ -64,7 +64,7 @@ class LoginView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () => onForgotPasswordPressed(context),
+                      onPressed: () => _onForgotPasswordPressed(context),
                       child: Text('Forgot your password?'),
                     ),
                   ],
@@ -74,7 +74,15 @@ class LoginView extends StatelessWidget {
                   width: 200,
                   child: LoadingButton(
                     isLoading: viewModel.isLoading,
-                    onPressed: () => onLoginPressed(context),
+                    onPressed: () => _onLoginPressed(context),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 64,
+                        vertical: 16,
+                      ),
+                    ),
                     child: Text('Sign In'),
                   ),
                 ),
@@ -84,7 +92,7 @@ class LoginView extends StatelessWidget {
                   children: [
                     Text("Don't have an account?"),
                     TextButton(
-                      onPressed: () => onSignUpPressed(context),
+                      onPressed: () => _onSignUpPressed(context),
                       child: Text(
                         "Sign Up",
                         style: TextStyle(decoration: TextDecoration.underline),
