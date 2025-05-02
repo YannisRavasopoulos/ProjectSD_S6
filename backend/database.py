@@ -4,7 +4,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSONB, ENUM, GEOGRAPHY
 import enum
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
 
 Base = declarative_base()
 
@@ -17,11 +18,25 @@ class RideType(enum.Enum):
     instaride = "instaride"
     activity = "activity"
 
-# USERS
+# Database connection
+SQLALCHEMY_DATABASE_URL = "postgresql://user:password@localhost/dbname"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# USERS (Updated with authentication fields)
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     name = Column(Text, nullable=False)
+    email = Column(String(255), unique=True, nullable=False)  # Added email
+    hashed_password = Column(String(255), nullable=False)  # Added password
     role = Column(ENUM(UserRole, name="user_role"), nullable=False)
 
 # VEHICLES
@@ -122,3 +137,6 @@ class ActivityRide(Base):
     __tablename__ = "activity_rides"
     activity_id = Column(Integer, ForeignKey("activities.id"), primary_key=True)
     ride_id = Column(Integer, ForeignKey("rides.id"), primary_key=True)
+
+
+Base.metadata.create_all(bind=engine)
