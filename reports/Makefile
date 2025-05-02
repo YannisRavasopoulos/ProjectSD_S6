@@ -20,10 +20,6 @@ clean:
 # 	latexmk --lualatex $<
 
 use-cases.pdf: report.md
-	pandoc $< -o $@
-	# pandoc $@ -o $@ --pdf-engine=lualatex
-	# TODO metadata
-	# latexmk --lualatex $<
-
+	pandoc $< -o $@ --pdf-engine=lualatex
 # domain-model.pdf: tex/domain-model.tex images/uml/domain-model.png
 # 	latexmk --lualatex $<
