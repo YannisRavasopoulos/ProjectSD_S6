@@ -1,0 +1,75 @@
+\hypertarget{edit-profile}{%
+\subsection{Edit Profile}\label{edit-profile}}
+
+\hypertarget{ux3c0ux3b5ux3c1ux3b9ux3b3ux3c1ux3b1ux3c6ux3ae}{%
+\subsubsection{Περιγραφή}\label{ux3c0ux3b5ux3c1ux3b9ux3b3ux3c1ux3b1ux3c6ux3ae}}
+
+Ο χρήστης επιθυμεί να ενημερώσει τα στοιχεία του προφίλ του.
+
+\hypertarget{ux3b2ux3b1ux3c3ux3b9ux3baux3ae-ux3c1ux3bfux3ae}{%
+\paragraph{Βασική
+Ροή}\label{ux3b2ux3b1ux3c3ux3b9ux3baux3ae-ux3c1ux3bfux3ae}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Ο χρήστης επιλέγει ``Profile'' στην οθόνη Account.
+\item
+  Το σύστημα ανακτά τα στοιχεία προφίλ του χρήστη και τα εμφανίζει στην
+  οθόνη Profile.
+\item
+  Ο χρήστης τροποποιεί κάποια στοιχεία στην οθόνη Profile.
+\item
+  Το σύστημα εμφανίζει τον διάλογο επιβεβαίωσης τροποποίησης.
+\item
+  Ο χρήστης επιλέγει ``Confirm'' στον διάλογο επιβεβαίωσης τροποποίησης.
+\item
+  Το σύστημα ελέγχει την απάντηση του χρήστη.
+\item
+  Το σύστημα επαληθεύει τα στοιχεία.
+\item
+  To σύστημα ενημερώνει τα στοιχεία προφίλ του χρήστη.
+\item
+  Το σύστημα εμφανίζει μήνυμα επιτυχίας στην οθόνη Account.
+\end{enumerate}
+
+\hypertarget{ux3b5ux3bdux3b1ux3bbux3bbux3b1ux3baux3c4ux3b9ux3baux3ae-ux3c1ux3bfux3ae-ux3b1ux3baux3cdux3c1ux3c9ux3c3ux3b7}{%
+\paragraph{Εναλλακτική Ροή:
+Ακύρωση}\label{ux3b5ux3bdux3b1ux3bbux3bbux3b1ux3baux3c4ux3b9ux3baux3ae-ux3c1ux3bfux3ae-ux3b1ux3baux3cdux3c1ux3c9ux3c3ux3b7}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Ο χρήστης επιλέγει ``Cancel'' στον διάλογο επιβεβαίωσης τροποποίησης.
+\item
+  Το σύστημα ελέγχει την απάντηση του χρήστη.
+\item
+  Τo σύστημα επιστρέφει στην οθόνη Account.
+\end{enumerate}
+
+\hypertarget{ux3b5ux3bdux3b1ux3bbux3bbux3b1ux3baux3c4ux3b9ux3baux3ae-ux3c1ux3bfux3ae-ux3b1ux3c0ux3bfux3c4ux3c5ux3c7ux3afux3b1-ux3b5ux3c0ux3b1ux3bbux3aeux3b8ux3b5ux3c5ux3c3ux3b7ux3c2}{%
+\paragraph{Εναλλακτική Ροή: Αποτυχία
+Επαλήθευσης}\label{ux3b5ux3bdux3b1ux3bbux3bbux3b1ux3baux3c4ux3b9ux3baux3ae-ux3c1ux3bfux3ae-ux3b1ux3c0ux3bfux3c4ux3c5ux3c7ux3afux3b1-ux3b5ux3c0ux3b1ux3bbux3aeux3b8ux3b5ux3c5ux3c3ux3b7ux3c2}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  Το σύστημα αποτυγχάνει να επαληθεύσει τα στοιχεία.
+\item
+  Το σύστημα εμφανίζει μήνυμα αποτυχίας στην οθόνη Profile.
+\end{enumerate}
+
+\hypertarget{ux3b1ux3bdux3acux3bbux3c5ux3c3ux3b7-ux3b5ux3c5ux3c1ux3c9ux3c3ux3c4ux3afux3b1ux3c2}{%
+\subsubsection{Ανάλυση
+Ευρωστίας}\label{ux3b1ux3bdux3acux3bbux3c5ux3c3ux3b7-ux3b5ux3c5ux3c1ux3c9ux3c3ux3c4ux3afux3b1ux3c2}}
+
+\begin{figure}
+\centering
+\includegraphics{./edit-profile-robustness.drawio.png}
+\caption{image}
+\end{figure}

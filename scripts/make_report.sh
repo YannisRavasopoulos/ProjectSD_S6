@@ -17,51 +17,8 @@ echo "# Περιπτώσεις Χρήσης" >> "$markdown_file"
 for use_case in "${use_cases[@]}"; do
     echo "Processing $use_case..."
 
-    description_file="reports/${use_case}-description.md"
-    robustness_file="reports/${use_case}-robustness.drawio.png"
-
-    # Convert use_case from dash-separated format to capitalized words
-    formatted_use_case=$(echo "$use_case" | sed -E 's/(\b|-)([a-z])/ \U\2/g')
-
-    echo "" >> "$markdown_file"
-    echo "##$formatted_use_case" >> "$markdown_file"
-    echo "" >> "$markdown_file"
-
-    #
-    # Description
-    #
-
-    echo "" >> "$markdown_file"
-    echo "### Περιγραφή" >> "$markdown_file"
-    echo "" >> "$markdown_file"
-
-    if [ -f "$description_file" ]; then
-        cat "$description_file" >> "$markdown_file"
-    else
-        echo "Δεν υπάρχει περιγραφή" >> "$markdown_file"
-    fi
-
-    echo "" >> "$markdown_file"
-    echo "\$\pagebreak\$" >> "$markdown_file"
-    echo "" >> "$markdown_file"
-
-    #
-    # Robustness
-    #
-
-    echo "" >> "$markdown_file"
-    echo "### Ανάλυση ευρωστίας" >> "$markdown_file"
-    echo "" >> "$markdown_file"
-
-    if [ -f "$robustness_file" ]; then
-        echo "![image]($robustness_file)" >> "$markdown_file"
-    else
-        echo "Δεν υπάρχει διάγραμμα ευρωστίας" >> "$markdown_file"
-    fi
-
-    echo "" >> "$markdown_file"
-    echo "\$\pagebreak\$" >> "$markdown_file"
-    echo "" >> "$markdown_file"
+    description_file="reports/use-cases/${use_case}-description.md"
+    robustness_file="reports/use-cases/${use_case}-robustness.drawio.png"
 done
 
 # Convert the Markdown file to PDF using pandoc
