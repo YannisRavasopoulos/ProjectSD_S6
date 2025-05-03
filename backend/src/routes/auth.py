@@ -6,7 +6,6 @@ from services.auth_service import AuthService
 
 router = APIRouter()
 
-
 class LoginRequest(BaseModel):
     email: str
     password: str

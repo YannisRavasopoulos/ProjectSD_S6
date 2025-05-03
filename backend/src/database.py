@@ -1,23 +1,26 @@
 from sqlalchemy import (
-    create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint,
-    CheckConstraint, Enum, JSON, TIMESTAMP, Table
+    create_engine, Column, Integer, Text, ForeignKey, CheckConstraint, TIMESTAMP, Column, Integer, Text,
+    Float, String, DateTime, func, ForeignKey, CheckConstraint
 )
 from sqlalchemy.dialects.postgresql import JSONB, ENUM
-from sqlalchemy import Column, Integer, String, Text, Float
-import enum
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+import enum
+import os
+import utils
 
 class Base(DeclarativeBase):
     __abstract__ = True
 
-# TODO: Database connection
-SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:password@postgres:5432/loop_db"
+# See docker-compose.yml
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 db = SessionLocal()
-
 
 # ENUMs
 class UserRole(enum.Enum):
@@ -27,6 +30,19 @@ class UserRole(enum.Enum):
 class RideType(enum.Enum):
     instaride = "instaride"
     activity = "activity"
+
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    name = Column(Text, nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    def verify_password(self, password: str) -> bool:
+        utils.verify_password(password, self.hashed_password)
+
 
 # VEHICLES
 class Vehicle(Base):
