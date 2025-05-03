@@ -41,7 +41,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     def verify_password(self, password: str) -> bool:
-        utils.verify_password(password, self.hashed_password)
+        return utils.verify_password(password, self.hashed_password)
 
 
 # VEHICLES
@@ -145,3 +145,18 @@ class ActivityRide(Base):
     ride_id = Column(Integer, ForeignKey("rides.id"), primary_key=True)
 
 Base.metadata.create_all(bind=engine)
+
+# TODO
+
+# Check if admin user already exists
+admin_exists = db.query(User).filter(User.email == "admin@loop.app").first()
+if not admin_exists:
+    admin_user = User()
+    admin_user.name = "admin"
+    admin_user.email = "admin@loop.app"
+    admin_user.hashed_password = utils.hash_password("admin")
+    db.add(admin_user)
+    db.commit()
+    print("Admin user created")
+else:
+    print("Admin user already exists")
