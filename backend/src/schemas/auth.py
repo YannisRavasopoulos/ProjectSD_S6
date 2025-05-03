@@ -1,8 +1,8 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel #, EmailStr
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: str # EmailStr
     password: str
 
 class LoginResponse(BaseModel):
-    jwt_token: str
+    token: str
