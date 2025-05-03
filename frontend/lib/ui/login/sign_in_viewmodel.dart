@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/service/authentication_service.dart';
 import 'package:frontend/data/service/user_service.dart';
 
-class LoginViewModel extends ChangeNotifier {
+class SignInViewModel extends ChangeNotifier {
   final AuthenticationService authenticationService;
   final UserService userService;
 
-  LoginViewModel(this.authenticationService, this.userService);
+  SignInViewModel(this.authenticationService, this.userService);
 
   String errorMessage = '';
   bool isLoading = false;

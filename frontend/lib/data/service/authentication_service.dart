@@ -5,26 +5,12 @@ import 'package:frontend/data/authentication_exception.dart';
 import 'package:frontend/data/json_web_token.dart';
 import 'package:http/http.dart' as http;
 
-/// This class is responsible for handling authentication-related tasks.
 class AuthenticationService {
   final http.Client client;
 
-  /// Creates an instance of [AuthenticationService] with an optional HTTP client.
-  /// If no client is provided, a new one will be created.
   AuthenticationService({http.Client? client})
     : client = client ?? http.Client();
 
-  /// Authenticates a user with their username (email) and password.
-  ///
-  /// Makes a POST request to the login endpoint with the provided credentials.
-  ///
-  /// Returns a [JsonWebToken] if authentication is successful.
-  ///
-  /// Throws an [AuthenticationException] if the login fails.
-  ///
-  /// Parameters:
-  /// - [username]: The user's email address
-  /// - [password]: The user's password
   Future<JsonWebToken> login(String username, String password) async {
     final response = await client.post(
       Uri.https(apiDomain, '/auth/login'),
@@ -39,16 +25,6 @@ class AuthenticationService {
     }
   }
 
-  /// Refreshes an authentication token.
-  ///
-  /// Makes a POST request to the refresh endpoint with the current token.
-  ///
-  /// Returns a new [JsonWebToken] if the refresh is successful.
-  ///
-  /// Throws an [AuthenticationException] if the token refresh fails.
-  ///
-  /// Parameters:
-  /// - [token]: The current JWT to refresh
   Future<JsonWebToken> refresh(JsonWebToken token) async {
     final response = await http.post(
       Uri.https(apiDomain, '/auth/refresh'),
@@ -62,14 +38,6 @@ class AuthenticationService {
     }
   }
 
-  /// Logs out a user by invalidating their token.
-  ///
-  /// Makes a POST request to the logout endpoint with the current token.
-  ///
-  /// Throws an [AuthenticationException] if the logout fails.
-  ///
-  /// Parameters:
-  /// - [token]: The JWT to invalidate
   Future<void> logout(JsonWebToken token) async {
     final response = await http.post(
       Uri.https(apiDomain, '/auth/logout'),

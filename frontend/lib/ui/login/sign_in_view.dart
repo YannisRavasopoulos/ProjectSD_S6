@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/service/authentication_service.dart';
 import 'package:frontend/data/service/user_service.dart';
 import 'package:frontend/ui/login/loading_button.dart';
-import 'package:frontend/ui/login/login_viewmodel.dart';
+import 'package:frontend/ui/login/sign_in_viewmodel.dart';
 import 'package:frontend/ui/login/password_field.dart';
 import 'package:frontend/ui/login/wrapper.dart';
 import 'package:http/http.dart' as http;
 
-class LoginView extends StatelessWidget {
-  LoginView({super.key});
+class SignInView extends StatelessWidget {
+  SignInView({super.key});
 
-  final LoginViewModel viewModel = LoginViewModel(
+  final SignInViewModel viewModel = SignInViewModel(
     AuthenticationService(client: http.Client()),
     UserService(client: http.Client()),
   );
@@ -75,14 +75,6 @@ class LoginView extends StatelessWidget {
                   child: LoadingButton(
                     isLoading: viewModel.isLoading,
                     onPressed: () => _onLoginPressed(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 64,
-                        vertical: 16,
-                      ),
-                    ),
                     child: Text('Sign In'),
                   ),
                 ),
