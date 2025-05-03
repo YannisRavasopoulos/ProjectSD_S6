@@ -35,9 +35,6 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: "postgresql://loop_user:loop_password@postgres:5433/loop_db"
-    volumes:
-      # Mount the current directory to the container
-      - .:/app
 
 volumes:
   loop_postgres_data:
