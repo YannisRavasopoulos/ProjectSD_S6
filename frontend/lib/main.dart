@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/service/authentication_service.dart';
 import 'package:frontend/data/service/user_service.dart';
+import 'package:frontend/ui/activities/activities_view.dart';
 import 'package:frontend/ui/forgot_password/forgot_password_view.dart';
+import 'package:frontend/ui/profile/profile_view.dart';
 import 'package:frontend/ui/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/sign_up/sign_up_viewmodel.dart';
+import 'package:frontend/ui/home/home_view.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -38,9 +41,11 @@ class LoopApp extends StatelessWidget {
       initialRoute: isLoggedIn ? '/home' : '/sign_in',
       routes: {
         '/sign_in': (context) => SignInView(viewModel: signInViewModel),
-        // '/home': (context) => HomeView(),
         '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
+        '/home': (context) => HomeView(),
+        '/activities': (context) => ActivitiesView(),
+        '/profile': (context) => ProfileView(),
       },
     );
   }

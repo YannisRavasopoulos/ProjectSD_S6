@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'shared.dart';
+import 'package:frontend/ui/shared_layout.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {

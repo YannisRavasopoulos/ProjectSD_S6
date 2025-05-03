@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'shared.dart';
+import 'package:frontend/ui/shared_layout.dart';
 
-class ActivitiesPage extends StatelessWidget {
-  const ActivitiesPage({super.key});
+class ActivitiesView extends StatelessWidget {
+  const ActivitiesView({super.key});
 
   @override
   Widget build(BuildContext context) {

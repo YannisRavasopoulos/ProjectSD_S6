@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'shared.dart';
+import 'package:frontend/ui/shared_layout.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfileView extends StatelessWidget {
+  const ProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
