@@ -5,3 +5,4 @@ uvicorn
 SQLAlchemy==2.0.40
 psycopg2-binary
 geoalchemy2
+passlib

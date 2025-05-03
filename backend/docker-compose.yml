@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: loop_password
     ports:
       # Expose PostgreSQL port
-      - "5433:5433"
+      - "5432:5432"
     volumes:
       # Use named volume for persistent data
       - loop_postgres_data:/var/lib/postgresql/data
@@ -34,7 +34,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: "postgresql://loop_user:loop_password@postgres:5433/loop_db"
+      DATABASE_URL: "postgresql://loop_user:loop_password@postgres:5432/loop_db"
 
 volumes:
   loop_postgres_data:

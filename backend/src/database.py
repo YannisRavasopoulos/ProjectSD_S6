@@ -11,7 +11,7 @@ class Base(DeclarativeBase):
     __abstract__ = True
 
 # TODO: Database connection
-SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:loop_password@postgres:5432/loop_db"
+SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:password@postgres:5432/loop_db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
