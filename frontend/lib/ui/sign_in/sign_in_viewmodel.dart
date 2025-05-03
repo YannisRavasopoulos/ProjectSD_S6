@@ -32,7 +32,7 @@ class SignInViewModel extends ChangeNotifier {
         return false;
       }
 
-      // TODO: authentication happens here
+      // TODO: authentication happens here, this is just a simulation
       await Future.delayed(const Duration(seconds: 2));
       final token = await authenticationService.login(email, password);
       final user = await userService.getUser(token);
