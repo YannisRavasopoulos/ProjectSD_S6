@@ -23,9 +23,10 @@ JWT_SECRET = secrets.token_hex(32)
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION = 3600
 
-def sign(email):
+def sign(email, user_id):
     payload = {
         "email": email,
+        "userId": user_id,
         "exp": time.time() + JWT_EXPIRATION
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
@@ -49,7 +50,7 @@ def signup(name, email, password, role, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    token = sign(new_user.email)
+    token = sign(new_user.email, new_user.id)
     return token
 
 def signin(email, password, db: Session = Depends(get_db)):
@@ -57,7 +58,7 @@ def signin(email, password, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == email).first()
     if user:
         if user.hashed_password == hashed_password:
-            token = sign(user.email)
+            token = sign(user.email, user.id)
             return token
         else:
             raise HTTPException(status_code=400, detail="Incorrect password")

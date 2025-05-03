@@ -100,7 +100,7 @@ A secure and efficient backend service providing JWT-based authentication with F
     {
       "name": "string",
       "email": "string",
-      "password": "string"
+      "password": "string",
       "role": "string"
     }
     ```
@@ -111,6 +111,31 @@ A secure and efficient backend service providing JWT-based authentication with F
     {
       "email": "string",
       "password": "string"
+    }
+    ```
+
+- `POST /auth/login` - Authenticate and get JWT token with userId in payload
+
+    ```json
+    {
+      "email": "string",
+      "password": "string"
+    }
+    ```
+
+    Response:
+    ```json
+    {
+      "token": "<jwt-token>"
+    }
+    ```
+    
+    JWT payload contains:
+    ```json
+    {
+      "userId": "<id>",
+      "email": "user@example.com",
+      "exp": 1620000000
     }
     ```
 

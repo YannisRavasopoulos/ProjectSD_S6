@@ -6,6 +6,8 @@ services:
       POSTGRES_DB: loopDB
       POSTGRES_USER: loop_app
       POSTGRES_PASSWORD: kostasaggelos
+    ports:
+      - "5433:5432"  # Add this line to expose PostgreSQL port
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
