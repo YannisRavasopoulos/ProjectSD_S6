@@ -1,5 +1,4 @@
-from fastapi import APIRouter, HTTPException
-from http import HTTPStatus
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 from services.auth_service import AuthService
@@ -23,21 +22,13 @@ class LogoutResponse(BaseModel):
 # Returns a JWT token on successful authentication.
 @router.post("/login", response_model=LoginResponse)
 async def login(request: LoginRequest):
-    try:
-        token = await AuthService.login(request.email, request.password)
-        return {
-            "token": token
-        }
-    except Exception as e:
-        # TODO: proper exception handling
-        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+    token = await AuthService.login(request.email, request.password)
+    return {
+        "token": token
+    }
 
 # Logout the user by invalidating the JWT token.
 # TODO
 @router.post("/logout", response_model=LogoutResponse)
 async def logout(request: LogoutRequest):
-    try:
-        await AuthService.logout()
-    except Exception as e:
-        # TODO: proper exception handling
-        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+    await AuthService.logout()
