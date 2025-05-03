@@ -8,6 +8,10 @@ import enum
 import os
 import utils
 
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 class Base(DeclarativeBase):
     __abstract__ = True
 
@@ -40,8 +44,21 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+    @staticmethod
+    def _hash_password(password: str) -> str:
+        return pwd_context.hash(password)
+
+    @staticmethod
+    def _verify_password(plain_password: str, hashed_password: str) -> bool:
+        return pwd_context.verify(plain_password, hashed_password)
+
+    def __init__(self, name: str, email: str, password: str):
+        self.name = name
+        self.email = email
+        self.hashed_password = User._hash_password(password)
+
     def verify_password(self, password: str) -> bool:
-        return utils.verify_password(password, self.hashed_password)
+        return User._verify_password(password, self.hashed_password)
 
 
 # VEHICLES
@@ -151,10 +168,7 @@ Base.metadata.create_all(bind=engine)
 # Check if admin user already exists
 admin_exists = db.query(User).filter(User.email == "admin@loop.app").first()
 if not admin_exists:
-    admin_user = User()
-    admin_user.name = "admin"
-    admin_user.email = "admin@loop.app"
-    admin_user.hashed_password = utils.hash_password("admin")
+    admin_user = User(name="admin", email="admin@loop.app", password="admin")
     db.add(admin_user)
     db.commit()
     print("Admin user created")
