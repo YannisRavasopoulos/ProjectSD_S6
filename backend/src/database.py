@@ -5,10 +5,19 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import JSONB, ENUM
 from sqlalchemy import Column, Integer, String, Text, Float
 import enum
-from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    __abstract__ = True
+
+# TODO: Database connection
+SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:loop_password@postgres:5432/loop_db"
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+db = SessionLocal()
+
 
 # ENUMs
 class UserRole(enum.Enum):
@@ -18,27 +27,6 @@ class UserRole(enum.Enum):
 class RideType(enum.Enum):
     instaride = "instaride"
     activity = "activity"
-
-# Database connection
-SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:kostasaggelos@postgres:5432/loopDB"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-# USERS (Updated with authentication fields)
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    name = Column(Text, nullable=False)
-    email = Column(String(255), unique=True, nullable=False)  # Added email
-    hashed_password = Column(String(255), nullable=False)  # Added password
-    role = Column(ENUM(UserRole, name="user_role"), nullable=False)
 
 # VEHICLES
 class Vehicle(Base):
@@ -139,6 +127,5 @@ class ActivityRide(Base):
     __tablename__ = "activity_rides"
     activity_id = Column(Integer, ForeignKey("activities.id"), primary_key=True)
     ride_id = Column(Integer, ForeignKey("rides.id"), primary_key=True)
-
 
 Base.metadata.create_all(bind=engine)

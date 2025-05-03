@@ -1,12 +1,16 @@
+from database import db, User
+from utils import encode_jwt
+
 class AuthService:
     @staticmethod
     async def login(email: str, password: str) -> str:
-        user = await UserRepository.get_user_by_email(email)
-        if not user or not verify_password(password, user.hashed_password):
-            raise Exception("Invalid credentials")
-        return generate_jwt({"user_id": user.id})
+        user = db.query(User).filter(User.email == email).first()
 
-    @staticmethod
-    async def register(email: str, password: str):
-        hashed_password = hash_password(password)
-        await UserRepository.create_user(email, hashed_password)
+        if not user:
+            raise Exception("User not found")
+
+        if not user.verify_password(password):
+            raise Exception("Invalid password")
+
+        token = encode_jwt({"user_id": user.id})
+        return token
