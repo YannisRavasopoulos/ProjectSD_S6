@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: Loop Carpooling API
+  description: API documentation for the Loop Carpooling app.
+  version: 1.0.0
+servers:
+  - url: https://api.loop.app
+    description: Production server
+  - url: http://localhost:3000
+    description: Development server
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticate a user and return a token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          description: Invalid input
+        '401':
+          description: Invalid email or password
+        '404':
+          description: User does not exist
+  /auth/register:
+    post:
+      summary: User registration
+      description: Register a new user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Invalid input
+        '409':
+          description: User already exists
