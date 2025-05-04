@@ -1,14 +1,30 @@
 from sqlalchemy import (
-    create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint,
-    CheckConstraint, Enum, JSON, TIMESTAMP, Table
+    create_engine, Column, Integer, Text, ForeignKey, CheckConstraint, TIMESTAMP, Column, Integer, Text,
+    Float, String, DateTime, func, ForeignKey, CheckConstraint
 )
 from sqlalchemy.dialects.postgresql import JSONB, ENUM
-from sqlalchemy import Column, Integer, String, Text, Float
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 import enum
-from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy.exc import SQLAlchemyError
+import os
+import utils
 
-Base = declarative_base()
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+class Base(DeclarativeBase):
+    __abstract__ = True
+
+# See docker-compose.yml
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+db = SessionLocal()
 
 # ENUMs
 class UserRole(enum.Enum):
@@ -19,26 +35,31 @@ class RideType(enum.Enum):
     instaride = "instaride"
     activity = "activity"
 
-# Database connection
-SQLALCHEMY_DATABASE_URL = "postgresql://loop_app:kostasaggelos@postgres:5432/loopDB"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-# USERS (Updated with authentication fields)
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     name = Column(Text, nullable=False)
-    email = Column(String(255), unique=True, nullable=False)  # Added email
-    hashed_password = Column(String(255), nullable=False)  # Added password
-    role = Column(ENUM(UserRole, name="user_role"), nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    @staticmethod
+    def _hash_password(password: str) -> str:
+        return pwd_context.hash(password)
+
+    @staticmethod
+    def _verify_password(plain_password: str, hashed_password: str) -> bool:
+        return pwd_context.verify(plain_password, hashed_password)
+
+    def __init__(self, name: str, email: str, password: str):
+        self.name = name
+        self.email = email
+        self.hashed_password = User._hash_password(password)
+
+    def verify_password(self, password: str) -> bool:
+        return User._verify_password(password, self.hashed_password)
+
 
 # VEHICLES
 class Vehicle(Base):
@@ -140,5 +161,16 @@ class ActivityRide(Base):
     activity_id = Column(Integer, ForeignKey("activities.id"), primary_key=True)
     ride_id = Column(Integer, ForeignKey("rides.id"), primary_key=True)
 
-
 Base.metadata.create_all(bind=engine)
+
+# TODO
+
+# Check if admin user already exists
+admin_exists = db.query(User).filter(User.email == "admin@loop.app").first()
+if not admin_exists:
+    admin_user = User(name="admin", email="admin@loop.app", password="admin")
+    db.add(admin_user)
+    db.commit()
+    print("Admin user created")
+else:
+    print("Admin user already exists")

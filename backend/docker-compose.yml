@@ -1,34 +1,40 @@
 services:
+  # DB setup
   postgres:
-    image: postgis/postgis:13-3.3  # Use PostGIS image instead of plain PostgreSQL
+    # Use PostGIS image instead of plain PostgreSQL for geospatial data
+    image: postgis/postgis:13-3.3
     container_name: loop_postgres
     environment:
-      POSTGRES_DB: loopDB
-      POSTGRES_USER: loop_app
-      POSTGRES_PASSWORD: kostasaggelos
+      # DB setup
+      POSTGRES_DB: loop_db
+      POSTGRES_USER: loop_user
+      POSTGRES_PASSWORD: loop_password
     ports:
-      - "5433:5432"  # Add this line to expose PostgreSQL port
+      # Expose PostgreSQL port
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # Use named volume for persistent data
+      - loop_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U loop_app -d loopDB"]
+      # Check if PostgreSQL is ready
+      test: ["CMD-SHELL", "pg_isready -U loop_user -d loop_db"]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 10s
 
+  # App setup
   app:
+    # Use the Dockerfile
     build: .
-    container_name: loop_app
+    container_name: loop_python
     ports:
       - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: "postgresql://loop_app:kostasaggelos@postgres:5432/loopDB"
-    volumes:
-      - .:/code
+      DATABASE_URL: "postgresql://loop_user:loop_password@postgres:5432/loop_db"
 
 volumes:
-  postgres_data:
+  loop_postgres_data:

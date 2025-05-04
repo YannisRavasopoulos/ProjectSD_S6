@@ -2,14 +2,25 @@
 
 A secure and efficient backend service providing JWT-based authentication with FastAPI. This API includes user registration, authentication, and token validation functionality.
 
+---
+
 ## File Structure
 
     backend/
-    ├── main.py            # FastAPI application and route definitions
-    ├── jwtsign.py         # JWT token generation and validation logic
-    ├── jwtvalidate.py     # Bearer token authentication middleware
-    ├── requirements.txt   # Python dependencies
-    └── README.md          # This documentation
+    ├── src/
+    │   ├── main.py            # FastAPI application and route definitions
+    │   ├── middleware/
+    │   │   └── jwt_bearer.py  # Bearer token authentication middleware
+    │   ├── routes/
+    │   │   └── auth.py        # Authentication routes
+    │   ├── utils/
+    │   │   └── utils.py   # JWT token generation and validation logic
+    ├── requirements.txt       # Python dependencies
+    ├── Dockerfile             # Dockerfile for containerizing the app
+    ├── docker-compose.yml     # Docker Compose configuration
+    └── README.md              # This documentation
+
+---
 
 ## Key Features
 
@@ -21,170 +32,133 @@ A secure and efficient backend service providing JWT-based authentication with F
 - Containerized PostgreSQL database
 - Dockerized application environment
 
+---
+
 ## Installation & Setup
 
-1. Clone the repository (if you haven't already)
+### Local Development
 
-    ```bash
-    git clone <repository-url>
-    cd backend
-    ```
+1. Set up a virtual environment (recommended):
 
-2. Set up a virtual environment (recommended)
+   ```bash
+   python -m venv venv
+   source venv/bin/activate
+   ```
 
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows use: venv\Scripts\activate
-    ```
+2. Install dependencies:
 
-3. Install dependencies
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+3. Run the development server:
 
-4. Run the development server
+   ```bash
+   uvicorn main:app --reload
+   ```
 
-    ```bash
-    uvicorn main:app --reload
-    ```
+4. When finished, deactivate the virtual environment:
 
-5. When finished, deactivate the virtual environment
+   ```bash
+   deactivate
+   ```
 
-    ```bash
-    deactivate
-    ```
+---
 
-## Docker Setup (Recommended)
+### Docker Setup (Recommended)
 
-### Prerequisites
-- Docker Engine
-- Docker Compose
-
-1. Clone the repository
-
-    ```bash
-    git clone <repository-url>
-    cd backend
-    ```
-
-2. Start the service
-
-    ```bash
-    docker-compose up -d --build
-    ```
-
-3. Access the API 
-    Interctive docs: http://localhost:8000/docs (GUI)
-
-4. Management commands
-    
-    ```bash
-    # View logs
-    docker-compose logs -f
-
-    # Stop services
-    docker-compose down
-
-    # Full cleanup (including volumes)
-    docker-compose down -v
-    ```
+```bash
+docker rm loop_python loop_postgres
+docker-compose build
+docker-compose up
+```
 
 ## API Endpoints
 
 ### Authentication
 
-- `POST /signup` - Register a new user
+- `POST /users` - Create a new user
 
-    ```json
-    {
-      "name": "string",
-      "email": "string",
-      "password": "string",
-      "role": "string"
-    }
-    ```
+  Request:
 
-- `POST /signin` - Authenticate and get JWT token
+  ```json
+  {
+    "name": "string",
+    "email": "string",
+    "password": "string"
+  }
+  ```
 
-    ```json
-    {
-      "email": "string",
-      "password": "string"
-    }
-    ```
+- `POST /auth/login` - Authenticate and get JWT token
 
-- `POST /auth/login` - Authenticate and get JWT token with userId in payload
+  Request:
 
-    ```json
-    {
-      "email": "string",
-      "password": "string"
-    }
-    ```
+  ```json
+  {
+    "email": "<email>",
+    "password": "<password>"
+  }
+  ```
 
-    Response:
-    ```json
-    {
-      "token": "<jwt-token>"
-    }
-    ```
-    
-    JWT payload contains:
-    ```json
-    {
-      "userId": "<id>",
-      "email": "user@example.com",
-      "exp": 1620000000
-    }
-    ```
+  Response:
+
+  ```json
+  {
+    "token": "<jwt-token>"
+  }
+  ```
+
+  JWT payload contains:
+
+  ```json
+  {
+    "user_id": "<id>",
+    "iat": 1620000000,
+    "exp": 1620000000
+  }
+  ```
 
 ### Protected Routes
 
 - `POST /secure` - Test endpoint requiring valid JWT
 
-    Requires Authorization: Bearer <token> header
+  Requires `Authorization: Bearer <token>` header.
+
+---
 
 ## Development Workflow
 
 1. Activate virtual environment:
 
-    ```bash
-    source venv/bin/activate
-    ```
+   ```bash
+   source venv/bin/activate
+   ```
 
 2. Start the development server:
 
-    ```bash
-    uvicorn main:app --reload
-    ```
+   ```bash
+   uvicorn src.main:app --reload
+   ```
 
 3. The API will be available at:
 
-    http://localhost:8000
+   [http://localhost:8000](http://localhost:8000)
 
 4. Access interactive documentation at:
 
-    http://localhost:8000/docs
+   [http://localhost:8000/docs](http://localhost:8000/docs)
 
 5. When done working:
 
-    ```bash
-    deactivate
-    ```
+   ```bash
+   deactivate
+   ```
 
-## Dependencies
-
-- Python 3.7+
-- FastAPI
-- PyJWT
-- Uvicorn
-
-All dependencies are listed in requirements.txt and will be installed automatically with `pip install -r requirements.txt`.
+---
 
 ## Security Notes
 
 - Passwords are hashed before storage
-- JWT tokens expire after 1 hour
+- JWT tokens expire after 2 hours
 - Always use HTTPS in production
-- The JWT secret is randomly generated on each startup (for development)
+- The JWT secret should be stored securely (e.g., in environment variables)
