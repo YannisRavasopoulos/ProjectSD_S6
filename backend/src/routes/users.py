@@ -33,7 +33,7 @@ async def get_user(id: int, payload = Depends(JWTBearer())):
 
 @router.post("/", response_model=CreateUserResponse)
 async def create_user(request: CreateUserRequest):
-    id = await UserService.create_user(request.name, request.email, request.password)
+    token = await UserService.create_user(request.name, request.email, request.password)
     return {
-        "id": id
+        "token": token
     }

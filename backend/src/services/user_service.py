@@ -1,4 +1,5 @@
 from database import db, User
+from utils import encode_jwt
 from fastapi import HTTPException, status
 
 class UserService:
@@ -16,7 +17,8 @@ class UserService:
         db.add(user)
         db.commit()
         db.refresh(user)
-        return user.id
+        token = encode_jwt({"userId": user.id})
+        return token
 
     @staticmethod
     async def get_user(actor_id, user_id: int) -> User:
