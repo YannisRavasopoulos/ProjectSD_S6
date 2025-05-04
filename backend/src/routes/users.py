@@ -17,7 +17,7 @@ class CreateUserRequest(BaseModel):
 
 
 class CreateUserResponse(BaseModel):
-    pass
+    id: int
 
 
 router = APIRouter()
@@ -33,7 +33,7 @@ async def get_user(id: int, payload = Depends(JWTBearer())):
 
 @router.post("/", response_model=CreateUserResponse)
 async def create_user(request: CreateUserRequest):
-    token = await UserService.create_user(request.name, request.email, request.password)
+    id = await UserService.create_user(request.name, request.email, request.password)
     return {
-        "token": token
+        "id": id
     }
