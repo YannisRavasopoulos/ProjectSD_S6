@@ -22,6 +22,11 @@ class CreateUserResponse(BaseModel):
 class DeleteUserResponse(BaseModel):
     message: str
 
+class UpdateUserRequest(BaseModel):
+    name: str
+    email: str
+    password: str | None = None
+
 router = APIRouter()
 
 @router.get("/{id}", response_model=GetUserResponse)
@@ -46,4 +51,13 @@ async def delete_user(id: int, payload = Depends(JWTBearer())):
     await UserService.delete_user(payload["user_id"], id)
     return {
         "message": "User deleted successfully"
+    }
+
+@router.put("/{id}", response_model=GetUserResponse)
+async def update_user(id: int, request: UpdateUserRequest, payload = Depends(JWTBearer())):
+    user_data = await UserService.update_user(payload["user_id"], id, request.name, request.email, request.password)
+    return {
+        "id": user_data.id,
+        "name": user_data.name,
+        "email": user_data.email
     }

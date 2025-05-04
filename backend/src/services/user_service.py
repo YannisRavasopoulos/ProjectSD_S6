@@ -52,3 +52,36 @@ class UserService:
 
         db.delete(user)
         db.commit()
+
+    @staticmethod
+    async def update_user(actor_id: int, user_id: int, name: str, email: str, password: str | None) -> User:
+        if actor_id != user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission to update this user"
+            )
+
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+
+        # Check when email is being changed if it's already taken
+        if email != user.email:
+            existing_user = db.query(User).filter(User.email == email).first()
+            if existing_user:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Email already taken"
+                )
+
+        user.name = name
+        user.email = email
+        if password:
+            user.password = password
+
+        db.commit()
+        db.refresh(user)
+        return user
