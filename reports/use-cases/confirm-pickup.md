@@ -15,6 +15,8 @@
 
 #### Εναλλακτική Ροή
 
+TODO
+
 ### Ανάλυση Ευρωστίας
 
 ![image](./confirm-pickup-robustness.drawio.png)
