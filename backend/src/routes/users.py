@@ -19,6 +19,8 @@ class CreateUserRequest(BaseModel):
 class CreateUserResponse(BaseModel):
     id: int
 
+class DeleteUserResponse(BaseModel):
+    message: str
 
 router = APIRouter()
 
@@ -36,4 +38,12 @@ async def create_user(request: CreateUserRequest):
     id = await UserService.create_user(request.name, request.email, request.password)
     return {
         "id": id
+    }
+
+
+@router.delete("/{id}", response_model=DeleteUserResponse)
+async def delete_user(id: int, payload = Depends(JWTBearer())):
+    await UserService.delete_user(payload["user_id"], id)
+    return {
+        "message": "User deleted successfully"
     }

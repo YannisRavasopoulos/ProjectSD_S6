@@ -35,3 +35,20 @@ class UserService:
             )
 
         return user
+    @staticmethod
+    async def delete_user(actor_id: int, user_id: int) -> None:
+        if actor_id != user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission to delete this user"
+            )
+
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+
+        db.delete(user)
+        db.commit()
