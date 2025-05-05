@@ -39,16 +39,15 @@ class UserService:
 
     @staticmethod
     async def delete_user(actor_id: int, user_id: int) -> None:
-        user = UserService.get_user(actor_id, user_id)
+        user = await UserService.get_user(actor_id, user_id)
         db.delete(user)
         db.commit()
 
     @staticmethod
     async def update_user(actor_id: int, user_id: int, name: str, email: str, password: str | None) -> User:
-        user = UserService.get_user(actor_id, user_id)
+        user = await UserService.get_user(actor_id, user_id)
 
-        # Check if the email is being changed to an already existing email
-        if email != user.email and db.query(User).filter(User.email == email).first():
+        if not user.can_have_email(email):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Email already taken"

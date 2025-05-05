@@ -45,21 +45,16 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    @staticmethod
-    def _hash_password(password: str) -> str:
-        return pwd_context.hash(password)
-
-    @staticmethod
-    def _verify_password(plain_password: str, hashed_password: str) -> bool:
-        return pwd_context.verify(plain_password, hashed_password)
+    def can_have_email(self, new_email: str) -> bool:
+        return self.email == new_email or db.query(User).filter(User.email == new_email).first() is None
 
     def __init__(self, name: str, email: str, password: str):
         self.name = name
         self.email = email
-        self.hashed_password = User._hash_password(password)
+        self.hashed_password = pwd_context.hash(password)
 
     def verify_password(self, password: str) -> bool:
-        return User._verify_password(password, self.hashed_password)
+        return pwd_context.verify(password, self.hashed_password)
 
 
 class Vehicle(Base):
