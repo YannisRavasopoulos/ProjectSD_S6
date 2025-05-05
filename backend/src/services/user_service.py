@@ -39,45 +39,20 @@ class UserService:
 
     @staticmethod
     async def delete_user(actor_id: int, user_id: int) -> None:
-        if actor_id != user_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You do not have permission to delete this user"
-            )
-
-        user = db.query(User).filter(User.id == user_id).first()
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
-            )
-
+        user = UserService.get_user(actor_id, user_id)
         db.delete(user)
         db.commit()
 
     @staticmethod
     async def update_user(actor_id: int, user_id: int, name: str, email: str, password: str | None) -> User:
-        if actor_id != user_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You do not have permission to update this user"
-            )
+        user = UserService.get_user(actor_id, user_id)
 
-        user = db.query(User).filter(User.id == user_id).first()
-        if not user:
+        # Check if the email is being changed to an already existing email
+        if email != user.email and db.query(User).filter(User.email == email).first():
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already taken"
             )
-
-        # Check when email is being changed if it's already taken
-        if email != user.email:
-            existing_user = db.query(User).filter(User.email == email).first()
-            if existing_user:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Email already taken"
-                )
 
         user.name = name
         user.email = email
