@@ -11,7 +11,7 @@ class UserService {
 
   Future<User> getUser(JsonWebToken token) async {
     final response = await client.get(
-      Uri.https(apiDomain, '/user/${token.userId}'),
+      Uri.https(apiDomain, '/users/${token.userId}'),
       headers: token.makeHeaders(),
     );
 
