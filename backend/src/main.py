@@ -4,17 +4,12 @@ from routes import auth, users, rides, locations
 
 app = FastAPI()
 
-# Include /auth routes
+# Add tags for grouping endpoints in the OpenAPI documentation.
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
-
-# Include /users routes with tag
 app.include_router(users.router, prefix="/users", tags=["Users"])
-
-# Include /locations routes with tag
 app.include_router(locations.router, prefix="/locations", tags=["Locations"])
-
-# Include /rides routes with tag
 app.include_router(rides.router, prefix="/rides", tags=["Rides"])
+
 
 # Protected endpoint requiring JWT authentication.
 # Validates the authorization bearer token in the header.

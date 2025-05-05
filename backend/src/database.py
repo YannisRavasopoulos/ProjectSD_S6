@@ -1,3 +1,5 @@
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 from sqlalchemy import (
     create_engine, Column, Integer, Text, ForeignKey, CheckConstraint, TIMESTAMP, Column, Integer, Text,
     Float, String, DateTime, func, ForeignKey, CheckConstraint
@@ -6,30 +8,29 @@ from sqlalchemy.dialects.postgresql import JSONB, ENUM
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 import enum
 import os
-import utils
-
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 class Base(DeclarativeBase):
     __abstract__ = True
+
 
 # See docker-compose.yml
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 db = SessionLocal()
 
-# ENUMs
+
 class UserRole(enum.Enum):
     driver = "driver"
     carpooler = "carpooler"
+
 
 class RideType(enum.Enum):
     instaride = "instaride"
@@ -61,16 +62,16 @@ class User(Base):
         return User._verify_password(password, self.hashed_password)
 
 
-# VEHICLES
 class Vehicle(Base):
     __tablename__ = "vehicles"
     id = Column(Integer, primary_key=True)
-    driver_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+    driver_id = Column(Integer, ForeignKey("users.id"),
+                       unique=True, nullable=False)
     model = Column(Text, nullable=False)
     license_plate = Column(Text, unique=True, nullable=False)
     capacity = Column(Integer, CheckConstraint("capacity > 0"), nullable=False)
 
-# LOCATIONS
+
 class Location(Base):
     __tablename__ = "locations"
     id = Column(Integer, primary_key=True)
@@ -78,14 +79,14 @@ class Location(Base):
     latitude = Column(Float)  # Stores latitude value
     longitude = Column(Float)  # Stores longitude value
 
-# ROUTES
+
 class Route(Base):
     __tablename__ = "routes"
     id = Column(Integer, primary_key=True)
     road_graph = Column(JSONB, nullable=False)
     driver_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
-# RIDES
+
 class Ride(Base):
     __tablename__ = "rides"
     id = Column(Integer, primary_key=True)
@@ -95,19 +96,19 @@ class Ride(Base):
     destination_location_id = Column(Integer, ForeignKey("locations.id"))
     type = Column(ENUM(RideType, name="ride_type"), nullable=False)
 
-# RIDE_OFFERS
+
 class RideOffer(Base):
     __tablename__ = "ride_offers"
     driver_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     ride_id = Column(Integer, ForeignKey("rides.id"), primary_key=True)
 
-# RIDE_REQUESTS
+
 class RideRequest(Base):
     __tablename__ = "ride_requests"
     carpooler_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     ride_id = Column(Integer, ForeignKey("rides.id"), primary_key=True)
 
-# PICKUPS
+
 class Pickup(Base):
     __tablename__ = "pickups"
     id = Column(Integer, primary_key=True)
@@ -116,7 +117,7 @@ class Pickup(Base):
     driver_id = Column(Integer, ForeignKey("users.id"))
     carpooler_id = Column(Integer, ForeignKey("users.id"))
 
-# RATINGS
+
 class Rating(Base):
     __tablename__ = "ratings"
     id = Column(Integer, primary_key=True)
@@ -125,7 +126,7 @@ class Rating(Base):
     stars = Column(Integer, CheckConstraint("stars BETWEEN 1 AND 5"))
     comment = Column(Text)
 
-# REPORTS
+
 class Report(Base):
     __tablename__ = "reports"
     id = Column(Integer, primary_key=True)
@@ -134,20 +135,20 @@ class Report(Base):
     reason = Column(Text, nullable=False)
     description = Column(Text)
 
-# REWARDS
+
 class Reward(Base):
     __tablename__ = "rewards"
     id = Column(Integer, primary_key=True)
     type = Column(Text)
     description = Column(Text)
 
-# USER_REWARDS
+
 class UserReward(Base):
     __tablename__ = "user_rewards"
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     reward_id = Column(Integer, ForeignKey("rewards.id"), primary_key=True)
 
-# ACTIVITIES
+
 class Activity(Base):
     __tablename__ = "activities"
     id = Column(Integer, primary_key=True)
@@ -155,11 +156,13 @@ class Activity(Base):
     description = Column(Text)
     scheduled_time = Column(TIMESTAMP)
 
-# ACTIVITY_RIDES
+
 class ActivityRide(Base):
     __tablename__ = "activity_rides"
-    activity_id = Column(Integer, ForeignKey("activities.id"), primary_key=True)
+    activity_id = Column(Integer, ForeignKey(
+        "activities.id"), primary_key=True)
     ride_id = Column(Integer, ForeignKey("rides.id"), primary_key=True)
+
 
 Base.metadata.create_all(bind=engine)
 
