@@ -3,7 +3,7 @@ import 'package:frontend/ui/loading_button.dart';
 import 'package:frontend/ui/sign_up/sign_up_viewmodel.dart';
 
 class SignUpView extends StatelessWidget {
-  SignUpView({super.key, required SignUpViewModel viewModel})
+  const SignUpView({super.key, required SignUpViewModel viewModel})
     : _viewModel = viewModel;
 
   final SignUpViewModel _viewModel;
