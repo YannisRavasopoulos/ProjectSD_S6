@@ -10,23 +10,23 @@ router = APIRouter()
 
 # Request Models
 class CreateRideRequest(BaseModel):
-    arrival_time: datetime            # When the ride should arrive at destination
-    destination: str                  # Text description of the destination
-    origin_location_id: int           # ID of the pickup location
-    destination_location_id: int      # ID of the dropoff location
-    type: str                         # Ride type: "instaride" or "activity"
+    arrival_time: datetime            
+    destination: str                  
+    origin_location_id: int           
+    destination_location_id: int      
+    type: str                         
 
 # Response Models
 class CreateRideResponse(BaseModel):
-    id: int                           # ID of the created ride
+    id: int                           
 
 class GetRideResponse(BaseModel):
-    id: int                           # ID of the ride
-    arrival_time: datetime            # When the ride should arrive at destination
-    destination: str                  # Text description of the destination
-    origin_location_id: int           # ID of the pickup location
-    destination_location_id: int      # ID of the dropoff location
-    type: str                         # Ride type: "instaride" or "activity"
+    id: int                           
+    arrival_time: datetime            
+    destination: str                  
+    origin_location_id: int           
+    destination_location_id: int      
+    type: str           
 
 # Create Ride
 @router.post("/", response_model=CreateRideResponse)

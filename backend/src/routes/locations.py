@@ -7,19 +7,19 @@ router = APIRouter()
 
 # Request Models
 class CreateLocationRequest(BaseModel):
-    address: str      # Street address or descriptive location
-    latitude: float   # Geographic latitude coordinate
-    longitude: float  # Geographic longitude coordinate
+    address: str      
+    latitude: float  
+    longitude: float  
 
 # Response Models
 class CreateLocationResponse(BaseModel):
-    id: int  # Database ID of the created location
+    id: int  
 
 class GetLocationResponse(BaseModel):
-    id: int           # Database ID of the location
-    address: str      # Street address or descriptive location
-    latitude: float   # Geographic latitude coordinate
-    longitude: float  # Geographic longitude coordinate
+    id: int           
+    address: str      
+    latitude: float   
+    longitude: float  
 
 # Create Location
 @router.post("/", response_model=CreateLocationResponse)
