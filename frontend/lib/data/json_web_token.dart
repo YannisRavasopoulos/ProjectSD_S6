@@ -22,6 +22,6 @@ class JsonWebToken {
   JsonWebToken.fromJson(Map<String, dynamic> json) : this(json['token']);
 
   Map<String, String> makeHeaders() {
-    return {'Authorization:': 'Bearer $token'};
+    return {'Authorization': 'Bearer $token'};
   }
 }

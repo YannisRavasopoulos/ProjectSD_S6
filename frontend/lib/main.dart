@@ -15,15 +15,32 @@ void main() {
   runApp(LoopApp());
 }
 
+// This is a simple proxy client that changes the port of the request, and https to http
+class ProxyClient extends http.BaseClient {
+  final http.Client _inner = http.Client();
+
+  ProxyClient();
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    var uri = request.url;
+    var newUri = uri.replace(port: 8000, scheme: 'http');
+    var modifiedRequest = http.Request(request.method, newUri);
+    modifiedRequest.headers.addAll(request.headers);
+    modifiedRequest.body = request is http.Request ? request.body : "";
+    return _inner.send(modifiedRequest);
+  }
+}
+
 class LoopApp extends StatelessWidget {
   LoopApp({super.key});
 
   // TODO
   final bool isLoggedIn = false;
 
-  final SignInViewModel signInViewModel = SignInViewModel(
-    AuthenticationService(client: http.Client()),
-    UserService(client: http.Client()),
+  SignInViewModel signInViewModel = SignInViewModel(
+    AuthenticationService(client: ProxyClient()),
+    UserService(client: ProxyClient()),
   );
 
   final SignUpViewModel signUpViewModel = SignUpViewModel(
