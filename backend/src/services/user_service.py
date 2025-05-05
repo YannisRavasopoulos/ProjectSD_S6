@@ -1,6 +1,7 @@
 from database import db, User
 from fastapi import HTTPException, status
 
+
 class UserService:
     @staticmethod
     async def create_user(name: str, email: str, password: str) -> int:
@@ -35,6 +36,7 @@ class UserService:
             )
 
         return user
+
     @staticmethod
     async def delete_user(actor_id: int, user_id: int) -> None:
         if actor_id != user_id:
@@ -80,7 +82,7 @@ class UserService:
         user.name = name
         user.email = email
         if password:
-            user.password = password
+            user.hashed_password = user._hash_password(password)
 
         db.commit()
         db.refresh(user)
