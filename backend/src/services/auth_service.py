@@ -1,6 +1,9 @@
 from database import db, User
 from utils import encode_jwt
 from fastapi import HTTPException, status
+from database import db, User
+from fastapi import HTTPException, status
+import utils 
 
 class AuthService:
     @staticmethod
@@ -19,5 +22,8 @@ class AuthService:
                 detail="Invalid password"
             )
 
-        token = encode_jwt({"user_id": user.id})
-        return token
+        # Generate both tokens
+        tokens = utils.create_tokens(user.id)
+        
+        # Return just the access token for backward compatibility
+        return tokens["access_token"]

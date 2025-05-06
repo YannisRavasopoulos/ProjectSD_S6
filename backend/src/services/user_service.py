@@ -1,6 +1,7 @@
 from database import db, User
 from fastapi import HTTPException, status
 
+
 class UserService:
     @staticmethod
     async def create_user(name: str, email: str, password: str) -> int:
@@ -34,4 +35,29 @@ class UserService:
                 detail="User not found"
             )
 
+        return user
+
+    @staticmethod
+    async def delete_user(actor_id: int, user_id: int) -> None:
+        user = await UserService.get_user(actor_id, user_id)
+        db.delete(user)
+        db.commit()
+
+    @staticmethod
+    async def update_user(actor_id: int, user_id: int, name: str, email: str, password: str | None) -> User:
+        user = await UserService.get_user(actor_id, user_id)
+
+        if not user.can_have_email(email):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already taken"
+            )
+
+        user.name = name
+        user.email = email
+        if password:
+            user.hashed_password = user._hash_password(password)
+
+        db.commit()
+        db.refresh(user)
         return user
