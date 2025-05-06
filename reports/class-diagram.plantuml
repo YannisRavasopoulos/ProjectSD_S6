@@ -1,0 +1,168 @@
+@startuml
+skinparam linetype ortho
+
+LoopApp ---> SignInView
+LoopApp ---> SignUpView
+LoopApp ---> ForgotPasswordView
+LoopApp ---> SignInViewModel
+LoopApp ---> SignUpViewModel
+LoopApp ---> ForgotPasswordViewModel
+LoopApp ---> HomeView
+LoopApp ---> HomeViewModel
+LoopApp ---> AuthenticationService
+LoopApp ---> UserService
+LoopApp ---> RideService
+LoopApp ---> RewardService
+
+JsonWebToken ...|> AuthenticationToken
+
+AuthenticationService ---> AuthenticationToken
+HttpAuthenticationService ---> AuthenticationToken
+UserService --> User
+RideService --> Ride
+RewardService --> Reward
+
+SignInViewModel ---|> ViewModelBase
+SignUpViewModel ---|> ViewModelBase
+ForgotPasswordViewModel ---|> ViewModelBase
+HomeViewModel ---|> ViewModelBase
+
+SignInView ...> SignInViewModel
+SignInViewModel ....> AuthenticationService
+SignInViewModel ..> UserService
+
+SignUpView ...> SignUpViewModel
+SignUpViewModel ...> AuthenticationService
+SignUpViewModel ...> UserService
+
+ForgotPasswordView ...> ForgotPasswordViewModel
+ForgotPasswordViewModel ...> AuthenticationService
+ForgotPasswordViewModel ...> UserService
+
+HomeView ...> HomeViewModel
+
+HttpUserService ...|> UserService
+CachedUserService ...|> UserService
+HttpAuthenticationService ...|> AuthenticationService
+HttpRideService ...|> RideService
+HttpRewardService ...|> RewardService
+
+User ---> Rating
+
+
+class LoopApp {
+
+}
+
+class ViewModelBase {
+
+}
+
+class RideService {
+
+}
+
+class SignInView {
+    +onSignInClick()
+    +onForgotPasswordClick()
+    +onSignUpClick()
+}
+
+class SignInViewModel {
+    +email
+    +password
+    +signIn()
+}
+
+class SignUpView {
+    +onSignUpClick()
+    +onSignInClick()
+}
+
+class SignUpViewModel {
+    +name
+    +email
+    +password
+    +confirmPassword
+    +signUp()
+}
+
+class ForgotPasswordView {
+    +email
+    +onResetPasswordClick()
+}
+
+class ForgotPasswordViewModel {
+    +email
+    +resetPassword()
+}
+
+class HomeView {
+
+}
+
+class HomeViewModel {
+}
+
+interface AuthenticationService {
+    +login()
+    +logout()
+}
+
+interface UserService {
+    +createUser()
+    +getUser()
+    +updateUser()
+    +deleteUser()
+}
+
+interface AuthenticationToken {
+
+}
+
+class CachedUserService {
+}
+
+class JsonWebToken {
+}
+
+class HttpRideService {
+}
+
+class HttpRewardService {
+}
+
+interface RideService {
+
+}
+
+interface RewardService {
+}
+
+class Reward {
+
+}
+
+class Rating {
+
+}
+
+class User {
+    +id
+    +name
+    +email
+    +password
+}
+
+class Ride {
+    +id
+    +pickupLocation
+    +dropoffLocation
+    +pickupTime
+    +dropoffTime
+    +status
+    -hidden
+}
+
+
+@enduml
