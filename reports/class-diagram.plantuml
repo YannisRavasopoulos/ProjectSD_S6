@@ -139,18 +139,42 @@ interface RideService {
 }
 
 interface RewardService {
+    +getRewards()
 }
 
 class Reward {
+    +requiredPoints
+    +name
+    +description
+    +image
+    +expirationDate
+    +couponCode
+}
 
+class UserDetailsView {
+    +onRateUserClick()
+    +onReportUserClick()
+}
+
+class ReportUserView {
+    -reasonSelector
+    -descriptionField
+    -onConfirmClick()
+    -onCancelClick()
 }
 
 class Rating {
-
+    +stars
+    +comment
+    +timestamp
 }
 
 class Report {
-
+    +from
+    +to
+    +timestamp
+    +reason
+    +description
 }
 
 class User {
@@ -158,16 +182,11 @@ class User {
     +name
     +email
     +password
+    +ratings
+    +reports
 }
 
 class Ride {
-    +id
-    +pickupLocation
-    +dropoffLocation
-    +pickupTime
-    +dropoffTime
-    +status
-    -hidden
 }
 
 
