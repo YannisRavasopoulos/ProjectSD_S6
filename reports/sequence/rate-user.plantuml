@@ -1,0 +1,66 @@
+@startuml
+actor User
+
+' Layers in horizontal order:
+participant RateUserPage
+participant RateUserViewModel
+participant RatingService_Frontend
+participant RatingService_Backend
+participant DB
+participant NotificationScreen
+
+
+User -> RateUserPage            : onRateUserClick()
+activate RateUserPage
+RateUserPage -> RateUserPage    : renderRatingForm()
+RateUserPage --> User           : return form displayed
+deactivate RateUserPage
+
+
+    alt Cancel clicked
+        User -> RateUserPage    : onCancelClick()
+        activate RateUserPage
+        RateUserPage --> User   : return to previous page
+        deactivate RateUserPage
+    else Submit clicked
+        User -> RateUserPage    : onSubmitClick()
+        activate RateUserPage
+        RateUserPage -> RateUserViewModel : submitRating()
+        deactivate RateUserPage
+
+        activate RateUserViewModel
+        RateUserViewModel -> RateUserViewModel : validate()
+        alt validation fails
+            RateUserViewModel --> RateUserPage : return error
+            deactivate RateUserViewModel
+        else validation succeeds
+            RateUserViewModel -> RatingService_Frontend : createRating()
+            deactivate RateUserViewModel
+
+            activate RatingService_Frontend
+            RatingService_Frontend -> RatingService_Backend : createRating()
+            deactivate RatingService_Frontend
+
+            activate RatingService_Backend
+            RatingService_Backend -> DB : insertRating()
+            activate DB
+            DB --> RatingService_Backend : return success
+            deactivate DB
+            RatingService_Backend --> RatingService_Frontend : return success
+            deactivate RatingService_Backend
+
+            activate RatingService_Frontend
+            RatingService_Frontend --> RateUserViewModel : return success
+            deactivate RatingService_Frontend
+
+            activate RateUserViewModel
+            RateUserViewModel --> NotificationScreen : return success
+            deactivate RateUserViewModel
+
+            activate NotificationScreen
+            NotificationScreen --> User : return displaySuccess
+            deactivate NotificationScreen
+        end
+    end
+@enduml
+

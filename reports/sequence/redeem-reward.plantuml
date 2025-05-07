@@ -1,0 +1,116 @@
+@startuml
+actor User
+
+participant HomeView
+participant RedeemRewardPage
+participant RedeemRewardViewModel
+participant RewardService_Frontend
+participant RewardService_Backend
+participant DB
+participant NotificationScreen
+
+
+User -> HomeView                           : onRedeemRewardClick()
+activate HomeView
+HomeView -> RedeemRewardPage               : new()
+activate RedeemRewardPage
+deactivate HomeView
+
+
+RedeemRewardPage -> RedeemRewardViewModel   : loadRewards()
+activate RedeemRewardViewModel
+
+RedeemRewardViewModel -> RewardService_Frontend : getUserPoints()
+deactivate RedeemRewardViewModel
+activate RewardService_Frontend
+RewardService_Frontend -> RewardService_Backend : getUserPoints()
+deactivate RewardService_Frontend
+activate RewardService_Backend
+RewardService_Backend -> DB                   : queryUserPoints()
+activate DB
+DB --> RewardService_Backend                  : return points
+deactivate DB
+RewardService_Backend --> RewardService_Frontend : return points
+deactivate RewardService_Backend
+activate RewardService_Frontend
+RewardService_Frontend --> RedeemRewardViewModel  : return points
+deactivate RewardService_Frontend
+
+activate RedeemRewardViewModel
+RedeemRewardViewModel -> RewardService_Frontend : getAvailableRewards()
+deactivate RedeemRewardViewModel
+activate RewardService_Frontend
+RewardService_Frontend -> RewardService_Backend : getAvailableRewards()
+deactivate RewardService_Frontend
+activate RewardService_Backend
+RewardService_Backend -> DB                   : queryRewards()
+activate DB
+DB --> RewardService_Backend                  : return rewardList
+deactivate DB
+RewardService_Backend --> RewardService_Frontend : return rewardList
+deactivate RewardService_Backend
+activate RewardService_Frontend
+RewardService_Frontend --> RedeemRewardViewModel  : return rewardList
+deactivate RewardService_Frontend
+
+activate RedeemRewardViewModel
+alt no rewards available
+    RedeemRewardViewModel --> RedeemRewardPage : return "No rewards available"
+    deactivate RedeemRewardViewModel
+    RedeemRewardPage --> User                  : return displayMessage
+else rewards available
+    RedeemRewardViewModel --> RedeemRewardPage  : return points and rewardList
+    deactivate RedeemRewardViewModel
+    RedeemRewardPage --> User                   : return displayRewards
+end
+deactivate RedeemRewardPage
+
+
+alt User cancels
+    User -> RedeemRewardPage   : onBackClick()
+    activate RedeemRewardPage
+    RedeemRewardPage --> HomeView : return to home
+    deactivate RedeemRewardPage
+
+else User selects reward
+    User -> RedeemRewardPage   : onSelectReward()
+    activate RedeemRewardPage
+    RedeemRewardPage -> RedeemRewardViewModel : redeemReward()
+    deactivate RedeemRewardPage
+
+    activate RedeemRewardViewModel
+    RedeemRewardViewModel -> RewardService_Frontend : redeemReward()
+    deactivate RedeemRewardViewModel
+
+    activate RewardService_Frontend
+    RewardService_Frontend -> RewardService_Backend : redeemReward()
+    deactivate RewardService_Frontend
+
+    activate RewardService_Backend
+    RewardService_Backend -> DB                   : updateRedemption()
+    activate DB
+    DB --> RewardService_Backend                  : return redemptionCode or error
+    deactivate DB
+    RewardService_Backend --> RewardService_Frontend : return redemptionResult
+    deactivate RewardService_Backend
+
+    activate RewardService_Frontend
+    RewardService_Frontend --> RedeemRewardViewModel  : return redemptionResult
+    deactivate RewardService_Frontend
+
+    activate RedeemRewardViewModel
+    alt insufficient points
+        RedeemRewardViewModel --> RedeemRewardPage : return "Not enough points"
+        deactivate RedeemRewardViewModel
+        RedeemRewardPage --> User                   : return displayError
+    else success
+        RedeemRewardViewModel --> RedeemRewardPage : return redemptionCode
+        deactivate RedeemRewardViewModel
+        RedeemRewardPage -> NotificationScreen     : showCode()
+        activate NotificationScreen
+        NotificationScreen --> User                : return displayCode
+        deactivate NotificationScreen
+    end
+    deactivate RedeemRewardPage
+end
+@enduml
