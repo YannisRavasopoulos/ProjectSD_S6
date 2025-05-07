@@ -8,7 +8,8 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SharedLayout(
       body: Center(child: const Text('This is the Profile Page')),
-      currentIndex: 2,
+      currentIndex: 0,
+      isIndexed: false,
     );
   }
 }

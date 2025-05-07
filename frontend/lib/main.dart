@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/service/authentication_service.dart';
 import 'package:frontend/data/service/user_service.dart';
-import 'package:frontend/ui/activities/activities_view.dart';
+import 'package:frontend/ui/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/profile/profile_view.dart';
 import 'package:frontend/ui/sign_in/sign_in_view.dart';
@@ -9,6 +9,11 @@ import 'package:frontend/ui/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/home/home_view.dart';
+// Core imports
+import 'package:frontend/ui/activities/activities_view.dart';
+import 'package:frontend/ui/settings/settings_view.dart';
+import 'package:frontend/ui/rides/rides_view.dart';
+
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -36,7 +41,7 @@ class LoopApp extends StatelessWidget {
   LoopApp({super.key});
 
   // TODO
-  final bool isLoggedIn = false;
+  final bool isLoggedIn = true;
 
   SignInViewModel signInViewModel = SignInViewModel(
     AuthenticationService(client: ProxyClient()),
@@ -61,8 +66,12 @@ class LoopApp extends StatelessWidget {
         '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
         '/home': (context) => HomeView(),
-        '/activities': (context) => ActivitiesView(),
+        '/settings': (context) => SettingsView(),
         '/profile': (context) => ProfileView(),
+        // Core routes
+        '/activities_view': (context) => ActivitiesView(),
+        '/rides_view': (context) => RidesView(),
+        '/find_ride': (context) => FindRideView(),
       },
     );
   }
