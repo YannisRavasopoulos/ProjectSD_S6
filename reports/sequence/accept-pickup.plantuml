@@ -1,0 +1,116 @@
+@startuml
+actor Carpooler
+
+' Layers in horizontal order:
+participant PickupDetailsPage
+participant AcceptPickupViewModel
+participant PickupService_Frontend
+participant PickupService_Backend
+participant DB
+participant AvailabilityNotificationScreen
+
+
+Carpooler -> PickupDetailsPage         : onViewPickupRequest()
+activate PickupDetailsPage
+PickupDetailsPage -> AcceptPickupViewModel : loadPickup()
+deactivate PickupDetailsPage
+
+activate AcceptPickupViewModel
+AcceptPickupViewModel -> PickupService_Frontend : getPickupDetails()
+deactivate AcceptPickupViewModel
+
+activate PickupService_Frontend
+PickupService_Frontend -> PickupService_Backend : fetchPickup()
+deactivate PickupService_Frontend
+
+activate PickupService_Backend
+PickupService_Backend -> DB                  : queryPickup()
+activate DB
+DB --> PickupService_Backend                 : return pickupData
+deactivate DB
+PickupService_Backend --> PickupService_Frontend  : return pickupData
+deactivate PickupService_Backend
+
+activate PickupService_Frontend
+PickupService_Frontend --> AcceptPickupViewModel  : return pickupData
+deactivate PickupService_Frontend
+
+activate AcceptPickupViewModel
+AcceptPickupViewModel --> PickupDetailsPage        : return pickupData
+deactivate AcceptPickupViewModel
+
+activate PickupDetailsPage
+PickupDetailsPage --> Carpooler                   : return displayDetails
+deactivate PickupDetailsPage
+
+alt Carpooler accepts
+    Carpooler -> PickupDetailsPage             : onAcceptClick()
+    activate PickupDetailsPage
+    PickupDetailsPage -> AcceptPickupViewModel : acceptPickup()
+    deactivate PickupDetailsPage
+
+    activate AcceptPickupViewModel
+    AcceptPickupViewModel -> PickupService_Frontend : acceptPickup()
+    deactivate AcceptPickupViewModel
+
+    activate PickupService_Frontend
+    PickupService_Frontend -> PickupService_Backend  : acceptPickup()
+    deactivate PickupService_Frontend
+
+    activate PickupService_Backend
+    PickupService_Backend -> DB                      : updatePickupStatus(pickupId, "accepted")
+    activate DB
+    DB --> PickupService_Backend                     : return success
+    deactivate DB
+    PickupService_Backend --> PickupService_Frontend  : return success
+    deactivate PickupService_Backend
+
+    activate PickupService_Frontend
+    PickupService_Frontend --> AcceptPickupViewModel : return success
+    deactivate PickupService_Frontend
+
+    activate AcceptPickupViewModel
+    AcceptPickupViewModel --> AvailabilityNotificationScreen : return "Pickup accepted"
+    deactivate AcceptPickupViewModel
+
+    activate AvailabilityNotificationScreen
+    AvailabilityNotificationScreen --> Carpooler               : return displaySuccess
+    deactivate AvailabilityNotificationScreen
+
+else Carpooler rejects
+    Carpooler -> PickupDetailsPage             : onRejectClick()
+    activate PickupDetailsPage
+    PickupDetailsPage -> AcceptPickupViewModel : rejectPickup()
+    deactivate PickupDetailsPage
+
+    activate AcceptPickupViewModel
+    AcceptPickupViewModel -> PickupService_Frontend : rejectPickup()
+    deactivate AcceptPickupViewModel
+
+    activate PickupService_Frontend
+    PickupService_Frontend -> PickupService_Backend  : rejectPickup()
+    deactivate PickupService_Frontend
+
+    activate PickupService_Backend
+    PickupService_Backend -> DB                      : updatePickupStatus(pickupId, "rejected")
+    activate DB
+    DB --> PickupService_Backend                     : return success
+    deactivate DB
+    PickupService_Backend --> PickupService_Frontend  : return success
+    deactivate PickupService_Backend
+
+    activate PickupService_Frontend
+    PickupService_Frontend --> AcceptPickupViewModel : return success
+    deactivate PickupService_Frontend
+
+    activate AcceptPickupViewModel
+    AcceptPickupViewModel --> AvailabilityNotificationScreen : return "Pickup rejected"
+    deactivate AcceptPickupViewModel
+
+    activate AvailabilityNotificationScreen
+    AvailabilityNotificationScreen --> Carpooler               : return displayInfo
+    deactivate AvailabilityNotificationScreen
+end
+
+@enduml
+
