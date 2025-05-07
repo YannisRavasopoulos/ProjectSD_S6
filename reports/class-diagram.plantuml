@@ -147,6 +147,10 @@ class Rating {
 
 }
 
+class Report {
+
+}
+
 class User {
     +id
     +name
