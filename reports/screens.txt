@@ -1,0 +1,10 @@
+Account
+Past Rides
+Ride Details (small window of ride details)
+User Details (small window of user details)
+Report User
+Profile
+Arrange Pickup
+Ride
+Pickup Offers
+Home

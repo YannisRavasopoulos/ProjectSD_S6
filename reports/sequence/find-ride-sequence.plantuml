@@ -1,0 +1,18 @@
+@startuml
+actor Carpooler
+boundary FindRideView
+control FindRideViewModel
+control RideService
+control BackendRideService
+database Database
+
+Carpooler -> FindRideView : onFindRideClick()
+FindRideView -> FindRideViewModel : findRide()
+FindRideViewModel -> RideService : searchRides(criteria)
+RideService -> BackendRideService : searchRides(criteria)
+BackendRideService -> Database : query rides
+Database --> BackendRideService : return matching rides
+BackendRideService --> RideService : return rides
+RideService --> FindRideViewModel : return rides
+FindRideViewModel --> FindRideView : display rides
+@enduml
