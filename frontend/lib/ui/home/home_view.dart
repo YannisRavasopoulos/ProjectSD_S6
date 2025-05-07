@@ -22,6 +22,7 @@ class HomeView extends StatelessWidget {
         ),
       ),
       currentIndex: 0,
+      isIndexed: true,
     );
   }
 }
