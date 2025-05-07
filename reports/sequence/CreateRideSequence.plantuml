@@ -24,35 +24,30 @@ loop Driver attempts to create a ride
     CreateRideView -> CreateRideViewModel: createRide()
     deactivate CreateRideView
     activate CreateRideViewModel
-    
-
-       
-
-
-
-    CreateRideViewModel -> RideService_FE: validateData()
+ 
+    CreateRideViewModel -> RideService_FE: createRide()
     activate RideService_FE
-    
 
-    
+    RideService_FE -> RideService_FE: validateRideData()
+      
     RideService_FE -> RideService_BE: /ride/create
     activate RideService_BE
 
     RideService_BE -> Ride: createRide()
     activate Ride 
 
-    Ride --> RideService_BE: rideCreated()
+    Ride --> RideService_BE: return: Ride
     deactivate Ride
     
     RideService_BE -> DB: insertRide()
     activate DB
-    DB --> RideService_BE: rideInserted()
+    DB --> RideService_BE: return: success
     deactivate DB
 
-    RideService_BE --> RideService_FE: successResponse()
+    RideService_BE --> RideService_FE: return: success
     deactivate RideService_BE
 
-    RideService_FE --> CreateRideViewModel: rideCreated()
+    RideService_FE --> CreateRideViewModel: return: success
     deactivate RideService_FE
 
     CreateRideViewModel --> CreateRideView: showSuccessMessage()
