@@ -1,6 +1,6 @@
 ### Περιγραφή
 
-Ένας οδηγός επιθυμεί να δημιουργήσει ένα ride
+Ο οδηγός επιθυμεί να δημιουργήσει ένα Ride.
 
 #### Βασική ροή
 
@@ -25,5 +25,5 @@
 8. Το σύστημα επιστρέφει στην οθόνη Create Ride.
 
 ### Ανάλυση Ευρωστίας
-![image](./create-ride-robustness.drawio.png)
 
+![image](./create-ride-robustness.drawio.png)

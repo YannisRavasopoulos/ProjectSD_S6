@@ -1,2 +1,4 @@
 - Λεξιλόγιο στα UCs να ταιριάζει με το domain model
-- Find Ride review
+- Find Ride review (UC/robust)
+- Offer Ride review (UC/robust)
+- Create Ride review (UC/robust)
