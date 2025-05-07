@@ -1,0 +1,95 @@
+@startuml
+autonumber
+actor Driver
+participant HomeView
+participant CreateRideView
+participant CreateRideViewModel
+participant RideService_Frontend as RideService_FE
+participant RideService_Backend as RideService_BE
+participant Ride
+database DB
+
+loop Driver attempts to create a ride
+
+    Driver -> HomeView: onCreateRideClick()
+    activate HomeView
+    
+    HomeView -> CreateRideView: createView()
+    deactivate HomeView
+    activate CreateRideView
+
+    Driver -> CreateRideView: fillRideForm()
+    Driver -> CreateRideView: onConfirmClick()
+    
+    CreateRideView -> CreateRideViewModel: createRide()
+    deactivate CreateRideView
+    activate CreateRideViewModel
+    
+
+       
+
+
+
+    CreateRideViewModel -> RideService_FE: validateData()
+    activate RideService_FE
+    
+
+    
+    RideService_FE -> RideService_BE: /ride/create
+    activate RideService_BE
+
+    RideService_BE -> Ride: createRide()
+    activate Ride 
+
+    Ride --> RideService_BE: rideCreated()
+    deactivate Ride
+    
+    RideService_BE -> DB: insertRide()
+    activate DB
+    DB --> RideService_BE: rideInserted()
+    deactivate DB
+
+    RideService_BE --> RideService_FE: successResponse()
+    deactivate RideService_BE
+
+    RideService_FE --> CreateRideViewModel: rideCreated()
+    deactivate RideService_FE
+
+    CreateRideViewModel --> CreateRideView: showSuccessMessage()
+    deactivate CreateRideViewModel
+    activate CreateRideView
+
+    CreateRideView --> Driver: displaySuccess()
+    deactivate CreateRideView
+    
+  
+    alt Invalid data
+        RideService_FE --> CreateRideViewModel: validationFailed()
+        deactivate RideService_FE
+
+        CreateRideViewModel --> CreateRideView: showErrorMessage("Data is invalid")
+        deactivate CreateRideViewModel
+        activate CreateRideView
+
+        CreateRideView --> Driver: displayError("Data is invalid")
+        deactivate CreateRideView
+        Driver -> CreateRideView: onOKClick()
+        activate CreateRideView
+        CreateRideView --> CreateRideViewModel: errorAcknowledged()
+        activate CreateRideViewModel
+        CreateRideViewModel --> CreateRideView: returnToForm()
+        deactivate CreateRideViewModel
+        deactivate CreateRideView
+    end alt
+    alt Cancel clicked
+        Driver -> CreateRideView: onCancelClick()
+        activate CreateRideView
+        CreateRideView -> CreateRideViewModel: cancelRequest()
+        activate CreateRideViewModel
+        CreateRideViewModel --> CreateRideView: returnToForm()
+        deactivate CreateRideViewModel
+        deactivate CreateRideView
+    end alt
+
+end loop
+@enduml
