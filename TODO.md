@@ -2,3 +2,6 @@
 - Find Ride review (robust)
 - Offer Ride review (UC/robust)
 - Create Ride review (robust)
+- Create Activity (UC/robust)
+- Edit Activity (UC/robust)
+- Redeem Reward (UC/robust)
