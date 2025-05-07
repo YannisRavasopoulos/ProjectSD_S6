@@ -1,0 +1,18 @@
+@startuml
+actor Carpooler
+boundary RideDetailsView
+control RideDetailsViewModel
+control RideService
+control BackendRideService
+database Database
+
+Carpooler -> RideDetailsView : onJoinRideClick()
+RideDetailsView -> RideDetailsViewModel : joinRide(rideId)
+RideDetailsViewModel -> RideService : joinRide(rideId)
+RideService -> BackendRideService : joinRide(rideId, userId)
+BackendRideService -> Database : update ride members
+Database --> BackendRideService : success
+BackendRideService --> RideService : success
+RideService --> RideDetailsViewModel : success
+RideDetailsViewModel --> RideDetailsView : success
+@enduml
