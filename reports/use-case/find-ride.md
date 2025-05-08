@@ -28,7 +28,3 @@
 
 4. Ο Carpooler επιλέγει "Manage Activities".
 5. Καλείται η περίπτωση χρήσης "Manage Activities".
-
-### Ανάλυση Ευρωστίας
-
-![image](./find-ride-robustness.drawio.png)

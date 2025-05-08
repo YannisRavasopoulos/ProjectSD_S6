@@ -16,7 +16,3 @@
 #### Εναλλακτική Ροή: Απόρριψη Πρότασης Pickup
 
 5. Το σύστημα μαρκάρει το Pickup Offer ως "Declined".
-
-### Ανάλυση Ευρωστίας
-
-![image](./confirm-pickup-robustness.drawio.png)

@@ -17,7 +17,3 @@
 #### Εναλλακτική Ροή: Αποτυχία Arrange Pickup
 
 8. Το σύστημα εμφανίζει μήνυμα αποτυχίας στην οθόνη Find Ride.
-
-### Ανάλυση Ευρωστίας
-
-![image](./join-ride-robustness.drawio.png)
