@@ -1,4 +1,4 @@
-@startuml ReportUserSequence
+@startuml
 actor User
 participant "UserDetailsScreen" as UDS
 participant "ReportUserScreen" as RUS

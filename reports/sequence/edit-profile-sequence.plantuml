@@ -1,4 +1,4 @@
-@startuml EditProfileSequence
+@startuml
 actor User
 participant "AccountView" as AV
 participant "EditProfileView" as EPV
