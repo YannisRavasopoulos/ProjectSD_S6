@@ -1,4 +1,4 @@
-@startuml ViewPastRidesSequence
+@startuml
 actor User
 participant "AccountView" as AV
 participant "PastRidesView" as PRV

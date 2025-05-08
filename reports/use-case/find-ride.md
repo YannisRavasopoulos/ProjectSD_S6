@@ -4,7 +4,7 @@
 
 Ο Carpooler επιθυμεί να βρεί Ride για να πάει στον προορισμό του.
 
-#### Βασική Ροή
+### Βασική Ροή
 
 1. Ο Carpooler επιλέγει "Find Ride" στην οθόνη Home.
 2. Το σύστημα ανακτά τα Activities του Carpooler και τα εμφανίζει στην οθόνη Find Ride.
@@ -18,13 +18,13 @@
 10. Το σύστημα εμφανίζει την οθόνη Ride Details.
 11. Καλείται η περίπτωση χρήσης Join Ride.
 
-#### Εναλλακτική Ροή: Επιλογή Activity
+### Εναλλακτική Ροή: Επιλογή Activity
 
 3. Ο Carpooler επιλέγει κάποιο Activity.
 4. Το σύστημα διαμορφώνει τα στοιχεία του Ride Request με βάση το Activity.
 5. Συνέχεια από το βήμα 6 της βασικής ροής.
 
-#### Εναλλακτική Ροή: Επιλογή Manage Activities
+### Εναλλακτική Ροή: Επιλογή Manage Activities
 
 4. Ο Carpooler επιλέγει "Manage Activities".
 5. Καλείται η περίπτωση χρήσης "Manage Activities".

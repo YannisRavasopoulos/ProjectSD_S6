@@ -20,7 +20,7 @@ $(ROBUSTNESS_PNG_FILES): build/robustness/%.png: reports/robustness/%.drawio.png
 
 $(USE_CASE_TEX_FILES): build/use-case/%.tex: reports/use-case/%.md
 	mkdir -p $(dir $@)
-	pandoc $< -o $@
+	pandoc $< -o $@ --top-level-division=section --metadata link-citations=false
 
 sequence: $(SEQUENCE_PNG_FILES)
 
@@ -41,11 +41,11 @@ build/use-case-diagram.png: reports/use-case-diagram.plantuml
 	plantuml -progress -tpng -o ../$(dir $@) $<
 
 generated.tex: sequence robustness use-case
-	./combine.sh >> $@
+	./scripts/generate_tex.sh > $@
 
-report.pdf: generated.tex
-	latexmk --lualatex report.tex
+report.pdf:
+	latexmk --lualatex --shell-escape -quiet report.tex
 
 clean:
-	rm -rf build
+	# rm -rf build
 	latexmk -C
