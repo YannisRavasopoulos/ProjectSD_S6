@@ -1,0 +1,71 @@
+@startuml EditProfileSequence
+actor User
+participant "AccountView" as AV
+participant "EditProfileView" as EPV
+participant "EditProfileViewModel" as EPVM
+participant "ProfileService_Frontend" as PSF
+participant "ProfileService_Backend" as PSB
+database "UserProfile" as DB
+
+== Basic Flow ==
+loop [User attempts to edit profile]
+    User -> AV: onProfileClick()
+    activate AV
+    AV -> EPV: navigateToEditProfile()
+    deactivate AV
+    activate EPV
+    EPV -> EPVM: fetchProfileData()
+    activate EPVM
+    EPVM -> PSF: getProfileData()
+    activate PSF
+    PSF -> PSB: GET /profile
+    activate PSB
+    PSB -> DB: queryProfile()
+    activate DB
+    DB --> PSB: returnProfileData()
+    deactivate DB
+    PSB --> PSF: returnProfileData()
+    deactivate PSB
+    PSF --> EPVM: returnProfileData()
+    deactivate PSF
+    EPVM --> EPV: displayProfileData()
+    deactivate EPVM
+    deactivate EPV
+end
+
+User -> EPV: onEditSubmit()
+activate EPV
+EPV -> EPVM: validateProfileData()
+activate EPVM
+EPVM -> PSF: updateProfileData()
+activate PSF
+PSF -> PSB: PUT /profile
+activate PSB
+PSB -> DB: updateProfile()
+activate DB
+DB --> PSB: updateSuccess()
+deactivate DB
+PSB --> PSF: updateSuccess()
+deactivate PSB
+PSF --> EPVM: updateSuccess()
+deactivate PSF
+EPVM --> EPV: showSuccessMessage()
+deactivate EPVM
+deactivate EPV
+
+== Alternative Flow: Invalid Data ==
+alt [Invalid data]
+    EPVM -> EPV: showError("Invalid data")
+    activate EPV
+    EPV -> User: onRetry()
+    deactivate EPV
+end
+
+== Alternative Flow: Cancel Edit ==
+alt [Cancel clicked]
+    User -> EPV: onCancelClick()
+    activate EPV
+    EPV -> AV: returnToAccount()
+    deactivate EPV
+end
+@enduml
