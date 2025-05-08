@@ -1,0 +1,63 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 75
+
+object Ride {
+
+}
+
+object Driver {
+
+}
+
+object Carpooler {
+
+}
+
+object User {
+
+}
+
+object RideRequest {
+
+}
+
+object RideOffer {
+
+}
+
+object Report {
+
+}
+
+object Rating {
+
+}
+
+object Reward {
+
+}
+
+object Pickup {
+}
+
+object Route {
+
+}
+
+Carpooler --- Ride : "joins"
+User --- Report : "submits"
+User --- Rating : "submits"
+Carpooler --- RideRequest : "makes"
+Driver --- RideOffer : "makes"
+User --- Reward : "receives"
+
+Carpooler ---|> User
+Driver ---|> User
+
+Pickup ---o Ride
+Route ---o Ride
+
+
+
+@enduml

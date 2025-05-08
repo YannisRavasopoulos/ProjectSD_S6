@@ -5,3 +5,4 @@
 - Create Activity (UC/robust)
 - Edit Activity (UC/robust)
 - Redeem Reward (UC/robust)
+- Domain Model
