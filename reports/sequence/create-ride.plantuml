@@ -1,5 +1,4 @@
 @startuml
-autonumber
 actor Driver
 participant HomeView
 participant CreateRideView
@@ -13,32 +12,32 @@ loop Driver attempts to create a ride
 
     Driver -> HomeView: onCreateRideClick()
     activate HomeView
-    
+
     HomeView -> CreateRideView: createView()
     deactivate HomeView
     activate CreateRideView
 
     Driver -> CreateRideView: fillRideForm()
     Driver -> CreateRideView: onConfirmClick()
-    
+
     CreateRideView -> CreateRideViewModel: createRide()
     deactivate CreateRideView
     activate CreateRideViewModel
- 
+
     CreateRideViewModel -> RideService_FE: createRide()
     activate RideService_FE
 
     RideService_FE -> RideService_FE: validateRideData()
-      
+
     RideService_FE -> RideService_BE: /ride/create
     activate RideService_BE
 
     RideService_BE -> Ride: createRide()
-    activate Ride 
+    activate Ride
 
     Ride --> RideService_BE: return: Ride
     deactivate Ride
-    
+
     RideService_BE -> DB: insertRide()
     activate DB
     DB --> RideService_BE: return: success
@@ -56,8 +55,8 @@ loop Driver attempts to create a ride
 
     CreateRideView --> Driver: displaySuccess()
     deactivate CreateRideView
-    
-  
+
+
     alt Invalid data
         RideService_FE --> CreateRideViewModel: validationFailed()
         deactivate RideService_FE
