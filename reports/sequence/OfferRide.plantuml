@@ -1,0 +1,154 @@
+@startuml
+autonumber
+actor Driver
+participant HomeView
+participant OfferRideView
+participant CarpoolerListView
+participant CarpoolerProfileView
+participant OfferRideViewModel
+participant RideService_Frontend as RideService_FE
+participant RideService_Backend as RideService_BE
+participant Ride
+participant Carpooler
+database DB
+
+loop Driver attempts to offer a ride
+
+    Driver -> HomeView: onOfferRideClick()
+    activate HomeView
+
+    HomeView -> OfferRideView: createOfferRidesVeiw()
+    deactivate HomeView
+    activate OfferRideView
+
+    Driver -> OfferRideView: onCreateRideClick()
+    OfferRideView -> OfferRideViewModel: fetchCreatedRides()
+    activate OfferRideViewModel
+
+    OfferRideViewModel -> RideService_FE: getCreatedRides()
+    activate RideService_FE
+
+    RideService_FE -> RideService_BE: /ride/getCreatedRides
+    activate RideService_BE
+
+    RideService_BE -> Ride: createRide()
+    activate Ride
+    RideService_BE -> DB: getCreatedRides()
+    activate DB
+    DB --> Ride: return: CreatedRides[]
+    deactivate DB
+    Ride --> RideService_BE: return: CreatedRides[]
+    deactivate Ride
+
+
+    RideService_BE --> RideService_FE: return: CreatedRides[]
+    deactivate RideService_BE
+
+    RideService_FE --> OfferRideViewModel: return: CreatedRides[]
+    deactivate RideService_FE
+
+    
+    OfferRideViewModel -> OfferRideView: displayCreatedRides()
+    deactivate OfferRideViewModel
+    deactivate OfferRideView
+
+    Driver -> OfferRideView: onSelectCreatedRide()
+    activate OfferRideView
+    OfferRideView -> OfferRideViewModel: findNearbyCarpoolers(rideId)
+    deactivate OfferRideView
+    activate OfferRideViewModel
+    
+
+    OfferRideViewModel -> RideService_FE: getNearbyCarpoolers(rideId)
+    activate RideService_FE
+
+    RideService_FE -> RideService_BE: /ride/findCarpoolers
+    activate RideService_BE
+
+    RideService_BE -> DB: fetchMatchingCarpoolers(rideId)
+    activate DB
+    DB --> RideService_BE: return: Carpoolers[]
+    deactivate DB
+
+    RideService_BE --> RideService_FE: return: Carpoolers[]
+    deactivate RideService_BE
+
+    RideService_FE --> OfferRideViewModel: return: Carpooler[]
+    deactivate RideService_FE
+
+    OfferRideViewModel -> CarpoolerListView: showCarpoolerList(Carpooler[],rideId)
+    deactivate OfferRideViewModel
+    activate CarpoolerListView
+
+    Driver -> CarpoolerListView: onSelectCarpooler()
+    CarpoolerListView -> CarpoolerProfileView: displayCarpoolerProfile(Carpooler,rideId)
+    deactivate CarpoolerListView
+    activate CarpoolerProfileView
+
+    CarpoolerProfileView -> ArrangePickupView: ArrangePickup(Carpooler, rideId)
+    deactivate CarpoolerProfileView
+   alt Pickup of an Activity
+        
+        Driver -> OfferRideView: onSelectActivity()
+        activate OfferRideView
+        OfferRideView -> ActivityView: createView()
+        deactivate OfferRideView
+        activate ActivityView
+
+        ActivityView -> ActivityViewModel: fetchActivities()
+        activate ActivityViewModel
+
+        ActivityViewModel -> ActivityService_FE: getActivities()
+        activate ActivityService_FE
+
+        ActivityService_FE -> ActivityService_BE: /activity/getAll
+        activate ActivityService_BE
+
+        ActivityService_BE -> Activity: getAll()
+        activate Activity
+        ActivityService_BE -> DB: fetchActivities()
+        activate DB
+        DB --> Activity: return: Activities[]
+        deactivate DB
+        Activity --> ActivityService_BE: return: Activities[]
+        deactivate Activity
+
+        ActivityService_BE --> ActivityService_FE: return: Activities[]
+        deactivate ActivityService_BE
+
+        ActivityService_FE --> ActivityViewModel: return: Activities[]
+        deactivate ActivityService_FE
+
+        ActivityViewModel -> ActivityView: displayActivityPreview()
+        deactivate ActivityViewModel
+        deactivate ActivityView
+
+        Driver -> ActivityView: onConfirmActivity()
+        ActivityView -> ActivityViewModel: findNearbyCarpoolersForActivity()
+        activate ActivityViewModel
+
+        ActivityViewModel -> ActivityService_FE: getNearbyCarpoolersForActivity()
+        activate ActivityService_FE
+
+        ActivityService_FE -> ActivityService_BE: /activity/matchCarpoolers
+        activate ActivityService_BE
+
+        ActivityService_BE -> DB: fetchCarpoolersForActivity()
+        activate DB
+        DB --> ActivityService_BE: return: Carpooler[]
+        deactivate DB
+
+        ActivityService_BE --> ActivityService_FE: return: Carpooler[]
+        deactivate ActivityService_BE
+
+        ActivityService_FE --> ActivityViewModel: return: Carpooler[]
+        deactivate ActivityService_FE
+
+        ActivityViewModel -> CarpoolerListView: showCarpoolerList()
+        deactivate ActivityViewModel
+        
+
+    end alt
+
+end loop
+@enduml
