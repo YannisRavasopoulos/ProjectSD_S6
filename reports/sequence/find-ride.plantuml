@@ -14,7 +14,7 @@ activate HomeView
 HomeView -> FindRideView: 2. navigateToFindRide()
 deactivate HomeView
 activate FindRideView
-FindRideView -> VM: 3. findRide()
+FindRideView -> VM: 3. fetchUserData()
 activate VM
 
 box "Main Course of Events"
@@ -60,61 +60,66 @@ box "Main Course (Insta‑Ride Selection → Show Matches)"
   deactivate VM
 end box
 
-FindRideView -> VM: 19. onRideSelected()
-activate VM
-VM -> RideSrv_F: 20. getRide(ride_id)
-activate RideSrv_F
+box "Main Course (Ride Details → Join)"
+  Carpooler -> FindRideView: 19. onRideSelect()
+  FindRideView -> VM: 20. fetchRide()
+  activate VM
+  VM -> RideSrv_F: 21. getRide(ride_id)
+  activate RideSrv_F
 
-RideSrv_F -> RideSrv_B: 21. getRide(ride_id)
-activate RideSrv_B
-RideSrv_B -> DB: 22. queryRide(ride_id)
-activate DB
-DB --> RideSrv_B: 23. ride
-deactivate DB
-RideSrv_B --> RideSrv_F: 24. ride
-deactivate RideSrv_B
+  RideSrv_F -> RideSrv_B: 22. getRide(ride_id)
+  activate RideSrv_B
+  RideSrv_B -> DB: 23. queryRide(ride_id)
+  activate DB
+  DB --> RideSrv_B: 24. ride
+  deactivate DB
+  RideSrv_B --> RideSrv_F: 25. ride
+  deactivate RideSrv_B
 
-RideSrv_F --> VM: 25. ride
-deactivate RideSrv_F
-VM -> FindRideView: 26. showRideDetails(ride)
-deactivate VM
+  RideSrv_F --> VM: 26. ride
+  deactivate RideSrv_F
+  VM -> FindRideView: 27. showRideDetails(ride)
+  deactivate VM
 
-FindRideView -> VM: 27. onClickJoinRide()
-deactivate FindRideView
-' → continues with Join Ride UC
+  Carpooler -> FindRideView: 28. onJoinRidePress()
+  FindRideView -> VM: 29. joinRide()
+  deactivate FindRideView
+end box
 
 alt Select Alternative Activity
   box "Alternative: Choose Activity"
-    FindRideView -> VM: A1. onActivitySelected()
+    Carpooler -> FindRideView: A1. onActivitySelect()
+    FindRideView -> VM: A2. fetchActivity()
     activate VM
     
-    VM -> ActSrv_F: A2. getActivityDetails()
+    VM -> ActSrv_F: A3. getActivityDetails()
     activate ActSrv_F
     
-    ActSrv_F -> ActSrv_B: A3. getActivity(activity_id)
+    ActSrv_F -> ActSrv_B: A4. getActivity(activity_id)
     activate ActSrv_B
     
-    ActSrv_B -> DB: A4. getActivity(activity_id)
+    ActSrv_B -> DB: A5. getActivity(activity_id)
     activate DB
-    DB --> ActSrv_B: A5. activity_data
+    DB --> ActSrv_B: A6. activity_data
     deactivate DB
     
-    ActSrv_B --> ActSrv_F: A6. activity_data
+    ActSrv_B --> ActSrv_F: A7. activity_data
     deactivate ActSrv_B
     
-    ActSrv_F --> VM: A7. activity_data
+    ActSrv_F --> VM: A8. activity_data
     deactivate ActSrv_F
     
-    VM -> RideSrv_F: A8. configureRequestFromActivity(activity_data)
+    VM -> RideSrv_F: A9. configureRequestFromActivity(activity_data)
     deactivate VM
   end box
 end
 
 alt Manage Activities Flow
   box "Alternative: Manage Activities"
-    FindRideView -> VM: B1. onManageActivitiesClicked()
+    Carpooler -> FindRideView: B1. onManageActivitiesPress()
+    FindRideView -> VM: B2. manageActivities()
     activate VM
-    VM -> ActSrv_F: B2. navigateToManageActivities()
+    VM -> ActSrv_F: B3. navigateToManageActivities()
     deactivate VM
   end box
 end
