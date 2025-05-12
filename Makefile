@@ -22,20 +22,29 @@ $(USE_CASE_TEX_FILES): build/use-case/%.tex: reports/use-case/%.md
 	mkdir -p $(dir $@)
 	pandoc $< -o $@ --top-level-division=section --metadata link-citations=false
 
+# Rule to generate all sequence diagrams
 sequence: $(SEQUENCE_PNG_FILES)
 
+# Rule to generate all robustness diagrams
 robustness: $(ROBUSTNESS_PNG_FILES)
 
+# Rule to generate all use-case tex files
 use-case: $(USE_CASE_TEX_FILES)
 
+# Rule to generate all diagrams for a use-case
+%: build/sequence/%.png build/robustness/%.png build/use-case/%.tex
+
+# Rule to generate domain model diagram
 build/domain-model.png: reports/domain-model.plantuml
 	mkdir -p $(dir $@)
 	plantuml -progress -tpng -o ../$(dir $@) $<
 
+# Rule to generate class diagram
 build/class-diagram.png: reports/class-diagram.plantuml
 	mkdir -p $(dir $@)
 	plantuml -progress -tpng -o ../$(dir $@) $<
 
+# Rule to generate use case diagram
 build/use-case-diagram.png: reports/use-case-diagram.plantuml
 	mkdir -p $(dir $@)
 	plantuml -progress -tpng -o ../$(dir $@) $<
@@ -47,5 +56,5 @@ report.pdf:
 	latexmk --lualatex --shell-escape -quiet report.tex
 
 clean:
-	# rm -rf build
+	rm -rf build
 	latexmk -C

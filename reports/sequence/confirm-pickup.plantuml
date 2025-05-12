@@ -9,7 +9,6 @@ participant PickupService_Backend
 participant DB
 participant AvailabilityNotificationScreen
 
-
 Carpooler -> PickupDetailsPage         : onViewPickupRequest()
 activate PickupDetailsPage
 PickupDetailsPage -> AcceptPickupViewModel : loadPickup()
@@ -113,4 +112,3 @@ else Carpooler rejects
 end
 
 @enduml
-
