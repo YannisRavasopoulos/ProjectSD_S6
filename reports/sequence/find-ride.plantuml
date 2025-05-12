@@ -9,21 +9,21 @@ participant "RideService_Frontend" as RideSrv_F
 participant "RideService_Backend" as RideSrv_B
 participant "Database" as DB
 
-Carpooler -> HomeView: 1. clickFindRide()
+Carpooler -> HomeView: 1. onFindRideClicked()
 activate HomeView
 HomeView -> FindRideView: 2. navigateToFindRide()
 deactivate HomeView
 activate FindRideView
-FindRideView -> VM: 3. onFindRideClicked()
+FindRideView -> VM: 3. findRide()
 activate VM
 
 box "Main Course of Events"
-  VM -> ActSrv_F: 4. getUserActivities(userId)
+  VM -> ActSrv_F: 4. getUserActivities(user_id)
   activate ActSrv_F
 
-  ActSrv_F -> ActSrv_B: 5. getActivities(userId)
+  ActSrv_F -> ActSrv_B: 5. getActivities(user_id)
   activate ActSrv_B
-  ActSrv_B -> DB: 6. queryActivities(userId)
+  ActSrv_B -> DB: 6. queryActivities(user_id)
   activate DB
   DB --> ActSrv_B: 7. activities
   deactivate DB
@@ -60,7 +60,7 @@ box "Main Course (Insta‑Ride Selection → Show Matches)"
   deactivate VM
 end box
 
-FindRideView -> VM: 19. onRideSelected(ride_id)
+FindRideView -> VM: 19. onRideSelected()
 activate VM
 VM -> RideSrv_F: 20. getRide(ride_id)
 activate RideSrv_F
@@ -79,19 +79,19 @@ deactivate RideSrv_F
 VM -> FindRideView: 26. showRideDetails(ride)
 deactivate VM
 
-FindRideView -> VM: 27. onClickJoinRide(ride_id)
+FindRideView -> VM: 27. onClickJoinRide()
 deactivate FindRideView
 ' → continues with Join Ride UC
 
 alt Select Alternative Activity
   box "Alternative: Choose Activity"
-    FindRideView -> VM: A1. onActivitySelected(activityId)
+    FindRideView -> VM: A1. onActivitySelected()
     activate VM
     
-    VM -> ActSrv_F: A2. getActivityDetails(activityId)
+    VM -> ActSrv_F: A2. getActivityDetails()
     activate ActSrv_F
     
-    ActSrv_F -> ActSrv_B: A3. getActivity(activityId)
+    ActSrv_F -> ActSrv_B: A3. getActivity(activity_id)
     activate ActSrv_B
     
     ActSrv_B -> DB: A4. getActivity(activity_id)
