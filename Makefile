@@ -33,6 +33,7 @@ use-case: $(USE_CASE_TEX_FILES)
 
 # Rule to generate all diagrams for a use-case
 %: build/sequence/%.png build/robustness/%.png build/use-case/%.tex
+	@echo "Generating diagrams for use-case $*"
 
 # Rule to generate domain model diagram
 build/domain-model.png: reports/domain-model.plantuml

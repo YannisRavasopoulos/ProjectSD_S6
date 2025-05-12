@@ -2,7 +2,7 @@
 skinparam linetype ortho
 skinparam nodesep 50
 
-
+' App
 LoopApp ---> SignInView
 LoopApp ---> SignUpView
 LoopApp ---> ForgotPasswordView
@@ -11,46 +11,175 @@ LoopApp ---> SignUpViewModel
 LoopApp ---> ForgotPasswordViewModel
 LoopApp ---> HomeView
 LoopApp ---> HomeViewModel
-LoopApp ---> AuthenticationService
-LoopApp ---> UserService
-LoopApp ---> RideService
-LoopApp ---> RewardService
+LoopApp ---> AuthenticationRepository
+LoopApp ---> UserRepository
+LoopApp ---> RideRepository
+LoopApp ---> RewardRepository
+LoopApp ---> ReportUserView
+LoopApp ---> UserDetailsView
+LoopApp ---> HttpUserRepository
+LoopApp ---> CachedUserRepository
 
-JsonWebToken ...|> AuthenticationToken
-
-AuthenticationService ---> AuthenticationToken
-HttpAuthenticationService ---> AuthenticationToken
-UserService --> User
-RideService --> Ride
-RewardService --> Reward
-
+' ViewModels
 SignInViewModel ---|> ViewModelBase
 SignUpViewModel ---|> ViewModelBase
 ForgotPasswordViewModel ---|> ViewModelBase
 HomeViewModel ---|> ViewModelBase
+RewardViewModel ---|> ViewModelBase
+ReportUserViewModel ---|> ViewModelBase
+UserDetailsViewModel ---|> ViewModelBase
 
+' Views -> ViewModels, Widgets
 SignInView ...> SignInViewModel
-SignInViewModel ....> AuthenticationService
-SignInViewModel ..> UserService
-
 SignUpView ...> SignUpViewModel
-SignUpViewModel ...> AuthenticationService
-SignUpViewModel ...> UserService
-
 ForgotPasswordView ...> ForgotPasswordViewModel
-ForgotPasswordViewModel ...> AuthenticationService
-ForgotPasswordViewModel ...> UserService
-
 HomeView ...> HomeViewModel
+HomeView ...> MapProvider
+RewardView ...> RewardViewModel
+ReportUserView ...> ReportUserViewModel
+UserDetailsView ...> UserDetailsViewModel
 
-HttpUserService ...|> UserService
-CachedUserService ...|> UserService
-HttpAuthenticationService ...|> AuthenticationService
-HttpRideService ...|> RideService
-HttpRewardService ...|> RewardService
+' ViewModels -> Repositories, Models
+SignInViewModel ....> AuthenticationRepository
+SignInViewModel ...> UserRepository
+SignUpViewModel ...> AuthenticationRepository
+SignUpViewModel ...> UserRepository
+ForgotPasswordViewModel ...> AuthenticationRepository
+ForgotPasswordViewModel ...> UserRepository
+ReportUserViewModel ...> UserRepository
+ReportUserViewModel ...> ReportRepository
+UserDetailsViewModel ...> UserRepository
+UserDetailsViewModel ...> User
+RewardViewModel ...> RewardRepository
 
+' Repositories
+AuthenticationRepository ---> AuthenticationToken
+UserRepository ---> User
+RideRepository ---> Ride
+RewardRepository ---> Reward
+HttpUserRepository ...|> UserRepository
+CachedUserRepository ...|> UserRepository
+
+'Models and misc
+JsonWebToken ...|> AuthenticationToken
+Reward ---> RewardStatus
+ReportRepository ---> Report
+User ---> Report
+Report ---> User
+Report ---> ReportReason
+Ride ---> Driver
+Ride ---> Passenger
+Ride ---> RideParticipant
+Ride ---> RideStatus
+Passenger ---|> RideParticipant
+Driver ---|> RideParticipant
+RideParticipant ---|> User
+PickupPoint ---|> RoutePoint
+DropoffPoint ---|> RoutePoint
+RoutePoint ---|> StartPoint
+RoutePoint ---|> EndPoint
+Route ---> RoutePoint
+Route ---> DropoffPoint
+Route ---> PickupPoint
+Route ---> StartPoint
+Route ---> EndPoint
+Ride ---> Route
+DropoffPoint ---> RidePassenger
+PickupPoint ---> RidePassenger
+GoogleMapProvider ...|> MapProvider
+MapProvider ---> Route
+MapProvider ---> RoutePoint
 User ---> Rating
+Driver ---> Vehicle
+Vehicle ---> User
+Motorbike ...|> Vehicle
+Car ...|> Vehicle
 
+class RewardView {
+
+}
+
+class RewardViewModel {
+
+}
+
+enum RewardStatus {
+
+}
+
+class Motorbike {
+
+}
+
+class Car {
+
+}
+
+class Vehicle {
+
+}
+
+class Route {
+
+}
+
+class StartPoint {
+
+}
+
+class EndPoint {
+
+}
+
+
+class RoutePoint {
+
+}
+
+class DropoffPoint {
+
+}
+
+class PickupPoint {
+
+}
+
+
+enum RideStatus {
+
+}
+
+class Passenger {
+
+}
+
+class Driver {
+
+}
+
+class RideParticipant {
+
+}
+
+class UserDetailsViewModel {
+
+}
+
+interface MapProvider {
+
+}
+
+class GoogleMapProvider {
+
+}
+
+enum ReportReason {
+
+}
+
+
+class ReportRepository {
+}
 
 class LoopApp {
 
@@ -60,7 +189,11 @@ class ViewModelBase {
 
 }
 
-class RideService {
+class ReportUserViewModel {
+
+}
+
+class RideRepository {
 
 }
 
@@ -106,12 +239,12 @@ class HomeView {
 class HomeViewModel {
 }
 
-interface AuthenticationService {
+interface AuthenticationRepository {
     +login()
     +logout()
 }
 
-interface UserService {
+interface UserRepository {
     +createUser()
     +getUser()
     +updateUser()
@@ -122,23 +255,17 @@ interface AuthenticationToken {
 
 }
 
-class CachedUserService {
+class CachedUserRepository {
 }
 
 class JsonWebToken {
 }
 
-class HttpRideService {
-}
-
-class HttpRewardService {
-}
-
-interface RideService {
+class RideRepository {
 
 }
 
-interface RewardService {
+class RewardRepository {
     +getRewards()
 }
 
