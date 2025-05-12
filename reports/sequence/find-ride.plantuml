@@ -1,18 +1,99 @@
 @startuml
 actor Carpooler
-boundary FindRideView
-control FindRideViewModel
-control RideService
-control BackendRideService
-database Database
+participant "HomeView" as HomeView
+participant "FindRideView" as FindRideView
+participant "FindRideViewModel" as VM
+participant "ActivityService_Frontend" as ActSrv_F
+participant "ActivityService_Backend" as ActSrv_B
+participant "RideService_Frontend" as RideSrv_F
+participant "RideService_Backend" as RideSrv_B
+participant "Database" as DB
 
-Carpooler -> FindRideView : onFindRideClick()
-FindRideView -> FindRideViewModel : findRide()
-FindRideViewModel -> RideService : searchRides(criteria)
-RideService -> BackendRideService : searchRides(criteria)
-BackendRideService -> Database : query rides
-Database --> BackendRideService : return matching rides
-BackendRideService --> RideService : return rides
-RideService --> FindRideViewModel : return rides
-FindRideViewModel --> FindRideView : display rides
+Carpooler -> HomeView: 1. clickFindRide()
+activate HomeView
+HomeView -> VM: 2. onFindRideClicked()
+deactivate HomeView
+activate VM
+
+box "Main Course of Events"
+  VM -> ActSrv_F: 3. getUserActivities(userId)
+  activate ActSrv_F
+
+  ActSrv_F -> ActSrv_B: 4. getActivities(userId)
+  activate ActSrv_B
+  ActSrv_B -> DB: 5. queryActivities(userId)
+  activate DB
+  DB --> ActSrv_B: 6. activities
+  deactivate DB
+  ActSrv_B --> ActSrv_F: 7. activities
+  deactivate ActSrv_B
+
+  ActSrv_F --> VM: 8. activities
+  deactivate ActSrv_F
+
+  VM -> FindRideView: 9. showActivities(activities)
+  deactivate VM
+end box
+
+box "Main Course (Insta‑Ride Selection → Show Matches)"
+  FindRideView -> VM: 10. onInstaRideSelected()
+  activate VM
+
+  VM -> RideSrv_F: 11. configureRequest(params)
+  activate RideSrv_F
+
+  RideSrv_F -> RideSrv_B: 12. findRides(params)
+  activate RideSrv_B
+  RideSrv_B -> DB: 13. queryRides(params)
+  activate DB
+  DB --> RideSrv_B: 14. matchingRides
+  deactivate DB
+  RideSrv_B --> RideSrv_F: 15. matchingRides
+  deactivate RideSrv_B
+
+  RideSrv_F --> VM: 16. matchingRides
+  deactivate RideSrv_F
+
+  VM -> FindRideView: 17. showMatchingRides(rides)
+  deactivate VM
+end box
+
+FindRideView -> VM: 18. onRideSelected(rideId)
+activate VM
+VM -> RideSrv_F: 19. getRide(rideId)
+activate RideSrv_F
+
+RideSrv_F -> RideSrv_B: 20. getRide(rideId)
+activate RideSrv_B
+RideSrv_B -> DB: 21. queryRideById(rideId)
+activate DB
+DB --> RideSrv_B: 22. ride
+deactivate DB
+RideSrv_B --> RideSrv_F: 23. ride
+deactivate RideSrv_B
+
+RideSrv_F --> VM: 24. ride
+deactivate RideSrv_F
+VM -> FindRideView: 25. showRideDetails(ride)
+deactivate VM
+
+FindRideView -> VM: 26. onClickJoinRide(rideId)
+' → continues with Join Ride UC
+
+alt Select Alternative Activity
+  box "Alternative: Choose Activity"
+    FindRideView -> VM: A1. onActivitySelected(activityId)
+    activate VM
+    VM -> RideSrv_F: A2. configureRequestFromActivity(activityId)
+    deactivate VM
+  end box
+
+else Manage Activities Flow
+  box "Alternative: Manage Activities"
+    FindRideView -> VM: B1. onManageActivitiesClicked()
+    activate VM
+    VM -> HomeView: B2. navigateToManageActivities()
+    deactivate VM
+  end box
+end
 @enduml
