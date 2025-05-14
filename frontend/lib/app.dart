@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/proxy_client.dart';
+import 'package:frontend/ui/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/profile/profile_view.dart';
@@ -45,10 +46,10 @@ class App extends StatelessWidget {
         '/home': (context) => HomeView(),
         '/settings': (context) => SettingsView(),
         '/profile': (context) => ProfileView(),
-        // Core routes
         '/activities_view': (context) => ActivitiesView(),
         '/rides_view': (context) => RidesView(),
         '/find_ride': (context) => FindRideView(),
+        '/create_ride': (context) => CreateRideView(),
       },
     );
   }

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class JsonWebToken {
+import 'package:frontend/data/repository/authentication_repository.dart';
+
+class JsonWebToken implements AuthenticationToken {
   final String token;
   final Map<String, dynamic> header;
   final Map<String, dynamic> payload;
@@ -11,6 +13,7 @@ class JsonWebToken {
     return jsonDecode(utf8.decode(base64.decode(data)));
   }
 
+  @override
   int get userId {
     return payload['user_id'];
   }
@@ -21,6 +24,7 @@ class JsonWebToken {
 
   JsonWebToken.fromJson(Map<String, dynamic> json) : this(json['token']);
 
+  @override
   Map<String, String> makeHeaders() {
     return {'Authorization': 'Bearer $token'};
   }
