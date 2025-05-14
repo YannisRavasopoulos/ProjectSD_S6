@@ -1,26 +1,21 @@
-import 'package:frontend/data/model/user.dart';
+import 'package:frontend/data/model/authentication.dart';
+import 'package:frontend/data/service/authentication_service.dart';
 
-abstract interface class AuthenticationToken {
-  Map<String, String> makeHeaders();
-  int get userId;
-}
+// TODO
+class AuthenticationRepository {
+  final AuthenticationService _authenticationService = AuthenticationService();
 
-abstract interface class AuthenticationInfo {
-  String get email;
-  String get password;
-}
+  Authentication? _cached;
 
-abstract interface class AuthenticationRepository {
-  AuthenticationToken getToken(AuthenticationInfo info);
-}
+  Future<void> createAuthentication(String email, String password) async {
+    _cached = await _authenticationService.login(email, password);
+  }
 
-abstract interface class UserRepository {
-  User getUser(int id);
-}
+  Future<Authentication> getAuthentication() async {
+    return _cached!;
+  }
 
-class MyAuthenticationRepository implements AuthenticationRepository {
-  @override
-  AuthenticationToken getToken(AuthenticationInfo info) {
-    throw UnimplementedError('getToken is not implemented');
+  Future<void> clearAuthentication() async {
+    throw UnimplementedError();
   }
 }
