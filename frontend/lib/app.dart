@@ -40,12 +40,12 @@ class App extends StatelessWidget {
         '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
         '/home': (context) => HomeView(),
-        '/settings': (context) => SettingsView(),
-        '/profile': (context) => ProfileView(),
-        '/activities_view': (context) => ActivitiesView(),
-        '/rides_view': (context) => RidesView(),
         '/find_ride': (context) => FindRideView(),
         '/create_ride': (context) => CreateRideView(),
+        '/profile': (context) => ProfileView(),
+        '/settings': (context) => SettingsView(),
+        '/activities': (context) => ActivitiesView(),
+        '/rides': (context) => RidesView(),
       },
     );
   }

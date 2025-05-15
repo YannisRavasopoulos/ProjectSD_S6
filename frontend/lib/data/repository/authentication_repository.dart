@@ -7,6 +7,7 @@ class AuthenticationRepository {
 
   Future<void> addAuthentication(String email, String password) async {
     _cached = JsonWebToken.fake(1);
+    await Future.delayed(Duration(seconds: 1));
   }
 
   Future<Authentication?> getAuthentication() async {
