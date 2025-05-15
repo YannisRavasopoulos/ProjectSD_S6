@@ -6,70 +6,74 @@ participant PickupFormView
 participant ArrangePickupViewModel
 participant PickupService_Frontend
 participant PickupService_Backend
-participant DB
+database DB
 participant Carpooler
 
-Driver -> RideView                  : onArrangePickupClick()
+Driver -> RideView: onArrangePickupClick()
 activate RideView
-RideView -> PickupFormView          : new()
+RideView -> PickupFormView: navigateTo()
 activate PickupFormView
-deactivate RideView
 
 
-PickupFormView -> PickupFormView    : renderPickupForm()
-PickupFormView --> Driver           : return form displayed
+PickupFormView -> PickupFormView: createForm()
+
+
+PickupFormView --> RideView: return: form
 deactivate PickupFormView
 
-alt Cancel Clicked
-    Driver -> PickupFormView        : onCancelClick()
-    activate PickupFormView
-    PickupFormView --> Driver       : return to previous page
-    deactivate PickupFormView
 
-else Confirm Clicked
-    Driver -> PickupFormView        : onConfirmClick()
+
+alt Confirm Clicked
+    Driver -> PickupFormView: onConfirmClick()
     activate PickupFormView
-    PickupFormView -> ArrangePickupViewModel : submitPickupData()
-    deactivate PickupFormView
+    PickupFormView -> ArrangePickupViewModel: submitData()
+    
 
     activate ArrangePickupViewModel
-    ArrangePickupViewModel -> ArrangePickupViewModel   : validateData()
-
-    alt Invalid data
-        ArrangePickupViewModel --> PickupFormView      : return "Invalid pickup data"
-        deactivate ArrangePickupViewModel
-
-    else Valid data
-        ArrangePickupViewModel -> PickupService_Frontend : createPickup()
-        deactivate ArrangePickupViewModel
-
+    ArrangePickupViewModel -> ArrangePickupViewModel: validateInput()
+    
+    alt Valid Data
+        ArrangePickupViewModel -> PickupService_Frontend: createPickupRequest()
         activate PickupService_Frontend
-        PickupService_Frontend -> PickupService_Backend : createPickup()
-        deactivate PickupService_Frontend
-
+        
+        PickupService_Frontend -> PickupService_Backend: submitPickupDetails()
         activate PickupService_Backend
-        PickupService_Backend -> DB                     : insertPickup()
+        
+        PickupService_Backend -> DB: insertPickupDetails()
         activate DB
-        DB --> PickupService_Backend                    : return pickupId
+        DB --> PickupService_Backend: return: result
         deactivate DB
-        PickupService_Backend --> PickupService_Frontend : return pickupId
+        
+        PickupService_Backend -> Carpooler: sendAcceptNotification()
+        PickupService_Backend --> PickupService_Frontend: return: creation success
         deactivate PickupService_Backend
-
-        activate PickupService_Frontend
-        PickupService_Frontend --> ArrangePickupViewModel : return pickupId
+        
+        PickupService_Frontend --> ArrangePickupViewModel: return: handled creation
         deactivate PickupService_Frontend
+        
+        ArrangePickupViewModel --> PickupFormView: return: Confirmation
+       
+        PickupFormView --> RideView: return: Confirmation message
+        
 
-        activate ArrangePickupViewModel
-        ArrangePickupViewModel --> PickupFormView         : return "Pickup arranged successfully"
+    else Invalid Data
+        ArrangePickupViewModel --> PickupFormView: return: Error
         deactivate ArrangePickupViewModel
-
-        activate PickupFormView
-        PickupFormView --> Driver                        : return confirmation message
+     
+        PickupFormView --> RideView: return: Error message
         deactivate PickupFormView
-
-        'basic
-        ' Notify carpooler of new pickup
-        PickupService_Frontend -> Carpooler            : notifyPickup()
     end
+
+else Cancel Clicked
+    Driver -> PickupFormView: onCancelClick()
+    activate PickupFormView
+    
+    PickupFormView --> RideView: return: Form closed
+    deactivate PickupFormView
+   
+    deactivate RideView
+    
 end
+
+deactivate ArrangePickupViewModel
 @enduml

@@ -1,114 +1,94 @@
 @startuml
 actor Carpooler
 
-' Layers in horizontal order:
 participant PickupDetailsPage
-participant AcceptPickupViewModel
+participant ConfirmPickupViewModel
 participant PickupService_Frontend
 participant PickupService_Backend
-participant DB
-participant AvailabilityNotificationScreen
+database DB
 
-Carpooler -> PickupDetailsPage         : onViewPickupRequest()
+Carpooler -> PickupDetailsPage : onViewPickupRequest()
 activate PickupDetailsPage
-PickupDetailsPage -> AcceptPickupViewModel : loadPickup()
-deactivate PickupDetailsPage
+PickupDetailsPage -> ConfirmPickupViewModel : loadPickupDetails()
+activate ConfirmPickupViewModel
 
-activate AcceptPickupViewModel
-AcceptPickupViewModel -> PickupService_Frontend : getPickupDetails()
-deactivate AcceptPickupViewModel
-
+ConfirmPickupViewModel -> PickupService_Frontend : getPickupDetails()
 activate PickupService_Frontend
-PickupService_Frontend -> PickupService_Backend : fetchPickup()
-deactivate PickupService_Frontend
 
+PickupService_Frontend -> PickupService_Backend : fetchPickupDetails()
 activate PickupService_Backend
-PickupService_Backend -> DB                  : queryPickup()
+
+PickupService_Backend -> DB : queryPickupDetails()
 activate DB
-DB --> PickupService_Backend                 : return pickupData
+DB --> PickupService_Backend : return pickup data
 deactivate DB
-PickupService_Backend --> PickupService_Frontend  : return pickupData
+
+PickupService_Backend --> PickupService_Frontend : return fetched pickup
 deactivate PickupService_Backend
 
-activate PickupService_Frontend
-PickupService_Frontend --> AcceptPickupViewModel  : return pickupData
+PickupService_Frontend --> ConfirmPickupViewModel : return updated pickup data
 deactivate PickupService_Frontend
 
-activate AcceptPickupViewModel
-AcceptPickupViewModel --> PickupDetailsPage        : return pickupData
-deactivate AcceptPickupViewModel
+ConfirmPickupViewModel --> PickupDetailsPage : return pickup data
+deactivate ConfirmPickupViewModel
 
-activate PickupDetailsPage
-PickupDetailsPage --> Carpooler                   : return displayDetails
-deactivate PickupDetailsPage
 
-alt Carpooler accepts
-    Carpooler -> PickupDetailsPage             : onAcceptClick()
-    activate PickupDetailsPage
-    PickupDetailsPage -> AcceptPickupViewModel : acceptPickup()
-    deactivate PickupDetailsPage
 
-    activate AcceptPickupViewModel
-    AcceptPickupViewModel -> PickupService_Frontend : acceptPickup()
-    deactivate AcceptPickupViewModel
-
+alt Carpooler Confirms
+    Carpooler -> PickupDetailsPage : onConfirmClick()
+    
+    PickupDetailsPage -> ConfirmPickupViewModel : ConfirmPickup()
+    activate ConfirmPickupViewModel
+    
+    ConfirmPickupViewModel -> PickupService_Frontend : sendConfirmRequest()
     activate PickupService_Frontend
-    PickupService_Frontend -> PickupService_Backend  : acceptPickup()
-    deactivate PickupService_Frontend
-
+    
+    PickupService_Frontend -> PickupService_Backend : confirmPickupConfirmance()
     activate PickupService_Backend
-    PickupService_Backend -> DB                      : updatePickupStatus(pickupId, "accepted")
+    
+    PickupService_Backend -> DB : updateStatusToConfirmed()
     activate DB
-    DB --> PickupService_Backend                     : return success
+    DB --> PickupService_Backend : return success
     deactivate DB
-    PickupService_Backend --> PickupService_Frontend  : return success
+    
+    PickupService_Backend --> PickupService_Frontend : return confirm flag
     deactivate PickupService_Backend
-
-    activate PickupService_Frontend
-    PickupService_Frontend --> AcceptPickupViewModel : return success
+    
+    PickupService_Frontend --> ConfirmPickupViewModel : return Confirmance
     deactivate PickupService_Frontend
+    
+    ConfirmPickupViewModel --> PickupDetailsPage : return confirmation
+    deactivate ConfirmPickupViewModel
+    
+    
 
-    activate AcceptPickupViewModel
-    AcceptPickupViewModel --> AvailabilityNotificationScreen : return "Pickup accepted"
-    deactivate AcceptPickupViewModel
-
-    activate AvailabilityNotificationScreen
-    AvailabilityNotificationScreen --> Carpooler               : return displaySuccess
-    deactivate AvailabilityNotificationScreen
-
+    
 else Carpooler rejects
-    Carpooler -> PickupDetailsPage             : onRejectClick()
-    activate PickupDetailsPage
-    PickupDetailsPage -> AcceptPickupViewModel : rejectPickup()
-    deactivate PickupDetailsPage
-
-    activate AcceptPickupViewModel
-    AcceptPickupViewModel -> PickupService_Frontend : rejectPickup()
-    deactivate AcceptPickupViewModel
-
+    Carpooler -> PickupDetailsPage : onRejectClick()
+  
+    PickupDetailsPage -> ConfirmPickupViewModel : rejectPickup()
+    activate ConfirmPickupViewModel
+    
+    ConfirmPickupViewModel -> PickupService_Frontend : sendRejectRequest()
     activate PickupService_Frontend
-    PickupService_Frontend -> PickupService_Backend  : rejectPickup()
-    deactivate PickupService_Frontend
-
+    
+    PickupService_Frontend -> PickupService_Backend : confirmPickupRejection()
     activate PickupService_Backend
-    PickupService_Backend -> DB                      : updatePickupStatus(pickupId, "rejected")
+    
+    PickupService_Backend -> DB : updateStatusToRejected()
     activate DB
-    DB --> PickupService_Backend                     : return success
+    DB --> PickupService_Backend : return success
     deactivate DB
-    PickupService_Backend --> PickupService_Frontend  : return success
+    
+    PickupService_Backend --> PickupService_Frontend : return reject flag
     deactivate PickupService_Backend
-
-    activate PickupService_Frontend
-    PickupService_Frontend --> AcceptPickupViewModel : return success
+    
+    PickupService_Frontend --> ConfirmPickupViewModel : return rejection
     deactivate PickupService_Frontend
-
-    activate AcceptPickupViewModel
-    AcceptPickupViewModel --> AvailabilityNotificationScreen : return "Pickup rejected"
-    deactivate AcceptPickupViewModel
-
-    activate AvailabilityNotificationScreen
-    AvailabilityNotificationScreen --> Carpooler               : return displayInfo
-    deactivate AvailabilityNotificationScreen
+    
+    ConfirmPickupViewModel --> PickupDetailsPage : return rejection
+    deactivate ConfirmPickupViewModel
+   
+    deactivate PickupDetailsPage
 end
-
 @enduml

@@ -6,61 +6,86 @@ participant RateUserPage
 participant RateUserViewModel
 participant RatingService_Frontend
 participant RatingService_Backend
-participant DB
-participant NotificationScreen
+database DB
+
 
 
 User -> RateUserPage            : onRateUserClick()
 activate RateUserPage
-RateUserPage -> RateUserPage    : renderRatingForm()
-RateUserPage --> User           : return form displayed
+RateUserPage -> RateUserViewModel    : renderRatingForm()
+activate RateUserViewModel
+RateUserViewModel --> RateUserPage           : return form displayed
+deactivate RateUserViewModel
 deactivate RateUserPage
 
 
-    alt Cancel clicked
-        User -> RateUserPage    : onCancelClick()
-        activate RateUserPage
-        RateUserPage --> User   : return to previous page
-        deactivate RateUserPage
-    else Submit clicked
+    
+    alt Submit clicked
         User -> RateUserPage    : onSubmitClick()
         activate RateUserPage
         RateUserPage -> RateUserViewModel : submitRating()
-        deactivate RateUserPage
+        
 
         activate RateUserViewModel
-        RateUserViewModel -> RateUserViewModel : validate()
-        alt validation fails
-            RateUserViewModel --> RateUserPage : return error
-            deactivate RateUserViewModel
-        else validation succeeds
+     
+       
+        alt validation succeeds
             RateUserViewModel -> RatingService_Frontend : createRating()
-            deactivate RateUserViewModel
+           
 
             activate RatingService_Frontend
-            RatingService_Frontend -> RatingService_Backend : createRating()
-            deactivate RatingService_Frontend
+            RatingService_Frontend -> RatingService_Backend : callRatingRouter()
+            
 
             activate RatingService_Backend
-            RatingService_Backend -> DB : insertRating()
+            RatingService_Backend -> DB : queryInsertRating()
             activate DB
-            DB --> RatingService_Backend : return success
+            DB --> RatingService_Backend : return success flag
             deactivate DB
-            RatingService_Backend --> RatingService_Frontend : return success
+            RatingService_Backend --> RatingService_Frontend : return success flag
             deactivate RatingService_Backend
 
-            activate RatingService_Frontend
+            
             RatingService_Frontend --> RateUserViewModel : return success
             deactivate RatingService_Frontend
 
-            activate RateUserViewModel
-            RateUserViewModel --> NotificationScreen : return success
-            deactivate RateUserViewModel
+            
+            RateUserViewModel --> RateUserPage : return success notification display
+            
 
-            activate NotificationScreen
-            NotificationScreen --> User : return displaySuccess
-            deactivate NotificationScreen
+            else validation fails
+            RateUserViewModel -> RatingService_Frontend : createRating()
+           
+
+            activate RatingService_Frontend
+            RatingService_Frontend -> RatingService_Backend : callRatingRouter()
+           
+
+            activate RatingService_Backend
+            RatingService_Backend -> DB : queryInsertRating()
+            activate DB
+            DB --> RatingService_Backend : return fail flag
+            deactivate DB
+            RatingService_Backend --> RatingService_Frontend : return fail flag
+            deactivate RatingService_Backend
+
+            
+            RatingService_Frontend --> RateUserViewModel : return fail
+            deactivate RatingService_Frontend
+ 
+
+            RateUserViewModel --> RateUserPage : return error display message
+            deactivate RateUserViewModel
+            deactivate RateUserPage
         end
+      else Cancel clicked
+        User -> RateUserPage    : onCancelClick()
+        activate RateUserPage
+        RateUserPage -> RateUserViewModel  : RateCancelled()
+        activate RateUserViewModel
+        RateUserViewModel --> RateUserPage   : return to previous page
+        deactivate RateUserViewModel
+        deactivate RateUserPage
     end
 @enduml
 
