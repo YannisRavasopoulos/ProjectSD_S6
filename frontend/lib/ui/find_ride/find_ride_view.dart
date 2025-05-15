@@ -1,98 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/ui/find_ride/ride_card.dart';
+import 'package:frontend/ui/find_ride/ride_location_selectors.dart';
+import 'package:frontend/ui/find_ride/ride_time_selectors.dart';
+import 'package:frontend/ui/find_ride/find_ride_viewmodel.dart';
+// import 'package:provider/provider.dart';
 
 class FindRideView extends StatelessWidget {
-  const FindRideView({super.key});
+  FindRideView({super.key});
+
+  final viewModel = FindRideViewModel(rideRepository: RideRepository());
 
   @override
   Widget build(BuildContext context) {
+    // Provider.of<FindRideViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Find a Ride')),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'From',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.location_pin),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'To',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.location_searching),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Row(
+      body: ListenableBuilder(
+        listenable: viewModel,
+        builder: (context, _) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
                   children: [
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          labelText: 'Departure Time',
-                          prefixIcon: Icon(Icons.access_time),
-                          border: OutlineInputBorder(),
-                        ),
-                        items:
-                            ['Now', '15min', '30min', 'Select']
-                                .map(
-                                  (time) => DropdownMenuItem(
-                                    value: time,
-                                    child: Text(time),
-                                  ),
-                                )
-                                .toList(),
-                        value: "Now",
-                        onChanged: (value) {
-                          // Handle departure time selection
-                        },
-                      ),
+                    RideLocationSelectors(
+                      onFromLocationChanged: viewModel.setSource,
+                      onToLocationChanged: viewModel.setDestination,
                     ),
-                    const SizedBox(width: 16.0),
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          labelText: 'Arrival Time',
-                          prefixIcon: Icon(Icons.access_time),
-                          border: OutlineInputBorder(),
-                        ),
-                        items:
-                            ['Soonest', '30min', '1hr', 'Select']
-                                .map(
-                                  (time) => DropdownMenuItem(
-                                    value: time,
-                                    child: Text(time),
-                                  ),
-                                )
-                                .toList(),
-                        value: "Soonest",
-                        onChanged: (value) {
-                          // Handle arrival time selection
-                        },
-                      ),
+                    const SizedBox(height: 16.0),
+                    RideTimeSelectors(
+                      onArrivalTimeChanged: viewModel.setArrivalTime,
+                      onDepartureTimeChanged: viewModel.setDepartureTime,
                     ),
                   ],
                 ),
-                const SizedBox(height: 16.0),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: List.generate(10, (index) {
-                return RideCard(ride: Ride());
-              }),
-            ),
-          ),
-        ],
+              ),
+              if (viewModel.isLoading)
+                Expanded(
+                  child: Center(child: const CircularProgressIndicator()),
+                )
+              else if (viewModel.errorMessage != null)
+                Center(
+                  child: Text(
+                    viewModel.errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                )
+              else
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: viewModel.rides.length,
+                    itemBuilder: (context, index) {
+                      return RideCard(ride: viewModel.rides[index]);
+                    },
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: viewModel.fetchRides,
+        child: const Icon(Icons.refresh),
       ),
     );
   }

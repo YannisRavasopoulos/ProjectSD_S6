@@ -41,7 +41,7 @@ class RideCard extends StatelessWidget {
                 ),
                 FilledButton(
                   onPressed:
-                      ride.passengers.length < ride.capacity
+                      ride.passengers < ride.capacity
                           ? () {
                             // Add your join ride logic here
                             print('Join ride button pressed');
