@@ -28,6 +28,8 @@ HomeViewModel ---|> ViewModelBase
 RewardViewModel ---|> ViewModelBase
 ReportUserViewModel ---|> ViewModelBase
 UserDetailsViewModel ---|> ViewModelBase
+AccountViewModel ---|> ViewModelBase
+RideDetailsViewModel ---|> ViewModelBase
 
 ' Views -> ViewModels, Widgets
 SignInView ...> SignInViewModel
@@ -38,6 +40,25 @@ HomeView ...> MapProvider
 RewardView ...> RewardViewModel
 ReportUserView ...> ReportUserViewModel
 UserDetailsView ...> UserDetailsViewModel
+AccountView ...> AccountViewModel
+RideDetailsView ...> RideDetailsViewModel
+
+class RideDetailsView {
+
+}
+
+class RideDetailsViewModel {
+
+}
+
+
+class AccountView {
+
+}
+
+class AccountViewModel {
+
+}
 
 ' ViewModels -> Repositories, Models
 SignInViewModel ....> AuthenticationRepository
