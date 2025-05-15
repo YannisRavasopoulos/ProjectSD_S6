@@ -17,8 +17,7 @@ import 'package:frontend/ui/sign_up/sign_up_viewmodel.dart';
 class App extends StatelessWidget {
   App({super.key});
 
-  // TODO
-  final bool isLoggedIn = true;
+  bool isLoggedIn = false;
 
   final SignInViewModel signInViewModel = SignInViewModel(
     AuthenticationRepository(),

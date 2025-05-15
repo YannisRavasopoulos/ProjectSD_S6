@@ -32,11 +32,7 @@ class SignInViewModel extends ChangeNotifier {
         return false;
       }
 
-      // TODO
-      await authenticationRepository.createAuthentication(email, password);
-
-      final token = await authenticationRepository.getAuthentication();
-      final user = await userRepository.getUser(token);
+      await authenticationRepository.addAuthentication(email, password);
 
       return true;
     } catch (e) {
