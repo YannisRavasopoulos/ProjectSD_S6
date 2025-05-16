@@ -5,19 +5,35 @@ import 'package:frontend/data/repository/ride_repository.dart';
 class FindRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
 
-  List<Ride> _rides = [];
-  List<Ride> get rides => _rides;
-
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
-
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  List<Ride> rides = [];
+  String? errorMessage;
+  bool isLoading = false;
 
   String _source = '';
   String _destination = '';
 
-  FindRideViewModel({required this.rideRepository}) {
+  String departureTime = 'Now';
+  String arrivalTime = 'Soonest';
+
+  static const List<String> _fixedDepartureTimes = [
+    'Now',
+    '15min',
+    '30min',
+    'Select',
+  ];
+  static const List<String> _fixedArrivalTimes = [
+    'Soonest',
+    '15min',
+    '30min',
+    'Select',
+  ];
+
+  List<String> departureTimes;
+  List<String> arrivalTimes;
+
+  FindRideViewModel({required this.rideRepository})
+    : departureTimes = _fixedDepartureTimes,
+      arrivalTimes = _fixedArrivalTimes {
     fetchRides();
   }
 
@@ -33,34 +49,73 @@ class FindRideViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setArrivalTime(String? arrivalTime) {
-    // Handle arrival time selection
+  bool selectingDepartureTime = false;
+  bool selectingArrivalTime = false;
+
+  void selectArrivalTime(String? arrivalTime) {
+    if (arrivalTime != null) {
+      arrivalTimes = _fixedArrivalTimes + [arrivalTime];
+      setArrivalTime(arrivalTime);
+    } else {
+      arrivalTimes = _fixedArrivalTimes;
+    }
+
+    selectingArrivalTime = false;
+    notifyListeners();
+  }
+
+  void selectDepartureTime(String? departureTime) {
+    if (departureTime != null) {
+      departureTimes = _fixedDepartureTimes + [departureTime];
+      setDepartureTime(departureTime);
+    } else {
+      departureTimes = _fixedDepartureTimes;
+    }
+
+    selectingDepartureTime = false;
+    notifyListeners();
+  }
+
+  void setArrivalTime(String arrivalTime) {
+    if (arrivalTime == "Select") {
+      selectingArrivalTime = true;
+      notifyListeners();
+      return;
+    }
+
+    this.arrivalTime = arrivalTime;
     fetchRides();
     notifyListeners();
   }
 
-  void setDepartureTime(String? departureTime) {
-    // Handle departure time selection
+  void setDepartureTime(String departureTime) {
+    if (departureTime == "Select") {
+      selectingDepartureTime = true;
+      notifyListeners();
+      return;
+    }
+
+    this.departureTime = departureTime;
     fetchRides();
     notifyListeners();
   }
 
   Future<void> fetchRides() async {
-    _isLoading = true;
-    _errorMessage = null;
+    isLoading = true;
+    errorMessage = null;
     notifyListeners();
 
     await Future.delayed(Duration(seconds: 1));
 
     try {
-      _rides = await rideRepository.getRides(
+      rides = await rideRepository.getRides(
         source: _source,
         destination: _destination,
       );
     } catch (e) {
-      _errorMessage = e.toString();
+      errorMessage = e.toString();
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
   }

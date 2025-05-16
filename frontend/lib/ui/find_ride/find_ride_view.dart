@@ -11,6 +11,24 @@ class FindRideView extends StatelessWidget {
 
   final viewModel = FindRideViewModel(rideRepository: RideRepository());
 
+  Future<void> _showDepartureTimePicker(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    viewModel.selectDepartureTime(pickedTime?.format(context));
+  }
+
+  Future<void> _showArrivalTimePicker(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    viewModel.selectArrivalTime(pickedTime?.format(context));
+  }
+
   @override
   Widget build(BuildContext context) {
     // Provider.of<FindRideViewModel>(context);
@@ -20,22 +38,42 @@ class FindRideView extends StatelessWidget {
       body: ListenableBuilder(
         listenable: viewModel,
         builder: (context, _) {
+          // Show the time picker if the user is selecting a departure time
+          if (viewModel.selectingDepartureTime) {
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => _showDepartureTimePicker(context),
+            );
+          }
+
+          if (viewModel.selectingArrivalTime) {
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => _showArrivalTimePicker(context),
+            );
+          }
+
           return Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    RideLocationSelectors(
-                      onFromLocationChanged: viewModel.setSource,
-                      onToLocationChanged: viewModel.setDestination,
-                    ),
-                    const SizedBox(height: 16.0),
-                    RideTimeSelectors(
-                      onArrivalTimeChanged: viewModel.setArrivalTime,
-                      onDepartureTimeChanged: viewModel.setDepartureTime,
-                    ),
-                  ],
+                child: Form(
+                  child: Column(
+                    children: [
+                      RideLocationSelectors(
+                        onFromLocationChanged: viewModel.setSource,
+                        onToLocationChanged: viewModel.setDestination,
+                      ),
+                      const SizedBox(height: 16.0),
+                      RideTimeSelectors(
+                        key: ValueKey(viewModel.departureTime),
+                        departureTime: viewModel.departureTime,
+                        arrivalTime: viewModel.arrivalTime,
+                        departureTimes: viewModel.departureTimes,
+                        arrivalTimes: viewModel.arrivalTimes,
+                        onArrivalTimeChanged: viewModel.setArrivalTime,
+                        onDepartureTimeChanged: viewModel.setDepartureTime,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               if (viewModel.isLoading)
