@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 
-// Card(
-//           );
-
 class RideCard extends StatelessWidget {
   final Ride ride;
 

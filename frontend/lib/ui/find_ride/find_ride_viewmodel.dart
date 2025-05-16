@@ -17,14 +17,14 @@ class FindRideViewModel extends ChangeNotifier {
 
   static const List<String> _fixedDepartureTimes = [
     'Now',
-    '15min',
-    '30min',
+    'in 15 minutes',
+    'in 30 minutes',
     'Select',
   ];
   static const List<String> _fixedArrivalTimes = [
     'Soonest',
-    '15min',
-    '30min',
+    'in 15 minutes',
+    'in 30 minutes',
     'Select',
   ];
 
