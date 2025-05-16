@@ -21,7 +21,12 @@ class ActivitiesViewModel extends ChangeNotifier {
 
   List<Activity> get activities => _activities;
 
-  void deleteActivity(String id) {
+  void addActivity(Activity activity) {
+    _activities.add(activity);
+    notifyListeners();
+  }
+
+  void removeActivity(String id) {
     _activities.removeWhere((activity) => activity.id == id);
     notifyListeners();
   }

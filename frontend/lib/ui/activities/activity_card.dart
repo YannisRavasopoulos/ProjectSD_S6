@@ -4,13 +4,13 @@ import 'package:frontend/data/model/activity.dart';
 class ActivityCard extends StatelessWidget {
   final Activity activity;
   final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback onRemove;
 
   const ActivityCard({
     super.key,
     required this.activity,
     required this.onEdit,
-    required this.onDelete,
+    required this.onRemove,
   });
 
   @override
@@ -36,7 +36,7 @@ class ActivityCard extends StatelessWidget {
               icon: const Icon(Icons.edit),
             ),
             trailing: IconButton(
-              onPressed: onDelete,
+              onPressed: onRemove,
               icon: const Icon(
                 Icons.delete,
                 color: Color.fromARGB(255, 216, 41, 29),
