@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/rewards/rewards_viewmodel.dart';
+import 'rewards_viewmodel.dart'; // Make sure this is correctly imported
 
-class RewardView extends StatefulWidget {
+class RewardView extends StatelessWidget {
   final RewardViewModel viewModel;
 
   RewardView({required this.viewModel});
 
-  @override
-  _RewardViewState createState() => _RewardViewState();
-}
-
-class _RewardViewState extends State<RewardView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,9 +20,11 @@ class _RewardViewState extends State<RewardView> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            Text(
-              '${widget.viewModel.userPoints} Points',
-              style: TextStyle(fontSize: 16),
+            ValueListenableBuilder<int>(
+              valueListenable: viewModel.userPoints,
+              builder: (context, points, _) {
+                return Text('$points Points', style: TextStyle(fontSize: 16));
+              },
             ),
             SizedBox(height: 24),
             Text(
@@ -36,113 +33,135 @@ class _RewardViewState extends State<RewardView> {
             ),
             SizedBox(height: 8),
             Expanded(
-              child: ListView.builder(
-                itemCount: widget.viewModel.availableRewards.length,
-                itemBuilder: (context, index) {
-                  final reward = widget.viewModel.availableRewards[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(reward.title),
-                      subtitle: Text(
-                        '${reward.description}\nCost: ${reward.cost} Points',
-                      ),
-                      trailing: ElevatedButton(
-                        onPressed:
-                            widget.viewModel.isLoading
-                                ? null // Disable button while loading
-                                : () {
-                                  BuildContext currentContext = context;
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text('Redeem Reward'),
-                                        content: Text(
-                                          'Are you sure you want to redeem ${reward.title} for ${reward.cost} points?',
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('Cancel'),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              Navigator.of(context).pop();
+              child: ValueListenableBuilder<List<Reward>>(
+                valueListenable: viewModel.availableRewards,
+                builder: (context, rewards, _) {
+                  return ListView.builder(
+                    itemCount: rewards.length,
+                    itemBuilder: (context, index) {
+                      final reward = rewards[index];
+                      return Card(
+                        child: ListTile(
+                          title: Text(reward.title),
+                          subtitle: Text(
+                            '${reward.description}\nCost: ${reward.cost} Points',
+                          ),
+                          trailing: ValueListenableBuilder<bool>(
+                            valueListenable: viewModel.isLoading,
+                            builder: (context, isLoading, _) {
+                              return ElevatedButton(
+                                onPressed:
+                                    isLoading
+                                        ? null
+                                        : () {
+                                          final dialogContext = context;
 
-                                              await widget.viewModel
-                                                  .redeemReward(reward);
-
-                                              // Capture the values before setState
-                                              final errorMessage =
-                                                  widget.viewModel.errorMessage;
-                                              final redemptionCode =
-                                                  widget
-                                                      .viewModel
-                                                      .redemptionCode;
-
-                                              setState(() {
-                                                // Update UI based on the captured values
-                                                if (errorMessage.isNotEmpty) {
-                                                  ScaffoldMessenger.of(
-                                                    currentContext,
-                                                  ).showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                        errorMessage,
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-                                                if (redemptionCode.isNotEmpty) {
-                                                  showDialog(
-                                                    context:
-                                                        currentContext, // Use captured context
-                                                    builder: (
-                                                      BuildContext context,
-                                                    ) {
-                                                      return AlertDialog(
-                                                        title: Text(
-                                                          'Redemption Code',
-                                                        ),
-                                                        content: Text(
-                                                          redemptionCode,
-                                                        ),
-                                                        actions: [
-                                                          TextButton(
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                context,
-                                                              ).pop();
-                                                              widget.viewModel
-                                                                  .clearRedemptionCode();
-                                                              setState(
-                                                                () {},
-                                                              ); // Update UI after clearing code
-                                                            },
-                                                            child: Text('OK'),
-                                                          ),
-                                                        ],
-                                                      );
+                                          showDialog(
+                                            context: dialogContext,
+                                            builder: (BuildContext alertCtx) {
+                                              return AlertDialog(
+                                                title: Text('Redeem Reward'),
+                                                content: Text(
+                                                  'Are you sure you want to redeem ${reward.title} for ${reward.cost} points?',
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(
+                                                        alertCtx,
+                                                      ).pop();
                                                     },
-                                                  );
-                                                }
-                                              });
+                                                    child: Text('Cancel'),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () async {
+                                                      Navigator.of(
+                                                        alertCtx,
+                                                      ).pop();
+
+                                                      // ✅ Use dialogContext captured earlier
+                                                      await viewModel
+                                                          .redeemReward(reward);
+
+                                                      final error =
+                                                          viewModel
+                                                              .errorMessage
+                                                              .value;
+                                                      final code =
+                                                          viewModel
+                                                              .redemptionCode
+                                                              .value;
+
+                                                      if (error.isNotEmpty) {
+                                                        ScaffoldMessenger.of(
+                                                          dialogContext,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              error,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+
+                                                      if (code.isNotEmpty) {
+                                                        // Show code dialog with safe context
+                                                        showDialog(
+                                                          context:
+                                                              dialogContext,
+                                                          builder:
+                                                              (
+                                                                ctx,
+                                                              ) => AlertDialog(
+                                                                title: Text(
+                                                                  'Redemption Code',
+                                                                ),
+                                                                content: Text(
+                                                                  code,
+                                                                ),
+                                                                actions: [
+                                                                  TextButton(
+                                                                    onPressed: () {
+                                                                      Navigator.of(
+                                                                        ctx,
+                                                                      ).pop();
+                                                                      viewModel
+                                                                          .clearRedemptionCode();
+                                                                    },
+                                                                    child: Text(
+                                                                      'OK',
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                        );
+                                                      }
+                                                    },
+                                                    child:
+                                                        isLoading
+                                                            ? SizedBox(
+                                                              width: 20,
+                                                              height: 20,
+                                                              child:
+                                                                  CircularProgressIndicator(
+                                                                    strokeWidth:
+                                                                        2,
+                                                                  ),
+                                                            )
+                                                            : Text('Redeem'),
+                                                  ),
+                                                ],
+                                              );
                                             },
-                                            child:
-                                                widget.viewModel.isLoading
-                                                    ? CircularProgressIndicator() // Show loading indicator
-                                                    : Text('Redeem'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                        child: Text('Redeem'),
-                      ),
-                    ),
+                                          );
+                                        },
+                                child: Text('Redeem'),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
