@@ -5,6 +5,7 @@ import 'package:frontend/ui/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/profile/profile_view.dart';
 import 'package:frontend/ui/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/sign_up/sign_up_view.dart';
+import 'package:frontend/ui/rewards/rewards_view.dart';
 import 'package:frontend/ui/home/home_view.dart';
 import 'package:frontend/ui/activities/activities_view.dart';
 import 'package:frontend/ui/settings/settings_view.dart';
@@ -39,6 +40,7 @@ class App extends StatelessWidget {
       ),
       initialRoute: isLoggedIn ? '/home' : '/sign_in',
       routes: {
+        '/rewards': (context) => RewardView(),
         '/sign_in': (context) => SignInView(viewModel: signInViewModel),
         '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
