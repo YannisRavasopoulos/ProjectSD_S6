@@ -10,19 +10,18 @@ class RideDetailsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        // Reduce padding
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, // Make column as small as possible
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               'Ride Details',
-              style: Theme.of(context).textTheme.titleMedium, // Smaller title
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 8), // Reduced spacing
+            const SizedBox(height: 12),
+            // Driver and Vehicle info
             Row(
-              // First row with driver and vehicle
               children: [
                 Expanded(
                   child: _buildDetailRow(
@@ -40,8 +39,8 @@ class RideDetailsPanel extends StatelessWidget {
                 ),
               ],
             ),
+            // Capacity and Duration
             Row(
-              // Second row with seats and departure
               children: [
                 Expanded(
                   child: _buildDetailRow(
@@ -54,12 +53,53 @@ class RideDetailsPanel extends StatelessWidget {
                 Expanded(
                   child: _buildDetailRow(
                     icon: Icons.schedule,
-                    label: 'Time',
+                    label: 'Duration',
                     value: ride.estimatedDuration,
                   ),
                 ),
               ],
             ),
+            // Distance and Description
+            Row(
+              children: [
+                Expanded(
+                  child: _buildDetailRow(
+                    icon: Icons.route,
+                    label: 'Distance',
+                    value: ride.distance,
+                  ),
+                ),
+                Expanded(
+                  child: _buildDetailRow(
+                    icon: Icons.info_outline,
+                    label: 'Description',
+                    value: ride.description,
+                  ),
+                ),
+              ],
+            ),
+            // Departure Time and Pickup Location if available
+            if (ride.departureTime != null)
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildDetailRow(
+                      icon: Icons.access_time,
+                      label: 'Departure',
+                      value: _formatDateTime(ride.departureTime!),
+                    ),
+                  ),
+                  if (ride.pickupLocation != null)
+                    Expanded(
+                      child: _buildDetailRow(
+                        icon: Icons.location_on,
+                        label: 'Pickup',
+                        value:
+                            '${ride.pickupLocation!.latitude.toStringAsFixed(2)}, ${ride.pickupLocation!.longitude.toStringAsFixed(2)}',
+                      ),
+                    ),
+                ],
+              ),
           ],
         ),
       ),
@@ -72,29 +112,30 @@ class RideDetailsPanel extends StatelessWidget {
     required String value,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0), // Reduced padding
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         mainAxisSize: MainAxisSize.min, // Make row as small as possible
         children: [
-          Icon(icon, size: 16), // Smaller icons
-          const SizedBox(width: 4), // Reduced spacing
+          Icon(icon, size: 16),
+          const SizedBox(width: 4),
           Text(
             '$label:',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 12, // Smaller text
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
-          const SizedBox(width: 4), // Reduced spacing
+          const SizedBox(width: 4),
           Flexible(
             child: Text(
               value,
-              style: const TextStyle(fontSize: 12), // Smaller text
+              style: const TextStyle(fontSize: 12),
               overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }

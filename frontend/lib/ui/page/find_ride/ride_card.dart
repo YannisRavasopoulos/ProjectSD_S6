@@ -41,26 +41,28 @@ class RideCard extends StatelessWidget {
                   onPressed:
                       ride.passengers < ride.capacity
                           ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => ArrangePickupView(
-                                      carpoolerId:
-                                          "test_carpooler_id", // TODO: Replace with actual user ID
-                                      driverId:
-                                          ride
-                                              .driver
-                                              .name, // TODO: Replace with actual driver ID
-                                      selectedRide: ride,
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Not Implemented'),
+                                  content: const Text(
+                                    'This feature is not implemented yet.',
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('OK'),
                                     ),
-                              ),
+                                  ],
+                                );
+                              },
                             );
                           }
                           : null,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: const Text('Join'),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text('Join'),
                   ),
                 ),
               ],

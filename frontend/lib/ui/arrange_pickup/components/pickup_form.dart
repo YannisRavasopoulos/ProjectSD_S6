@@ -54,13 +54,6 @@ class _PickupFormState extends State<PickupForm> {
             const SizedBox(height: 16),
             PickupMapView(onLocationChanged: widget.onLocationChanged),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: widget.onSubmit,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-              ),
-              child: const Text('Confirm Pickup Arrangement'),
-            ),
           ],
         ),
       ),

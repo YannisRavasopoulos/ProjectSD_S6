@@ -8,8 +8,11 @@ class ArrangePickupViewModel extends ChangeNotifier {
   DateTime? _selectedTime;
   String _location = '';
 
-  ArrangePickupViewModel({required PickupRepository repository})
-    : _repository = repository;
+  ArrangePickupViewModel({
+    required PickupRepository repository,
+    required String driverId,
+    required String rideId,
+  }) : _repository = repository;
 
   // state access
   bool get isLoading => _isLoading;
@@ -26,6 +29,30 @@ class ArrangePickupViewModel extends ChangeNotifier {
   void setLocation(String newLocation) {
     _location = newLocation;
     notifyListeners();
+  }
+
+  // Validate pickup details
+  bool isValid() {
+    if (_selectedTime == null) {
+      _errorMessage = 'Please select a pickup time';
+      notifyListeners();
+      return false;
+    }
+
+    if (_location.isEmpty) {
+      _errorMessage = 'Please select a pickup location';
+      notifyListeners();
+      return false;
+    }
+
+    // Check if pickup time is in the future
+    if (_selectedTime!.isBefore(DateTime.now())) {
+      _errorMessage = 'Pickup time must be in the future';
+      notifyListeners();
+      return false;
+    }
+
+    return true;
   }
 
   // business logic
