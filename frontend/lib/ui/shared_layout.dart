@@ -42,6 +42,16 @@ class SharedLayout extends StatelessWidget {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.card_giftcard), // Added rewards icon
+              title: const Text('Rewards'), // Added rewards title
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/rewards',
+                ); // Navigate to rewards view
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Settings'),
               onTap: () {
