@@ -1,10 +1,20 @@
 import 'package:frontend/data/location_exception.dart';
 import 'package:frontend/data/model/location.dart';
+import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 class LocationRepository {
-  Future<Location> getLocation(LatLng coordinates) async {}
+  GeoCode _geoCodeApi = GeoCode();
+
+  Future<Location> getLocation(LatLng coordinates) async {
+    var address = await _geoCodeApi.reverseGeocoding(
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+    );
+
+    return Location(coordinates: coordinates, name: address.toString());
+  }
 
   Future<Location> getCurrentLocation() async {
     var isServiceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -28,10 +38,10 @@ class LocationRepository {
     }
 
     var position = await Geolocator.getCurrentPosition();
-
-    return Location(
-      coordinates: LatLng(position.latitude, position.longitude),
-      name: "Current Location",
+    var location = await getLocation(
+      LatLng(position.latitude, position.longitude),
     );
+
+    return location;
   }
 }

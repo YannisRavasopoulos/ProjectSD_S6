@@ -9,9 +9,12 @@ class HomeViewModel extends ChangeNotifier {
   LatLng? destination;
   LatLng? source;
 
-  void selectPoint(LatLng point) {
+  Future<void> selectPoint(LatLng point) async {
     destination = point;
     notifyListeners();
+
+    var location = await _locationRepository.getLocation(point);
+    print(location.name);
   }
 
   Future<void> refreshLocation() async {
@@ -19,8 +22,6 @@ class HomeViewModel extends ChangeNotifier {
       _location = await _locationRepository.getCurrentLocation();
       source = _location!.coordinates;
       notifyListeners();
-
-      // print("UPDATED");
     } catch (e) {
       // Handle error
       print(e);

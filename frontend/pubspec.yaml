@@ -42,7 +42,7 @@ dependencies:
   latlong2: ^0.9.1
   geolocator: ^14.0.0
   geolocator_linux: ^0.2.3
-  geocoding: ^3.0.0
+  geocode: ^1.0.3
 
 
 dev_dependencies:

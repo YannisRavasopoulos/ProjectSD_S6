@@ -34,6 +34,8 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
     widget.viewModel.selectPoint(point);
   }
 
+  void _onMenuPressed() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,33 +91,89 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                 ],
               ),
               // Search bar overlay
-              Positioned(
-                top: 16.0,
-                left: 16.0,
-                right: 16.0,
-                child: Card(
-                  elevation: 4.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search for a location...',
-                      // prefixIcon: const Icon(Icons.search),
-                      prefixIcon: const Icon(Icons.menu),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(16.0),
-                    ),
-                    onSubmitted: (value) {
-                      // Handle search logic here
-                      print('Search query: $value');
-                    },
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 16.0,
+              //   left: 16.0,
+              //   right: 16.0,
+              //   child: Card(
+              //     elevation: 4.0,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(8.0),
+              //     ),
+              //     child: TextField(
+              //       decoration: InputDecoration(
+              //         hintText: 'Search for a location...',
+              //         // prefixIcon: const Icon(Icons.search),
+              //         prefixIcon: IconButton(
+              //           onPressed: () => _onMenuPressed(),
+              //           icon: const Icon(Icons.menu),
+              //         ),
+              //         border: InputBorder.none,
+              //         contentPadding: const EdgeInsets.all(16.0),
+              //       ),
+              //       onSubmitted: (value) {
+              //         // Handle search logic here
+              //         print('Search query: $value');
+              //       },
+              //     ),
+              //   ),
+              // ),
             ],
           );
         },
+      ),
+      appBar: AppBar(
+        title: TextField(
+          decoration: InputDecoration(
+            hintText: 'Search for a location...',
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+          ),
+          onSubmitted: (value) {
+            // Handle search logic here
+            print('Search query: $value');
+          },
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 23, 143, 117),
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.card_giftcard), // Added rewards icon
+              title: const Text('Rewards'), // Added rewards title
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/rewards',
+                ); // Navigate to rewards view
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Find Ride'),
+              onTap: () {
+                Navigator.pushNamed(context, '/find_ride');
+              },
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomPanel(routeName: "/home"),
       floatingActionButton: FloatingActionButton(
