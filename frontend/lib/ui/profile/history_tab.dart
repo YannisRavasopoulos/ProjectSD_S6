@@ -8,7 +8,7 @@ class HistoryTab extends StatefulWidget {
   State<HistoryTab> createState() => _HistoryTabState();
 }
 
-class _HistoryTabState extends State<HistoryTab> {
+class _HistoryTabState extends State<HistoryTab> { //hardcoded for now
   List<Map<String, String>> rides = [
     {'from': 'Athens', 'to': 'Thessaloniki', 'date': '2025-04-12'},
     {'from': 'Patras', 'to': 'Athens', 'date': '2025-03-30'},
