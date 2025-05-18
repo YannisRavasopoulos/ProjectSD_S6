@@ -17,6 +17,7 @@ import 'package:frontend/ui/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/data/service/authentication_service.dart';
 import 'package:frontend/data/service/user_service.dart';
 import 'package:frontend/ui/rewards/rewards_viewmodel.dart';
+import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
 
 class App extends StatelessWidget {
   App({super.key});
@@ -51,6 +52,11 @@ class App extends StatelessWidget {
         '/settings': (context) => SettingsView(),
         '/activities': (context) => ActivitiesView(),
         '/rides': (context) => RidesView(),
+        '/arrange_pickup':
+            (context) => ArrangePickupView(
+              carpoolerId: "test_carpooler_id",
+              driverId: "test_driver_id",
+            ),
       },
     );
   }
