@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/repository/ride_repository.dart';
-import 'package:frontend/ui/find_ride/ride_card.dart';
-import 'package:frontend/ui/find_ride/ride_location_selectors.dart';
-import 'package:frontend/ui/find_ride/ride_time_selectors.dart';
-import 'package:frontend/ui/find_ride/find_ride_viewmodel.dart';
+import 'package:frontend/ui/page/find_ride/ride_card.dart';
+import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
+import 'package:frontend/ui/page/find_ride/ride_time_selectors.dart';
+import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
 
 class FindRideView extends StatelessWidget {
-  FindRideView({super.key});
+  FindRideView({super.key, required this.viewModel});
 
-  final viewModel = FindRideViewModel(rideRepository: RideRepository());
+  final FindRideViewModel viewModel;
 
   Future<void> _showDepartureTimePicker(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
@@ -30,8 +29,6 @@ class FindRideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provider.of<FindRideViewModel>(context);
-
     return Scaffold(
       appBar: AppBar(title: const Text('Find a Ride')),
       body: ListenableBuilder(

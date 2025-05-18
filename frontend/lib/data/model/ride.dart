@@ -1,56 +1,7 @@
-import 'package:frontend/data/model/user.dart';
+import 'package:frontend/data/model/driver.dart';
 import 'dart:math';
 
-class RideParticipant /* extends User */ {
-  String name;
-
-  RideParticipant({required this.name});
-
-  factory RideParticipant.random() {
-    final names = ["John Doe", "Jane Smith", "Alice Johnson", "Bob Brown"];
-    final random = Random();
-    return RideParticipant(name: names[random.nextInt(names.length)]);
-  }
-}
-
-class Driver extends RideParticipant {
-  Driver({required String name}) : super(name: name);
-
-  factory Driver.random() {
-    return Driver(name: RideParticipant.random().name);
-  }
-}
-
-class Vehicle {
-  String description;
-
-  Vehicle({required this.description});
-
-  factory Vehicle.random() {
-    final descriptions = [
-      "Toyota Camry",
-      "Honda Civic",
-      "Ford Focus",
-      "BMW 3 Series",
-    ];
-    final random = Random();
-    return Vehicle(
-      description: descriptions[random.nextInt(descriptions.length)],
-    );
-  }
-}
-
-class Passenger extends RideParticipant {
-  Passenger({required String name}) : super(name: name);
-
-  factory Passenger.random() {
-    return Passenger(name: RideParticipant.random().name);
-  }
-}
-
-class Location {}
-
-class DateTime {}
+import 'package:frontend/data/model/vehicle.dart';
 
 // TODO
 class Ride {

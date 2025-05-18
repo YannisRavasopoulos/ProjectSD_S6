@@ -11,6 +11,7 @@ class RideRepository {
       //   source: source,
       //   destination: destination,
       // );
+      await Future.delayed(Duration(milliseconds: 500));
       return List.generate(10, (index) => Ride.random());
     } catch (e) {
       throw Exception('Failed to fetch rides: $e');

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/loading_button.dart';
-import 'package:frontend/ui/sign_up/sign_up_viewmodel.dart';
+import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 
 class SignUpView extends StatelessWidget {
   const SignUpView({super.key, required SignUpViewModel viewModel})
