@@ -27,16 +27,4 @@ class PickupRepository {
       return false;
     }
   }
-
-  Future<List<Pickup>> getDriverPickups(String driverId) async {
-    try {
-      final List<dynamic> response = await _pickupService.getDriverPickups(
-        driverId,
-      );
-      return response.map((json) => Pickup.fromJson(json)).toList();
-    } catch (e) {
-      print('Error fetching driver pickups: $e');
-      return [];
-    }
-  }
 }

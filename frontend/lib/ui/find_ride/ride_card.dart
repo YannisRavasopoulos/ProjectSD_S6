@@ -49,7 +49,10 @@ class RideCard extends StatelessWidget {
                                       carpoolerId:
                                           "test_carpooler_id", // TODO: Replace with actual user ID
                                       driverId:
-                                          5.toString(), // TODO: Replace with actual driver ID
+                                          ride
+                                              .driver
+                                              .name, // TODO: Replace with actual driver ID
+                                      selectedRide: ride,
                                     ),
                               ),
                             );

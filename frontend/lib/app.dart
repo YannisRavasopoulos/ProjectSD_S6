@@ -52,11 +52,11 @@ class App extends StatelessWidget {
         '/settings': (context) => SettingsView(),
         '/activities': (context) => ActivitiesView(),
         '/rides': (context) => RidesView(),
-        '/arrange_pickup':
-            (context) => ArrangePickupView(
-              carpoolerId: "test_carpooler_id",
-              driverId: "test_driver_id",
-            ),
+        // '/arrange_pickup':
+        //     (context) => ArrangePickupView(
+        //       carpoolerId: "test_carpooler_id",
+        //       driverId: "test_driver_id",
+        //     ),
       },
     );
   }

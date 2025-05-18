@@ -51,10 +51,6 @@ class _PickupFormState extends State<PickupForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Arrange Pickup',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.access_time),
