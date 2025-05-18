@@ -42,10 +42,10 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
               // Map as the background
               FlutterMap(
                 mapController: mapController,
-                // options: MapOptions(
-                //   // initialCenter: viewModel.location.coordinates,
-                //   // initialZoom: 9.2,
-                // ),
+                options: MapOptions(
+                  initialCenter: widget.viewModel.location.coordinates,
+                  initialZoom: 8,
+                ),
                 children: [
                   TileLayer(
                     urlTemplate:

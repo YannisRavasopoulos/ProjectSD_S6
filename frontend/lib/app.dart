@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/ui/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/find_ride/find_ride_view.dart';
+import 'package:frontend/ui/find_ride/find_ride_viewmodel.dart';
 import 'package:frontend/ui/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/home/home_viewmodel.dart';
 import 'package:frontend/ui/profile/profile_view.dart';
@@ -27,6 +29,10 @@ class App extends StatelessWidget {
   }
 
   bool isLoggedIn = false;
+
+  final FindRideViewModel findRideViewModel = FindRideViewModel(
+    rideRepository: RideRepository(),
+  );
 
   final HomeViewModel homeViewModel = HomeViewModel(
     locationRepository: LocationRepository(),
@@ -54,7 +60,7 @@ class App extends StatelessWidget {
         '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
         '/home': (context) => HomeView(viewModel: homeViewModel),
-        '/find_ride': (context) => FindRideView(),
+        '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/create_ride': (context) => CreateRideView(),
         '/profile': (context) => ProfileView(),
         '/settings': (context) => SettingsView(),
