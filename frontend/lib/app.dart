@@ -66,6 +66,11 @@ class App extends StatelessWidget {
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         '/activities': (context) => ActivitiesView(),
         '/rides': (context) => RidesView(),
+        // '/arrange_pickup':
+        //     (context) => ArrangePickupView(
+        //       carpoolerId: "test_carpooler_id",
+        //       driverId: "test_driver_id",
+        //     ),
       },
     );
   }

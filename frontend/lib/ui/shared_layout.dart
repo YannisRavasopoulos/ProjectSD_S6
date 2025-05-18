@@ -41,6 +41,21 @@ class SharedLayout extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
+            // Add this new ListTile for testing
+            ListTile(
+              leading: const Icon(Icons.access_time),
+              title: const Text('Test Arrange Pickup'),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/arrange_pickup',
+                  arguments: {
+                    'carpoolerId': 'test_carpooler_id',
+                    'driverId': 'test_driver_id',
+                  },
+                );
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.card_giftcard), // Added rewards icon
               title: const Text('Rewards'), // Added rewards title

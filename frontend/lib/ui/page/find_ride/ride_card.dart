@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
 
 class RideCard extends StatelessWidget {
   final Ride ride;
@@ -40,12 +41,25 @@ class RideCard extends StatelessWidget {
                   onPressed:
                       ride.passengers < ride.capacity
                           ? () {
-                            // Add your join ride logic here
-                            print('Join ride button pressed');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => ArrangePickupView(
+                                      carpoolerId:
+                                          "test_carpooler_id", // TODO: Replace with actual user ID
+                                      driverId:
+                                          ride
+                                              .driver
+                                              .name, // TODO: Replace with actual driver ID
+                                      selectedRide: ride,
+                                    ),
+                              ),
+                            );
                           }
                           : null,
                   child: Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: const Text('Join'),
                   ),
                 ),
