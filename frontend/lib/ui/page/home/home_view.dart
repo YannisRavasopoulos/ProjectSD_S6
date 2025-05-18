@@ -93,7 +93,7 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
           );
         },
       ),
-      bottomNavigationBar: BottomPanel(currentIndex: 0),
+      bottomNavigationBar: BottomPanel(routeName: "/home"),
 
       floatingActionButton: FloatingActionButton(
         onPressed: _onLocationClick,

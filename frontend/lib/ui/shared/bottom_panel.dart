@@ -1,36 +1,21 @@
 import 'package:flutter/material.dart';
 
-class BottomPanel extends StatefulWidget {
-  final int currentIndex;
+class BottomPanel extends StatelessWidget {
+  BottomPanel({super.key, required this.routeName});
 
-  const BottomPanel({super.key, required this.currentIndex});
+  final String routeName;
 
-  @override
-  State<BottomPanel> createState() => _BottomPanelState();
-}
+  final List<String> _routes = ['/home', '/activities', '/profile'];
 
-class _BottomPanelState extends State<BottomPanel> {
-  void _onItemTapped(int index) {
-    switch (index) {
-      case 0:
-        Navigator.pushNamed(context, '/home');
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/activities');
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/profile');
-        break;
-      default:
-        break;
-    }
+  void _onItemTapped(BuildContext context, int index) {
+    Navigator.pushReplacementNamed(context, _routes[index]);
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: widget.currentIndex,
-      onTap: _onItemTapped,
+      currentIndex: _routes.indexOf(routeName),
+      onTap: (index) => _onItemTapped(context, index),
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(

@@ -1,4 +1,3 @@
-// lib/ui/profile/profile_view.dart
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/profile/points_widget.dart';
@@ -6,6 +5,7 @@ import 'package:frontend/ui/page/profile/pick_profile_picture.dart';
 import 'package:frontend/ui/page/profile/profile_tab.dart';
 import 'package:frontend/ui/page/profile/history_tab.dart';
 import 'package:frontend/ui/page/profile/rating_tab.dart';
+import 'package:frontend/ui/shared/bottom_panel.dart';
 
 class ProfileView extends StatelessWidget {
   final ProfileViewModel viewModel;
@@ -67,6 +67,7 @@ class ProfileView extends StatelessWidget {
                   ),
                 ),
           ),
+          bottomNavigationBar: BottomPanel(routeName: "/profile"),
         );
       },
     );

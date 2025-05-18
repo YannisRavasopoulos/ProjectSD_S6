@@ -3,6 +3,7 @@ import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/activities/activity_card.dart';
 import 'package:frontend/ui/page/activities/activity_deletion_dialog.dart';
 import 'package:frontend/ui/page/create_activity/create_activity_view.dart';
+import 'package:frontend/ui/shared/bottom_panel.dart';
 
 class ActivitiesView extends StatelessWidget {
   const ActivitiesView({super.key});
@@ -63,6 +64,7 @@ class ActivitiesView extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
+      bottomNavigationBar: BottomPanel(routeName: "/activities"),
     );
   }
 }
