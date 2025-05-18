@@ -4,7 +4,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 class LocationRepository {
-  Future<Location> getLocation() async {
+  Future<Location> getLocation(LatLng coordinates) async {}
+
+  Future<Location> getCurrentLocation() async {
     var isServiceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isServiceEnabled) {
       throw LocationException('Location services are disabled.');
