@@ -17,18 +17,15 @@ import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/rewards/rewards_view.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/activities/activities_view.dart';
-import 'package:frontend/ui/settings/settings_view.dart';
 import 'package:frontend/ui/page/rides/rides_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 
 class App extends StatelessWidget {
-  App({super.key}) {
-    if (Platform.isLinux) {}
-  }
+  App({super.key});
 
-  bool isLoggedIn = false;
+  final bool isLoggedIn = false;
 
   final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: RideRepository(),
@@ -67,7 +64,6 @@ class App extends StatelessWidget {
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/create_ride': (context) => CreateRideView(),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
-        '/settings': (context) => SettingsView(),
         '/activities': (context) => ActivitiesView(),
         '/rides': (context) => RidesView(),
       },
