@@ -5,6 +5,7 @@ import 'package:frontend/ui/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/profile/profile_view.dart';
+import 'package:frontend/ui/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/rewards/rewards_view.dart';
@@ -23,12 +24,18 @@ class App extends StatelessWidget {
 
   bool isLoggedIn = false;
 
+  final UserRepository userRepository = UserRepository();
+
   final SignInViewModel signInViewModel = SignInViewModel(
     AuthenticationRepository(),
     UserRepository(),
   );
 
   final SignUpViewModel signUpViewModel = SignUpViewModel(UserRepository());
+
+  final ProfileViewModel profileViewModel = ProfileViewModel(
+    userRepository: UserRepository(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +54,7 @@ class App extends StatelessWidget {
         '/home': (context) => HomeView(),
         '/find_ride': (context) => FindRideView(),
         '/create_ride': (context) => CreateRideView(),
-        '/profile': (context) => ProfileView(),
+        '/profile': (context) => ProfileView(viewModel: profileViewModel), 
         '/settings': (context) => SettingsView(),
         '/activities': (context) => ActivitiesView(),
         '/rides': (context) => RidesView(),
