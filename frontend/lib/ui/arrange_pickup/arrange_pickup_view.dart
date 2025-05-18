@@ -52,7 +52,10 @@ class _ArrangePickupViewState extends State<ArrangePickupView> {
       isIndexed: false,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 8.0,
+          ), // Reduced vertical padding
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

@@ -10,31 +10,55 @@ class RideDetailsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        // Reduce padding
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // Make column as small as possible
           children: [
-            Text('Ride Details', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 16),
-            _buildDetailRow(
-              icon: Icons.person,
-              label: 'Driver',
-              value: ride.driver.name,
+            Text(
+              'Ride Details',
+              style: Theme.of(context).textTheme.titleMedium, // Smaller title
             ),
-            _buildDetailRow(
-              icon: Icons.directions_car,
-              label: 'Vehicle',
-              value: ride.vehicle.description,
+            const SizedBox(height: 8), // Reduced spacing
+            Row(
+              // First row with driver and vehicle
+              children: [
+                Expanded(
+                  child: _buildDetailRow(
+                    icon: Icons.person,
+                    label: 'Driver',
+                    value: ride.driver.name,
+                  ),
+                ),
+                Expanded(
+                  child: _buildDetailRow(
+                    icon: Icons.directions_car,
+                    label: 'Vehicle',
+                    value: ride.vehicle.description,
+                  ),
+                ),
+              ],
             ),
-            _buildDetailRow(
-              icon: Icons.group,
-              label: 'Available Seats',
-              value: '${ride.capacity - ride.passengers}/${ride.capacity}',
-            ),
-            _buildDetailRow(
-              icon: Icons.schedule,
-              label: 'Departure',
-              value: ride.estimatedDuration,
+            Row(
+              // Second row with seats and departure
+              children: [
+                Expanded(
+                  child: _buildDetailRow(
+                    icon: Icons.group,
+                    label: 'Seats',
+                    value:
+                        '${ride.capacity - ride.passengers}/${ride.capacity}',
+                  ),
+                ),
+                Expanded(
+                  child: _buildDetailRow(
+                    icon: Icons.schedule,
+                    label: 'Time',
+                    value: ride.estimatedDuration,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -48,14 +72,27 @@ class RideDetailsPanel extends StatelessWidget {
     required String value,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0), // Reduced padding
       child: Row(
+        mainAxisSize: MainAxisSize.min, // Make row as small as possible
         children: [
-          Icon(icon, size: 20),
-          const SizedBox(width: 12),
-          Text('$label:', style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(width: 8),
-          Expanded(child: Text(value)),
+          Icon(icon, size: 16), // Smaller icons
+          const SizedBox(width: 4), // Reduced spacing
+          Text(
+            '$label:',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 12, // Smaller text
+            ),
+          ),
+          const SizedBox(width: 4), // Reduced spacing
+          Flexible(
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 12), // Smaller text
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );
