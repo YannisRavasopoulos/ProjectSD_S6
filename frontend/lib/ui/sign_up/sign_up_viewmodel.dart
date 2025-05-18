@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/service/user_service.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 
 class SignUpViewModel extends ChangeNotifier {
-  SignUpViewModel({required this.userService}) {
+  SignUpViewModel(this.userRepository) {
     passwordController.addListener(notifyListeners);
     confirmPasswordController.addListener(notifyListeners);
   }
 
-  UserService userService;
+  UserRepository userRepository;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();

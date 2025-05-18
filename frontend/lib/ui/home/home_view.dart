@@ -14,7 +14,7 @@ class HomeView extends StatelessWidget {
             const Text('Welcome to Loop App!'),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/next');
+                Navigator.pushNamed(context, '/find_ride');
               },
               child: const Text('Start Looping'),
             ),
