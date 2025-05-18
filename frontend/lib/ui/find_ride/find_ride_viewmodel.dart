@@ -105,8 +105,6 @@ class FindRideViewModel extends ChangeNotifier {
     errorMessage = null;
     notifyListeners();
 
-    await Future.delayed(Duration(seconds: 1));
-
     try {
       rides = await rideRepository.getRides(
         source: _source,

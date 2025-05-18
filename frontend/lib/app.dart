@@ -14,8 +14,6 @@ import 'package:frontend/ui/settings/settings_view.dart';
 import 'package:frontend/ui/rides/rides_view.dart';
 import 'package:frontend/ui/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/sign_up/sign_up_viewmodel.dart';
-import 'package:frontend/data/service/authentication_service.dart';
-import 'package:frontend/data/service/user_service.dart';
 import 'package:frontend/ui/rewards/rewards_viewmodel.dart';
 
 class App extends StatelessWidget {
