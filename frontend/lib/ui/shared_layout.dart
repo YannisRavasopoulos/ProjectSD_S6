@@ -89,9 +89,9 @@ class SharedLayout extends StatelessWidget {
           if (index == 0) {
             Navigator.pushNamed(context, '/home');
           } else if (index == 1) {
-            Navigator.pushNamed(context, '/activities_view');
+            Navigator.pushNamed(context, '/activities');
           } else if (index == 2) {
-            Navigator.pushNamed(context, '/rides_view');
+            Navigator.pushNamed(context, '/rides');
           }
         },
       ),

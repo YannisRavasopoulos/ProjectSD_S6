@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/service/authentication_service.dart';
-import 'package:frontend/data/service/user_service.dart';
+import 'package:frontend/data/repository/authentication_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 
 class SignInViewModel extends ChangeNotifier {
-  final AuthenticationService authenticationService;
-  final UserService userService;
+  final AuthenticationRepository authenticationRepository;
+  final UserRepository userRepository;
 
-  SignInViewModel(this.authenticationService, this.userService);
+  SignInViewModel(this.authenticationRepository, this.userRepository);
 
   String errorMessage = '';
   bool isLoading = false;
@@ -32,9 +32,7 @@ class SignInViewModel extends ChangeNotifier {
         return false;
       }
 
-      // TODO
-      final token = await authenticationService.login(email, password);
-      final user = await userService.getUser(token);
+      await authenticationRepository.addAuthentication(email, password);
 
       return true;
     } catch (e) {

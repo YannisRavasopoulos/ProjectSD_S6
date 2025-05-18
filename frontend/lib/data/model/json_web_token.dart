@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class JsonWebToken {
+import 'package:frontend/data/model/authentication.dart';
+
+class JsonWebToken implements Authentication {
   final String token;
   final Map<String, dynamic> header;
   final Map<String, dynamic> payload;
@@ -11,6 +13,7 @@ class JsonWebToken {
     return jsonDecode(utf8.decode(base64.decode(data)));
   }
 
+  @override
   int get userId {
     return payload['user_id'];
   }
@@ -21,7 +24,20 @@ class JsonWebToken {
 
   JsonWebToken.fromJson(Map<String, dynamic> json) : this(json['token']);
 
+  @override
   Map<String, String> makeHeaders() {
     return {'Authorization': 'Bearer $token'};
+  }
+
+  factory JsonWebToken.fake(int userId) {
+    final payload = {
+      'user_id': userId,
+      'exp':
+          DateTime.now().add(Duration(days: 1)).millisecondsSinceEpoch ~/ 1000,
+    };
+    final header = {'alg': 'none', 'typ': 'JWT'};
+    final token =
+        '${base64.encode(utf8.encode(jsonEncode(header)))}.${base64.encode(utf8.encode(jsonEncode(payload)))}.';
+    return JsonWebToken(token);
   }
 }

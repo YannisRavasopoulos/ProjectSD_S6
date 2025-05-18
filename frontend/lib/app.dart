@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/proxy_client.dart';
+import 'package:frontend/data/repository/authentication_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
+import 'package:frontend/ui/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/profile/profile_view.dart';
@@ -19,17 +21,14 @@ import 'package:frontend/ui/rewards/rewards_viewmodel.dart';
 class App extends StatelessWidget {
   App({super.key});
 
-  // TODO
-  final bool isLoggedIn = true;
+  bool isLoggedIn = false;
 
   final SignInViewModel signInViewModel = SignInViewModel(
-    AuthenticationService(client: ProxyClient()),
-    UserService(client: ProxyClient()),
+    AuthenticationRepository(),
+    UserRepository(),
   );
 
-  final SignUpViewModel signUpViewModel = SignUpViewModel(
-    userService: UserService(),
-  );
+  final SignUpViewModel signUpViewModel = SignUpViewModel(UserRepository());
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +45,12 @@ class App extends StatelessWidget {
         '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
         '/home': (context) => HomeView(),
-        '/settings': (context) => SettingsView(),
-        '/profile': (context) => ProfileView(),
-        // Core routes
-        '/activities_view': (context) => ActivitiesView(),
-        '/rides_view': (context) => RidesView(),
         '/find_ride': (context) => FindRideView(),
+        '/create_ride': (context) => CreateRideView(),
+        '/profile': (context) => ProfileView(),
+        '/settings': (context) => SettingsView(),
+        '/activities': (context) => ActivitiesView(),
+        '/rides': (context) => RidesView(),
       },
     );
   }
