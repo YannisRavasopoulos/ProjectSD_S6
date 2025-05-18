@@ -14,12 +14,12 @@ class RewardCard extends StatelessWidget {
       child: ListTile(
         title: Text(reward.title),
         subtitle: Text('${reward.description}\nCost: ${reward.cost} Points'),
-        trailing: ValueListenableBuilder<bool>(
-          valueListenable: viewModel.isLoading,
-          builder: (context, isLoading, _) {
+        trailing: AnimatedBuilder(
+          animation: viewModel,
+          builder: (context, _) {
             return ElevatedButton(
               onPressed:
-                  isLoading
+                  viewModel.isLoading
                       ? null
                       : () {
                         final dialogContext = context;
@@ -45,24 +45,25 @@ class RewardCard extends StatelessWidget {
 
                                     await viewModel.redeemReward(reward);
 
-                                    final error = viewModel.errorMessage.value;
-                                    final code = viewModel.redemptionCode.value;
-
-                                    if (error.isNotEmpty) {
+                                    if (viewModel.errorMessage.isNotEmpty) {
                                       ScaffoldMessenger.of(
                                         dialogContext,
                                       ).showSnackBar(
-                                        SnackBar(content: Text(error)),
+                                        SnackBar(
+                                          content: Text(viewModel.errorMessage),
+                                        ),
                                       );
                                     }
 
-                                    if (code.isNotEmpty) {
+                                    if (viewModel.redemptionCode.isNotEmpty) {
                                       showDialog(
                                         context: dialogContext,
                                         builder:
                                             (ctx) => AlertDialog(
                                               title: Text('Redemption Code'),
-                                              content: Text(code),
+                                              content: Text(
+                                                viewModel.redemptionCode,
+                                              ),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () {
@@ -78,7 +79,7 @@ class RewardCard extends StatelessWidget {
                                     }
                                   },
                                   child:
-                                      isLoading
+                                      viewModel.isLoading
                                           ? SizedBox(
                                             width: 20,
                                             height: 20,

@@ -8,56 +8,59 @@ class Reward {
   Reward({required this.title, required this.description, required this.cost});
 }
 
-class RewardViewModel {
-  // Notifiers for reactive updates
-  final ValueNotifier<int> userPoints = ValueNotifier<int>(12345);
-  final ValueNotifier<List<Reward>> availableRewards =
-      ValueNotifier<List<Reward>>([
-        Reward(
-          title: '10% Discount',
-          description: 'Get 10% off your next ride',
-          cost: 1000,
-        ),
-        Reward(
-          title: 'Free Coffee',
-          description: 'Enjoy a free coffee at participating locations',
-          cost: 2000,
-        ),
-        Reward(
-          title: 'Priority Booking',
-          description: 'Get priority booking for your next ride',
-          cost: 3000,
-        ),
-      ]);
+class RewardViewModel extends ChangeNotifier {
+  int _userPoints = 12345;
+  List<Reward> _availableRewards = [
+    Reward(
+      title: '10% Discount',
+      description: 'Get 10% off your next ride',
+      cost: 1000,
+    ),
+    Reward(
+      title: 'Free Coffee',
+      description: 'Enjoy a free coffee at participating locations',
+      cost: 2000,
+    ),
+    Reward(
+      title: 'Priority Booking',
+      description: 'Get priority booking for your next ride',
+      cost: 3000,
+    ),
+  ];
+  String _redemptionCode = '';
+  String _errorMessage = '';
+  bool _isLoading = false;
 
-  final ValueNotifier<String> redemptionCode = ValueNotifier<String>('');
-  final ValueNotifier<String> errorMessage = ValueNotifier<String>('');
-  final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
+  // Getters
+  int get userPoints => _userPoints;
+  List<Reward> get availableRewards => List.unmodifiable(_availableRewards);
+  String get redemptionCode => _redemptionCode;
+  String get errorMessage => _errorMessage;
+  bool get isLoading => _isLoading;
 
   Future<void> redeemReward(Reward reward) async {
-    isLoading.value = true;
-    errorMessage.value = '';
-    redemptionCode.value = '';
+    _isLoading = true;
+    _errorMessage = '';
+    _redemptionCode = '';
+    notifyListeners();
 
-    if (userPoints.value >= reward.cost) {
+    if (_userPoints >= reward.cost) {
       await Future.delayed(Duration(seconds: 2));
 
-      redemptionCode.value =
+      _redemptionCode =
           'REDEEM-${reward.title.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch % 1000}';
-      userPoints.value -= reward.cost;
+      _userPoints -= reward.cost;
 
-      // Remove reward from list
-      final updatedList = List<Reward>.from(availableRewards.value);
-      updatedList.remove(reward);
-      availableRewards.value = updatedList;
-    } else {
-      errorMessage.value = 'Not enough points to redeem this reward.';
+      _availableRewards = List<Reward>.from(_availableRewards)..remove(reward);
+      notifyListeners();
     }
 
-    isLoading.value = false;
+    _isLoading = false;
+    notifyListeners();
   }
 
   void clearRedemptionCode() {
-    redemptionCode.value = '';
+    _redemptionCode = '';
+    notifyListeners();
   }
 }

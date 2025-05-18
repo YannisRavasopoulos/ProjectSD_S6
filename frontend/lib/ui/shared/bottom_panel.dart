@@ -21,6 +21,10 @@ class _BottomPanelState extends State<BottomPanel> {
       case 2:
         Navigator.pushNamed(context, '/profile');
         break;
+      case 3:
+        Navigator.pushNamed(context, '/rewards');
+        break;
+      case 4:
       default:
         break;
     }
@@ -38,6 +42,7 @@ class _BottomPanelState extends State<BottomPanel> {
           label: 'Activities',
         ),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Rewards'),
       ],
     );
   }

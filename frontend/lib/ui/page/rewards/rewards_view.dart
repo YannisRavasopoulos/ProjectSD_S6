@@ -21,10 +21,13 @@ class RewardView extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            ValueListenableBuilder<int>(
-              valueListenable: viewModel.userPoints,
-              builder: (context, points, _) {
-                return Text('$points Points', style: TextStyle(fontSize: 16));
+            AnimatedBuilder(
+              animation: viewModel,
+              builder: (context, _) {
+                return Text(
+                  '${viewModel.userPoints} Points',
+                  style: TextStyle(fontSize: 16),
+                );
               },
             ),
             SizedBox(height: 24),
@@ -34,13 +37,13 @@ class RewardView extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Expanded(
-              child: ValueListenableBuilder<List<Reward>>(
-                valueListenable: viewModel.availableRewards,
-                builder: (context, rewards, _) {
+              child: AnimatedBuilder(
+                animation: viewModel,
+                builder: (context, _) {
                   return ListView.builder(
-                    itemCount: rewards.length,
+                    itemCount: viewModel.availableRewards.length,
                     itemBuilder: (context, index) {
-                      final reward = rewards[index];
+                      final reward = viewModel.availableRewards[index];
                       return RewardCard(reward: reward, viewModel: viewModel);
                     },
                   );
