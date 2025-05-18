@@ -1,26 +1,35 @@
 // lib/ui/profile/profile_viewmodel.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
-//import 'package:image_picker/image_picker.dart';
+import 'package:frontend/data/model/user.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 
 class ProfileViewModel extends ChangeNotifier {
+  final UserRepository userRepository;
+
+  ProfileViewModel({required this.userRepository});
+
   // Profile fields
-  String firstName = 'Kwstas';
-  String lastName  = 'Loukanaris';
-  String email     = 'koslou@gmail.com';
-  String password  = 'mySecret123';
+  User? user; // Make user nullable to handle loading state
+  bool isEditing = false;
+  bool showPassword = false;
+  File? profileImage;
 
-  // UI state
-  bool isEditing      = false;
-  bool showPassword   = false;
-  File? profileImage;           // holds picked image file
-
-  //final ImagePicker _picker = ImagePicker();
+  // Asynchronous user loading
+  Future<void> loadUser(int userId) async {
+    if (user != null) return; // Prevent reloading if user is already loaded
+    try {
+      user = await userRepository.getUser(userId); // Use an asynchronous method
+      notifyListeners();
+    } catch (e) {
+      // Handle errors (e.g., log them or show a message)
+      debugPrint('Error loading user: $e');
+    }
+  }
 
   void toggleEditing() {
     isEditing = !isEditing;
-    // reset password-visibility when you start editing
-    if (isEditing == true) showPassword = false;
+    if (isEditing) showPassword = false;
     notifyListeners();
   }
 
@@ -29,17 +38,41 @@ class ProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> pickProfileImage() async {
-  //   final picked = await _picker.pickImage(source: ImageSource.gallery);
-  //   if (picked != null) {
-  //     profileImage = File(picked.path);
-  //     notifyListeners();
-  //   }
-  // }
+  Future<void> saveChanges() async {
+    if (user == null) {
+      debugPrint('Cannot save changes: user is null');
+      return;
+    }
+    try {
+      await userRepository.updateUser(user!); // Persist user data
+      toggleEditing();
+    } catch (e) {
+      // Handle errors (e.g., log them or show a message)
+      debugPrint('Error saving changes: $e');
+    }
+  }
 
-  // Field updaters
-  void updateFirstName(String v) { firstName = v; notifyListeners(); }
-  void updateLastName(String v)  { lastName  = v; notifyListeners(); }
-  void updateEmail(String v)     { email     = v; notifyListeners(); }
-  void updatePassword(String v)  { password  = v; notifyListeners(); }
+  void updateFirstName(String value) {
+    if (user == null) return;
+    user!.firstName = value;
+    notifyListeners();
+  }
+
+  void updateLastName(String value) {
+    if (user == null) return;
+    user!.lastName = value;
+    notifyListeners();
+  }
+
+  void updateEmail(String value) {
+    if (user == null) return;
+    user!.email = value;
+    notifyListeners();
+  }
+
+  void updatePassword(String value) {
+    if (user == null) return;
+    user!.password = value;
+    notifyListeners();
+  }
 }

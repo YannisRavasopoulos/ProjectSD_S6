@@ -1,39 +1,16 @@
-import 'dart:convert';
-
-import 'package:frontend/config.dart';
-import 'package:frontend/data/model/json_web_token.dart';
+import 'dart:async';
 import 'package:frontend/data/model/user.dart';
-import 'package:http/http.dart' as http;
 
 class UserService {
-  final http.Client client;
-  UserService({http.Client? client}) : client = client ?? http.Client();
-
-  Future<User> getUser(JsonWebToken token) async {
-    final response = await client.get(
-      Uri.https(apiDomain, '/users/${token.userId}'),
-      headers: token.makeHeaders(),
-    );
-
-    if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load user');
-    }
+  // Simulate fetching user data by ID
+  Future<UserProfile> getUserById(int userId) async {
+    await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
+    return UserProfile.dummy(); // Return dummy user profile
   }
 
-  Future<void> createUser(User user) async {
-    // TODO
-    throw UnimplementedError('UserService.createUser is not implemented');
-  }
-
+  // Simulate updating user data
   Future<void> updateUser(User user) async {
-    // TODO
-    throw UnimplementedError('UserService.updateUser is not implemented');
-  }
-
-  Future<void> deleteUser(User user) async {
-    // TODO
-    throw UnimplementedError('UserService.deleteUser is not implemented');
+    await Future.delayed(const Duration(seconds: 1)); // Simulate network delay
+    print('User updated: ${user.toJson()}'); // Log updated user data
   }
 }
