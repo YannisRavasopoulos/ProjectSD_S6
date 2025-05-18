@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/find_ride/ride_card.dart';
-import 'package:frontend/ui/find_ride/ride_location_selectors.dart';
-import 'package:frontend/ui/find_ride/ride_time_selectors.dart';
-import 'package:frontend/ui/find_ride/find_ride_viewmodel.dart';
+import 'package:frontend/ui/page/find_ride/ride_card.dart';
+import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
+import 'package:frontend/ui/page/find_ride/ride_time_selectors.dart';
+import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
 
 class FindRideView extends StatelessWidget {
   FindRideView({super.key, required this.viewModel});

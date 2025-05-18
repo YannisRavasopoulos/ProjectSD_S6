@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/loading_button.dart';
-import 'package:frontend/ui/sign_in/sign_in_viewmodel.dart';
+import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/password_field.dart';
 
 class SignInView extends StatelessWidget {

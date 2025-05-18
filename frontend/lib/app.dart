@@ -5,24 +5,23 @@ import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
-import 'package:frontend/ui/create_ride/create_ride_view.dart';
-import 'package:frontend/ui/find_ride/find_ride_view.dart';
-import 'package:frontend/ui/find_ride/find_ride_viewmodel.dart';
-import 'package:frontend/ui/forgot_password/forgot_password_view.dart';
-import 'package:frontend/ui/home/home_viewmodel.dart';
-import 'package:frontend/ui/profile/profile_view.dart';
-import 'package:frontend/ui/profile/profile_viewmodel.dart';
-import 'package:frontend/ui/sign_in/sign_in_view.dart';
-import 'package:frontend/ui/sign_up/sign_up_view.dart';
-import 'package:frontend/ui/rewards/rewards_view.dart';
-import 'package:frontend/ui/home/home_view.dart';
-import 'package:frontend/ui/activities/activities_view.dart';
+import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
+import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
+import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
+import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
+import 'package:frontend/ui/page/home/home_viewmodel.dart';
+import 'package:frontend/ui/page/profile/profile_view.dart';
+import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
+import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
+import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
+import 'package:frontend/ui/page/rewards/rewards_view.dart';
+import 'package:frontend/ui/page/home/home_view.dart';
+import 'package:frontend/ui/page/activities/activities_view.dart';
 import 'package:frontend/ui/settings/settings_view.dart';
-import 'package:frontend/ui/rides/rides_view.dart';
-import 'package:frontend/ui/sign_in/sign_in_viewmodel.dart';
-import 'package:frontend/ui/sign_up/sign_up_viewmodel.dart';
-import 'package:frontend/ui/rewards/rewards_viewmodel.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:frontend/ui/page/rides/rides_view.dart';
+import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
+import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
+import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 
 class App extends StatelessWidget {
   App({super.key}) {
@@ -67,7 +66,7 @@ class App extends StatelessWidget {
         '/home': (context) => HomeView(viewModel: homeViewModel),
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/create_ride': (context) => CreateRideView(),
-        '/profile': (context) => ProfileView(viewModel: profileViewModel), 
+        '/profile': (context) => ProfileView(viewModel: profileViewModel),
         '/settings': (context) => SettingsView(),
         '/activities': (context) => ActivitiesView(),
         '/rides': (context) => RidesView(),

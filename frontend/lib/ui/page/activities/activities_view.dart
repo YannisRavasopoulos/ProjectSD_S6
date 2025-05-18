@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/activities/activities_viewmodel.dart';
-import 'package:frontend/ui/activities/activity_card.dart';
-import 'package:frontend/ui/activities/activity_deletion_dialog.dart';
-import 'package:frontend/ui/create_activity/create_activity_view.dart';
+import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
+import 'package:frontend/ui/page/activities/activity_card.dart';
+import 'package:frontend/ui/page/activities/activity_deletion_dialog.dart';
+import 'package:frontend/ui/page/create_activity/create_activity_view.dart';
 
 class ActivitiesView extends StatelessWidget {
   const ActivitiesView({super.key});
