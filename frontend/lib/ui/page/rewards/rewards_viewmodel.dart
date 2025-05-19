@@ -5,7 +5,7 @@ import 'package:frontend/data/model/reward.dart';
 class RewardViewModel extends ChangeNotifier {
   final RewardRepository rewardRepository;
 
-  int _userPoints = 12345;
+  int _userPoints = 200;
   List<Reward> _availableRewards = [];
   String _redemptionCode = '';
   String _errorMessage = '';
