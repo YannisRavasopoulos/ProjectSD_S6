@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
+import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
@@ -46,6 +48,10 @@ class App extends StatelessWidget {
     userRepository: UserRepository(),
   );
 
+  final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
+    activityRepository: ActivityRepository(),
+  );
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -64,7 +70,8 @@ class App extends StatelessWidget {
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/create_ride': (context) => CreateRideView(),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
-        '/activities': (context) => ActivitiesView(),
+        '/activities':
+            (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/rides': (context) => RidesView(),
         // '/arrange_pickup':
         //     (context) => ArrangePickupView(

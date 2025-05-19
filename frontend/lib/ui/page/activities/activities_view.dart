@@ -1,51 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/activities/activity_card.dart';
 import 'package:frontend/ui/page/activities/activity_deletion_dialog.dart';
-import 'package:frontend/ui/page/create_activity/create_activity_view.dart';
+import 'package:frontend/ui/page/activities/create_activity_view.dart';
 import 'package:frontend/ui/shared/bottom_panel.dart';
 
 class ActivitiesView extends StatelessWidget {
-  const ActivitiesView({super.key});
+  const ActivitiesView({super.key, required this.viewModel});
+
+  final ActivitiesViewModel viewModel;
+
+  void _onRemoveActivityPressed(BuildContext context, Activity activity) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ActivityDeletionDialog(
+          activityName: activity.name,
+          onDelete: () {
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Activity "${activity.name}" deleted')),
+            );
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildActivityList(BuildContext context) {
+    return ListView.builder(
+      itemCount: viewModel.activities?.length ?? 0,
+      itemBuilder: (context, index) {
+        final activity = viewModel.activities![index];
+        return ActivityCard(
+          activity: activity,
+          onEdit: () {
+            // Navigate to an edit screen or show a dialog
+            print('Edit activity: ${activity.name}');
+          },
+          onRemove: () => _onRemoveActivityPressed(context, activity),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ActivitiesViewModel();
-
     return Scaffold(
       appBar: AppBar(title: const Text('Activities')),
-      body: ListView.builder(
-        itemCount: viewModel.activities.length,
-        itemBuilder: (context, index) {
-          final activity = viewModel.activities[index];
-          return ActivityCard(
-            activity: activity,
-            onEdit: () {
-              // Navigate to an edit screen or show a dialog
-              print('Edit activity: ${activity.name}');
-            },
-            onRemove: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return ActivityDeletionDialog(
-                    activityName: activity.name,
-                    onDelete: () {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Activity "${activity.name}" deleted'),
-                        ),
-                      );
-                    },
-                    onCancel: () {
-                      Navigator.of(context).pop();
-                    },
-                  );
-                },
-              );
-            },
-          );
+      body: ListenableBuilder(
+        listenable: viewModel,
+        builder: (context, _) {
+          if (viewModel.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (viewModel.activities == null ||
+              viewModel.activities!.isEmpty) {
+            return const Center(child: Text('No activities found'));
+          } else {
+            return _buildActivityList(context);
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(
