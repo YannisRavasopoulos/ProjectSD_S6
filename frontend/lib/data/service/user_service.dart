@@ -2,10 +2,18 @@ import 'dart:async';
 import 'package:frontend/data/model/user.dart';
 
 class UserService {
+  UserProfile? _dummyUser;
   // Simulate fetching user data by ID
   Future<UserProfile> getUserById(int userId) async {
     await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
-    return UserProfile.dummy(); // Return dummy user profile
+    if (_dummyUser == null) {
+      _dummyUser = UserProfile.dummy();
+      print('Created new dummy user: ${_dummyUser?.toJson()}');
+    } else {
+      print('Returning existing dummy user: ${_dummyUser?.toJson()}');
+    }
+
+    return _dummyUser!;
   }
 
   // Simulate updating user data

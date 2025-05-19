@@ -27,6 +27,7 @@ class App extends StatelessWidget {
   App({super.key});
 
   final bool isLoggedIn = false;
+  final UserRepository _userRepository = UserRepository();
 
   final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: RideRepository(),
@@ -43,12 +44,12 @@ class App extends StatelessWidget {
 
   final SignUpViewModel signUpViewModel = SignUpViewModel(UserRepository());
 
-  final ProfileViewModel profileViewModel = ProfileViewModel(
-    userRepository: UserRepository(),
+  late final ProfileViewModel profileViewModel = ProfileViewModel(
+    userRepository: _userRepository,
   );
-  final RewardViewModel rewardViewModel = RewardViewModel(
+  late final RewardViewModel rewardViewModel = RewardViewModel(
     rewardRepository: RewardRepository(),
-    userRepository: UserRepository(),
+    userRepository: _userRepository,
   );
   @override
   Widget build(BuildContext context) {

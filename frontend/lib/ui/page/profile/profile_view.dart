@@ -1,7 +1,7 @@
 // lib/ui/profile/profile_view.dart
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
-import 'package:frontend/ui/page/profile/points_widget.dart';
+import 'package:frontend/ui/shared/points.dart'; // Updated import
 import 'package:frontend/ui/page/profile/pick_profile_picture.dart';
 import 'package:frontend/ui/page/profile/profile_tab.dart';
 import 'package:frontend/ui/page/profile/history_tab.dart';
@@ -43,7 +43,9 @@ class ProfileView extends StatelessWidget {
                         '#ABCD-0000',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      PointsWidget(points: 1280),
+                      const SizedBox(height: 8),
+                      Points(points: viewModel.user?.points ?? 0),
+                      const SizedBox(height: 16),
                       const TabBar(
                         indicatorColor: Colors.deepPurple,
                         labelColor: Colors.deepPurple,
