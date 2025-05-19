@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
   App({super.key});
 
   final bool isLoggedIn = false;
+  final UserRepository _userRepository = UserRepository();
 
   final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: RideRepository(),
@@ -42,8 +44,13 @@ class App extends StatelessWidget {
 
   final SignUpViewModel signUpViewModel = SignUpViewModel(UserRepository());
 
-  final ProfileViewModel profileViewModel = ProfileViewModel(
-    userRepository: UserRepository(),
+  late final ProfileViewModel profileViewModel = ProfileViewModel(
+    userRepository: _userRepository,
+  )..loadUser(1); // Load user data on app start
+
+  late final RewardViewModel rewardViewModel = RewardViewModel(
+    rewardRepository: RewardRepository(),
+    profileViewModel: profileViewModel, // Use ProfileViewModel here
   );
 
   @override
@@ -56,7 +63,7 @@ class App extends StatelessWidget {
       ),
       initialRoute: isLoggedIn ? '/home' : '/sign_in',
       routes: {
-        '/rewards': (context) => RewardView(viewModel: RewardViewModel()),
+        '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/sign_in': (context) => SignInView(viewModel: signInViewModel),
         '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
@@ -66,11 +73,6 @@ class App extends StatelessWidget {
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         '/activities': (context) => ActivitiesView(),
         '/rides': (context) => RidesView(),
-        // '/arrange_pickup':
-        //     (context) => ArrangePickupView(
-        //       carpoolerId: "test_carpooler_id",
-        //       driverId: "test_driver_id",
-        //     ),
       },
     );
   }

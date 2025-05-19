@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/ui/page/profile/points_widget.dart';
 import 'rewards_viewmodel.dart';
 import 'reward_card.dart';
 
@@ -10,37 +11,32 @@ class RewardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Redeem Reward')),
+      appBar: AppBar(title: const Text('Redeem Reward')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Your Points:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
-            ValueListenableBuilder<int>(
-              valueListenable: viewModel.userPoints,
-              builder: (context, points, _) {
-                return Text('$points Points', style: TextStyle(fontSize: 16));
-              },
-            ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 8),
+            PointsWidget(viewModel: viewModel.profileViewModel), // Use ProfileViewModel
+            const SizedBox(height: 24),
+            const Text(
               'Available Rewards:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Expanded(
-              child: ValueListenableBuilder<List<Reward>>(
-                valueListenable: viewModel.availableRewards,
-                builder: (context, rewards, _) {
+              child: AnimatedBuilder(
+                animation: viewModel,
+                builder: (context, _) {
                   return ListView.builder(
-                    itemCount: rewards.length,
+                    itemCount: viewModel.availableRewards.length,
                     itemBuilder: (context, index) {
-                      final reward = rewards[index];
+                      final reward = viewModel.availableRewards[index];
                       return RewardCard(reward: reward, viewModel: viewModel);
                     },
                   );
