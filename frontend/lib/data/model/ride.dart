@@ -1,6 +1,5 @@
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/vehicle.dart';
-import 'package:latlong2/latlong.dart';
 import 'dart:math';
 
 class Ride {
@@ -12,7 +11,6 @@ class Ride {
   final String estimatedDuration;
   final int passengers;
   final int capacity;
-  final LatLng? pickupLocation; // Add this
   final DateTime? departureTime; // Add this
 
   Ride({
@@ -24,7 +22,6 @@ class Ride {
     required this.estimatedDuration,
     required this.passengers,
     required this.capacity,
-    this.pickupLocation,
     this.departureTime,
   });
 
@@ -48,11 +45,41 @@ class Ride {
       estimatedDuration: durations[random.nextInt(durations.length)],
       passengers: random.nextInt(4) + 1,
       capacity: 4,
-      pickupLocation: null,
       departureTime: DateTime.now().add(
         Duration(minutes: random.nextInt(60)),
       ), // Random departure time within the next hour
     );
+  }
+
+  factory Ride.fromJson(Map<String, dynamic> json) {
+    return Ride(
+      id: json['id'],
+      driver: Driver.fromJson(json['driver']),
+      vehicle: Vehicle.fromJson(json['vehicle']),
+      distance: json['distance'],
+      description: json['description'],
+      estimatedDuration: json['estimated_duration'],
+      passengers: json['passengers'],
+      capacity: json['capacity'],
+      departureTime:
+          json['departure_time'] != null
+              ? DateTime.parse(json['departure_time'])
+              : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'driver': driver.toJson(),
+      'vehicle': vehicle.toJson(),
+      'distance': distance,
+      'description': description,
+      'estimated_duration': estimatedDuration,
+      'passengers': passengers,
+      'capacity': capacity,
+      'departure_time': departureTime?.toIso8601String(),
+    };
   }
 
   bool get hasAvailableSeats => passengers < capacity;
@@ -66,7 +93,6 @@ class Ride {
     String? estimatedDuration,
     int? passengers,
     int? capacity,
-    LatLng? pickupLocation,
     DateTime? departureTime,
   }) {
     return Ride(
@@ -78,7 +104,6 @@ class Ride {
       estimatedDuration: estimatedDuration ?? this.estimatedDuration,
       passengers: passengers ?? this.passengers,
       capacity: capacity ?? this.capacity,
-      pickupLocation: pickupLocation ?? this.pickupLocation,
       departureTime: departureTime ?? this.departureTime,
     );
   }

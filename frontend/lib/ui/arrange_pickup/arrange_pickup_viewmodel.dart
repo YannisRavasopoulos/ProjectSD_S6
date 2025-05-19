@@ -1,5 +1,7 @@
+import 'package:frontend/data/model/ride.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
+import 'package:frontend/data/model/driver.dart';
 
 class ArrangePickupViewModel extends ChangeNotifier {
   final PickupRepository _repository;
@@ -10,7 +12,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
 
   ArrangePickupViewModel({
     required PickupRepository repository,
-    required String driverId,
+    required Driver driver,
     required String rideId,
   }) : _repository = repository;
 
@@ -58,7 +60,8 @@ class ArrangePickupViewModel extends ChangeNotifier {
   // business logic
   Future<bool> arrangePickup({
     required String carpoolerId,
-    required String driverId,
+    required Driver driver,
+    required Ride ride,
   }) async {
     if (_selectedTime == null || _location.isEmpty) {
       _errorMessage = 'Please select both time and location';
@@ -73,7 +76,8 @@ class ArrangePickupViewModel extends ChangeNotifier {
 
       await _repository.createPickupRequest(
         carpoolerId: carpoolerId,
-        driverId: driverId,
+        driver: driver,
+        ride: ride, // Assuming driver has a ride property,
         pickupTime: _selectedTime!,
         location: _location,
       );

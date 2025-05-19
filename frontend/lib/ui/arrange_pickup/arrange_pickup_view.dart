@@ -6,16 +6,17 @@ import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/service/pickup_service.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/arrange_pickup/components/ride_details_panel.dart';
+import 'package:frontend/data/model/driver.dart';
 
 class ArrangePickupView extends StatefulWidget {
   final String carpoolerId;
-  final String driverId;
+  final Driver driver;
   final Ride selectedRide;
 
   const ArrangePickupView({
     super.key,
     required this.carpoolerId,
-    required this.driverId,
+    required this.driver,
     required this.selectedRide,
   });
 
@@ -31,7 +32,7 @@ class _ArrangePickupViewState extends State<ArrangePickupView> {
     super.initState();
     _viewModel = ArrangePickupViewModel(
       repository: PickupRepository(pickupService: PickupService()),
-      driverId: widget.driverId,
+      driver: widget.driver,
       rideId: widget.selectedRide.id,
     )..addListener(_onViewModelChanged);
   }
@@ -114,7 +115,8 @@ class _ArrangePickupViewState extends State<ArrangePickupView> {
 
     final success = await _viewModel.arrangePickup(
       carpoolerId: widget.carpoolerId,
-      driverId: widget.driverId,
+      driver: widget.driver,
+      ride: widget.selectedRide,
     );
 
     if (success) {

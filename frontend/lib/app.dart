@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
@@ -21,8 +19,17 @@ import 'package:frontend/ui/page/rides/rides_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
+import 'package:frontend/ui/notification/pickup_notification_handler.dart';
+import 'package:frontend/data/service/notification_service.dart';
+//Testing notification
+import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
+import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/driver.dart';
+//
 
 class App extends StatelessWidget {
+  final NotificationService _notificationService = NotificationService();
+
   App({super.key});
 
   final bool isLoggedIn = false;
@@ -55,6 +62,12 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.comfortable,
       ),
       initialRoute: isLoggedIn ? '/home' : '/sign_in',
+      builder: (context, child) {
+        return PickupNotificationHandler(
+          notificationService: _notificationService,
+          child: child ?? const SizedBox(),
+        );
+      },
       routes: {
         '/rewards': (context) => RewardView(viewModel: RewardViewModel()),
         '/sign_in': (context) => SignInView(viewModel: signInViewModel),

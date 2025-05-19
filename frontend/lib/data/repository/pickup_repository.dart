@@ -1,5 +1,6 @@
-import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/service/pickup_service.dart';
+import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/ride.dart';
 
 class PickupRepository {
   final PickupService _pickupService;
@@ -9,14 +10,16 @@ class PickupRepository {
 
   Future<bool> createPickupRequest({
     required String carpoolerId,
-    required String driverId,
+    required Driver driver,
+    required Ride ride,
     required DateTime pickupTime,
     required String location,
   }) async {
     try {
       final response = await _pickupService.createPickup(
         carpoolerId: carpoolerId,
-        driverId: driverId,
+        driver: driver,
+        ride: ride,
         pickupTime: pickupTime,
         location: location,
       );

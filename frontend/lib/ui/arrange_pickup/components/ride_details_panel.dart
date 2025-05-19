@@ -89,15 +89,6 @@ class RideDetailsPanel extends StatelessWidget {
                       value: _formatDateTime(ride.departureTime!),
                     ),
                   ),
-                  if (ride.pickupLocation != null)
-                    Expanded(
-                      child: _buildDetailRow(
-                        icon: Icons.location_on,
-                        label: 'Pickup',
-                        value:
-                            '${ride.pickupLocation!.latitude.toStringAsFixed(2)}, ${ride.pickupLocation!.longitude.toStringAsFixed(2)}',
-                      ),
-                    ),
                 ],
               ),
           ],
