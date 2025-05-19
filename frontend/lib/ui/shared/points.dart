@@ -7,25 +7,38 @@ class Points extends StatelessWidget {
   const Points({
     super.key,
     required this.points,
-    this.themeColor = const Color.fromARGB(255, 23, 143, 117),
+    this.themeColor = const Color(0xFFDAA520), // Changed to Golden color
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: themeColor?.withOpacity(0.1),
+        color: const Color(0xFFFFF8DC), // Light gold/cream background
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: themeColor ?? Theme.of(context).primaryColor,
+          color: themeColor ?? const Color(0xFFDAA520), // Golden border
           width: 2,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFDAA520).withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.monetization_on_rounded, color: themeColor, size: 24),
+          Icon(
+            Icons.toll_rounded,
+            color: themeColor,
+            size: 24,
+          ), // Changed to coin icon
           const SizedBox(width: 8),
           Text(
             '$points',

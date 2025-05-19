@@ -6,6 +6,7 @@ class User {
   String lastName;
   String email;
   String password;
+  int points;
 
   User({
     required this.id,
@@ -13,6 +14,7 @@ class User {
     required this.lastName,
     required this.email,
     required this.password,
+    this.points = 0,
   });
 
   factory User.dummy() {
@@ -22,6 +24,7 @@ class User {
       lastName: "Doe",
       email: "johndoe@example.com",
       password: "password123",
+      points: Random().nextInt(1000),
     );
   }
 
@@ -47,15 +50,16 @@ class UserProfile extends User {
     required String lastName,
     required String email,
     required String password,
+    required super.points,
     required this.phoneNumber,
     required this.bio,
   }) : super(
-          id: id,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: password,
-        );
+         id: id,
+         firstName: firstName,
+         lastName: lastName,
+         email: email,
+         password: password,
+       );
 
   factory UserProfile.dummy() {
     return UserProfile(
@@ -66,16 +70,14 @@ class UserProfile extends User {
       password: "password123",
       phoneNumber: "+1234567890",
       bio: "Software Engineer and Flutter enthusiast.",
+      points: Random().nextInt(1000),
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
     final json = super.toJson();
-    json.addAll({
-      'phoneNumber': phoneNumber,
-      'bio': bio,
-    });
+    json.addAll({'phoneNumber': phoneNumber, 'bio': bio});
     return json;
   }
 }
@@ -107,15 +109,9 @@ class UserPreferences {
   bool receiveNotifications;
   String theme;
 
-  UserPreferences({
-    required this.receiveNotifications,
-    required this.theme,
-  });
+  UserPreferences({required this.receiveNotifications, required this.theme});
 
   factory UserPreferences.dummy() {
-    return UserPreferences(
-      receiveNotifications: true,
-      theme: "Dark",
-    );
+    return UserPreferences(receiveNotifications: true, theme: "Dark");
   }
 }

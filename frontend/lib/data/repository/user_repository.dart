@@ -13,4 +13,15 @@ class UserRepository {
   Future<void> updateUser(User user) async {
     await _userService.updateUser(user);
   }
+
+  Future<void> updateUserPoints(int userId, int points) async {
+    final user = await getUser(userId);
+    user.points = points;
+    await updateUser(user);
+  }
+
+  Future<int> getUserPoints(int userId) async {
+    final user = await getUser(userId);
+    return user.points;
+  }
 }

@@ -48,6 +48,7 @@ class App extends StatelessWidget {
   );
   final RewardViewModel rewardViewModel = RewardViewModel(
     rewardRepository: RewardRepository(),
+    userRepository: UserRepository(),
   );
   @override
   Widget build(BuildContext context) {
