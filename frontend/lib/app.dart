@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
@@ -45,7 +46,9 @@ class App extends StatelessWidget {
   final ProfileViewModel profileViewModel = ProfileViewModel(
     userRepository: UserRepository(),
   );
-
+  final RewardViewModel rewardViewModel = RewardViewModel(
+    rewardRepository: RewardRepository(),
+  );
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -56,7 +59,7 @@ class App extends StatelessWidget {
       ),
       initialRoute: isLoggedIn ? '/home' : '/sign_in',
       routes: {
-        '/rewards': (context) => RewardView(viewModel: RewardViewModel()),
+        '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/sign_in': (context) => SignInView(viewModel: signInViewModel),
         '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),

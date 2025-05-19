@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'rewards_viewmodel.dart';
+import 'package:frontend/data/model/reward.dart';
 
 class RewardCard extends StatelessWidget {
   final Reward reward;
@@ -15,7 +16,7 @@ class RewardCard extends StatelessWidget {
           (BuildContext alertCtx) => AlertDialog(
             title: const Text('Redeem Reward'),
             content: Text(
-              'Are you sure you want to redeem ${reward.title} for ${reward.cost} points?',
+              'Are you sure you want to redeem ${reward.name} for ${reward.points} points?',
             ),
             actions: [
               TextButton(
@@ -92,8 +93,8 @@ class RewardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(reward.title),
-        subtitle: Text('${reward.description}\nCost: ${reward.cost} Points'),
+        title: Text(reward.name),
+        subtitle: Text('${reward.description}\nCost: ${reward.points} Points'),
         trailing: AnimatedBuilder(
           animation: viewModel,
           builder: (context, _) => _buildRedeemButton(context),
