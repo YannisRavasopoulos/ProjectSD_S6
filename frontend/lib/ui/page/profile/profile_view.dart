@@ -5,7 +5,7 @@ import 'package:frontend/ui/page/profile/pick_profile_picture.dart';
 import 'package:frontend/ui/page/profile/profile_tab.dart';
 import 'package:frontend/ui/page/profile/history_tab.dart';
 import 'package:frontend/ui/page/profile/rating_tab.dart';
-import 'package:frontend/ui/shared/bottom_panel.dart';
+import 'package:frontend/ui/shared/nav/app_navigation_bar.dart';
 
 class ProfileView extends StatefulWidget {
   final ProfileViewModel viewModel;
@@ -81,7 +81,7 @@ class _ProfileViewState extends State<ProfileView> with SingleTickerProviderStat
               )
             : const Center(child: CircularProgressIndicator()),
       ),
-      bottomNavigationBar: BottomPanel(routeName: "/profile"),
+      bottomNavigationBar: AppNavigationBar(routeName: "/profile"),
     );
   }
 }

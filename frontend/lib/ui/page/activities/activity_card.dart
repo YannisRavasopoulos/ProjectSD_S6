@@ -30,7 +30,7 @@ class ActivityCard extends StatelessWidget {
           },
           child: ListTile(
             title: Text(activity.name),
-            subtitle: Text(activity.description),
+            // subtitle: Text(activity.description),
             leading: IconButton(
               onPressed: onEdit,
               icon: const Icon(Icons.edit),
