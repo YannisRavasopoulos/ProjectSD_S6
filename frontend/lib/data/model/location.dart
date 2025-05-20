@@ -8,5 +8,12 @@ class Location {
 
   const Location({required this.coordinates, required this.name});
 
+  Location.random()
+    : coordinates = LatLng(
+        37.7749 + (0.1 * (DateTime.now().millisecondsSinceEpoch % 100)),
+        -122.4194 + (0.1 * (DateTime.now().millisecondsSinceEpoch % 100)),
+      ),
+      name = 'Location ${DateTime.now().millisecondsSinceEpoch}';
+
   // final String name;
 }

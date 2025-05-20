@@ -1,63 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/repository/reward_repository.dart';
+import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
+import 'package:frontend/data/model/reward.dart';
 
-class Reward {
-  final String title;
-  final String description;
-  final int cost;
+class RewardViewModel extends ChangeNotifier {
+  final RewardRepository rewardRepository;
+  final ProfileViewModel profileViewModel;
 
-  Reward({required this.title, required this.description, required this.cost});
-}
+  List<Reward> _availableRewards = [];
+  String _redemptionCode = '';
+  String _errorMessage = '';
+  bool _isLoading = false;
 
-class RewardViewModel {
-  // Notifiers for reactive updates
-  final ValueNotifier<int> userPoints = ValueNotifier<int>(12345);
-  final ValueNotifier<List<Reward>> availableRewards =
-      ValueNotifier<List<Reward>>([
-        Reward(
-          title: '10% Discount',
-          description: 'Get 10% off your next ride',
-          cost: 1000,
-        ),
-        Reward(
-          title: 'Free Coffee',
-          description: 'Enjoy a free coffee at participating locations',
-          cost: 2000,
-        ),
-        Reward(
-          title: 'Priority Booking',
-          description: 'Get priority booking for your next ride',
-          cost: 3000,
-        ),
-      ]);
+  RewardViewModel({
+    required this.rewardRepository,
+    required this.profileViewModel,
+  }) {
+    _loadRewards();
+    profileViewModel.addListener(_onProfileUpdated); // Listen to ProfileViewModel updates
+  }
 
-  final ValueNotifier<String> redemptionCode = ValueNotifier<String>('');
-  final ValueNotifier<String> errorMessage = ValueNotifier<String>('');
-  final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
+  List<Reward> get availableRewards => List.unmodifiable(_availableRewards);
+  String get redemptionCode => _redemptionCode;
+  String get errorMessage => _errorMessage;
+  bool get isLoading => _isLoading;
+
+  int get userPoints => profileViewModel.points; // Fetch points from ProfileViewModel
+
+  void _loadRewards() {
+    _availableRewards = rewardRepository.getAllRewards();
+    notifyListeners();
+  }
+
+  void _onProfileUpdated() {
+    notifyListeners(); // Notify listeners when ProfileViewModel updates
+  }
 
   Future<void> redeemReward(Reward reward) async {
-    isLoading.value = true;
-    errorMessage.value = '';
-    redemptionCode.value = '';
+    _isLoading = true;
+    _errorMessage = '';
+    _redemptionCode = '';
+    notifyListeners();
 
-    if (userPoints.value >= reward.cost) {
-      await Future.delayed(Duration(seconds: 2));
+    try {
+      if (userPoints >= reward.points) {
+        await Future.delayed(const Duration(milliseconds: 500)); // Simulating API call
 
-      redemptionCode.value =
-          'REDEEM-${reward.title.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch % 1000}';
-      userPoints.value -= reward.cost;
+        _redemptionCode =
+            'REDEEM-${reward.name.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch % 1000}';
 
-      // Remove reward from list
-      final updatedList = List<Reward>.from(availableRewards.value);
-      updatedList.remove(reward);
-      availableRewards.value = updatedList;
-    } else {
-      errorMessage.value = 'Not enough points to redeem this reward.';
+        final newPoints = userPoints - reward.points;
+        await profileViewModel.updatePoints(newPoints); // Update points in ProfileViewModel
+
+        rewardRepository.removeReward(reward.id);
+        _loadRewards();
+      } else {
+        _errorMessage = 'Not enough points to redeem this reward';
+      }
+    } catch (e) {
+      _errorMessage = 'Failed to redeem reward: ${e.toString()}';
     }
 
-    isLoading.value = false;
+    _isLoading = false;
+    notifyListeners();
   }
 
   void clearRedemptionCode() {
-    redemptionCode.value = '';
+    _redemptionCode = '';
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    profileViewModel.removeListener(_onProfileUpdated); // Clean up listener
+    super.dispose();
   }
 }

@@ -30,15 +30,15 @@ class _CreateActivityViewState extends State<CreateActivityView> {
 
   void _createActivity() {
     if (_formKey.currentState!.validate()) {
-      final newActivity = Activity(
-        id: DateTime.now().toString(),
-        name: _nameController.text,
-        description: _descriptionController.text,
-        startLocation: _startLocationController.text,
-        endLocation: _endLocationController.text,
-      );
+      // final newActivity = Activity(
+      //   id: DateTime.now().toString(),
+      //   name: _nameController.text,
+      //   description: _descriptionController.text,
+      //   startLocation: _startLocationController.text,
+      //   endLocation: _endLocationController.text,
+      // );
 
-      widget.onCreate(newActivity);
+      // widget.onCreate(newActivity);
       Navigator.pop(context);
     }
   }

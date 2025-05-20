@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class BottomPanel extends StatelessWidget {
-  BottomPanel({super.key, required this.routeName});
+class AppNavigationBar extends StatelessWidget {
+  AppNavigationBar({super.key, required this.routeName});
 
   final String routeName;
 
