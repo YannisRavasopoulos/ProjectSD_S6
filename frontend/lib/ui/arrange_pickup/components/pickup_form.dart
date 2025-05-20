@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/ui/arrange_pickup/components/pickup_map_view.dart';
 
 class PickupForm extends StatefulWidget {
   final DateTime? selectedTime;
   final String location;
   final Function(DateTime) onTimeSelected;
   final Function(String) onLocationChanged;
-  final VoidCallback onSubmit;
+  final Function() onSubmit;
 
   const PickupForm({
     super.key,
@@ -21,28 +22,6 @@ class PickupForm extends StatefulWidget {
 }
 
 class _PickupFormState extends State<PickupForm> {
-  late TextEditingController _locationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _locationController = TextEditingController(text: widget.location);
-  }
-
-  @override
-  void didUpdateWidget(PickupForm oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.location != widget.location) {
-      _locationController.text = widget.location;
-    }
-  }
-
-  @override
-  void dispose() {
-    _locationController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -51,7 +30,6 @@ class _PickupFormState extends State<PickupForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.access_time),
               title: Text(widget.selectedTime?.toString() ?? 'Select Time'),
@@ -73,23 +51,9 @@ class _PickupFormState extends State<PickupForm> {
                 }
               },
             ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _locationController,
-              decoration: const InputDecoration(
-                labelText: 'Pickup Location',
-                prefixIcon: Icon(Icons.location_on),
-              ),
-              onChanged: widget.onLocationChanged,
-            ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: widget.onSubmit,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-              ),
-              child: const Text('Confirm Pickup Arrangement'),
-            ),
+            PickupMapView(onLocationChanged: widget.onLocationChanged),
+            const SizedBox(height: 16),
           ],
         ),
       ),

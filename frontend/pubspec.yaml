@@ -43,6 +43,7 @@ dependencies:
   geolocator: ^14.0.0
   geolocator_linux: ^0.2.3
   geocode: ^1.0.3
+  location: ^5.0.3
 
 
 dev_dependencies:
