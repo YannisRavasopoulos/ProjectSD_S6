@@ -7,7 +7,7 @@ class HomeViewModel extends ChangeNotifier {
   Location? _location;
 
   LatLng? destination;
-  LatLng? source;
+  LatLng source = const LatLng(0, 0); // Initialize to (0,0) coordinates
 
   List<String> suggestions = [];
 

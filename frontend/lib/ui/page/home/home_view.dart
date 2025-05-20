@@ -31,6 +31,11 @@ class HomeView extends StatefulWidget {
 class _HomeView extends State<HomeView> with TickerProviderStateMixin {
   MapController get mapController => _customMapController.mapController;
 
+  void _onLocationPressed() async {
+    await widget.viewModel.refreshLocation();
+    _customMapController.animateTo(dest: widget.viewModel.source, zoom: 15.0);
+  }
+
   late final AnimatedMapController _customMapController = AnimatedMapController(
     vsync: this,
     duration: const Duration(milliseconds: 500),
@@ -38,94 +43,31 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
     cancelPreviousAnimations: false,
   );
 
-  void _onLocationPressed() async {
-    await widget.viewModel.refreshLocation();
-    _customMapController.animateTo(dest: widget.viewModel.source, zoom: 15.0);
-  }
-
   void _onMapTapped(TapPosition tapPosition, LatLng point) {
     widget.viewModel.selectPoint(point);
-  }
-
-  void _showTestNotification() {
-    final testRide = Ride.random();
-    final testDriver = Driver.random();
-
-    final pickup = Pickup(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      ride: testRide,
-      driver: testDriver,
-      carpoolerId: 'test_user_id',
-      pickupTime: DateTime.now().add(const Duration(minutes: 30)),
-      location: 'Test Location',
-      status: 'requested',
-    );
-
-    Navigator.pop(context); // Close drawer first
-
-    NotificationOverlay.show(
-      context,
-      PickupRequestNotification(
-        pickup: pickup,
-        onArrange: () => _handleArrangePickup(pickup),
-        onDecline: () => _handleDeclinePickup(pickup.id),
-      ),
-    );
-  }
-
-  void _handleArrangePickup(Pickup pickup) {
-    Navigator.pushNamed(
-      context,
-      '/arrange_pickup',
-      arguments: {
-        'carpoolerId': pickup.carpoolerId,
-        'driverId': pickup.driver.id,
-        'ride': pickup.ride,
-      },
-    );
-  }
-
-  Future<void> _handleDeclinePickup(String pickupId) async {
-    final pickupService = PickupService();
-    await pickupService.updatePickupStatus(
-      pickupId: pickupId,
-      status: 'declined',
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Loop App'),
-        backgroundColor: const Color.fromARGB(255, 23, 143, 117),
-      ),
       body: ListenableBuilder(
         listenable: widget.viewModel,
         builder: (context, _) {
-          // Define a default center position
-          final LatLng defaultCenter = const LatLng(
-            45.5017,
-            -73.5673,
-          ); // Montreal coordinates
-
           return Stack(
             children: [
+              // Map as the background
               FlutterMap(
                 mapController: mapController,
                 options: MapOptions(
                   onTap: _onMapTapped,
-                  initialCenter:
-                      widget.viewModel.source ??
-                      defaultCenter, // Provide default center
+                  initialCenter: widget.viewModel.source ?? LatLng(0, 0),
                   initialZoom: 8,
                 ),
                 children: [
                   OpenStreetMapsTileLayer(),
                   MarkerLayer(
                     markers: [
-                      if (widget.viewModel.source != null)
-                        HereMarker(widget.viewModel.source!), // Add null check
+                      HereMarker(widget.viewModel.source),
                       if (widget.viewModel.destination != null)
                         DestinationMarker(widget.viewModel.destination),
                     ],
@@ -138,8 +80,12 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                 right: 16,
                 child: MapSearchBar(
                   suggestions: widget.viewModel.suggestions,
-                  onSearchChanged: widget.viewModel.search,
-                  onSuggestionSelected: widget.viewModel.selectSuggestion,
+                  onSearchChanged: (value) {
+                    widget.viewModel.search(value);
+                  },
+                  onSuggestionSelected: (index) {
+                    widget.viewModel.selectSuggestion(index);
+                  },
                   hintText: 'Search for a location...',
                 ),
               ),
@@ -147,6 +93,20 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
           );
         },
       ),
+      appBar: AppBar(
+        title: TextField(
+          decoration: InputDecoration(
+            hintText: 'Search for a location...',
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+          ),
+          onSubmitted: (value) {
+            // Handle search logic here
+            print('Search query: $value');
+          },
+        ),
+      ),
+
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -161,27 +121,91 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.card_giftcard),
-              title: const Text('Rewards'),
-              onTap: () => Navigator.pushNamed(context, '/rewards'),
+              leading: const Icon(Icons.card_giftcard), // Added rewards icon
+              title: const Text('Rewards'), // Added rewards title
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/rewards',
+                ); // Navigate to rewards view
+              },
             ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Settings'),
-              onTap: () => Navigator.pushNamed(context, '/settings'),
+              onTap: () {
+                Navigator.pushNamed(context, '/settings');
+              },
             ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Find Ride'),
-              onTap: () => Navigator.pushNamed(context, '/find_ride'),
+              onTap: () {
+                Navigator.pushNamed(context, '/find_ride');
+              },
             ),
+            // Testing notification for arrange pickup
             ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Test Notification'),
-              onTap: _showTestNotification,
+              onTap: () {
+                // Dummy data for testing
+                final testRide = Ride.random();
+                final testDriver = Driver.random();
+
+                final pickup = Pickup(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  ride: testRide,
+                  driver: testDriver,
+                  carpoolerId: 'test_user_id',
+                  pickupTime: DateTime.now().add(const Duration(minutes: 30)),
+                  location: 'Test Location',
+                  status: 'requested',
+                );
+                //
+
+                Navigator.pop(context); // Close drawer first
+
+                NotificationOverlay.show(
+                  context,
+                  PickupRequestNotification(
+                    pickup: pickup,
+                    onArrange: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/arrange_pickup',
+                        arguments: {
+                          'carpoolerId': pickup.carpoolerId,
+                          'driverId': pickup.driver.id,
+                          'ride': pickup.ride,
+                        },
+                      );
+                    },
+                    onDecline: () async {
+                      final pickupService = PickupService();
+                      await pickupService.updatePickupStatus(
+                        pickupId: pickup.id,
+                        status: 'declined',
+                      );
+                    },
+                  ),
+                );
+              },
             ),
           ],
         ),
+
+        // title: TextField(
+        //   decoration: InputDecoration(
+        //     hintText: 'Search for a location...',
+        //     border: InputBorder.none,
+        //     contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+        //   ),
+        //   onSubmitted: (value) {
+        //     // Handle search logic here
+        //     print('Search query: $value');
+        //   },
+        // ),
       ),
       bottomNavigationBar: AppNavigationBar(routeName: "/home"),
       floatingActionButton: FloatingActionButton(
