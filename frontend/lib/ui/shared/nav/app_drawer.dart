@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/data/service/pickup_service.dart';
 import 'package:frontend/ui/arrange_pickup/components/pickup_request_notification.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
 
@@ -53,43 +52,21 @@ class AppDrawer extends StatelessWidget {
               // Dummy data for testing
               final testRide = Ride.random();
               final testDriver = Driver.random();
-
               final pickup = Pickup(
                 id: DateTime.now().millisecondsSinceEpoch.toString(),
-                ride: testRide,
-                driver: testDriver,
+                rideID: testRide.id, // Changed to use rideID
+                driverID: testDriver.id, // Changed to use driverID
                 carpoolerId: 'test_user_id',
                 pickupTime: DateTime.now().add(const Duration(minutes: 30)),
                 location: 'Test Location',
                 status: 'requested',
               );
-              //
 
-              Navigator.pop(context); // Close drawer first
+              Navigator.pop(context);
 
               NotificationOverlay.show(
                 context,
-                PickupRequestNotification(
-                  pickup: pickup,
-                  onArrange: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/arrange_pickup',
-                      arguments: {
-                        'carpoolerId': pickup.carpoolerId,
-                        'driverId': pickup.driver.id,
-                        'ride': pickup.ride,
-                      },
-                    );
-                  },
-                  onDecline: () async {
-                    final pickupService = PickupService();
-                    await pickupService.updatePickupStatus(
-                      pickupId: pickup.id,
-                      status: 'declined',
-                    );
-                  },
-                ),
+                PickupRequestNotification(pickup: pickup),
               );
             },
           ),

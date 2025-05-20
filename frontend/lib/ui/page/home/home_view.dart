@@ -9,15 +9,6 @@ import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/shared/map/open_street_maps_tile_layer.dart';
 import 'package:frontend/ui/shared/nav/app_navigation_bar.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/model/pickup.dart';
-//testing
-import 'package:frontend/ui/arrange_pickup/components/pickup_request_notification.dart';
-import 'package:frontend/data/service/pickup_service.dart';
-import 'package:frontend/ui/notification/notification_overlay.dart';
-//
-import 'package:frontend/data/service/notification_service.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key, required this.viewModel});
@@ -49,69 +40,60 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListenableBuilder(
-        listenable: widget.viewModel,
-        builder: (context, _) {
-          return Stack(
-            children: [
-              // Map as the background
-              FlutterMap(
-                mapController: mapController,
-                options: MapOptions(
-                  onTap: _onMapTapped,
-                  initialCenter: widget.viewModel.source,
-                  initialZoom: 8,
-                ),
-                children: [
-                  OpenStreetMapsTileLayer(),
-                  MarkerLayer(
-                    markers: [
-                      HereMarker(widget.viewModel.source),
-                      if (widget.viewModel.destination != null)
-                        DestinationMarker(widget.viewModel.destination),
-                    ],
+    return WillPopScope(
+      onWillPop: () async => false, // Prevent back button navigation
+      child: Scaffold(
+        body: ListenableBuilder(
+          listenable: widget.viewModel,
+          builder: (context, _) {
+            return Stack(
+              children: [
+                FlutterMap(
+                  mapController: mapController,
+                  options: MapOptions(
+                    onTap: _onMapTapped,
+                    initialCenter:
+                        widget.viewModel.source ??
+                        const LatLng(45.5017, -73.5673),
+                    initialZoom: 8,
                   ),
-                ],
-              ),
-              Positioned(
-                top: 16,
-                left: 16,
-                right: 16,
-                child: MapSearchBar(
-                  suggestions: widget.viewModel.suggestions,
-                  onSearchChanged: (value) {
-                    widget.viewModel.search(value);
-                  },
-                  onSuggestionSelected: (index) {
-                    widget.viewModel.selectSuggestion(index);
-                  },
-                  hintText: 'Search for a location...',
+                  children: [
+                    OpenStreetMapsTileLayer(),
+                    MarkerLayer(
+                      markers: [
+                        if (widget.viewModel.source != null)
+                          HereMarker(widget.viewModel.source!),
+                        if (widget.viewModel.destination != null)
+                          DestinationMarker(widget.viewModel.destination),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          );
-        },
-      ),
-      appBar: AppBar(
-        title: TextField(
-          decoration: InputDecoration(
-            hintText: 'Search for a location...',
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-          ),
-          onSubmitted: (value) {
-            // Handle search logic here
-            print('Search query: $value');
+                Positioned(
+                  top: 16,
+                  left: 16,
+                  right: 16,
+                  child: MapSearchBar(
+                    suggestions: widget.viewModel.suggestions,
+                    onSearchChanged: widget.viewModel.search,
+                    onSuggestionSelected: widget.viewModel.selectSuggestion,
+                    hintText: 'Search for a location...',
+                  ),
+                ),
+              ],
+            );
           },
         ),
-      ),
-
-      drawer: AppDrawer(),
-      bottomNavigationBar: AppNavigationBar(routeName: "/home"),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onLocationPressed,
-        child: const Icon(Icons.my_location),
+        appBar: AppBar(
+          title: const Text('Loop App'),
+          backgroundColor: const Color.fromARGB(255, 23, 143, 117),
+        ),
+        drawer: AppDrawer(),
+        bottomNavigationBar: AppNavigationBar(routeName: "/home"),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _onLocationPressed,
+          child: const Icon(Icons.my_location),
+        ),
       ),
     );
   }

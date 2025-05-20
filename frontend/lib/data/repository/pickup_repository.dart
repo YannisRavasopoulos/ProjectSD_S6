@@ -23,7 +23,6 @@ class PickupRepository {
         pickupTime: pickupTime,
         location: location,
       );
-
       return response['success'] ?? false;
     } catch (e) {
       print('Error creating pickup request: $e');

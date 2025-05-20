@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/pickup.dart';
+import 'package:frontend/data/repository/driver_repository.dart';
+import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/service/notification_service.dart';
-import 'package:frontend/data/service/pickup_service.dart';
-import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
 import 'package:frontend/ui/arrange_pickup/components/pickup_request_notification.dart';
 
 class PickupNotificationHandler extends StatelessWidget {
   final NotificationService notificationService;
+  final DriverRepository driverRepository;
+  final RideRepository rideRepository;
   final Widget child;
 
   const PickupNotificationHandler({
     super.key,
     required this.notificationService,
+    required this.driverRepository,
+    required this.rideRepository,
     required this.child,
   });
 
@@ -31,37 +35,39 @@ class PickupNotificationHandler extends StatelessWidget {
   }
 
   void _showPickupNotification(BuildContext context, Pickup pickup) {
-    showDialog(
+    showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder:
-          (context) => PickupRequestNotification(
-            pickup: pickup,
-            onArrange: () => _handleArrange(context, pickup),
-            onDecline: () => _handleDecline(context, pickup),
-          ),
-    );
+      builder: (dialogContext) => PickupRequestNotification(pickup: pickup),
+    ).then((accepted) {
+      if (accepted == true) {
+        _handleArrange(context, pickup);
+      } else if (accepted == false) {
+        // _handleDecline(context, pickup);
+      }
+    });
   }
 
-  void _handleArrange(BuildContext context, Pickup pickup) {
-    Navigator.pop(context);
-    Navigator.pushNamed(
-      context,
-      '/arrange_pickup',
-      arguments: {
-        'carpoolerId': pickup.carpoolerId,
-        'driverId': pickup.driver.id,
-        'ride': pickup.ride,
-      },
-    );
-  }
+  void _handleArrange(BuildContext context, Pickup pickup) async {
+    try {
+      final driver = await driverRepository.getDriver(pickup.driverID);
+      final ride = await rideRepository.getRide(pickup.rideID);
 
-  Future<void> _handleDecline(BuildContext context, Pickup pickup) async {
-    final pickupService = PickupService();
-    await pickupService.updatePickupStatus(
-      pickupId: pickup.id,
-      status: 'declined',
-    );
-    if (context.mounted) Navigator.pop(context);
+      if (!context.mounted) return;
+
+      Navigator.of(context).pushNamed(
+        '/arrange_pickup',
+        arguments: {
+          'carpoolerId': pickup.carpoolerId,
+          'driver': driver,
+          'selectedRide': ride,
+        },
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load pickup details: $e')),
+      );
+    }
   }
 }

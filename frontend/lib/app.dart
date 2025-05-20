@@ -5,6 +5,7 @@ import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
+import 'package:frontend/ui/arrange_pickup/arrange_pickup_viewmodel.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
@@ -28,18 +29,30 @@ import 'package:frontend/data/service/notification_service.dart';
 import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/driver.dart';
-//
+import 'package:frontend/data/service/pickup_service.dart';
+import 'package:frontend/data/repository/pickup_repository.dart';
+import 'package:frontend/data/repository/driver_repository.dart';
+import 'package:frontend/data/service/driver_service.dart';
+import 'package:frontend/data/service/ride_service.dart';
 
 class App extends StatelessWidget {
-  final NotificationService _notificationService = NotificationService();
+  final NotificationService _notificationService;
+  final DriverRepository _driverRepository;
+  final RideRepository _rideRepository;
+  final UserRepository _userRepository;
+  final PickupRepository _pickupRepository;
 
-  App({super.key});
+  App({super.key})
+    : _notificationService = NotificationService(),
+      _driverRepository = DriverRepository(driverService: DriverService()),
+      _rideRepository = RideRepository(rideService: RideService()),
+      _userRepository = UserRepository(),
+      _pickupRepository = PickupRepository(pickupService: PickupService());
 
   final bool isLoggedIn = false;
-  final UserRepository _userRepository = UserRepository();
 
-  final FindRideViewModel findRideViewModel = FindRideViewModel(
-    rideRepository: RideRepository(),
+  late final FindRideViewModel findRideViewModel = FindRideViewModel(
+    rideRepository: _rideRepository,
   );
 
   final HomeViewModel homeViewModel = HomeViewModel(
@@ -78,6 +91,8 @@ class App extends StatelessWidget {
       builder: (context, child) {
         return PickupNotificationHandler(
           notificationService: _notificationService,
+          driverRepository: _driverRepository,
+          rideRepository: _rideRepository,
           child: child ?? const SizedBox(),
         );
       },
@@ -95,18 +110,32 @@ class App extends StatelessWidget {
         '/rides': (context) => RidesView(),
       },
       onGenerateRoute: (settings) {
-        var args = settings.arguments as Map<String, dynamic>;
+        if (settings.name == '/arrange_pickup') {
+          final args = settings.arguments as Map<String, dynamic>?;
 
-        switch (settings.name) {
-          case '/arrange_pickup':
-            return MaterialPageRoute(
-              builder:
-                  (context) => ArrangePickupView(
-                    // carpoolerId: args['carpoolerId'],
-                    // selectedRide: args['selectedRide'],
-                    // driver: args['driver'],
+          if (args == null ||
+              !args.containsKey('carpoolerId') ||
+              !args.containsKey('driver') ||
+              !args.containsKey('selectedRide')) {
+            return null;
+          }
+
+          final driver = args['driver'] as Driver;
+          final ride = args['selectedRide'] as Ride;
+
+          return MaterialPageRoute(
+            builder:
+                (context) => ArrangePickupView(
+                  viewModel: ArrangePickupViewModel(
+                    repository: _pickupRepository,
+                    driver: driver,
+                    rideId: ride.id,
                   ),
-            );
+                  carpoolerId: args['carpoolerId'] as String,
+                  driver: driver,
+                  selectedRide: ride,
+                ),
+          );
         }
         return null;
       },

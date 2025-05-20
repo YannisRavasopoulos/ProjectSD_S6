@@ -3,27 +3,20 @@ import 'package:frontend/data/model/pickup.dart';
 
 class PickupRequestNotification extends StatelessWidget {
   final Pickup pickup;
-  final VoidCallback onArrange;
-  final VoidCallback onDecline;
 
-  const PickupRequestNotification({
-    super.key,
-    required this.pickup,
-    required this.onArrange,
-    required this.onDecline,
-  });
+  const PickupRequestNotification({super.key, required this.pickup});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 72, // Compact fixed height
+      height: 80,
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black,
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -37,7 +30,7 @@ class PickupRequestNotification extends StatelessWidget {
             backgroundColor: Theme.of(context).colorScheme.primary,
             child: const Icon(
               Icons.directions_car,
-              color: Colors.white,
+              color: Color.fromARGB(255, 255, 255, 255),
               size: 16,
             ),
           ),
@@ -66,10 +59,10 @@ class PickupRequestNotification extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text(
-                  'From ${pickup.driver.name}',
-                  style: const TextStyle(fontSize: 11),
-                ),
+                // Text(
+                //   'From ${//TODO driver getter name by id}',
+                //   style: const TextStyle(fontSize: 11),
+                // ),
               ],
             ),
           ),
@@ -78,13 +71,15 @@ class PickupRequestNotification extends StatelessWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.close, size: 18),
-                onPressed: onDecline,
+                onPressed: () => Navigator.pop(context, false),
                 padding: const EdgeInsets.all(8),
                 constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
               ),
               IconButton(
                 icon: const Icon(Icons.check, size: 18),
-                onPressed: onArrange,
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
                 padding: const EdgeInsets.all(8),
                 constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
               ),
