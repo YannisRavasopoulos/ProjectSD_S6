@@ -9,15 +9,15 @@ import 'package:frontend/ui/arrange_pickup/components/ride_details_panel.dart';
 import 'package:frontend/data/model/driver.dart';
 
 class ArrangePickupView extends StatefulWidget {
-  final String carpoolerId;
-  final Driver driver;
-  final Ride selectedRide;
+  final String carpoolerId = "";
+  final Driver driver = Driver.random();
+  final Ride selectedRide = Ride.random();
 
-  const ArrangePickupView({
+  ArrangePickupView({
     super.key,
-    required this.carpoolerId,
-    required this.driver,
-    required this.selectedRide,
+    // required this.carpoolerId,
+    // required this.driver,
+    // required this.selectedRide,
   });
 
   @override

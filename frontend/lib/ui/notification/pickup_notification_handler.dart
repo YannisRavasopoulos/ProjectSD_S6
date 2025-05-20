@@ -45,16 +45,14 @@ class PickupNotificationHandler extends StatelessWidget {
 
   void _handleArrange(BuildContext context, Pickup pickup) {
     Navigator.pop(context);
-    Navigator.push(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder:
-            (context) => ArrangePickupView(
-              carpoolerId: pickup.carpoolerId,
-              driver: pickup.driver,
-              selectedRide: pickup.ride,
-            ),
-      ),
+      '/arrange_pickup',
+      arguments: {
+        'carpoolerId': pickup.carpoolerId,
+        'driverId': pickup.driver.id,
+        'ride': pickup.ride,
+      },
     );
   }
 

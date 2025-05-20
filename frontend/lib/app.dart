@@ -94,6 +94,22 @@ class App extends StatelessWidget {
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/rides': (context) => RidesView(),
       },
+      onGenerateRoute: (settings) {
+        var args = settings.arguments as Map<String, dynamic>;
+
+        switch (settings.name) {
+          case '/arrange_pickup':
+            return MaterialPageRoute(
+              builder:
+                  (context) => ArrangePickupView(
+                    // carpoolerId: args['carpoolerId'],
+                    // selectedRide: args['selectedRide'],
+                    // driver: args['driver'],
+                  ),
+            );
+        }
+        return null;
+      },
     );
   }
 }
