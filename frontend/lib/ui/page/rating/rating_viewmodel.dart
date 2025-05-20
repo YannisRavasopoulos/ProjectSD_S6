@@ -10,22 +10,18 @@ class RatingViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String _errorMessage = '';
   List<Rating> _userRatings = [];
-
-  RatingViewModel({required this.ratingRepository}) {
-    _loadRewards();
-  }
+  double _averageRating = 0.0;
+  RatingViewModel({required this.ratingRepository}) {}
 
   // Getters
+
   int get currentRating => _currentRating;
   String get comment => _comment;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
   List<Rating> get userRatings => List.unmodifiable(_userRatings);
   bool get canSubmit => _currentRating > 0;
-
-  void _loadRewards() {
-    _userRatings = ratingRepository.getRatingsForUser(''); // Load user ratings
-  }
+  double get averageRating => getUserAverageRating(1); // Example user ID
 
   // Update rating value
   void updateRating(int rating) {
@@ -73,23 +69,28 @@ class RatingViewModel extends ChangeNotifier {
     }
   }
 
-  // Load user ratings
-  Future<void> loadUserRatings(String userId) async {
+  Future<void> loadUserRatings(int userId) async {
     _isLoading = true;
     notifyListeners();
-
     try {
       _userRatings = ratingRepository.getRatingsForUser(userId);
+      _errorMessage = '';
     } catch (e) {
-      _errorMessage = 'Failed to load ratings: ${e.toString()}';
+      _errorMessage = 'Failed to load ratings: $e';
+      _userRatings = [];
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
+  void loadRatings(int userId) {
+    _userRatings = ratingRepository.getRatingsForUser(userId);
+    _averageRating = ratingRepository.getAverageRatingForUser(userId);
+  }
+
   // Get average rating
-  double getUserAverageRating(String userId) {
+  double getUserAverageRating(int userId) {
     return ratingRepository.getAverageRatingForUser(userId);
   }
 

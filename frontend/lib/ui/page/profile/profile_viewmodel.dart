@@ -27,7 +27,7 @@ class ProfileViewModel extends ChangeNotifier {
     try {
       user = await userRepository.getUser(userId); // Use an asynchronous method
       // Load ratings after user is loaded
-      _loadUserRatings(userId);
+
       notifyListeners(); // Notify listeners when user data is loaded
     } catch (e) {
       // Handle errors (e.g., log them or show a message)
@@ -35,26 +35,7 @@ class ProfileViewModel extends ChangeNotifier {
     }
   }
 
-  // Add rating-related fields
-  double _averageRating = 0.0;
-  List<Rating> _userRatings = [];
-
-  // Add rating getters
-  double get averageRating => _averageRating;
-  List<Rating> get userRatings => List.unmodifiable(_userRatings);
-
   // Add method to load user ratings
-  void _loadUserRatings(int userId) {
-    try {
-      _userRatings = ratingRepository.getRatingsForUser(userId.toString());
-      _averageRating = ratingRepository.getAverageRatingForUser(
-        userId.toString(),
-      );
-      notifyListeners();
-    } catch (e) {
-      debugPrint('Error loading ratings: $e');
-    }
-  }
 
   void toggleEditing() {
     isEditing = !isEditing;

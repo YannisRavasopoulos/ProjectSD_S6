@@ -9,6 +9,7 @@ class RatingTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    viewModel.loadRatings(1); // Example user ID
     return AnimatedBuilder(
       animation: viewModel,
       builder: (context, _) {
@@ -37,13 +38,19 @@ class RatingTab extends StatelessWidget {
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              if (viewModel.errorMessage.isNotEmpty)
-                Text(
-                  viewModel.errorMessage,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                )
-              else
-                Expanded(child: _buildReviewsList()),
+              Expanded(
+                child:
+                    viewModel.errorMessage.isNotEmpty
+                        ? Center(
+                          child: Text(
+                            viewModel.errorMessage,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                          ),
+                        )
+                        : _buildReviewsList(),
+              ),
             ],
           ),
         );
@@ -52,9 +59,8 @@ class RatingTab extends StatelessWidget {
   }
 
   Widget _buildAverageRating(BuildContext context) {
-    final averageRating = viewModel.getUserAverageRating(
-      'currentUserId',
-    ); // Replace with actual user ID
+    final averageRating = viewModel.averageRating;
+    print('Average Rating: $averageRating');
     return Row(
       children: List.generate(5, (index) {
         return Icon(
@@ -68,6 +74,7 @@ class RatingTab extends StatelessWidget {
   Widget _buildReviewsList() {
     return ListView.separated(
       itemCount: viewModel.userRatings.length,
+
       separatorBuilder: (_, __) => const Divider(),
       itemBuilder: (context, index) {
         final rating = viewModel.userRatings[index];
