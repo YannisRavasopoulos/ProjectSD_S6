@@ -4,7 +4,7 @@ import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/activities/activity_card.dart';
 import 'package:frontend/ui/page/activities/activity_deletion_dialog.dart';
 import 'package:frontend/ui/page/activities/create_activity_view.dart';
-import 'package:frontend/ui/shared/bottom_panel.dart';
+import 'package:frontend/ui/shared/nav/app_navigation_bar.dart';
 
 class ActivitiesView extends StatelessWidget {
   const ActivitiesView({super.key, required this.viewModel});
@@ -81,7 +81,7 @@ class ActivitiesView extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: BottomPanel(routeName: "/activities"),
+      bottomNavigationBar: AppNavigationBar(routeName: "/activities"),
     );
   }
 }
