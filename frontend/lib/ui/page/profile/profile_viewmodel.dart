@@ -6,7 +6,7 @@ import 'package:frontend/data/repository/user_repository.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   final UserRepository userRepository;
-
+  
   ProfileViewModel({required this.userRepository});
 
   // Profile fields
@@ -20,7 +20,7 @@ class ProfileViewModel extends ChangeNotifier {
     if (user != null) return; // Prevent reloading if user is already loaded
     try {
       user = await userRepository.getUser(userId); // Use an asynchronous method
-      notifyListeners();
+      notifyListeners(); // Notify listeners when user data is loaded
     } catch (e) {
       // Handle errors (e.g., log them or show a message)
       debugPrint('Error loading user: $e');
@@ -73,6 +73,15 @@ class ProfileViewModel extends ChangeNotifier {
   void updatePassword(String value) {
     if (user == null) return;
     user!.password = value;
+    notifyListeners();
+  }
+
+  int get points => user?.points ?? 1200; // Default points set to 1200
+
+  Future<void> updatePoints(int newPoints) async {
+    if (user == null) return;
+    user!.points = newPoints;
+    await userRepository.updateUserPoints(user!.id, newPoints);
     notifyListeners();
   }
 }

@@ -1,103 +1,63 @@
 import 'package:flutter/material.dart';
 import 'rewards_viewmodel.dart';
+import 'package:frontend/data/model/reward.dart';
 
 class RewardCard extends StatelessWidget {
   final Reward reward;
   final RewardViewModel viewModel;
 
   const RewardCard({Key? key, required this.reward, required this.viewModel})
-    : super(key: key);
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final bool hasEnoughPoints = viewModel.userPoints >= reward.points;
+
     return Card(
+      color: hasEnoughPoints ? Colors.green.shade50 : Colors.red.shade50,
       child: ListTile(
-        title: Text(reward.title),
-        subtitle: Text('${reward.description}\nCost: ${reward.cost} Points'),
-        trailing: ValueListenableBuilder<bool>(
-          valueListenable: viewModel.isLoading,
-          builder: (context, isLoading, _) {
-            return ElevatedButton(
-              onPressed:
-                  isLoading
-                      ? null
-                      : () {
-                        final dialogContext = context;
-
-                        showDialog(
-                          context: dialogContext,
-                          builder: (BuildContext alertCtx) {
-                            return AlertDialog(
-                              title: Text('Redeem Reward'),
-                              content: Text(
-                                'Are you sure you want to redeem ${reward.title} for ${reward.cost} points?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(alertCtx).pop();
-                                  },
-                                  child: Text('Cancel'),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    Navigator.of(alertCtx).pop();
-
-                                    await viewModel.redeemReward(reward);
-
-                                    final error = viewModel.errorMessage.value;
-                                    final code = viewModel.redemptionCode.value;
-
-                                    if (error.isNotEmpty) {
-                                      ScaffoldMessenger.of(
-                                        dialogContext,
-                                      ).showSnackBar(
-                                        SnackBar(content: Text(error)),
-                                      );
-                                    }
-
-                                    if (code.isNotEmpty) {
-                                      showDialog(
-                                        context: dialogContext,
-                                        builder:
-                                            (ctx) => AlertDialog(
-                                              title: Text('Redemption Code'),
-                                              content: Text(code),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(ctx).pop();
-                                                    viewModel
-                                                        .clearRedemptionCode();
-                                                  },
-                                                  child: Text('OK'),
-                                                ),
-                                              ],
-                                            ),
-                                      );
-                                    }
-                                  },
-                                  child:
-                                      isLoading
-                                          ? SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                            ),
-                                          )
-                                          : Text('Redeem'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-              child: Text('Redeem'),
-            );
-          },
+        title: Text(reward.name),
+        subtitle: Text('${reward.description}\nCost: ${reward.points} Points'),
+        trailing: ElevatedButton(
+          onPressed: hasEnoughPoints && !viewModel.isLoading
+              ? () => _redeemReward(context)
+              : null,
+          child: viewModel.isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text('Redeem'),
         ),
       ),
     );
+  }
+
+  void _redeemReward(BuildContext context) async {
+    await viewModel.redeemReward(reward);
+
+    if (viewModel.errorMessage.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(viewModel.errorMessage)),
+      );
+    } else if (viewModel.redemptionCode.isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Redemption Successful'),
+          content: Text('Your redemption code: ${viewModel.redemptionCode}'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                viewModel.clearRedemptionCode();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

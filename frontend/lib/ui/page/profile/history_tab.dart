@@ -8,16 +8,18 @@ class HistoryTab extends StatefulWidget {
   State<HistoryTab> createState() => _HistoryTabState();
 }
 
-class _HistoryTabState extends State<HistoryTab> { //hardcoded for now
-  List<Map<String, String>> rides = [
+class _HistoryTabState extends State<HistoryTab> {
+  // Static variables to persist state across instances
+  static final List<Map<String, String>> _rides = [
     {'from': 'Athens', 'to': 'Thessaloniki', 'date': '2025-04-12'},
     {'from': 'Patras', 'to': 'Athens', 'date': '2025-03-30'},
     {'from': 'Larisa', 'to': 'Volos', 'date': '2025-02-20'},
   ];
+  static bool _isCleared = false;
 
   void _clearHistory() {
     setState(() {
-      rides.clear();
+      _isCleared = true; // Mark history as cleared
     });
   }
 
@@ -28,8 +30,8 @@ class _HistoryTabState extends State<HistoryTab> { //hardcoded for now
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton(
-            onPressed: rides.isEmpty
-                ? null // Disable button if history is already empty
+            onPressed: _isCleared
+                ? null // Disable button if history is already cleared
                 : _clearHistory,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
@@ -39,7 +41,7 @@ class _HistoryTabState extends State<HistoryTab> { //hardcoded for now
           ),
         ),
         Expanded(
-          child: rides.isEmpty
+          child: _isCleared
               ? const Center(
                   child: Text(
                     'No history available.',
@@ -48,9 +50,9 @@ class _HistoryTabState extends State<HistoryTab> { //hardcoded for now
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: rides.length,
+                  itemCount: _rides.length,
                   itemBuilder: (_, i) {
-                    final ride = rides[i];
+                    final ride = _rides[i];
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 6),
                       child: ListTile(
