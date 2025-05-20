@@ -60,7 +60,7 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                 mapController: mapController,
                 options: MapOptions(
                   onTap: _onMapTapped,
-                  initialCenter: widget.viewModel.source ?? LatLng(0, 0),
+                  initialCenter: widget.viewModel.source,
                   initialZoom: 8,
                 ),
                 children: [
