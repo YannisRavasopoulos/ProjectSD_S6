@@ -9,6 +9,14 @@ class HomeViewModel extends ChangeNotifier {
   LatLng? destination;
   LatLng? source;
 
+  List<String> suggestions = [];
+
+  Future<void> search(String query) async {}
+
+  Future<void> selectSuggestion(int index) async {
+    // Handle suggestion selection
+  }
+
   Future<void> selectPoint(LatLng point) async {
     destination = point;
     notifyListeners();

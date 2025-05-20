@@ -65,35 +65,21 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-              MapSearchBar(),
-              // Search bar overlay
-              // Positioned(
-              //   top: 16.0,
-              //   left: 16.0,
-              //   right: 16.0,
-              //   child: Card(
-              //     elevation: 4.0,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(8.0),
-              //     ),
-              //     child: TextField(
-              //       decoration: InputDecoration(
-              //         hintText: 'Search for a location...',
-              //         // prefixIcon: const Icon(Icons.search),
-              //         prefixIcon: IconButton(
-              //           onPressed: () => _onMenuPressed(),
-              //           icon: const Icon(Icons.menu),
-              //         ),
-              //         border: InputBorder.none,
-              //         contentPadding: const EdgeInsets.all(16.0),
-              //       ),
-              //       onSubmitted: (value) {
-              //         // Handle search logic here
-              //         print('Search query: $value');
-              //       },
-              //     ),
-              //   ),
-              // ),
+              Positioned(
+                top: 16,
+                left: 16,
+                right: 16,
+                child: MapSearchBar(
+                  suggestions: widget.viewModel.suggestions,
+                  onSearchChanged: (value) {
+                    widget.viewModel.search(value);
+                  },
+                  onSuggestionSelected: (index) {
+                    widget.viewModel.selectSuggestion(index);
+                  },
+                  hintText: 'Search for a location...',
+                ),
+              ),
             ],
           );
         },
