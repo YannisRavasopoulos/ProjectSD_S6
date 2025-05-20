@@ -23,7 +23,7 @@ class Pickup {
   // json -> pickup
   factory Pickup.fromJson(Map<String, dynamic> json) => Pickup(
     id: json['id'],
-    driver: json['driver'],
+    driver: Driver.fromJson(json['driver']),
     ride: Ride.fromJson(json['ride']), // Add ride deserialization
     carpoolerId: json['carpooler_id'],
     pickupTime: DateTime.parse(json['pickup_time']),
