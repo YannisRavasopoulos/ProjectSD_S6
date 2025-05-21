@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/shared_layout.dart';
-import 'package:frontend/ui/arrange_pickup/arrange_pickup_viewmodel.dart';
-import 'package:frontend/ui/arrange_pickup/components/pickup_form.dart';
+import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/arrange_pickup/components/pickup_form.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/ui/arrange_pickup/components/ride_details_panel.dart';
+import 'package:frontend/ui/page/arrange_pickup/components/ride_details_panel.dart';
 import 'package:frontend/data/model/driver.dart';
 
 class ArrangePickupView extends StatelessWidget {

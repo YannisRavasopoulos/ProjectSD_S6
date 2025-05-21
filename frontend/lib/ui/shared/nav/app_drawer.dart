@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/pickup.dart';
-import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/ui/arrange_pickup/components/pickup_request_notification.dart';
+import 'package:frontend/ui/page/arrange_pickup/components/pickup_request_notification.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
 
 class AppDrawer extends StatelessWidget {

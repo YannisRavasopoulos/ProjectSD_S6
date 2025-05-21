@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/pickup.dart';
-import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
-import 'package:frontend/ui/arrange_pickup/arrange_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
+import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/service/pickup_service.dart';
 import 'package:frontend/data/model/driver.dart';
