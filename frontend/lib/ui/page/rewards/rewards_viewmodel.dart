@@ -17,7 +17,9 @@ class RewardViewModel extends ChangeNotifier {
     required this.profileViewModel,
   }) {
     _loadRewards();
-    profileViewModel.addListener(_onProfileUpdated); // Listen to ProfileViewModel updates
+    profileViewModel.addListener(
+      _onProfileUpdated,
+    ); // Listen to ProfileViewModel updates
   }
 
   List<Reward> get availableRewards => List.unmodifiable(_availableRewards);
@@ -25,7 +27,8 @@ class RewardViewModel extends ChangeNotifier {
   String get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
 
-  int get userPoints => profileViewModel.points; // Fetch points from ProfileViewModel
+  int get userPoints =>
+      profileViewModel.points; // Fetch points from ProfileViewModel
 
   void _loadRewards() {
     _availableRewards = rewardRepository.getAllRewards();
@@ -44,13 +47,16 @@ class RewardViewModel extends ChangeNotifier {
 
     try {
       if (userPoints >= reward.points) {
-        await Future.delayed(const Duration(milliseconds: 500)); // Simulating API call
+        await Future.delayed(
+          const Duration(milliseconds: 500),
+        ); // Simulating API call
 
-        _redemptionCode =
-            'REDEEM-${reward.name.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch % 1000}';
+        _redemptionCode = reward.code;
 
         final newPoints = userPoints - reward.points;
-        await profileViewModel.updatePoints(newPoints); // Update points in ProfileViewModel
+        await profileViewModel.updatePoints(
+          newPoints,
+        ); // Update points in ProfileViewModel
 
         rewardRepository.removeReward(reward.id);
         _loadRewards();

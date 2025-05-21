@@ -1,26 +1,16 @@
 import 'package:frontend/data/model/reward.dart';
 
 class RewardRepository {
-  final List<Reward> _rewards = [
-    Reward(
-      id: '1',
-      name: 'Free Coffee',
-      description: 'Enjoy a free coffee at our store.',
-      points: 100,
+  final List<Reward> _rewards = List<Reward>.generate(
+    10,
+    (index) => Reward(
+      id: index,
+      name: 'Reward $index',
+      description: 'Description for reward $index',
+      code: 'Code $index',
+      points: index * 10,
     ),
-    Reward(
-      id: '2',
-      name: 'Discount Coupon',
-      description: 'Get a 10% discount on your next purchase.',
-      points: 200,
-    ),
-    Reward(
-      id: '3',
-      name: 'Gift Card',
-      description: 'Redeem this gift card at any partner store.',
-      points: 500,
-    ),
-  ];
+  );
 
   List<Reward> getAllRewards() {
     return List<Reward>.from(_rewards);
@@ -38,7 +28,7 @@ class RewardRepository {
     _rewards.add(reward);
   }
 
-  void removeReward(String id) {
+  void removeReward(int id) {
     _rewards.removeWhere((reward) => reward.id == id);
   }
 }

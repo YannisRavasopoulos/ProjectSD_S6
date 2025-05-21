@@ -1,38 +1,34 @@
-class Reward {
-  final String id;
+import 'package:frontend/data/model.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'reward.g.dart';
+
+@JsonSerializable()
+class Reward extends Model {
   final String name;
   final String description;
+  final String code;
   final int points;
 
-  Reward({
-    required this.id,
+  const Reward({
+    required super.id,
     required this.name,
     required this.description,
+    required this.code,
     required this.points,
   });
 
-  static Reward random() {
-    final List<String> names = [
-      'Free Coffee',
-      'Discount Coupon',
-      'Gift Card',
-      'Bonus Points',
-      'Mystery Box',
-    ];
-    final List<String> descriptions = [
-      'Enjoy a free coffee at our store.',
-      'Get a 10% discount on your next purchase.',
-      'Redeem this gift card at any partner store.',
-      'Earn extra bonus points for your account.',
-      'Open the box for a surprise reward!',
-    ];
-    final random = DateTime.now().millisecondsSinceEpoch;
-    final index = random % names.length;
+  factory Reward.fromJson(Map<String, dynamic> json) => _$RewardFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RewardToJson(this);
+
+  factory Reward.random() {
     return Reward(
-      id: 'reward_${random}',
-      name: names[index],
-      description: descriptions[index],
-      points: 10 + (random % 91), // random points between 10 and 100
+      id: DateTime.now().millisecondsSinceEpoch,
+      name: 'Reward ${DateTime.now().millisecondsSinceEpoch}',
+      description: 'Description ${DateTime.now().millisecondsSinceEpoch}',
+      code: 'Code ${DateTime.now().millisecondsSinceEpoch}',
+      points: DateTime.now().millisecondsSinceEpoch % 100,
     );
   }
 }
