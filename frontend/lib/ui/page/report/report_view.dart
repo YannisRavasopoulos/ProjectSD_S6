@@ -11,7 +11,7 @@ class ReportView extends StatelessWidget {
 
   Future<String> _getReportedUserName(String userId) async {
     final userRepository = UserRepository();
-    User? user = await userRepository.getUser(int.parse(userId));
+    User? user = await userRepository.fetchForId(int.parse(userId));
     return user?.firstName ?? 'Unknown User';
   }
 
@@ -41,7 +41,9 @@ class ReportView extends StatelessWidget {
                 valueListenable: submitted,
                 builder: (context, isSubmitted, _) {
                   if (isSubmitted) {
-                    return const Center(child: Text('Report submitted. Thank you!'));
+                    return const Center(
+                      child: Text('Report submitted. Thank you!'),
+                    );
                   }
                   return ValueListenableBuilder<String?>(
                     valueListenable: errorMessage,
@@ -88,7 +90,8 @@ class ReportView extends StatelessWidget {
                                           errorMessage.value = null;
                                           if (selectedReason.value == null ||
                                               selectedReason.value!.isEmpty) {
-                                            errorMessage.value = 'Please select a reason';
+                                            errorMessage.value =
+                                                'Please select a reason';
                                             return;
                                           }
                                           isLoading.value = true;

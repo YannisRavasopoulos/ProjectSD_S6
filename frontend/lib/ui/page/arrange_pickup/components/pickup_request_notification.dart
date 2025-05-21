@@ -110,17 +110,11 @@ class PickupRequestNotification extends StatelessWidget {
                               repository: PickupRepository(
                                 pickupService: PickupService(),
                               ),
-                              driver: Driver(
-                                id: pickup.driverID,
-                                name: 'Test Driver',
-                              ),
+                              driver: Driver.random(),
                               rideId: pickup.rideID,
                             ),
                             carpoolerId: pickup.carpoolerId,
-                            driver: Driver(
-                              id: pickup.driverID,
-                              name: 'Test Driver',
-                            ),
+                            driver: Driver.random(),
                             selectedRide: Ride(
                               id: pickup.rideID,
                               driver: Driver.random(),
