@@ -37,7 +37,7 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> refreshLocation() async {
     try {
-      _location = await _locationRepository.getCurrentLocation();
+      _location = await _locationRepository.fetchCurrent();
       source = _location!.coordinates;
       notifyListeners();
     } catch (e) {

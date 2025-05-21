@@ -7,7 +7,16 @@ import 'package:latlong2/latlong.dart';
 class LocationRepository {
   GeoCode _geoCodeApi = GeoCode();
 
-  Future<Location> getLocation(LatLng coordinates) async {
+  // Watch for changes in current location
+  Stream<Location> watchCurrent() async* {
+    while (true) {
+      // Update every 5 seconds
+      yield await fetchCurrent();
+      await Future.delayed(const Duration(seconds: 5));
+    }
+  }
+
+  Future<Location> fetchForCoordinates(LatLng coordinates) async {
     var address = await _geoCodeApi.reverseGeocoding(
       latitude: coordinates.latitude,
       longitude: coordinates.longitude,
@@ -16,7 +25,7 @@ class LocationRepository {
     return Location(id: 1, coordinates: coordinates, name: address.toString());
   }
 
-  Future<Location> getCurrentLocation() async {
+  Future<Location> fetchCurrent() async {
     var isServiceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isServiceEnabled) {
       throw LocationException('Location services are disabled.');
@@ -38,7 +47,7 @@ class LocationRepository {
     }
 
     var position = await Geolocator.getCurrentPosition();
-    var location = await getLocation(
+    var location = await fetchForCoordinates(
       LatLng(position.latitude, position.longitude),
     );
 

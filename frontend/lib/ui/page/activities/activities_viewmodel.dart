@@ -16,7 +16,7 @@ class ActivitiesViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    activities = await activityRepository.fetchActivities();
+    activities = await activityRepository.fetch();
     isLoading = false;
     notifyListeners();
   }
