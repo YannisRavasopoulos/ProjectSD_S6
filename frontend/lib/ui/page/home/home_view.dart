@@ -70,22 +70,20 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                 top: 16,
                 left: 16,
                 right: 16,
-                child: Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(32),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: MapSearchBar(
-                      suggestionsBuilder: widget.viewModel.getSuggestions,
-                      onSearchChanged: (value) {
-                        widget.viewModel.search(value);
-                      },
-                      onSuggestionSelected: (index) {
-                        // widget.viewModel.selectSuggestion(index);
-                      },
-                    ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: MapSearchBar(
+                    suggestionsBuilder: widget.viewModel.getSuggestions,
+                    onSearchChanged: (value) {
+                      widget.viewModel.search(value);
+                    },
+                    onSuggestionSelected: (index) {
+                      // widget.viewModel.selectSuggestion(index);
+                    },
                   ),
                 ),
               ),
