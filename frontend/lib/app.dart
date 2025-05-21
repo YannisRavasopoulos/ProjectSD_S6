@@ -29,10 +29,7 @@ import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 
-import 'package:frontend/ui/notification/pickup_notification_handler.dart';
-import 'package:frontend/data/service/notification_service.dart';
 import 'package:frontend/ui/page/rating/rating_viewmodel.dart';
-
 
 //Testing notification
 import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
@@ -40,27 +37,21 @@ import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/service/pickup_service.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
-import 'package:frontend/data/repository/driver_repository.dart';
-import 'package:frontend/data/service/driver_service.dart';
 import 'package:frontend/data/service/ride_service.dart';
 
 class App extends StatelessWidget {
-  final DriverRepository _driverRepository;
-  final RideRepository _rideRepository;
-  final UserRepository _userRepository;
-  final PickupRepository _pickupRepository;
+  final RideRepository _rideRepository = RideRepository(
+    rideService: RideService(),
+  );
 
-  App({super.key})
-    : _driverRepository = DriverRepository(driverService: DriverService()),
-      _rideRepository = RideRepository(rideService: RideService()),
-      _userRepository = UserRepository(),
-      _pickupRepository = PickupRepository(pickupService: PickupService());
+  final PickupRepository _pickupRepository = PickupRepository(
+    pickupService: PickupService(),
+  );
 
   final bool isLoggedIn = false;
 
   final UserRepository _userRepository = UserRepository();
   final RatingRepository _ratingRepository = RatingRepository();
-
 
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: _rideRepository,
