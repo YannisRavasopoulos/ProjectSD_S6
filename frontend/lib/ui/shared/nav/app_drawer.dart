@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/pickup.dart';
+import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/ui/arrange_pickup/components/pickup_request_notification.dart';
+import 'package:frontend/ui/notification/notification_overlay.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -17,6 +22,13 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.card_giftcard), // Added rewards icon
             title: const Text('Rewards'), // Added rewards title
             onTap: () {
@@ -26,18 +38,37 @@ class AppDrawer extends StatelessWidget {
               ); // Navigate to rewards view
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              Navigator.pushNamed(context, '/settings');
-            },
-          ),
+
           ListTile(
             leading: const Icon(Icons.person),
             title: const Text('Find Ride'),
             onTap: () {
               Navigator.pushNamed(context, '/find_ride');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.notifications),
+            title: const Text('Test Notification'),
+            onTap: () {
+              // Create a test pickup
+              final testPickup = Pickup(
+                id: 'test_${DateTime.now().millisecondsSinceEpoch}',
+                rideID: 'test_ride_id',
+                driverID: 'test_driver_id',
+                carpoolerId: 'test_carpooler_id',
+                pickupTime: DateTime.now().add(const Duration(minutes: 30)),
+                location: 'Test Location',
+                status: 'pending',
+              );
+
+              // Close the drawer
+              Navigator.pop(context);
+
+              // Show the notification
+              NotificationOverlay.show(
+                context,
+                PickupRequestNotification(pickup: testPickup),
+              );
             },
           ),
         ],
