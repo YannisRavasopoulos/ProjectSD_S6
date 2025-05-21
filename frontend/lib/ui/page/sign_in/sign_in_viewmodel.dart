@@ -10,6 +10,7 @@ class SignInViewModel extends ChangeNotifier {
 
   String errorMessage = '';
   bool isLoading = false;
+  bool isPasswordVisible = false;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -17,10 +18,17 @@ class SignInViewModel extends ChangeNotifier {
   String get email => emailController.text;
   String get password => passwordController.text;
 
+  void togglePasswordVisibility() {
+    isPasswordVisible = !isPasswordVisible;
+    notifyListeners();
+  }
+
   Future<bool> login() async {
     try {
       isLoading = true;
       notifyListeners();
+
+      // TODO: more validation
 
       if (email.isEmpty) {
         errorMessage = 'Email cannot be empty';

@@ -20,7 +20,7 @@ class SignUpView extends StatelessWidget {
   }
 
   void _onSignUpPressed(BuildContext context) async {
-    bool success = await viewModel.signUp();
+    final success = await viewModel.signUp();
 
     if (!success) {
       final messenger = ScaffoldMessenger.of(context);
@@ -35,9 +35,10 @@ class SignUpView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Sign Up')),
-      body: Center(
+      body: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(32.0),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32.0),
           child: ListenableBuilder(
             listenable: viewModel,
             builder: (context, _) {

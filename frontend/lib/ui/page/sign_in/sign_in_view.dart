@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/loading_button.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
-import 'package:frontend/ui/password_field.dart';
+import 'package:frontend/ui/shared/form/password_field.dart';
+import 'package:frontend/ui/shared/form/email_field.dart';
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key, required this.viewModel});
@@ -21,8 +22,7 @@ class SignInView extends StatelessWidget {
     if (success) {
       Navigator.pushReplacementNamed(context, '/home');
     } else {
-      // Hide the current snackbar if it exists
-      var messenger = ScaffoldMessenger.of(context);
+      final messenger = ScaffoldMessenger.of(context);
       messenger.hideCurrentSnackBar();
       messenger.showSnackBar(SnackBar(content: Text(viewModel.errorMessage)));
     }
@@ -31,6 +31,7 @@ class SignInView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Sign In')),
       body: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.all(32.0),
@@ -49,12 +50,13 @@ class SignInView extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 32),
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Email'),
-                    controller: viewModel.emailController,
-                  ),
+                  EmailField(controller: viewModel.emailController),
                   SizedBox(height: 16),
-                  PasswordField(controller: viewModel.passwordController),
+                  PasswordField(
+                    controller: viewModel.passwordController,
+                    isVisible: viewModel.isPasswordVisible,
+                    onVisibilityPressed: viewModel.togglePasswordVisibility,
+                  ),
                   SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
