@@ -132,6 +132,8 @@ class PickupRequestNotification extends StatelessWidget {
                               passengers: Random().nextInt(3) + 1,
                               capacity: 4,
                               departureTime: pickup.pickupTime,
+                              source: '',
+                              destination: '',
                             ),
                           ),
                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
+import 'package:frontend/data/service/ride_service.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/rides_list_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/ride_list_card.dart';
@@ -11,7 +12,7 @@ class RidesListView extends StatelessWidget {
   final RidesListViewModel viewModel;
 
   final CreateRideViewModel createRideViewModel = CreateRideViewModel(
-    rideRepository: RideRepository(),
+    rideRepository: RideRepository(rideService: RideService()),
   );
 
   RidesListView({super.key, required this.viewModel});

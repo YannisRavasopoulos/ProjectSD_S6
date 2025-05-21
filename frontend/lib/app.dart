@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
-
 import 'package:frontend/ui/arrange_pickup/arrange_pickup_viewmodel.dart';
-
 import 'package:frontend/data/repository/rating_repository.dart';
-
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
@@ -30,13 +26,10 @@ import 'package:frontend/ui/page/create_ride/rides_list_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
-
 import 'package:frontend/ui/page/rating/rating_viewmodel.dart';
 import 'package:frontend/ui/page/report/report_view.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/ui/page/report/report_viewmodel.dart';
-
-//Testing notification
 import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/driver.dart';
@@ -45,42 +38,41 @@ import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/service/ride_service.dart';
 
 class App extends StatelessWidget {
-  final RideRepository _rideRepository = RideRepository(
-    rideService: RideService(),
-  );
-
+  final RideRepository _rides = RideRepository(rideService: RideService());
   final PickupRepository _pickupRepository = PickupRepository(
     pickupService: PickupService(),
   );
-
-  final bool isLoggedIn = false;
-
   final UserRepository _userRepository = UserRepository();
   final RatingRepository _ratingRepository = RatingRepository();
-  final RideRepository _rideRepository = RideRepository();
+  final LocationRepository _locationRepository = LocationRepository();
+  final AuthenticationRepository _authenticationRepository =
+      AuthenticationRepository();
+  final RewardRepository _rewardRepository = RewardRepository();
+  final ActivityRepository _activityRepository = ActivityRepository();
+  final ReportRepository _reportRepository = ReportRepository();
 
   late final RidesListViewModel ridesViewModel = RidesListViewModel(
-    rideRepository: _rideRepository,
+    rideRepository: _rides,
   );
 
   late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
-    rideRepository: _rideRepository,
+    rideRepository: _rides,
   );
 
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
-    rideRepository: _rideRepository,
+    rideRepository: _rides,
   );
 
-  final HomeViewModel homeViewModel = HomeViewModel(
-    locationRepository: LocationRepository(),
+  late final HomeViewModel homeViewModel = HomeViewModel(
+    locationRepository: _locationRepository,
   );
 
-  final SignInViewModel signInViewModel = SignInViewModel(
-    AuthenticationRepository(),
-    UserRepository(),
+  late final SignInViewModel signInViewModel = SignInViewModel(
+    _authenticationRepository,
+    _userRepository,
   );
 
-  final SignUpViewModel signUpViewModel = SignUpViewModel(UserRepository());
+  late final SignUpViewModel signUpViewModel = SignUpViewModel(_userRepository);
 
   late final ProfileViewModel profileViewModel = ProfileViewModel(
     userRepository: _userRepository,
@@ -88,19 +80,23 @@ class App extends StatelessWidget {
   )..loadUser(1); // Load user data on app start
 
   late final RewardViewModel rewardViewModel = RewardViewModel(
-    rewardRepository: RewardRepository(),
+    rewardRepository: _rewardRepository,
     profileViewModel: profileViewModel,
   );
+
   late final RatingViewModel rateViewModel = RatingViewModel(
     ratingRepository: _ratingRepository,
   );
-  final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
-    activityRepository: ActivityRepository(),
+
+  late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
+    activityRepository: _activityRepository,
   );
 
-  final ReportViewModel reportViewModel = ReportViewModel(
-    reportRepository: ReportRepository(),
+  late final ReportViewModel reportViewModel = ReportViewModel(
+    reportRepository: _reportRepository,
   );
+
+  final bool isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {

@@ -40,82 +40,79 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false, // Prevent back button navigation
-      child: Scaffold(
-        body: ListenableBuilder(
-          listenable: widget.viewModel,
-          builder: (context, _) {
-            return Stack(
-              children: [
-                FlutterMap(
-                  mapController: mapController,
-                  options: MapOptions(
-                    onTap: _onMapTapped,
-                    initialCenter:
-                        widget.viewModel.source ??
-                        const LatLng(45.5017, -73.5673),
-                    initialZoom: 8,
-                  ),
-                  children: [
-                    OpenStreetMapsTileLayer(),
-                    MarkerLayer(
-                      markers: [
-                        if (widget.viewModel.source != null)
-                          HereMarker(widget.viewModel.source!),
-                        if (widget.viewModel.destination != null)
-                          DestinationMarker(widget.viewModel.destination),
-                      ],
-                    ),
-                  ],
+    return Scaffold(
+      body: ListenableBuilder(
+        listenable: widget.viewModel,
+        builder: (context, _) {
+          return Stack(
+            children: [
+              FlutterMap(
+                mapController: mapController,
+                options: MapOptions(
+                  onTap: _onMapTapped,
+                  initialCenter:
+                      widget.viewModel.source ??
+                      const LatLng(45.5017, -73.5673),
+                  initialZoom: 8,
                 ),
-                Positioned(
-                  top: 16,
-                  left: 16,
-                  right: 16,
-                  child: MapSearchBar(
-                    suggestions: widget.viewModel.suggestions,
-                    onSearchChanged: widget.viewModel.search,
-                    onSuggestionSelected: widget.viewModel.selectSuggestion,
-                    hintText: 'Search for a location...',
+                children: [
+                  OpenStreetMapsTileLayer(),
+                  MarkerLayer(
+                    markers: [
+                      if (widget.viewModel.source != null)
+                        HereMarker(widget.viewModel.source!),
+                      if (widget.viewModel.destination != null)
+                        DestinationMarker(widget.viewModel.destination),
+                    ],
                   ),
+                ],
+              ),
+              Positioned(
+                top: 16,
+                left: 16,
+                right: 16,
+                child: MapSearchBar(
+                  suggestions: widget.viewModel.suggestions,
+                  onSearchChanged: widget.viewModel.search,
+                  onSuggestionSelected: widget.viewModel.selectSuggestion,
+                  hintText: 'Search for a location...',
                 ),
-              ],
-            );
-          },
-        appBar: AppBar(
-          title: const Text('Loop App'),
-          backgroundColor: const Color.fromARGB(255, 23, 143, 117),
-        ),
-        drawer: AppDrawer(),
-        bottomNavigationBar: AppNavigationBar(routeName: "/home"),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _onLocationPressed,
-          child: const Icon(Icons.my_location),
-        ),
-//                     ListTile(
-//               leading: const Icon(Icons.directions_car),
-//               title: const Text('My Rides'),
-//               onTap: () {
-//                 Navigator.pushNamed(context, '/rides');
-//               },
-//             ),
-//             ListTile(
-//               leading: const Icon(Icons.add_circle_outline),
-//               title: const Text('Create Ride'),
-//               onTap: () {
-//                 Navigator.pushNamed(context, '/create_ride');
-//               },
-
-        
-//               ListTile( //VGALTO EINAI GIA TEST 
-//               leading: const Icon(Icons.report),
-//               title: const Text('Report User (Test)'),
-//               onTap: () {
-//                 Navigator.pushNamed(context, '/report');
-//               },
-//             ), //VGALTO STO TELOS EINAI GIA TEST
+              ),
+            ],
+          );
+        },
       ),
+      appBar: AppBar(
+        title: const Text('Loop App'),
+        backgroundColor: const Color.fromARGB(255, 23, 143, 117),
+      ),
+      drawer: AppDrawer(),
+      bottomNavigationBar: AppNavigationBar(routeName: "/home"),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _onLocationPressed,
+        child: const Icon(Icons.my_location),
+      ),
+      //                     ListTile(
+      //               leading: const Icon(Icons.directions_car),
+      //               title: const Text('My Rides'),
+      //               onTap: () {
+      //                 Navigator.pushNamed(context, '/rides');
+      //               },
+      //             ),
+      //             ListTile(
+      //               leading: const Icon(Icons.add_circle_outline),
+      //               title: const Text('Create Ride'),
+      //               onTap: () {
+      //                 Navigator.pushNamed(context, '/create_ride');
+      //               },
+
+      //               ListTile( //VGALTO EINAI GIA TEST
+      //               leading: const Icon(Icons.report),
+      //               title: const Text('Report User (Test)'),
+      //               onTap: () {
+      //                 Navigator.pushNamed(context, '/report');
+      //               },
+      //             ), //VGALTO STO TELOS EINAI GIA TEST
     );
   }
 }
