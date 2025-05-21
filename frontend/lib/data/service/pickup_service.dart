@@ -1,11 +1,8 @@
-import 'package:frontend/data/service/notification_service.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/ride.dart';
 
 class PickupService {
-  final NotificationService _notificationService = NotificationService();
-
   // In-memory storage for mock data
   final List<Map<String, dynamic>> _pickups = [];
 
@@ -76,7 +73,6 @@ class PickupService {
     };
 
     _pickups.add(pickup);
-    _notificationService.sendPickupRequest(Pickup.fromJson(pickup));
 
     return {'success': true, 'data': pickup};
   }
