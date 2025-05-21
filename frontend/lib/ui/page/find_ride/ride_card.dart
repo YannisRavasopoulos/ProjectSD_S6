@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
 
 class RideCard extends StatelessWidget {
   final Ride ride;

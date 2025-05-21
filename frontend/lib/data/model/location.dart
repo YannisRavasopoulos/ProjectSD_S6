@@ -15,5 +15,8 @@ class Location {
       ),
       name = 'Location ${DateTime.now().millisecondsSinceEpoch}';
 
-  // final String name;
+  factory Location.fromString(String name) {
+    // Αν δεν έχεις συντεταγμένες, βάλε 0,0 ή ό,τι default θέλεις
+    return Location(coordinates: const LatLng(0, 0), name: name);
+  }
 }

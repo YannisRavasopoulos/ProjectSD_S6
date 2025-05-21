@@ -192,6 +192,20 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                 );
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.directions_car),
+              title: const Text('My Rides'),
+              onTap: () {
+                Navigator.pushNamed(context, '/rides');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.add_circle_outline),
+              title: const Text('Create Ride'),
+              onTap: () {
+                Navigator.pushNamed(context, '/create_ride');
+              },
+            ),
           ],
         ),
 

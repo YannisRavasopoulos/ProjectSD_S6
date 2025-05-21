@@ -23,6 +23,8 @@ class Ride {
     required this.passengers,
     required this.capacity,
     this.departureTime,
+    required String source,
+    required String destination,
   });
 
   factory Ride.random() {
@@ -45,9 +47,9 @@ class Ride {
       estimatedDuration: durations[random.nextInt(durations.length)],
       passengers: random.nextInt(4) + 1,
       capacity: 4,
-      departureTime: DateTime.now().add(
-        Duration(minutes: random.nextInt(60)),
-      ), // Random departure time within the next hour
+      departureTime: DateTime.now().add(Duration(minutes: random.nextInt(60))),
+      source: '',
+      destination: '', // Random departure time within the next hour
     );
   }
 
@@ -65,6 +67,8 @@ class Ride {
           json['departure_time'] != null
               ? DateTime.parse(json['departure_time'])
               : null,
+      source: '',
+      destination: '',
     );
   }
 
@@ -105,6 +109,8 @@ class Ride {
       passengers: passengers ?? this.passengers,
       capacity: capacity ?? this.capacity,
       departureTime: departureTime ?? this.departureTime,
+      source: '',
+      destination: '',
     );
   }
 }
