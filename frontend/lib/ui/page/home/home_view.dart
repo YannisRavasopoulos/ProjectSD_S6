@@ -70,31 +70,23 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                 top: 16,
                 left: 16,
                 right: 16,
-                child: Row(
-                  children: [
-                    FloatingMenuButton(),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(32),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: MapSearchBar(
-                          suggestions: widget.viewModel.suggestions,
-                          onSearchChanged: (value) {
-                            widget.viewModel.search(value);
-                          },
-                          onSuggestionSelected: (index) {
-                            widget.viewModel.selectSuggestion(index);
-                          },
-                        ),
-                      ),
+                child: Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(32),
                     ),
-                    const SizedBox(width: 8),
-                    FloatingProfileButton(),
-                  ],
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: MapSearchBar(
+                      suggestionsBuilder: widget.viewModel.getSuggestions,
+                      onSearchChanged: (value) {
+                        widget.viewModel.search(value);
+                      },
+                      onSuggestionSelected: (index) {
+                        // widget.viewModel.selectSuggestion(index);
+                      },
+                    ),
+                  ),
                 ),
               ),
             ],

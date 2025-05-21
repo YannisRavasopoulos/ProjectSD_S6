@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/repository/location_repository.dart';
@@ -11,10 +13,18 @@ class HomeViewModel extends ChangeNotifier {
 
   List<String> suggestions = [];
 
-  Future<void> search(String query) async {}
+  Future<void> search(String query) async {
+    suggestions.add("NIGGA");
+    notifyListeners();
+  }
 
   Future<void> selectSuggestion(int index) async {
     // Handle suggestion selection
+  }
+
+  Iterable<String> getSuggestions(TextEditingValue textEditingValue) {
+    var query = textEditingValue.text;
+    return suggestions.where((suggestion) => suggestion.contains(query));
   }
 
   Future<void> selectPoint(LatLng point) async {
