@@ -72,7 +72,9 @@ class App extends StatelessWidget {
     _userRepository,
   );
 
-  late final SignUpViewModel signUpViewModel = SignUpViewModel(_userRepository);
+  late final SignUpViewModel signUpViewModel = SignUpViewModel(
+    userRepository: _userRepository,
+  );
 
   late final ProfileViewModel profileViewModel = ProfileViewModel(
     userRepository: _userRepository,

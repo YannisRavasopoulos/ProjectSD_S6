@@ -19,8 +19,16 @@ class SignUpView extends StatelessWidget {
     viewModel.toggleConfirmPasswordVisibility();
   }
 
-  void _onSignUpPressed() {
-    viewModel.signUp();
+  void _onSignUpPressed(BuildContext context) async {
+    bool success = await viewModel.signUp();
+
+    if (!success) {
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(viewModel.errorMessage)));
+    } else {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
   }
 
   @override
@@ -28,56 +36,49 @@ class SignUpView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Sign Up')),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(32.0),
-          child: SingleChildScrollView(
-            child: ListenableBuilder(
-              listenable: viewModel,
-              builder: (context, _) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    EmailField(controller: viewModel.emailController),
-                    const SizedBox(height: 16),
-                    NameField(controller: viewModel.nameController),
-                    const SizedBox(height: 16),
-                    PasswordField(
-                      controller: viewModel.passwordController,
-                      isVisible: viewModel.passwordVisible,
-                      onVisibilityPressed: _onPasswordVisiblePressed,
-                    ),
-                    const SizedBox(height: 16),
-                    ConfirmPasswordField(
-                      controller: viewModel.confirmPasswordController,
-                      isVisible: viewModel.confirmPasswordVisible,
-                      onVisibilityPressed: _onConfirmPasswordVisiblePressed,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      viewModel.doPasswordsMatch
-                          ? ''
-                          : 'Passwords do not match',
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                    const SizedBox(height: 24),
-                    LoadingButton(
-                      onPressed: _onSignUpPressed,
-                      isLoading: viewModel.isLoading,
-                      child: const Text('Sign Up'),
-                    ),
-                  ],
-                );
-              },
-            ),
+          child: ListenableBuilder(
+            listenable: viewModel,
+            builder: (context, _) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Sign Up',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  EmailField(controller: viewModel.emailController),
+                  const SizedBox(height: 16),
+                  NameField(controller: viewModel.nameController),
+                  const SizedBox(height: 16),
+                  PasswordField(
+                    controller: viewModel.passwordController,
+                    isVisible: viewModel.isPasswordVisible,
+                    onVisibilityPressed: _onPasswordVisiblePressed,
+                  ),
+                  const SizedBox(height: 16),
+                  ConfirmPasswordField(
+                    controller: viewModel.confirmPasswordController,
+                    isVisible: viewModel.isConfirmPasswordVisible,
+                    onVisibilityPressed: _onConfirmPasswordVisiblePressed,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    viewModel.doPasswordsMatch ? '' : 'Passwords do not match',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 24),
+                  LoadingButton(
+                    onPressed: () => _onSignUpPressed(context),
+                    isLoading: viewModel.isLoading,
+                    child: const Text('Sign Up'),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
