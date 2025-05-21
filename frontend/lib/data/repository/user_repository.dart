@@ -1,27 +1,17 @@
 import 'package:frontend/data/model/user.dart';
-import 'package:frontend/data/service/user_service.dart';
 
 class UserRepository {
-  final UserService _userService = UserService();
-
   // Fetch user data
   Future<User> getUser(int userId) async {
-    return await _userService.getUserById(userId);
+    return User.random();
   }
 
   // Update user data
-  Future<void> updateUser(User user) async {
-    await _userService.updateUser(user);
-  }
+  Future<void> updateUser(User user) async {}
 
-  Future<void> updateUserPoints(int userId, int points) async {
-    final user = await getUser(userId);
-    user.points = points;
-    await updateUser(user);
-  }
+  Future<void> updateUserPoints(int userId, int points) async {}
 
   Future<int> getUserPoints(int userId) async {
-    final user = await getUser(userId);
-    return user.points;
+    return 500;
   }
 }

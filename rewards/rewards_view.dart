@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/page/profile/points_widget.dart';
+import '../../../../profile/points_widget.dart';
 import 'rewards_viewmodel.dart';
 import 'reward_card.dart';
 
@@ -22,7 +22,9 @@ class RewardView extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            PointsWidget(viewModel: viewModel.profileViewModel), // Use ProfileViewModel
+            PointsWidget(
+              viewModel: viewModel.profileViewModel,
+            ), // Use ProfileViewModel
             const SizedBox(height: 24),
             const Text(
               'Available Rewards:',

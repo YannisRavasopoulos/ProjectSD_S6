@@ -14,18 +14,14 @@ import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
-import 'package:frontend/ui/page/profile/profile_view.dart';
-import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/rides_list_viewmodel.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
-import 'package:frontend/ui/page/rewards/rewards_view.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/activities/activities_view.dart';
 import 'package:frontend/ui/page/create_ride/rides_list_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
-import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 import 'package:frontend/ui/page/rating/rating_viewmodel.dart';
 import 'package:frontend/ui/page/report/report_view.dart';
 import 'package:frontend/data/repository/report_repository.dart';
@@ -76,15 +72,15 @@ class App extends StatelessWidget {
     userRepository: _userRepository,
   );
 
-  late final ProfileViewModel profileViewModel = ProfileViewModel(
-    userRepository: _userRepository,
-    ratingRepository: _ratingRepository,
-  )..loadUser(1); // Load user data on app start
+  // late final ProfileViewModel profileViewModel = ProfileViewModel(
+  //   userRepository: _userRepository,
+  //   ratingRepository: _ratingRepository,
+  // )..loadUser(1); // Load user data on app start
 
-  late final RewardViewModel rewardViewModel = RewardViewModel(
-    rewardRepository: _rewardRepository,
-    profileViewModel: profileViewModel,
-  );
+  // late final RewardViewModel rewardViewModel = RewardViewModel(
+  //   rewardRepository: _rewardRepository,
+  //   profileViewModel: profileViewModel,
+  // );
 
   late final RatingViewModel rateViewModel = RatingViewModel(
     ratingRepository: _ratingRepository,
@@ -110,7 +106,6 @@ class App extends StatelessWidget {
       ),
       initialRoute: isLoggedIn ? '/home' : '/sign_in',
       routes: {
-        '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/sign_in': (context) => SignInView(viewModel: signInViewModel),
         '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
@@ -118,11 +113,12 @@ class App extends StatelessWidget {
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/create_ride':
             (context) => CreateRideView(viewModel: createRideViewModel),
-        '/profile':
-            (context) => ProfileView(
-              viewModel: profileViewModel,
-              ratingViewModel: rateViewModel,
-            ),
+        // '/rewards': (context) => RewardView(viewModel: rewardViewModel),
+        // '/profile':
+        //     (context) => ProfileView(
+        //       viewModel: profileViewModel,
+        //       ratingViewModel: rateViewModel,
+        //     ),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/rides': (context) => RidesListView(viewModel: ridesViewModel),

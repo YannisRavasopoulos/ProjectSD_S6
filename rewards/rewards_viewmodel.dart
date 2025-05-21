@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
-import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
+import '../../../../profile/profile_viewmodel.dart';
 import 'package:frontend/data/model/reward.dart';
 
 class RewardViewModel extends ChangeNotifier {

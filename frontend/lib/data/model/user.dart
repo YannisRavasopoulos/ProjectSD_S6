@@ -1,117 +1,40 @@
-import 'dart:math';
+import 'package:frontend/data/model.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class User {
-  int id;
-  String firstName;
-  String lastName;
-  String email;
-  String password;
-  int points;
+part 'user.g.dart';
 
-  User({
-    required this.id,
+@JsonSerializable()
+class User extends Model {
+  final String firstName;
+  final String lastName;
+  // TODO
+  // final String email;
+  // final String password;
+  final int points;
+
+  const User({
+    required super.id,
     required this.firstName,
     required this.lastName,
-    required this.email,
-    required this.password,
-    this.points = 0,
+    required this.points,
   });
 
-  factory User.dummy() {
+  get name => '$firstName $lastName';
+
+  User copyWith({int? id, String? firstName, String? lastName, int? points}) {
     return User(
-      id: 1,
-      firstName: "John",
-      lastName: "Doe",
-      email: "johndoe@example.com",
-      password: "password123",
-      points: Random().nextInt(1000),
+      id: id ?? 0,
+      firstName: firstName ?? '',
+      lastName: lastName ?? '',
+      points: points ?? 0,
     );
   }
 
-  // Convert User object to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'email': email,
-      'password': password,
-    };
-  }
-}
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-class UserProfile extends User {
-  String phoneNumber;
-  String bio;
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 
-  UserProfile({
-    required int id,
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String password,
-    required super.points,
-    required this.phoneNumber,
-    required this.bio,
-  }) : super(
-         id: id,
-         firstName: firstName,
-         lastName: lastName,
-         email: email,
-         password: password,
-       );
-
-  factory UserProfile.dummy() {
-    return UserProfile(
-      id: 1,
-      firstName: "John",
-      lastName: "Doe",
-      email: "johndoe@example.com",
-      password: "password123",
-      phoneNumber: "+1234567890",
-      bio: "Software Engineer and Flutter enthusiast.",
-      points: Random().nextInt(1000),
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    final json = super.toJson();
-    json.addAll({'phoneNumber': phoneNumber, 'bio': bio});
-    return json;
-  }
-}
-
-class UserAddress {
-  String street;
-  String city;
-  String state;
-  String zipCode;
-
-  UserAddress({
-    required this.street,
-    required this.city,
-    required this.state,
-    required this.zipCode,
-  });
-
-  factory UserAddress.dummy() {
-    return UserAddress(
-      street: "123 Main Street",
-      city: "Springfield",
-      state: "IL",
-      zipCode: "62704",
-    );
-  }
-}
-
-class UserPreferences {
-  bool receiveNotifications;
-  String theme;
-
-  UserPreferences({required this.receiveNotifications, required this.theme});
-
-  factory UserPreferences.dummy() {
-    return UserPreferences(receiveNotifications: true, theme: "Dark");
+  factory User.random() {
+    return User(id: 0, firstName: 'John', lastName: 'Doe', points: 300);
   }
 }
