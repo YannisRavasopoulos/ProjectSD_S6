@@ -8,6 +8,7 @@ class User extends Model {
   final String firstName;
   final String lastName;
   // TODO
+  // WE SHOULD NOT STORE EMAILS/PASSWORDS
   // final String email;
   // final String password;
   final int points;

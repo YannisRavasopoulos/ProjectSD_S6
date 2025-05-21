@@ -1,9 +1,27 @@
-import 'package:frontend/data/model/ride_participant.dart';
+import 'package:frontend/data/model/pickup.dart';
+import 'package:frontend/data/model/user.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class Passenger extends RideParticipant {
-  Passenger({required String name}) : super(name: name);
+part 'passenger.g.dart';
+
+@JsonSerializable()
+class Passenger extends User {
+  final Pickup? pickup;
+
+  const Passenger({
+    required super.id,
+    required super.firstName,
+    required super.lastName,
+    required super.points,
+    this.pickup,
+  });
+
+  factory Passenger.fromJson(Map<String, dynamic> json) =>
+      _$PassengerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PassengerToJson(this);
 
   factory Passenger.random() {
-    return Passenger(name: RideParticipant.random().name);
+    return Passenger(id: 0, firstName: 'John', lastName: 'Doe', points: 300);
   }
 }
