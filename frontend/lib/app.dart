@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
+
 import 'package:frontend/ui/arrange_pickup/arrange_pickup_viewmodel.dart';
+
+import 'package:frontend/data/repository/rating_repository.dart';
+
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
@@ -23,6 +28,11 @@ import 'package:frontend/ui/page/rides/rides_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
+
+import 'package:frontend/ui/notification/pickup_notification_handler.dart';
+import 'package:frontend/data/service/notification_service.dart';
+import 'package:frontend/ui/page/rating/rating_viewmodel.dart';
+
 
 //Testing notification
 import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
@@ -48,6 +58,10 @@ class App extends StatelessWidget {
 
   final bool isLoggedIn = false;
 
+  final UserRepository _userRepository = UserRepository();
+  final RatingRepository _ratingRepository = RatingRepository();
+
+
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: _rideRepository,
   );
@@ -65,13 +79,16 @@ class App extends StatelessWidget {
 
   late final ProfileViewModel profileViewModel = ProfileViewModel(
     userRepository: _userRepository,
+    ratingRepository: _ratingRepository,
   )..loadUser(1); // Load user data on app start
 
   late final RewardViewModel rewardViewModel = RewardViewModel(
     rewardRepository: RewardRepository(),
-    profileViewModel: profileViewModel, // Use ProfileViewModel here
+    profileViewModel: profileViewModel,
   );
-
+  late final RatingViewModel rateViewModel = RatingViewModel(
+    ratingRepository: _ratingRepository,
+  );
   final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
     activityRepository: ActivityRepository(),
   );
@@ -93,7 +110,11 @@ class App extends StatelessWidget {
         '/home': (context) => HomeView(viewModel: homeViewModel),
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/create_ride': (context) => CreateRideView(),
-        '/profile': (context) => ProfileView(viewModel: profileViewModel),
+        '/profile':
+            (context) => ProfileView(
+              viewModel: profileViewModel,
+              ratingViewModel: rateViewModel,
+            ),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/rides': (context) => RidesView(),

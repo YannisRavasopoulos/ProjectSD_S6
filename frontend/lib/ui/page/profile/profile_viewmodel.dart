@@ -2,12 +2,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/user.dart';
+import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/repository/user_repository.dart';
+import 'package:frontend/data/repository/rating_repository.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   final UserRepository userRepository;
-  
-  ProfileViewModel({required this.userRepository});
+  final RatingRepository ratingRepository; // Add RatingRepository
+
+  ProfileViewModel({
+    required this.userRepository,
+    required this.ratingRepository, // Make it required
+  });
 
   // Profile fields
   User? user; // Make user nullable to handle loading state
@@ -20,12 +26,16 @@ class ProfileViewModel extends ChangeNotifier {
     if (user != null) return; // Prevent reloading if user is already loaded
     try {
       user = await userRepository.getUser(userId); // Use an asynchronous method
+      // Load ratings after user is loaded
+
       notifyListeners(); // Notify listeners when user data is loaded
     } catch (e) {
       // Handle errors (e.g., log them or show a message)
       debugPrint('Error loading user: $e');
     }
   }
+
+  // Add method to load user ratings
 
   void toggleEditing() {
     isEditing = !isEditing;
