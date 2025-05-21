@@ -23,8 +23,7 @@ import 'package:frontend/ui/page/rides/rides_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
-import 'package:frontend/ui/notification/pickup_notification_handler.dart';
-import 'package:frontend/data/service/notification_service.dart';
+
 //Testing notification
 import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
 import 'package:frontend/data/model/ride.dart';
@@ -36,15 +35,13 @@ import 'package:frontend/data/service/driver_service.dart';
 import 'package:frontend/data/service/ride_service.dart';
 
 class App extends StatelessWidget {
-  final NotificationService _notificationService;
   final DriverRepository _driverRepository;
   final RideRepository _rideRepository;
   final UserRepository _userRepository;
   final PickupRepository _pickupRepository;
 
   App({super.key})
-    : _notificationService = NotificationService(),
-      _driverRepository = DriverRepository(driverService: DriverService()),
+    : _driverRepository = DriverRepository(driverService: DriverService()),
       _rideRepository = RideRepository(rideService: RideService()),
       _userRepository = UserRepository(),
       _pickupRepository = PickupRepository(pickupService: PickupService());
@@ -88,14 +85,6 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.comfortable,
       ),
       initialRoute: isLoggedIn ? '/home' : '/sign_in',
-      builder: (context, child) {
-        return PickupNotificationHandler(
-          notificationService: _notificationService,
-          driverRepository: _driverRepository,
-          rideRepository: _rideRepository,
-          child: child ?? const SizedBox(),
-        );
-      },
       routes: {
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/sign_in': (context) => SignInView(viewModel: signInViewModel),

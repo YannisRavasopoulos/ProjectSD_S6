@@ -22,6 +22,13 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.card_giftcard), // Added rewards icon
             title: const Text('Rewards'), // Added rewards title
             onTap: () {
@@ -31,13 +38,7 @@ class AppDrawer extends StatelessWidget {
               ); // Navigate to rewards view
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              Navigator.pushNamed(context, '/settings');
-            },
-          ),
+
           ListTile(
             leading: const Icon(Icons.person),
             title: const Text('Find Ride'),
@@ -49,24 +50,24 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.notifications),
             title: const Text('Test Notification'),
             onTap: () {
-              // Dummy data for testing
-              final testRide = Ride.random();
-              final testDriver = Driver.random();
-              final pickup = Pickup(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                rideID: testRide.id, // Changed to use rideID
-                driverID: testDriver.id, // Changed to use driverID
-                carpoolerId: 'test_user_id',
+              // Create a test pickup
+              final testPickup = Pickup(
+                id: 'test_${DateTime.now().millisecondsSinceEpoch}',
+                rideID: 'test_ride_id',
+                driverID: 'test_driver_id',
+                carpoolerId: 'test_carpooler_id',
                 pickupTime: DateTime.now().add(const Duration(minutes: 30)),
                 location: 'Test Location',
-                status: 'requested',
+                status: 'pending',
               );
 
+              // Close the drawer
               Navigator.pop(context);
 
+              // Show the notification
               NotificationOverlay.show(
                 context,
-                PickupRequestNotification(pickup: pickup),
+                PickupRequestNotification(pickup: testPickup),
               );
             },
           ),
