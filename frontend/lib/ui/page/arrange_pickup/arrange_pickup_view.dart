@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/shared_layout.dart';
 import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 import 'package:frontend/ui/page/arrange_pickup/components/pickup_form.dart';
 import 'package:frontend/data/model/ride.dart';
@@ -25,57 +24,53 @@ class ArrangePickupView extends StatelessWidget {
     return ListenableBuilder(
       listenable: viewModel,
       builder: (context, _) {
-        return SharedLayout(
-          currentIndex: 0,
-          isIndexed: false,
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    'Arrange Pickup Details',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  RideDetailsPanel(ride: selectedRide),
-                  const SizedBox(height: 24),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Set Pickup Details',
-                            style: Theme.of(context).textTheme.titleMedium,
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Arrange Pickup Details',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                RideDetailsPanel(ride: selectedRide),
+                const SizedBox(height: 24),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Set Pickup Details',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 16),
+                        if (viewModel.isLoading)
+                          const Center(child: CircularProgressIndicator())
+                        else
+                          PickupForm(
+                            selectedTime: viewModel.selectedTime,
+                            location: viewModel.location,
+                            onTimeSelected: viewModel.setPickupTime,
+                            onLocationChanged: viewModel.setLocation,
+                            onSubmit: () => _handleSubmit(context),
                           ),
-                          const SizedBox(height: 16),
-                          if (viewModel.isLoading)
-                            const Center(child: CircularProgressIndicator())
-                          else
-                            PickupForm(
-                              selectedTime: viewModel.selectedTime,
-                              location: viewModel.location,
-                              onTimeSelected: viewModel.setPickupTime,
-                              onLocationChanged: viewModel.setLocation,
-                              onSubmit: () => _handleSubmit(context),
-                            ),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => _handleSubmit(context),
-                    child: const Text('Send Pickup Proposal'),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => _handleSubmit(context),
+                  child: const Text('Send Pickup Proposal'),
+                ),
+              ],
             ),
           ),
         );
