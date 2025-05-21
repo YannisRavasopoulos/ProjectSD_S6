@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 
-class RideCard extends StatelessWidget {
+class RideListCard extends StatelessWidget {
   final Ride ride;
   final VoidCallback onEdit;
   final VoidCallback onRemove;
 
-  const RideCard({
+  const RideListCard({
     super.key,
     required this.ride,
     required this.onEdit,
