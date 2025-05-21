@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:frontend/config.dart';
 import 'package:frontend/data/authentication_exception.dart';
-import 'package:frontend/data/model/json_web_token.dart';
+import 'package:frontend/data/json_web_token.dart';
 import 'package:http/http.dart' as http;
 
 class AuthenticationService {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frontend/data/model/authentication.dart';
+import 'package:frontend/data/authentication.dart';
 
 class JsonWebToken implements Authentication {
   final String token;

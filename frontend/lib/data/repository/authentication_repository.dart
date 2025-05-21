@@ -1,5 +1,5 @@
-import 'package:frontend/data/model/authentication.dart';
-import 'package:frontend/data/model/json_web_token.dart';
+import 'package:frontend/data/authentication.dart';
+import 'package:frontend/data/json_web_token.dart';
 
 // TODO
 class AuthenticationRepository {
