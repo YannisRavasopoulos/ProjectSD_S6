@@ -13,18 +13,20 @@ import 'package:frontend/data/repository/rating_repository.dart';
 
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
+import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/profile/profile_view.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
+import 'package:frontend/ui/page/create_ride/rides_list_viewmodel.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/rewards/rewards_view.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/activities/activities_view.dart';
-import 'package:frontend/ui/page/rides/rides_view.dart';
+import 'package:frontend/ui/page/create_ride/rides_list_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
@@ -55,6 +57,15 @@ class App extends StatelessWidget {
 
   final UserRepository _userRepository = UserRepository();
   final RatingRepository _ratingRepository = RatingRepository();
+  final RideRepository _rideRepository = RideRepository();
+
+  late final RidesListViewModel ridesViewModel = RidesListViewModel(
+    rideRepository: _rideRepository,
+  );
+
+  late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
+    rideRepository: _rideRepository,
+  );
 
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: _rideRepository,
@@ -107,7 +118,8 @@ class App extends StatelessWidget {
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
         '/home': (context) => HomeView(viewModel: homeViewModel),
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
-        '/create_ride': (context) => CreateRideView(),
+        '/create_ride':
+            (context) => CreateRideView(viewModel: createRideViewModel),
         '/profile':
             (context) => ProfileView(
               viewModel: profileViewModel,
@@ -115,7 +127,7 @@ class App extends StatelessWidget {
             ),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
-        '/rides': (context) => RidesView(),
+        '/rides': (context) => RidesListView(viewModel: ridesViewModel),
         '/report': (context) => ReportView(viewModel: reportViewModel),
       },
       onGenerateRoute: (settings) {

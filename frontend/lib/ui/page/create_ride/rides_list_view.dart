@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
-import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
-import 'package:frontend/ui/page/rides/ride_card.dart';
-import 'package:frontend/ui/page/rides/ride_deletion_dialog.dart';
+import 'package:frontend/ui/page/create_ride/rides_list_viewmodel.dart';
+import 'package:frontend/ui/page/create_ride/ride_list_card.dart';
+import 'package:frontend/ui/page/create_ride/ride_deletion_dialog.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 
-class RidesView extends StatelessWidget {
-  final RidesViewModel viewModel;
+class RidesListView extends StatelessWidget {
+  final RidesListViewModel viewModel;
 
   final CreateRideViewModel createRideViewModel = CreateRideViewModel(
     rideRepository: RideRepository(),
   );
 
-  RidesView({super.key, required this.viewModel});
+  RidesListView({super.key, required this.viewModel});
 
   void _onRemoveRidePressed(BuildContext context, Ride ride) {
     showDialog(
@@ -47,7 +47,7 @@ class RidesView extends StatelessWidget {
             itemCount: viewModel.createdRides.length,
             itemBuilder: (context, index) {
               final ride = viewModel.createdRides[index];
-              return RideCard(
+              return RideListCard(
                 ride: ride,
                 onEdit: () {}, // implement edit if needed
                 onRemove: () => _onRemoveRidePressed(context, ride),
@@ -91,7 +91,7 @@ class RidesView extends StatelessWidget {
             if (action == 'created') {
               await viewModel.addRide(newRide);
             }
-            // Αν είναι offer, κάνε ό,τι χρειάζεται για τα offer rides
+            // TODO: Implement the logic to offer the ride
           }
         },
       ),
