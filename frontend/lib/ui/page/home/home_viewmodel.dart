@@ -21,8 +21,8 @@ class HomeViewModel extends ChangeNotifier {
     destination = point;
     notifyListeners();
 
-    var location = await _locationRepository.getLocation(point);
-    print(location.name);
+    // var location = await _locationRepository.getLocation(point);
+    // print(location.name);
   }
 
   Future<void> refreshLocation() async {

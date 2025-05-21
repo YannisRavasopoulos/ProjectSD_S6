@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:frontend/ui/page/home/floating_profile_button.dart';
 import 'package:frontend/ui/page/home/map_search_bar.dart';
+import 'package:frontend/ui/page/home/floating_menu_button.dart';
 import 'package:frontend/ui/shared/nav/app_drawer.dart';
 import 'package:frontend/ui/shared/map/destination_marker.dart';
 import 'package:frontend/ui/shared/map/here_marker.dart';
@@ -50,17 +52,14 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                 mapController: mapController,
                 options: MapOptions(
                   onTap: _onMapTapped,
-                  initialCenter:
-                      widget.viewModel.source ??
-                      const LatLng(45.5017, -73.5673),
+                  initialCenter: widget.viewModel.source,
                   initialZoom: 8,
                 ),
                 children: [
                   OpenStreetMapsTileLayer(),
                   MarkerLayer(
                     markers: [
-                      if (widget.viewModel.source != null)
-                        HereMarker(widget.viewModel.source!),
+                      HereMarker(widget.viewModel.source),
                       if (widget.viewModel.destination != null)
                         DestinationMarker(widget.viewModel.destination),
                     ],
@@ -71,21 +70,38 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                 top: 16,
                 left: 16,
                 right: 16,
-                child: MapSearchBar(
-                  suggestions: widget.viewModel.suggestions,
-                  onSearchChanged: widget.viewModel.search,
-                  onSuggestionSelected: widget.viewModel.selectSuggestion,
-                  hintText: 'Search for a location...',
+                child: Row(
+                  children: [
+                    FloatingMenuButton(),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: MapSearchBar(
+                          suggestions: widget.viewModel.suggestions,
+                          onSearchChanged: (value) {
+                            widget.viewModel.search(value);
+                          },
+                          onSuggestionSelected: (index) {
+                            widget.viewModel.selectSuggestion(index);
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    FloatingProfileButton(),
+                  ],
                 ),
               ),
             ],
           );
         },
       ),
-      appBar: AppBar(
-        title: const Text('Loop App'),
-        backgroundColor: const Color.fromARGB(255, 23, 143, 117),
-      ),
+      // appBar: AppBar(title: const Text('Loop App')),
       drawer: AppDrawer(),
       bottomNavigationBar: AppNavigationBar(routeName: "/home"),
       floatingActionButton: FloatingActionButton(
