@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/loading_button.dart';
+import 'package:frontend/ui/shared/loading_button.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/shared/form/password_field.dart';
 import 'package:frontend/ui/shared/form/email_field.dart';
