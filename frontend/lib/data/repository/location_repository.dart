@@ -13,7 +13,7 @@ class LocationRepository {
       longitude: coordinates.longitude,
     );
 
-    return Location(coordinates: coordinates, name: address.toString());
+    return Location(id: 1, coordinates: coordinates, name: address.toString());
   }
 
   Future<Location> getCurrentLocation() async {
