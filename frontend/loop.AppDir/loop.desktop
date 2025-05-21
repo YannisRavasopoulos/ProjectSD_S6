@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Name=Loop
+Exec=loop %u
+Categories=Utility
+Icon=loop
