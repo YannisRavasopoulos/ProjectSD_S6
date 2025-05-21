@@ -83,7 +83,6 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
               ],
             );
           },
-        ),
         appBar: AppBar(
           title: const Text('Loop App'),
           backgroundColor: const Color.fromARGB(255, 23, 143, 117),
@@ -94,6 +93,15 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
           onPressed: _onLocationPressed,
           child: const Icon(Icons.my_location),
         ),
+
+        
+//               ListTile( //VGALTO EINAI GIA TEST 
+//               leading: const Icon(Icons.report),
+//               title: const Text('Report User (Test)'),
+//               onTap: () {
+//                 Navigator.pushNamed(context, '/report');
+//               },
+//             ), //VGALTO STO TELOS EINAI GIA TEST
       ),
     );
   }
