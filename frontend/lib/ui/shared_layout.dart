@@ -81,6 +81,13 @@ class SharedLayout extends StatelessWidget {
                 Navigator.pushNamed(context, '/find_ride');
               },
             ),
+            ListTile( //vgalto einai gia test!!!!!
+              leading: const Icon(Icons.report),
+              title: const Text('Report User (Test)'),
+              onTap: () {
+                Navigator.pushNamed(context, '/report');
+              },
+            ), //gia test!!!!
           ],
         ),
       ),

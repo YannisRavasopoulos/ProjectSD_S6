@@ -6,7 +6,11 @@ import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
+
+import 'package:frontend/ui/arrange_pickup/arrange_pickup_viewmodel.dart';
+
 import 'package:frontend/data/repository/rating_repository.dart';
+
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
@@ -26,22 +30,31 @@ import 'package:frontend/ui/page/create_ride/rides_list_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
-import 'package:frontend/ui/notification/pickup_notification_handler.dart';
-import 'package:frontend/data/service/notification_service.dart';
+
 import 'package:frontend/ui/page/rating/rating_viewmodel.dart';
+import 'package:frontend/ui/page/report/report_view.dart';
+import 'package:frontend/data/repository/report_repository.dart';
+import 'package:frontend/ui/page/report/report_viewmodel.dart';
 
 //Testing notification
 import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/driver.dart';
-//
+import 'package:frontend/data/service/pickup_service.dart';
+import 'package:frontend/data/repository/pickup_repository.dart';
+import 'package:frontend/data/service/ride_service.dart';
 
 class App extends StatelessWidget {
-  final NotificationService _notificationService = NotificationService();
+  final RideRepository _rideRepository = RideRepository(
+    rideService: RideService(),
+  );
 
-  App({super.key});
+  final PickupRepository _pickupRepository = PickupRepository(
+    pickupService: PickupService(),
+  );
 
   final bool isLoggedIn = false;
+
   final UserRepository _userRepository = UserRepository();
   final RatingRepository _ratingRepository = RatingRepository();
   final RideRepository _rideRepository = RideRepository();
@@ -54,8 +67,8 @@ class App extends StatelessWidget {
     rideRepository: _rideRepository,
   );
 
-  final FindRideViewModel findRideViewModel = FindRideViewModel(
-    rideRepository: RideRepository(),
+  late final FindRideViewModel findRideViewModel = FindRideViewModel(
+    rideRepository: _rideRepository,
   );
 
   final HomeViewModel homeViewModel = HomeViewModel(
@@ -85,6 +98,10 @@ class App extends StatelessWidget {
     activityRepository: ActivityRepository(),
   );
 
+  final ReportViewModel reportViewModel = ReportViewModel(
+    reportRepository: ReportRepository(),
+  );
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -94,12 +111,6 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.comfortable,
       ),
       initialRoute: isLoggedIn ? '/home' : '/sign_in',
-      builder: (context, child) {
-        return PickupNotificationHandler(
-          notificationService: _notificationService,
-          child: child ?? const SizedBox(),
-        );
-      },
       routes: {
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/sign_in': (context) => SignInView(viewModel: signInViewModel),
@@ -117,6 +128,37 @@ class App extends StatelessWidget {
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/rides': (context) => RidesListView(viewModel: ridesViewModel),
+        '/report': (context) => ReportView(viewModel: reportViewModel),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/arrange_pickup') {
+          final args = settings.arguments as Map<String, dynamic>?;
+
+          if (args == null ||
+              !args.containsKey('carpoolerId') ||
+              !args.containsKey('driver') ||
+              !args.containsKey('selectedRide')) {
+            return null;
+          }
+
+          final driver = args['driver'] as Driver;
+          final ride = args['selectedRide'] as Ride;
+
+          return MaterialPageRoute(
+            builder:
+                (context) => ArrangePickupView(
+                  viewModel: ArrangePickupViewModel(
+                    repository: _pickupRepository,
+                    driver: driver,
+                    rideId: ride.id,
+                  ),
+                  carpoolerId: args['carpoolerId'] as String,
+                  driver: driver,
+                  selectedRide: ride,
+                ),
+          );
+        }
+        return null;
       },
     );
   }

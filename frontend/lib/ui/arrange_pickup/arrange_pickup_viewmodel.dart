@@ -5,6 +5,8 @@ import 'package:frontend/data/model/driver.dart';
 
 class ArrangePickupViewModel extends ChangeNotifier {
   final PickupRepository _repository;
+  final Driver _driver;
+  final String _rideId;
   bool _isLoading = false;
   String? _errorMessage;
   DateTime? _selectedTime;
@@ -14,13 +16,17 @@ class ArrangePickupViewModel extends ChangeNotifier {
     required PickupRepository repository,
     required Driver driver,
     required String rideId,
-  }) : _repository = repository;
+  }) : _repository = repository,
+       _driver = driver,
+       _rideId = rideId;
 
-  // state access
+  // Getters
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   DateTime? get selectedTime => _selectedTime;
   String get location => _location;
+  Driver get driver => _driver;
+  String get rideId => _rideId;
 
   // update state
   void setPickupTime(DateTime time) {
@@ -63,28 +69,23 @@ class ArrangePickupViewModel extends ChangeNotifier {
     required Driver driver,
     required Ride ride,
   }) async {
-    if (_selectedTime == null || _location.isEmpty) {
-      _errorMessage = 'Please select both time and location';
-      notifyListeners();
-      return false;
-    }
-
     try {
       _isLoading = true;
       _errorMessage = null;
       notifyListeners();
 
-      await _repository.createPickupRequest(
+      final success = await _repository.createPickupRequest(
         carpoolerId: carpoolerId,
         driver: driver,
-        ride: ride, // Assuming driver has a ride property,
+        ride: ride,
         pickupTime: _selectedTime!,
         location: _location,
       );
 
       _isLoading = false;
       notifyListeners();
-      return true;
+
+      return success;
     } catch (e) {
       _isLoading = false;
       _errorMessage = 'Failed to arrange pickup: ${e.toString()}';
