@@ -1,108 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/loading_button.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
+import 'package:frontend/ui/shared/form/email_field.dart';
+import 'package:frontend/ui/shared/form/name_field.dart';
+import 'package:frontend/ui/shared/form/password_field.dart';
+import 'package:frontend/ui/shared/form/confirm_password_field.dart';
 
 class SignUpView extends StatelessWidget {
-  const SignUpView({super.key, required SignUpViewModel viewModel})
-    : _viewModel = viewModel;
+  const SignUpView({super.key, required this.viewModel});
 
-  final SignUpViewModel _viewModel;
+  final SignUpViewModel viewModel;
 
-  void _onPasswordVisiblePressed(BuildContext context) {
-    _viewModel.togglePasswordVisibility();
+  void _onPasswordVisiblePressed() {
+    viewModel.togglePasswordVisibility();
   }
 
-  void _onConfirmPasswordVisiblePressed(BuildContext context) {
-    _viewModel.toggleConfirmPasswordVisibility();
+  void _onConfirmPasswordVisiblePressed() {
+    viewModel.toggleConfirmPasswordVisibility();
   }
 
-  void _onSignUpPressed(BuildContext context) {
-    _viewModel.signUp();
+  void _onSignUpPressed() {
+    viewModel.signUp();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Sign Up')),
-      body: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(32.0),
-        child: SingleChildScrollView(
-          child: ListenableBuilder(
-            listenable: _viewModel,
-            builder: (context, _) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Sign Up',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      prefixIcon: Icon(Icons.person),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _viewModel.passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _viewModel.passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: () => _onPasswordVisiblePressed(context),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: SingleChildScrollView(
+            child: ListenableBuilder(
+              listenable: viewModel,
+              builder: (context, _) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    obscureText: !_viewModel.passwordVisible,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _viewModel.confirmPasswordController,
-                    decoration: InputDecoration(
-                      labelText: 'Confirm Password',
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _viewModel.confirmPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed:
-                            () => _onConfirmPasswordVisiblePressed(context),
-                      ),
+                    const SizedBox(height: 20),
+                    EmailField(controller: viewModel.emailController),
+                    const SizedBox(height: 16),
+                    NameField(controller: viewModel.nameController),
+                    const SizedBox(height: 16),
+                    PasswordField(
+                      controller: viewModel.passwordController,
+                      isVisible: viewModel.passwordVisible,
+                      onVisibilityPressed: _onPasswordVisiblePressed,
                     ),
-                    obscureText: !_viewModel.confirmPasswordVisible,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    _viewModel.doPasswordsMatch ? '' : 'Passwords do not match',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 24),
-                  LoadingButton(
-                    onPressed: () => _onSignUpPressed(context),
-                    isLoading: _viewModel.isLoading,
-                    child: const Text('Sign Up'),
-                  ),
-                ],
-              );
-            },
+                    const SizedBox(height: 16),
+                    ConfirmPasswordField(
+                      controller: viewModel.confirmPasswordController,
+                      isVisible: viewModel.confirmPasswordVisible,
+                      onVisibilityPressed: _onConfirmPasswordVisiblePressed,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      viewModel.doPasswordsMatch
+                          ? ''
+                          : 'Passwords do not match',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: 24),
+                    LoadingButton(
+                      onPressed: _onSignUpPressed,
+                      isLoading: viewModel.isLoading,
+                      child: const Text('Sign Up'),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
