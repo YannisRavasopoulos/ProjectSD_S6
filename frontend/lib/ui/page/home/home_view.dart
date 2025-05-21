@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:frontend/ui/page/home/floating_profile_button.dart';
 import 'package:frontend/ui/page/home/map_search_bar.dart';
-import 'package:frontend/ui/page/home/floating_menu_button.dart';
 import 'package:frontend/ui/shared/nav/app_drawer.dart';
 import 'package:frontend/ui/shared/map/destination_marker.dart';
 import 'package:frontend/ui/shared/map/here_marker.dart';
@@ -98,27 +96,6 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
         onPressed: _onLocationPressed,
         child: const Icon(Icons.my_location),
       ),
-      //                     ListTile(
-      //               leading: const Icon(Icons.directions_car),
-      //               title: const Text('My Rides'),
-      //               onTap: () {
-      //                 Navigator.pushNamed(context, '/rides');
-      //               },
-      //             ),
-      //             ListTile(
-      //               leading: const Icon(Icons.add_circle_outline),
-      //               title: const Text('Create Ride'),
-      //               onTap: () {
-      //                 Navigator.pushNamed(context, '/create_ride');
-      //               },
-
-      //               ListTile( //VGALTO EINAI GIA TEST
-      //               leading: const Icon(Icons.report),
-      //               title: const Text('Report User (Test)'),
-      //               onTap: () {
-      //                 Navigator.pushNamed(context, '/report');
-      //               },
-      //             ), //VGALTO STO TELOS EINAI GIA TEST
     );
   }
 }

@@ -38,12 +38,33 @@ class AppDrawer extends StatelessWidget {
               ); // Navigate to rewards view
             },
           ),
-
           ListTile(
             leading: const Icon(Icons.person),
             title: const Text('Find Ride'),
             onTap: () {
               Navigator.pushNamed(context, '/find_ride');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.directions_car),
+            title: const Text('My Rides'),
+            onTap: () {
+              Navigator.pushNamed(context, '/rides');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.add_circle_outline),
+            title: const Text('Create Ride'),
+            onTap: () {
+              Navigator.pushNamed(context, '/create_ride');
+            },
+          ),
+          ListTile(
+            //VGALTO EINAI GIA TEST
+            leading: const Icon(Icons.report),
+            title: const Text('Report User (Test)'),
+            onTap: () {
+              Navigator.pushNamed(context, '/report');
             },
           ),
           ListTile(
