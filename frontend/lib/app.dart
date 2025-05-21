@@ -27,6 +27,9 @@ import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 import 'package:frontend/ui/notification/pickup_notification_handler.dart';
 import 'package:frontend/data/service/notification_service.dart';
 import 'package:frontend/ui/page/rating/rating_viewmodel.dart';
+import 'package:frontend/ui/page/report/report_view.dart';
+import 'package:frontend/data/repository/report_repository.dart';
+import 'package:frontend/ui/page/report/report_viewmodel.dart';
 
 //Testing notification
 import 'package:frontend/ui/arrange_pickup/arrange_pickup_view.dart';
@@ -74,6 +77,10 @@ class App extends StatelessWidget {
     activityRepository: ActivityRepository(),
   );
 
+  final ReportViewModel reportViewModel = ReportViewModel(
+    reportRepository: ReportRepository(),
+  );
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -105,6 +112,7 @@ class App extends StatelessWidget {
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/rides': (context) => RidesView(),
+        '/report': (context) => ReportView(viewModel: reportViewModel),
       },
     );
   }

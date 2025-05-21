@@ -192,20 +192,15 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                 );
               },
             ),
+            ListTile( //VGALTO EINAI GIA TEST 
+              leading: const Icon(Icons.report),
+              title: const Text('Report User (Test)'),
+              onTap: () {
+                Navigator.pushNamed(context, '/report');
+              },
+            ), //VGALTO STO TELOS EINAI GIA TEST
           ],
         ),
-
-        // title: TextField(
-        //   decoration: InputDecoration(
-        //     hintText: 'Search for a location...',
-        //     border: InputBorder.none,
-        //     contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-        //   ),
-        //   onSubmitted: (value) {
-        //     // Handle search logic here
-        //     print('Search query: $value');
-        //   },
-        // ),
       ),
       bottomNavigationBar: AppNavigationBar(routeName: "/home"),
       floatingActionButton: FloatingActionButton(
