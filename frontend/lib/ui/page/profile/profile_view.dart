@@ -5,7 +5,6 @@ import 'package:frontend/ui/page/profile/profile_picture_picker.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/profile/rating_tab.dart';
 import 'package:frontend/ui/page/profile/profile_tab.dart';
-// import 'package:frontend/ui/page/profile/points_widget.dart';
 import 'package:frontend/ui/shared/nav/app_navigation_bar.dart';
 
 class ProfileView extends StatelessWidget {

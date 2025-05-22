@@ -70,15 +70,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Test Notification'),
             onTap: () {
               // Create a test pickup
-              final testPickup = Pickup(
-                id: 'test_${DateTime.now().millisecondsSinceEpoch}',
-                rideID: 'test_ride_id',
-                driverID: 'test_driver_id',
-                carpoolerId: 'test_carpooler_id',
-                pickupTime: DateTime.now().add(const Duration(minutes: 30)),
-                location: 'Test Location',
-                status: 'pending',
-              );
+              final testPickup = Pickup.random();
 
               // Close the drawer
               Navigator.pop(context);

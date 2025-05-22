@@ -1,41 +1,46 @@
-class Pickup {
-  final String id;
-  final String rideID;
-  final String driverID;
-  final String carpoolerId;
-  final DateTime pickupTime;
-  final String location;
-  final String status;
+import 'package:frontend/data/model.dart';
+import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/location.dart';
+import 'package:frontend/data/model/passenger.dart';
+import 'package:frontend/data/model/ride.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'pickup.g.dart';
+
+enum PickupStatus { pending, accepted, completed, cancelled }
+
+@JsonSerializable()
+class Pickup extends Model {
+  final Driver driver;
+  final Passenger passenger;
+  final Ride ride;
+  final DateTime time;
+  final Location location;
+  final PickupStatus status;
 
   const Pickup({
-    required this.id,
-    required this.rideID,
-    required this.driverID,
-    required this.carpoolerId,
-    required this.pickupTime,
+    required super.id,
     required this.location,
-    this.status = 'pending',
+    required this.status,
+    required this.driver,
+    required this.passenger,
+    required this.ride,
+    required this.time,
   });
 
-  // json -> pickup
-  factory Pickup.fromJson(Map<String, dynamic> json) => Pickup(
-    id: json['id'],
-    driverID: json['driver_id'],
-    rideID: json['ride_id'],
-    carpoolerId: json['carpooler_id'],
-    pickupTime: DateTime.parse(json['pickup_time']),
-    location: json['location'],
-    status: json['status'] ?? 'pending',
-  );
+  factory Pickup.fromJson(Map<String, dynamic> json) => _$PickupFromJson(json);
 
-  // pickup -> json
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'driver_id': driverID,
-    'ride_id': rideID,
-    'carpooler_id': carpoolerId,
-    'pickup_time': pickupTime.toIso8601String(),
-    'location': location,
-    'status': status,
-  };
+  Map<String, dynamic> toJson() => _$PickupToJson(this);
+
+  factory Pickup.random() {
+    return Pickup(
+      id: 1,
+      location: Location.random(),
+      status: PickupStatus.values[0],
+      driver: Driver.random(),
+      passenger: Passenger.random(),
+      ride: Ride.random(),
+      time: DateTime.now(),
+    );
+  }
 }

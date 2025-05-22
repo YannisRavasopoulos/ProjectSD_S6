@@ -60,7 +60,7 @@ class PickupRequestNotification extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '• ${pickup.pickupTime.hour}:${pickup.pickupTime.minute.toString().padLeft(2, '0')}',
+                      pickup.time.toString(),
                       style: TextStyle(
                         fontSize: 11,
                         color: Theme.of(context).textTheme.bodySmall?.color,
@@ -69,7 +69,7 @@ class PickupRequestNotification extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  'Pickup request from ${pickup.driverID}',
+                  'Pickup request from ${pickup.driver.id}',
                   style: const TextStyle(fontSize: 11),
                 ),
               ],
@@ -114,7 +114,7 @@ class PickupRequestNotification extends StatelessWidget {
                               // TODO
                               rideId: 5,
                             ),
-                            carpoolerId: pickup.carpoolerId,
+                            carpoolerId: "TODO",
                             driver: Driver.random(),
                             selectedRide: Ride.random(),
                           ),
