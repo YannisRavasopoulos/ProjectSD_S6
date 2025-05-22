@@ -3,7 +3,7 @@ import 'package:frontend/data/model/rating.dart';
 class RatingRepository {
   final List<Rating> _ratings = [
     Rating(
-      id: '1',
+      id: 1,
       fromUserId: 2,
       toUserId: 1,
       rideId: 'ride_123',
@@ -12,7 +12,7 @@ class RatingRepository {
       createdAt: DateTime.now().subtract(const Duration(days: 5)),
     ),
     Rating(
-      id: '2',
+      id: 2,
       fromUserId: 3,
       toUserId: 1,
       rideId: 'ride_124',
@@ -21,7 +21,7 @@ class RatingRepository {
       createdAt: DateTime.now().subtract(const Duration(days: 3)),
     ),
     Rating(
-      id: '3',
+      id: 3,
       fromUserId: 1,
       toUserId: 2,
       rideId: 'ride_125',
@@ -30,7 +30,7 @@ class RatingRepository {
       createdAt: DateTime.now().subtract(const Duration(days: 2)),
     ),
     Rating(
-      id: '4',
+      id: 4,
       fromUserId: 4,
       toUserId: 1,
       rideId: 'ride_126',
@@ -48,7 +48,7 @@ class RatingRepository {
     String? comment,
   }) async {
     final rating = Rating(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: DateTime.now().millisecondsSinceEpoch,
       fromUserId: fromUserId,
       toUserId: toUserId,
       rideId: rideId,

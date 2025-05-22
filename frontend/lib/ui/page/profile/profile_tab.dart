@@ -1,10 +1,36 @@
-// lib/ui/profile/profile_tab.dart
 import 'package:flutter/material.dart';
-import 'profile_viewmodel.dart';
 
 class ProfileTab extends StatelessWidget {
-  final ProfileViewModel vm;
-  const ProfileTab({Key? key, required this.vm}) : super(key: key);
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String password;
+  final bool isEditing;
+  final bool showPassword;
+  final ValueChanged<String> onFirstNameChanged;
+  final ValueChanged<String> onLastNameChanged;
+  final ValueChanged<String> onEmailChanged;
+  final ValueChanged<String> onPasswordChanged;
+  final VoidCallback onToggleEditing;
+  final VoidCallback onTogglePasswordVisibility;
+  final VoidCallback onSaveChanges;
+
+  const ProfileTab({
+    Key? key,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.password,
+    required this.isEditing,
+    required this.showPassword,
+    required this.onFirstNameChanged,
+    required this.onLastNameChanged,
+    required this.onEmailChanged,
+    required this.onPasswordChanged,
+    required this.onToggleEditing,
+    required this.onTogglePasswordVisibility,
+    required this.onSaveChanges,
+  }) : super(key: key);
 
   Widget _buildField({
     required String label,
@@ -12,7 +38,7 @@ class ProfileTab extends StatelessWidget {
     required bool isEditing,
     required ValueChanged<String> onChanged,
     bool obscure = false,
-    Widget? trailing, // for show/hide eye
+    Widget? trailing,
   }) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
@@ -21,14 +47,12 @@ class ProfileTab extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child:
             isEditing
-                // Editable TextFormField
                 ? TextFormField(
                   initialValue: value,
                   decoration: InputDecoration(labelText: label),
                   obscureText: obscure,
                   onChanged: onChanged,
                 )
-                // Read-only ListTile
                 : ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(
@@ -39,7 +63,7 @@ class ProfileTab extends StatelessWidget {
                     value,
                     style: TextStyle(
                       letterSpacing:
-                          label == 'Password' && !vm.showPassword ? 2.0 : 0,
+                          label == 'Password' && !showPassword ? 2.0 : 0,
                     ),
                   ),
                   trailing: trailing,
@@ -50,10 +74,6 @@ class ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (vm.user == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -68,8 +88,8 @@ class ProfileTab extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 IconButton(
-                  icon: Icon(vm.isEditing ? Icons.check : Icons.edit),
-                  onPressed: vm.toggleEditing,
+                  icon: Icon(isEditing ? Icons.check : Icons.edit),
+                  onPressed: onToggleEditing,
                 ),
               ],
             ),
@@ -77,55 +97,52 @@ class ProfileTab extends StatelessWidget {
 
           _buildField(
             label: 'First Name',
-            value: vm.user!.firstName,
-            isEditing: vm.isEditing,
-            onChanged: vm.updateFirstName,
+            value: firstName,
+            isEditing: isEditing,
+            onChanged: onFirstNameChanged,
           ),
 
           _buildField(
             label: 'Last Name',
-            value: vm.user!.lastName,
-            isEditing: vm.isEditing,
-            onChanged: vm.updateLastName,
+            value: lastName,
+            isEditing: isEditing,
+            onChanged: onLastNameChanged,
           ),
 
           _buildField(
             label: 'Email',
-            value: "TODO",
-            isEditing: vm.isEditing,
-            onChanged: vm.updateEmail,
+            value: email,
+            isEditing: isEditing,
+            onChanged: onEmailChanged,
           ),
 
           _buildField(
             label: 'Password',
-            value: "TODO",
-            // value: vm.showPassword || vm.isEditing
-            //     ? vm.user!.password
-            //     : List.filled(vm.user!.password.length, '*').join(),
-            isEditing: vm.isEditing,
-            obscure: vm.isEditing,
-            onChanged: vm.updatePassword,
+            value:
+                isEditing || showPassword
+                    ? password
+                    : List.filled(password.length, '*').join(),
+            isEditing: isEditing,
+            obscure: isEditing,
+            onChanged: onPasswordChanged,
             trailing:
-                !vm.isEditing
+                !isEditing
                     ? IconButton(
                       icon: Icon(
-                        vm.showPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                        showPassword ? Icons.visibility_off : Icons.visibility,
                       ),
-                      onPressed: vm.togglePasswordVisibility,
+                      onPressed: onTogglePasswordVisibility,
                     )
                     : null,
           ),
 
-          // Save Changes button
-          if (vm.isEditing)
+          if (isEditing)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: vm.saveChanges,
+                  onPressed: onSaveChanges,
                   child: const Text('Save Changes'),
                 ),
               ),

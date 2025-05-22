@@ -1,5 +1,5 @@
 class Rating {
-  final String id;
+  final int id;
   final int fromUserId;
   final int toUserId;
   final String rideId;
@@ -16,4 +16,20 @@ class Rating {
     this.comment,
     required this.createdAt,
   });
+
+  factory Rating.random() {
+    final score = (1 + (5 - 1) * (0.5)).toInt();
+    final comment = 'This is a random comment';
+    final createdAt = DateTime.now();
+
+    return Rating(
+      id: 0,
+      fromUserId: 1,
+      toUserId: 2,
+      rideId: 'x',
+      score: score,
+      comment: comment,
+      createdAt: createdAt,
+    );
+  }
 }
