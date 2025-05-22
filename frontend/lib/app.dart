@@ -33,10 +33,9 @@ import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/service/pickup_service.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
-import 'package:frontend/data/service/ride_service.dart';
 
 class App extends StatelessWidget {
-  final RideRepository _rides = RideRepository(rideService: RideService());
+  final RideRepository _rides = RideRepository();
   final PickupRepository _pickupRepository = PickupRepository(
     pickupService: PickupService(),
   );

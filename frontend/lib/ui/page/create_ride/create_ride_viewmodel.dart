@@ -62,13 +62,9 @@ class CreateRideViewModel extends ChangeNotifier {
         departureTime!.hour,
         departureTime!.minute,
       );
-      await rideRepository.createRide(
-        source: from!,
-        destination: to!,
-        departureTime: dt,
-        passengers: seats,
-        capacity: capacity,
-        description: '',
+      await rideRepository.create(
+        // TODO
+        Ride.random(),
       );
       successMessage = "Ride created successfully!";
     } catch (e) {

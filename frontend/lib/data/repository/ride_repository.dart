@@ -1,71 +1,75 @@
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/service/ride_service.dart';
+import 'package:frontend/data/model/location.dart';
 
 class RideRepository {
-  final List<Ride> _createdRides = [];
+  List<Ride> _rides = List.generate(5, (index) => Ride.random());
 
-  Future<void> createRide({
-    required String source,
-    required String destination,
-    required DateTime departureTime,
-    required int passengers,
-    required int capacity,
-    String? description,
-  }) async {
-    // TODO
-    final ride = Ride(
-      id: DateTime.now().millisecondsSinceEpoch,
-      departureTime: departureTime,
-      passengers: [],
-      driver: Driver.random(),
-    );
-    _createdRides.add(ride);
-    await Future.delayed(const Duration(milliseconds: 200));
+  Future<List<Ride>> fetchMatching(
+    Location from,
+    Location to,
+    DateTime when,
+    // TODO add more filters
+  ) async {
+    // Simulate a network call
+    await Future.delayed(const Duration(seconds: 1));
+    return _rides;
   }
 
-  List<Ride> getCreatedRides() => List.unmodifiable(_createdRides);
-
-  final RideService _rideService;
-
-  RideRepository({required RideService rideService})
-    : _rideService = rideService;
-
-  Future<Ride> getRide(String rideId) async {
-    try {
-      return await _rideService.getRide(rideId);
-    } catch (e) {
-      print('Error fetching ride: $e');
-      throw Exception('Failed to fetch ride');
+  Stream<List<Ride>> watchMatching(
+    Location from,
+    Location to,
+    DateTime when,
+  ) async* {
+    while (true) {
+      // Simulate a network call
+      await Future.delayed(const Duration(seconds: 1));
+      yield await fetchMatching(from, to, when);
     }
   }
 
-  Future<List<Ride>> getRides({
-    required String source,
-    required String destination,
-  }) async {
-    try {
-      return await _rideService.getRides(
-        source: source,
-        destination: destination,
-      );
-    } catch (e) {
-      throw Exception('Failed to fetch rides: $e');
+  Future<List<Ride>> fetchById(int id) async {
+    // Simulate a network call
+    await Future.delayed(const Duration(seconds: 1));
+    return _rides.where((ride) => ride.id == id).toList();
+  }
+
+  Stream<List<Ride>> watchById(int id) async* {
+    while (true) {
+      // Simulate a network call
+      await Future.delayed(const Duration(seconds: 1));
+      yield await fetchById(id);
     }
   }
 
-  Future<void> insertRide(Ride ride) async {
-    _createdRides.add(ride);
-    await Future.delayed(const Duration(milliseconds: 200));
+  Future<List<Ride>> fetch() async {
+    // Simulate a network call
+    await Future.delayed(const Duration(seconds: 1));
+    return _rides;
   }
 
-  Future<void> removeRide(int id) async {
-    _createdRides.removeWhere((ride) => ride.id == id);
-    await Future.delayed(const Duration(milliseconds: 200));
+  Stream<List<Ride>> watch() async* {
+    while (true) {
+      // Simulate a network call
+      await Future.delayed(const Duration(seconds: 1));
+      yield _rides;
+    }
   }
 
-  Future<List<Ride>> fetchCreatedRides() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    return List.unmodifiable(_createdRides);
+  // Create a ride
+  Future<void> create(Ride ride) async {
+    _rides.add(ride);
+  }
+
+  // Update a ride
+  Future<void> update(Ride ride) async {
+    final index = _rides.indexWhere((r) => r.id == ride.id);
+    if (index != -1) {
+      _rides[index] = ride;
+    }
+  }
+
+  // Delete a ride
+  Future<void> delete(int id) async {
+    _rides.removeWhere((ride) => ride.id == id);
   }
 }

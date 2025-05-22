@@ -106,9 +106,10 @@ class FindRideViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      rides = await rideRepository.getRides(
-        source: _source,
-        destination: _destination,
+      // TODO: fetch Matching rides
+      rides = await rideRepository.fetch(
+        // source: _source,
+        // destination: _destination,
       );
     } catch (e) {
       errorMessage = e.toString();
