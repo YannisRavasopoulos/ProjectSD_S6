@@ -1,6 +1,5 @@
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/model/vehicle.dart';
 import 'package:frontend/data/service/ride_service.dart';
 
 class RideRepository {
@@ -14,27 +13,18 @@ class RideRepository {
     required int capacity,
     String? description,
   }) async {
+    // TODO
     final ride = Ride(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      source: source,
-      destination: destination,
+      id: DateTime.now().millisecondsSinceEpoch,
       departureTime: departureTime,
-      passengers: passengers,
-      capacity: capacity,
-      description: description ?? '',
+      passengers: [],
       driver: Driver.random(),
-      vehicle: Vehicle.random(),
-      distance: '',
-      estimatedDuration: '',
     );
     _createdRides.add(ride);
     await Future.delayed(const Duration(milliseconds: 200));
   }
 
   List<Ride> getCreatedRides() => List.unmodifiable(_createdRides);
-
-
-
 
   final RideService _rideService;
 
@@ -49,7 +39,6 @@ class RideRepository {
       throw Exception('Failed to fetch ride');
     }
   }
-
 
   Future<List<Ride>> getRides({
     required String source,
@@ -70,7 +59,7 @@ class RideRepository {
     await Future.delayed(const Duration(milliseconds: 200));
   }
 
-  Future<void> removeRide(String id) async {
+  Future<void> removeRide(int id) async {
     _createdRides.removeWhere((ride) => ride.id == id);
     await Future.delayed(const Duration(milliseconds: 200));
   }

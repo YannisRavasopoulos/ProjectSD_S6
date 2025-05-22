@@ -15,7 +15,7 @@ class RideCard extends StatelessWidget {
         // leading: const Icon(Icons.directions_car),
         leading: CircleAvatar(),
         title: Text(ride.driver.name),
-        subtitle: Text(ride.description),
+        subtitle: Text("TODO"),
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -26,19 +26,19 @@ class RideCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Distance: ${ride.distance}'),
+                      Text('Distance: TODO'),
                       const SizedBox(height: 8.0),
-                      Text('Estimated Duration: ${ride.estimatedDuration}'),
+                      Text('Estimated Duration: TODO'),
                       const SizedBox(height: 8.0),
                       Text(
-                        'Additional Details: ${ride.passengers}/${ride.capacity}',
+                        'Additional Details: ${ride.availableSeats}/${ride.totalSeats}',
                       ),
                     ],
                   ),
                 ),
                 FilledButton(
                   onPressed:
-                      ride.passengers < ride.capacity
+                      ride.availableSeats > 0
                           ? () {
                             showDialog(
                               context: context,

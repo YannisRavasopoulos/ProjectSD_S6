@@ -111,24 +111,12 @@ class PickupRequestNotification extends StatelessWidget {
                                 pickupService: PickupService(),
                               ),
                               driver: Driver.random(),
-                              rideId: pickup.rideID,
+                              // TODO
+                              rideId: 5,
                             ),
                             carpoolerId: pickup.carpoolerId,
                             driver: Driver.random(),
-                            selectedRide: Ride(
-                              id: pickup.rideID,
-                              driver: Driver.random(),
-                              vehicle: Vehicle.random(),
-                              distance: "${Random().nextInt(20) + 5} km",
-                              description: "Pickup request ride",
-                              estimatedDuration:
-                                  "${Random().nextInt(45) + 15} minutes",
-                              passengers: Random().nextInt(3) + 1,
-                              capacity: 4,
-                              departureTime: pickup.pickupTime,
-                              source: '',
-                              destination: '',
-                            ),
+                            selectedRide: Ride.random(),
                           ),
                     ),
                   );

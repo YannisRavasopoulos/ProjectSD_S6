@@ -34,7 +34,7 @@ class RideDetailsPanel extends StatelessWidget {
                   child: _buildDetailRow(
                     icon: Icons.directions_car,
                     label: 'Vehicle',
-                    value: ride.vehicle.description,
+                    value: ride.driver.vehicle.description,
                   ),
                 ),
               ],
@@ -46,15 +46,15 @@ class RideDetailsPanel extends StatelessWidget {
                   child: _buildDetailRow(
                     icon: Icons.group,
                     label: 'Seats',
-                    value:
-                        '${ride.capacity - ride.passengers}/${ride.capacity}',
+                    value: '${ride.availableSeats}/${ride.totalSeats}',
                   ),
                 ),
                 Expanded(
                   child: _buildDetailRow(
                     icon: Icons.schedule,
                     label: 'Duration',
-                    value: ride.estimatedDuration,
+                    value: "TODO",
+                    // value: ride.estimatedDuration,
                   ),
                 ),
               ],
@@ -66,31 +66,32 @@ class RideDetailsPanel extends StatelessWidget {
                   child: _buildDetailRow(
                     icon: Icons.route,
                     label: 'Distance',
-                    value: ride.distance,
+                    value: "TODO",
+                    // value: ride.distance,
                   ),
                 ),
                 Expanded(
                   child: _buildDetailRow(
                     icon: Icons.info_outline,
                     label: 'Description',
-                    value: ride.description,
+                    value: "TODO",
+                    // value: ride.description,
                   ),
                 ),
               ],
             ),
             // Departure Time and Pickup Location if available
-            if (ride.departureTime != null)
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildDetailRow(
-                      icon: Icons.access_time,
-                      label: 'Departure',
-                      value: _formatDateTime(ride.departureTime!),
-                    ),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildDetailRow(
+                    icon: Icons.access_time,
+                    label: 'Departure',
+                    value: _formatDateTime(ride.departureTime),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/page/arrange_pickup/components/pickup_map_view.dart';
+import 'package:frontend/ui/page/arrange_pickup/pickup_map_view.dart';
 
 class PickupForm extends StatefulWidget {
   final DateTime? selectedTime;

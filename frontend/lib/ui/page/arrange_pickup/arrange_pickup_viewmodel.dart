@@ -6,7 +6,7 @@ import 'package:frontend/data/model/driver.dart';
 class ArrangePickupViewModel extends ChangeNotifier {
   final PickupRepository _repository;
   final Driver _driver;
-  final String _rideId;
+  final int _rideId;
   bool _isLoading = false;
   String? _errorMessage;
   DateTime? _selectedTime;
@@ -15,7 +15,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
   ArrangePickupViewModel({
     required PickupRepository repository,
     required Driver driver,
-    required String rideId,
+    required int rideId,
   }) : _repository = repository,
        _driver = driver,
        _rideId = rideId;
@@ -26,7 +26,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
   DateTime? get selectedTime => _selectedTime;
   String get location => _location;
   Driver get driver => _driver;
-  String get rideId => _rideId;
+  int get rideId => _rideId;
 
   // update state
   void setPickupTime(DateTime time) {

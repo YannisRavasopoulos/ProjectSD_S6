@@ -25,7 +25,7 @@ class RideListCard extends StatelessWidget {
         child: ListTile(
           title: Text('${ride.id} → ${ride.id}'),
           subtitle: Text(
-            'Capacity: ${ride.capacity}, Departure: ${ride.departureTime?.hour.toString().padLeft(2, '0')}:${ride.departureTime?.minute.toString().padLeft(2, '0')}',
+            'Capacity: ${ride.driver.vehicle.capacity}, Departure: ${ride.departureTime.hour.toString().padLeft(2, '0')}:${ride.departureTime?.minute.toString().padLeft(2, '0')}',
           ),
           leading: Icon(Icons.directions_car),
           trailing: Row(

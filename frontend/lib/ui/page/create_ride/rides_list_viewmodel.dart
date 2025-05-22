@@ -22,7 +22,7 @@ class RidesListViewModel extends ChangeNotifier {
     await fetchCreatedRides();
   }
 
-  Future<void> removeRide(String id) async {
+  Future<void> removeRide(int id) async {
     await rideRepository.removeRide(id);
     await fetchCreatedRides();
   }
