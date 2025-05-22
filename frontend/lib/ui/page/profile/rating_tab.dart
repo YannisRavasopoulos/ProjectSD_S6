@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/page/rating/rating_viewmodel.dart';
 import 'package:frontend/data/model/rating.dart';
 
 class RatingTab extends StatelessWidget {

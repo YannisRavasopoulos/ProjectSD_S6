@@ -116,11 +116,7 @@ class App extends StatelessWidget {
         '/create_ride':
             (context) => CreateRideView(viewModel: createRideViewModel),
         // '/rewards': (context) => RewardView(viewModel: rewardViewModel),
-        '/profile':
-            (context) => ProfileView(
-              viewModel: profileViewModel,
-              // ratingViewModel: rateViewModel,
-            ),
+        '/profile': (context) => ProfileView(viewModel: profileViewModel),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/rides': (context) => RidesListView(viewModel: ridesViewModel),
