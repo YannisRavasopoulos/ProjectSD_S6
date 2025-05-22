@@ -3,20 +3,14 @@ import 'package:flutter/material.dart';
 class ProfileViewModel extends ChangeNotifier {
   bool isLoading = false;
 
-  String firstName = '';
-  String lastName = '';
-  String email = '';
-  String password = '';
+  String firstName = 'First';
+  String lastName = 'Last';
+  String email = 'mail';
+  String password = 'perfectpassword';
   bool isEditing = false;
-  bool showPassword = false;
 
   void toggleEditing() {
     isEditing = !isEditing;
-    notifyListeners();
-  }
-
-  void togglePasswordVisibility() {
-    showPassword = !showPassword;
     notifyListeners();
   }
 
@@ -35,12 +29,7 @@ class ProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onToggleEditing() {
-    isEditing = !isEditing;
-    notifyListeners();
-  }
-
-  void onSaveChanges() {
+  void saveChanges() {
     // Save changes logic here
     isEditing = false;
     notifyListeners();
@@ -50,6 +39,4 @@ class ProfileViewModel extends ChangeNotifier {
     email = value;
     notifyListeners();
   }
-
-  String get name => '$firstName $lastName';
 }

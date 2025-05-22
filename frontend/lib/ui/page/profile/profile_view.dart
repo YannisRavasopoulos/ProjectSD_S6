@@ -10,13 +10,8 @@ import 'package:frontend/ui/shared/nav/app_navigation_bar.dart';
 
 class ProfileView extends StatelessWidget {
   final ProfileViewModel viewModel;
-  // final RatingViewModel ratingViewModel;
 
-  const ProfileView({
-    super.key,
-    required this.viewModel,
-    // required this.ratingViewModel,
-  });
+  const ProfileView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -59,23 +54,18 @@ class ProfileView extends StatelessWidget {
                                   const BouncingScrollPhysics(), // Smooth scrolling
                               children: [
                                 ProfileTab(
-                                  showPassword: viewModel.showPassword,
                                   email: viewModel.email,
                                   firstName: viewModel.firstName,
                                   lastName: viewModel.lastName,
                                   password: viewModel.password,
-                                  isEditing: viewModel.isEditing,
-                                  onTogglePasswordVisibility:
-                                      viewModel.togglePasswordVisibility,
                                   onEmailChanged: viewModel.onEmailChanged,
                                   onFirstNameChanged:
                                       viewModel.onFirstNameChanged,
                                   onLastNameChanged:
                                       viewModel.onLastNameChanged,
-                                  onToggleEditing: viewModel.onToggleEditing,
                                   onPasswordChanged:
                                       viewModel.onPasswordChanged,
-                                  onSaveChanges: viewModel.onSaveChanges,
+                                  onSavePressed: viewModel.saveChanges,
                                 ),
                                 HistoryTab(onClearHistory: () {}, rides: []),
                                 RatingTab(

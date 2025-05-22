@@ -1,150 +1,135 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/ui/shared/form/email_field.dart';
+import 'package:frontend/ui/shared/form/name_field.dart';
+import 'package:frontend/ui/shared/form/password_field.dart';
 
-class ProfileTab extends StatelessWidget {
+class ProfileTab extends StatefulWidget {
   final String firstName;
   final String lastName;
   final String email;
   final String password;
-  final bool isEditing;
-  final bool showPassword;
   final ValueChanged<String> onFirstNameChanged;
   final ValueChanged<String> onLastNameChanged;
   final ValueChanged<String> onEmailChanged;
   final ValueChanged<String> onPasswordChanged;
-  final VoidCallback onToggleEditing;
-  final VoidCallback onTogglePasswordVisibility;
-  final VoidCallback onSaveChanges;
+  final VoidCallback onSavePressed;
 
   const ProfileTab({
-    Key? key,
+    super.key,
     required this.firstName,
     required this.lastName,
     required this.email,
     required this.password,
-    required this.isEditing,
-    required this.showPassword,
     required this.onFirstNameChanged,
     required this.onLastNameChanged,
     required this.onEmailChanged,
     required this.onPasswordChanged,
-    required this.onToggleEditing,
-    required this.onTogglePasswordVisibility,
-    required this.onSaveChanges,
-  }) : super(key: key);
+    required this.onSavePressed,
+  });
 
-  Widget _buildField({
-    required String label,
-    required String value,
-    required bool isEditing,
-    required ValueChanged<String> onChanged,
-    bool obscure = false,
-    Widget? trailing,
-  }) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child:
-            isEditing
-                ? TextFormField(
-                  initialValue: value,
-                  decoration: InputDecoration(labelText: label),
-                  obscureText: obscure,
-                  onChanged: onChanged,
-                )
-                : ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    label,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  subtitle: Text(
-                    value,
-                    style: TextStyle(
-                      letterSpacing:
-                          label == 'Password' && !showPassword ? 2.0 : 0,
-                    ),
-                  ),
-                  trailing: trailing,
-                ),
-      ),
-    );
+  @override
+  State<StatefulWidget> createState() => _ProfileTabState();
+}
+
+class _ProfileTabState extends State<ProfileTab> {
+  bool isEditing = false;
+
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    firstNameController.text = widget.firstName;
+    lastNameController.text = widget.lastName;
+    emailController.text = widget.email;
+    passwordController.text = widget.password;
+
+    firstNameController.addListener(() {
+      widget.onFirstNameChanged(firstNameController.text);
+    });
+    lastNameController.addListener(() {
+      widget.onLastNameChanged(lastNameController.text);
+    });
+    emailController.addListener(() {
+      widget.onEmailChanged(emailController.text);
+    });
+    passwordController.addListener(() {
+      widget.onPasswordChanged(passwordController.text);
+    });
+  }
+
+  void _onSaveChangesPressed() {
+    widget.onSavePressed();
+
+    setState(() {
+      isEditing = false;
+    });
+  }
+
+  void _onToggleEditingPressed() {
+    if (isEditing) {
+      widget.onSavePressed();
+    }
+
+    setState(() {
+      isEditing = !isEditing;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Tab-local edit toggle
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Profile Details',
-                  style: Theme.of(context).textTheme.titleLarge,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: Icon(isEditing ? Icons.check : Icons.edit),
+                onPressed: _onToggleEditingPressed,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: NameField(
+                  readOnly: !isEditing,
+                  labelText: 'First Name',
+                  controller: firstNameController,
                 ),
-                IconButton(
-                  icon: Icon(isEditing ? Icons.check : Icons.edit),
-                  onPressed: onToggleEditing,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: NameField(
+                  readOnly: !isEditing,
+                  labelText: 'Last Name',
+                  controller: lastNameController,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-
-          _buildField(
-            label: 'First Name',
-            value: firstName,
-            isEditing: isEditing,
-            onChanged: onFirstNameChanged,
-          ),
-
-          _buildField(
-            label: 'Last Name',
-            value: lastName,
-            isEditing: isEditing,
-            onChanged: onLastNameChanged,
-          ),
-
-          _buildField(
-            label: 'Email',
-            value: email,
-            isEditing: isEditing,
-            onChanged: onEmailChanged,
-          ),
-
-          _buildField(
-            label: 'Password',
-            value:
-                isEditing || showPassword
-                    ? password
-                    : List.filled(password.length, '*').join(),
-            isEditing: isEditing,
-            obscure: isEditing,
-            onChanged: onPasswordChanged,
-            trailing:
-                !isEditing
-                    ? IconButton(
-                      icon: Icon(
-                        showPassword ? Icons.visibility_off : Icons.visibility,
-                      ),
-                      onPressed: onTogglePasswordVisibility,
-                    )
-                    : null,
-          ),
-
+          const SizedBox(height: 16),
+          EmailField(readOnly: !isEditing, controller: emailController),
+          const SizedBox(height: 16),
+          PasswordField(readOnly: !isEditing, controller: passwordController),
           if (isEditing)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: onSaveChanges,
-                  child: const Text('Save Changes'),
+              padding: const EdgeInsets.only(top: 24.0),
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
                 ),
+                onPressed: _onSaveChangesPressed,
+                child: const Text('Save Changes'),
               ),
             ),
         ],

@@ -52,11 +52,7 @@ class SignInView extends StatelessWidget {
                   SizedBox(height: 32),
                   EmailField(controller: viewModel.emailController),
                   SizedBox(height: 16),
-                  PasswordField(
-                    controller: viewModel.passwordController,
-                    isVisible: viewModel.isPasswordVisible,
-                    onVisibilityPressed: viewModel.togglePasswordVisibility,
-                  ),
+                  PasswordField(controller: viewModel.passwordController),
                   SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,

@@ -4,20 +4,11 @@ import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/shared/form/email_field.dart';
 import 'package:frontend/ui/shared/form/name_field.dart';
 import 'package:frontend/ui/shared/form/password_field.dart';
-import 'package:frontend/ui/shared/form/confirm_password_field.dart';
 
 class SignUpView extends StatelessWidget {
   const SignUpView({super.key, required this.viewModel});
 
   final SignUpViewModel viewModel;
-
-  void _onPasswordVisiblePressed() {
-    viewModel.togglePasswordVisibility();
-  }
-
-  void _onConfirmPasswordVisiblePressed() {
-    viewModel.toggleConfirmPasswordVisibility();
-  }
 
   void _onSignUpPressed(BuildContext context) async {
     final success = await viewModel.signUp();
@@ -55,16 +46,11 @@ class SignUpView extends StatelessWidget {
                   const SizedBox(height: 16),
                   NameField(controller: viewModel.nameController),
                   const SizedBox(height: 16),
-                  PasswordField(
-                    controller: viewModel.passwordController,
-                    isVisible: viewModel.isPasswordVisible,
-                    onVisibilityPressed: _onPasswordVisiblePressed,
-                  ),
+                  PasswordField(controller: viewModel.passwordController),
                   const SizedBox(height: 16),
-                  ConfirmPasswordField(
+                  PasswordField(
+                    labelText: 'Confirm Password',
                     controller: viewModel.confirmPasswordController,
-                    isVisible: viewModel.isConfirmPasswordVisible,
-                    onVisibilityPressed: _onConfirmPasswordVisiblePressed,
                   ),
                   const SizedBox(height: 16),
                   Text(
