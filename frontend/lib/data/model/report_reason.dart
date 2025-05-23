@@ -1,0 +1,1 @@
+enum ReportReason { inappropriateBehavior, other }

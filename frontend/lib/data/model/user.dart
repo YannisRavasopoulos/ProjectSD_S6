@@ -1,41 +1,43 @@
-import 'package:frontend/data/model.dart';
-import 'package:json_annotation/json_annotation.dart';
+abstract interface class User {}
 
-part 'user.g.dart';
+// import 'package:frontend/data/model.dart';
+// import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
-class User extends Model {
-  final String firstName;
-  final String lastName;
-  // TODO
-  // WE SHOULD NOT STORE EMAILS/PASSWORDS
-  // final String email;
-  // final String password;
-  final int points;
+// part 'user.g.dart';
 
-  const User({
-    required super.id,
-    required this.firstName,
-    required this.lastName,
-    required this.points,
-  });
+// @JsonSerializable()
+// class User extends Model {
+//   final String firstName;
+//   final String lastName;
+//   // TODO
+//   // WE SHOULD NOT STORE EMAILS/PASSWORDS
+//   // final String email;
+//   // final String password;
+//   final int points;
 
-  get name => '$firstName $lastName';
+//   const User({
+//     required super.id,
+//     required this.firstName,
+//     required this.lastName,
+//     required this.points,
+//   });
 
-  User copyWith({int? id, String? firstName, String? lastName, int? points}) {
-    return User(
-      id: id ?? 0,
-      firstName: firstName ?? '',
-      lastName: lastName ?? '',
-      points: points ?? 0,
-    );
-  }
+//   get name => '$firstName $lastName';
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+//   User copyWith({int? id, String? firstName, String? lastName, int? points}) {
+//     return User(
+//       id: id ?? 0,
+//       firstName: firstName ?? '',
+//       lastName: lastName ?? '',
+//       points: points ?? 0,
+//     );
+//   }
 
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+//   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  factory User.random() {
-    return User(id: 0, firstName: 'John', lastName: 'Doe', points: 300);
-  }
-}
+//   Map<String, dynamic> toJson() => _$UserToJson(this);
+
+//   factory User.random() {
+//     return User(id: 0, firstName: 'John', lastName: 'Doe', points: 300);
+//   }
+// }
