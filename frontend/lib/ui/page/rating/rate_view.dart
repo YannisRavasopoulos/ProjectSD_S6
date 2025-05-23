@@ -139,12 +139,6 @@ class RateView extends StatelessWidget {
                 viewModel.canSubmit
                     ? () => viewModel.submitRating(toUser)
                     : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
             child:
                 viewModel.isLoading
                     ? const SizedBox(
