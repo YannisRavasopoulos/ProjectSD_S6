@@ -1,3 +1,9 @@
+import 'package:frontend/data/interface/user.dart';
+
+abstract class AuthenticationRepository {
+  Future<Authentication> fetch();
+}
+
 // import 'package:frontend/data/authentication.dart';
 // import 'package:frontend/data/json_web_token.dart';
 

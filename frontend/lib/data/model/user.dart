@@ -1,4 +1,8 @@
-abstract interface class User {}
+abstract class User {
+  String get firstName;
+  String get lastName;
+  int get points;
+}
 
 // import 'package:frontend/data/model.dart';
 // import 'package:json_annotation/json_annotation.dart';

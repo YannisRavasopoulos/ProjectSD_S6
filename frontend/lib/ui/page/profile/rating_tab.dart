@@ -9,7 +9,7 @@ class RatingTab extends StatelessWidget {
   });
 
   final List<Rating> ratings;
-  final int averageRating;
+  final double averageRating;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,6 @@ class RatingTab extends StatelessWidget {
   }
 
   Widget _buildAverageRating(BuildContext context) {
-    print('Average Rating: $averageRating');
     return Row(
       children: List.generate(5, (index) {
         return Icon(
@@ -66,17 +65,17 @@ class RatingTab extends StatelessWidget {
 
   Widget _buildRatingItem(BuildContext context, Rating rating) {
     return ListTile(
-      leading: CircleAvatar(
-        child: Text(rating.fromUserId.toString()[0].toUpperCase()),
+      leading: CircleAvatar(child: Text("TODO ID")),
+      title: Text(
+        'User ${rating.fromUser.firstName} ${rating.fromUser.lastName}',
       ),
-      title: Text('User ${rating.fromUserId}'),
       subtitle: rating.comment != null ? Text(rating.comment!) : null,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: List.generate(
           5,
           (index) => Icon(
-            index < rating.score ? Icons.star : Icons.star_border,
+            index < rating.stars ? Icons.star : Icons.star_border,
             size: 16,
             color: Colors.amber,
           ),

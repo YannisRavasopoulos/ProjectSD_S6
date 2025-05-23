@@ -66,13 +66,16 @@ class ProfileView extends StatelessWidget {
                                       viewModel.onPasswordChanged,
                                   onSavePressed: viewModel.saveChanges,
                                 ),
-                                HistoryTab(onClearHistory: () {}, rides: []),
+                                HistoryTab(
+                                  onClearHistory: () {
+                                    // TODO
+                                  },
+                                  // TODO
+                                  rides: [],
+                                ),
                                 RatingTab(
-                                  ratings: List.generate(
-                                    5,
-                                    (idx) => Rating.random(),
-                                  ),
-                                  averageRating: 4,
+                                  ratings: viewModel.ratings,
+                                  averageRating: viewModel.averageRating,
                                 ),
                               ],
                             ),

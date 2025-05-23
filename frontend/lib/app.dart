@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/mocks/mock_rating_repository.dart';
+import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:frontend/data/repository/rating_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
+import 'package:frontend/ui/page/profile/profile_view.dart';
+import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
+
 // import 'package:frontend/data/repository/activity_repository.dart';
 // import 'package:frontend/data/repository/authentication_repository.dart';
 // import 'package:frontend/data/repository/location_repository.dart';
@@ -39,8 +46,9 @@ class App extends StatelessWidget {
   // final PickupRepository _pickupRepository = PickupRepository(
   //   pickupService: PickupService(),
   // );
-  // final UserRepository _userRepository = UserRepository();
-  // final RatingRepository _ratingRepository = RatingRepository();
+  final UserRepository _userRepository = MockUserRepository();
+  final RatingRepository _ratingRepository = MockRatingRepository();
+
   // final LocationRepository _locationRepository = LocationRepository();
   // final AuthenticationRepository _authenticationRepository =
   //     AuthenticationRepository();
@@ -73,10 +81,10 @@ class App extends StatelessWidget {
   //   userRepository: _userRepository,
   // );
 
-  // late final ProfileViewModel profileViewModel = ProfileViewModel(
-  //   userRepository: _userRepository,
-  // ratingRepository: _ratingRepository,
-  // ); // Load user data on app start
+  late final ProfileViewModel profileViewModel = ProfileViewModel(
+    userRepository: _userRepository,
+    ratingRepository: _ratingRepository,
+  ); // Load user data on app start
 
   // late final RewardViewModel rewardViewModel = RewardViewModel(
   //   rewardRepository: _rewardRepository,
@@ -105,7 +113,8 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         visualDensity: VisualDensity.comfortable,
       ),
-      initialRoute: isLoggedIn ? '/home' : '/sign_in',
+      // initialRoute: isLoggedIn ? '/home' : '/sign_in',
+      initialRoute: '/profile',
       routes: {
         // '/sign_in': (context) => SignInView(viewModel: signInViewModel),
         // '/forgot_password': (context) => ForgotPasswordView(),
@@ -115,7 +124,7 @@ class App extends StatelessWidget {
         // '/create_ride':
         //     (context) => CreateRideView(viewModel: createRideViewModel),
         // // '/rewards': (context) => RewardView(viewModel: rewardViewModel),
-        // '/profile': (context) => ProfileView(viewModel: profileViewModel),
+        '/profile': (context) => ProfileView(viewModel: profileViewModel),
         // '/activities':
         //     (context) => ActivitiesView(viewModel: activitiesViewModel),
         // '/rides': (context) => RidesListView(viewModel: ridesViewModel),

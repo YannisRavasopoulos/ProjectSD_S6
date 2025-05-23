@@ -1,7 +1,7 @@
 import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
 
-abstract interface class RatingRepository {
+abstract class RatingRepository {
   /// Fetches ratings for a user.
   Future<List<Rating>> fetch(User user);
 
