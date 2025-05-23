@@ -58,6 +58,13 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.directions_car),
+            title: const Text('Offer Ride'),
+            onTap: () {
+              Navigator.pushNamed(context, '/offer_ride');
+            },
+          ),
+          ListTile(
             //VGALTO EINAI GIA TEST
             leading: const Icon(Icons.report),
             title: const Text('Report User (Test)'),

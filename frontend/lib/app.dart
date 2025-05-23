@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/repository/offer_ride_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
@@ -14,14 +15,16 @@ import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
-import 'package:frontend/ui/page/create_ride/rides_list_viewmodel.dart';
+import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
+import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
+import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/profile/profile_view.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/activities/activities_view.dart';
-import 'package:frontend/ui/page/create_ride/rides_list_view.dart';
+import 'package:frontend/ui/page/rides/rides_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/rating/rating_viewmodel.dart';
@@ -36,6 +39,7 @@ import 'package:frontend/data/repository/pickup_repository.dart';
 
 class App extends StatelessWidget {
   final RideRepository _rides = RideRepository();
+  final OfferRideRepository _offerRepostitory = OfferRideRepository();
   final PickupRepository _pickupRepository = PickupRepository(
     pickupService: PickupService(),
   );
@@ -48,7 +52,10 @@ class App extends StatelessWidget {
   final ActivityRepository _activityRepository = ActivityRepository();
   final ReportRepository _reportRepository = ReportRepository();
 
-  late final RidesListViewModel ridesViewModel = RidesListViewModel(
+  late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
+    offerRideRepository: _offerRepostitory,
+  );
+  late final RidesViewModel ridesViewModel = RidesViewModel(
     rideRepository: _rides,
   );
 
@@ -118,7 +125,16 @@ class App extends StatelessWidget {
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
-        '/rides': (context) => RidesListView(viewModel: ridesViewModel),
+        '/rides':
+            (context) => RidesView(
+              viewModel: ridesViewModel,
+              createRideViewModel: createRideViewModel,
+            ),
+        '/offer_ride':
+            (context) => OfferRideView(
+              viewModel: offerRideViewModel,
+              activitiesViewModel: activitiesViewModel,
+            ),
         '/report': (context) => ReportView(viewModel: reportViewModel),
       },
       onGenerateRoute: (settings) {

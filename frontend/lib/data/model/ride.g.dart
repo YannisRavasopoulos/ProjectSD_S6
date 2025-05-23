@@ -14,6 +14,9 @@ Ride _$RideFromJson(Map<String, dynamic> json) => Ride(
           .map((e) => Passenger.fromJson(e as Map<String, dynamic>))
           .toList(),
   departureTime: DateTime.parse(json['departureTime'] as String),
+  from: '',
+  to: '',
+  seats: 4,
 );
 
 Map<String, dynamic> _$RideToJson(Ride instance) => <String, dynamic>{

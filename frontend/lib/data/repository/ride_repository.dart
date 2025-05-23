@@ -2,7 +2,7 @@ import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/location.dart';
 
 class RideRepository {
-  List<Ride> _rides = List.generate(5, (index) => Ride.random());
+  List<Ride> _rides = [];
 
   Future<List<Ride>> fetchMatching(
     Location from,

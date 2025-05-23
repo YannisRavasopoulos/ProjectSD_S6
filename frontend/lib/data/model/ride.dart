@@ -10,12 +10,18 @@ class Ride extends Model {
   final Driver driver;
   final List<Passenger> passengers;
   final DateTime departureTime;
+  final String from;
+  final String to;
+  final int seats;
 
   const Ride({
     required super.id,
     required this.driver,
     required this.passengers,
     required this.departureTime,
+    required this.from,
+    required this.to,
+    required this.seats,
   });
 
   int get availableSeats => driver.vehicle.capacity - passengers.length - 1;
@@ -31,6 +37,9 @@ class Ride extends Model {
       driver: Driver.random(),
       passengers: [],
       departureTime: DateTime.now(),
+      from: 'Random From',
+      to: 'Random To',
+      seats: 4,
     );
   }
   // TODO
