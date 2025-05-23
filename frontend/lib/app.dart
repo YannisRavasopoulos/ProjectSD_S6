@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/mocks/mock_rating_repository.dart';
 import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
+import 'package:frontend/ui/page/home/home_view.dart';
+import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/profile/profile_view.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 
@@ -51,8 +55,7 @@ class App extends StatelessWidget {
   final UserRepository _userRepository = MockUserRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
   final RideRepository _rideRepository = MockRideRepository();
-
-  // final LocationRepository _locationRepository = LocationRepository();
+  final LocationRepository _locationRepository = MockLocationRepository();
   // final AuthenticationRepository _authenticationRepository =
   //     AuthenticationRepository();
   // final RewardRepository _rewardRepository = RewardRepository();
@@ -71,9 +74,10 @@ class App extends StatelessWidget {
   //   rideRepository: _rides,
   // );
 
-  // late final HomeViewModel homeViewModel = HomeViewModel(
-  //   locationRepository: _locationRepository,
-  // );
+  late final HomeViewModel homeViewModel = HomeViewModel(
+    userRepository: _userRepository,
+    locationRepository: _locationRepository,
+  );
 
   // late final SignInViewModel signInViewModel = SignInViewModel(
   //   _authenticationRepository,
@@ -117,13 +121,12 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         visualDensity: VisualDensity.comfortable,
       ),
-      // initialRoute: isLoggedIn ? '/home' : '/sign_in',
-      initialRoute: '/profile',
+      initialRoute: isLoggedIn ? '/home' : '/sign_in',
       routes: {
         // '/sign_in': (context) => SignInView(viewModel: signInViewModel),
         // '/forgot_password': (context) => ForgotPasswordView(),
         // '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
-        // '/home': (context) => HomeView(viewModel: homeViewModel),
+        '/home': (context) => HomeView(viewModel: homeViewModel),
         // '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         // '/create_ride':
         //     (context) => CreateRideView(viewModel: createRideViewModel),

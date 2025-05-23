@@ -2,23 +2,67 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/location.dart';
+import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 import 'package:latlong2/latlong.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  Location? _location;
+  final LocationRepository locationRepository;
+  final UserRepository userRepository;
+  User? user;
 
+  HomeViewModel({
+    required this.locationRepository,
+    required this.userRepository,
+  }) {
+    _init();
+  }
+
+  late final StreamSubscription<Location>? _locationSubscription;
+
+  void _init() async {
+    user = await userRepository.fetchCurrent();
+    _locationSubscription = locationRepository
+        .watchCurrent(user!)
+        .listen(_onLocationUpdate);
+    await refreshLocation();
+  }
+
+  void _onLocationUpdate(Location location) {
+    _location = location;
+    source = location.coordinates;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _locationSubscription?.cancel();
+    super.dispose();
+  }
+
+  Location? _location;
   LatLng? destination;
-  LatLng source = const LatLng(0, 0); // Initialize to (0,0) coordinates
+  LatLng source = LatLng(0, 0);
 
   List<String> suggestions = [];
 
-  Future<void> search(String query) async {
+  Future<void> refreshLocation() async {
+    try {
+      var location = await locationRepository.fetchCurrent(user!);
+      _onLocationUpdate(location);
+    } catch (e) {
+      // Handle error
+      print(e);
+    }
+  }
+
+  void search(String query) async {
     suggestions.add("NIGGA");
     notifyListeners();
   }
 
-  Future<void> selectSuggestion(int index) async {
+  void selectSuggestion(String suggestion) async {
     // Handle suggestion selection
   }
 
@@ -29,27 +73,10 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> selectPoint(LatLng point) async {
     destination = point;
+    print("Selected ${point}");
     notifyListeners();
 
     // var location = await _locationRepository.getLocation(point);
     // print(location.name);
-  }
-
-  Future<void> refreshLocation() async {
-    try {
-      _location = await _locationRepository.fetchCurrent();
-      source = _location!.coordinates;
-      notifyListeners();
-    } catch (e) {
-      // Handle error
-      print(e);
-    }
-  }
-
-  final LocationRepository _locationRepository;
-
-  HomeViewModel({required LocationRepository locationRepository})
-    : _locationRepository = locationRepository {
-    refreshLocation();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/passenger.dart';
@@ -42,22 +43,6 @@ class MockDriver extends Driver {
 
   factory MockDriver.random() {
     return MockDriver(firstName: 'John', lastName: 'Doe', points: 300);
-  }
-}
-
-class MockLocation extends Location {
-  @override
-  final LatLng coordinates;
-
-  MockLocation({required this.coordinates});
-
-  factory MockLocation.random() {
-    return MockLocation(
-      coordinates: LatLng(
-        37.7749 + (0.1 * (DateTime.now().millisecondsSinceEpoch % 100)),
-        -122.4194 + (0.1 * (DateTime.now().millisecondsSinceEpoch % 100)),
-      ),
-    );
   }
 }
 
