@@ -12,46 +12,49 @@ class RateView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(context, toUser),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildRatingTitle(context),
+            _buildRatingTitle(),
             const SizedBox(height: 24),
-            _buildRatingBar(),
+            _buildRatingBar(viewModel.rating.toDouble(), viewModel.setRating),
             const SizedBox(height: 32),
-            _buildCommentTitle(context),
+            _buildCommentTitle(),
             const SizedBox(height: 8),
-            _buildCommentField(),
+            _buildCommentField(viewModel.setComment),
             const SizedBox(height: 24),
-            _buildErrorMessage(context),
-            _buildSubmitButton(context),
+            _buildErrorMessage(viewModel.errorMessage, context),
+            _buildSubmitButton(context, toUser),
           ],
         ),
       ),
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context, User toUser) {
     return AppBar(
       title: Text('Rate ${toUser.name}'),
       backgroundColor: Theme.of(context).primaryColor,
     );
   }
 
-  Widget _buildRatingTitle(BuildContext context) {
-    return Text(
+  Widget _buildRatingTitle() {
+    return const Text(
       'How would you rate your experience?',
-      style: Theme.of(context).textTheme.titleLarge,
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     );
   }
 
-  Widget _buildRatingBar() {
+  Widget _buildRatingBar(
+    double initialRating,
+    Function(double) onRatingUpdate,
+  ) {
     return Center(
       child: RatingBar.builder(
-        initialRating: viewModel.rating.toDouble(),
+        initialRating: initialRating,
         minRating: 1,
         direction: Axis.horizontal,
         allowHalfRating: false,
@@ -59,21 +62,21 @@ class RateView extends StatelessWidget {
         itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
         itemBuilder:
             (context, _) => const Icon(Icons.star, color: Colors.amber),
-        onRatingUpdate: viewModel.setRating,
+        onRatingUpdate: onRatingUpdate,
       ),
     );
   }
 
-  Widget _buildCommentTitle(BuildContext context) {
-    return Text(
+  Widget _buildCommentTitle() {
+    return const Text(
       'Add a comment (optional)',
-      style: Theme.of(context).textTheme.titleMedium,
+      style: TextStyle(fontSize: 16),
     );
   }
 
-  Widget _buildCommentField() {
+  Widget _buildCommentField(Function(String) onCommentChanged) {
     return TextField(
-      onChanged: viewModel.setComment,
+      onChanged: onCommentChanged,
       maxLines: 3,
       decoration: InputDecoration(
         hintText: 'Share your experience...',
@@ -84,19 +87,19 @@ class RateView extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorMessage(BuildContext context) {
-    if (viewModel.errorMessage.isEmpty) return const SizedBox.shrink();
+  Widget _buildErrorMessage(String errorMessage, BuildContext context) {
+    if (errorMessage.isEmpty) return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Text(
-        viewModel.errorMessage,
+        errorMessage,
         style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
     );
   }
 
-  Widget _buildSubmitButton(BuildContext context) {
+  Widget _buildSubmitButton(BuildContext context, User toUser) {
     return ListenableBuilder(
       listenable: viewModel,
       builder: (context, _) {
