@@ -1,5 +1,5 @@
-import 'package:frontend/data/interface/user.dart';
 import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/ride_request.dart';
 
 abstract interface class RideRepository {
   /// Fetches rides based on the given parameters.
