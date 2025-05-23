@@ -97,18 +97,26 @@ class RateView extends StatelessWidget {
   }
 
   Widget _buildSubmitButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 48,
-      child: ElevatedButton(
-        onPressed:
-            viewModel.canSubmit ? () => viewModel.submitRating(toUser) : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        child: _buildSubmitButtonChild(),
-      ),
+    return ListenableBuilder(
+      listenable: viewModel,
+      builder:
+          (context, _) => SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              onPressed:
+                  viewModel.canSubmit
+                      ? () => viewModel.submitRating(toUser)
+                      : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: _buildSubmitButtonChild(),
+            ),
+          ),
     );
   }
 
