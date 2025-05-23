@@ -1,0 +1,195 @@
+import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/location.dart';
+import 'package:frontend/data/model/passenger.dart';
+import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/ride_request.dart';
+import 'package:frontend/data/model/route.dart';
+import 'package:frontend/data/repository/ride_repository.dart';
+import 'package:latlong2/latlong.dart';
+
+class MockPassenger extends Passenger {
+  @override
+  final String firstName;
+  @override
+  final String lastName;
+  @override
+  final int points;
+
+  MockPassenger({
+    required this.firstName,
+    required this.lastName,
+    required this.points,
+  });
+
+  factory MockPassenger.random() {
+    return MockPassenger(firstName: 'John', lastName: 'Doe', points: 300);
+  }
+}
+
+class MockDriver extends Driver {
+  @override
+  final String firstName;
+  @override
+  final String lastName;
+  @override
+  final int points;
+
+  MockDriver({
+    required this.firstName,
+    required this.lastName,
+    required this.points,
+  });
+
+  factory MockDriver.random() {
+    return MockDriver(firstName: 'John', lastName: 'Doe', points: 300);
+  }
+}
+
+class MockLocation extends Location {
+  @override
+  final LatLng coordinates;
+
+  MockLocation({required this.coordinates});
+
+  factory MockLocation.random() {
+    return MockLocation(
+      coordinates: LatLng(
+        37.7749 + (0.1 * (DateTime.now().millisecondsSinceEpoch % 100)),
+        -122.4194 + (0.1 * (DateTime.now().millisecondsSinceEpoch % 100)),
+      ),
+    );
+  }
+}
+
+class MockRide extends Ride {
+  @override
+  final Driver driver;
+
+  @override
+  final List<Passenger> passengers;
+
+  @override
+  final Route route;
+
+  @override
+  final Duration departureTime;
+
+  @override
+  final DateTime estimatedArrivalTime;
+
+  @override
+  final Duration estimatedDuration;
+
+  @override
+  final int availableSeats;
+
+  @override
+  final int totalSeats;
+
+  MockRide({
+    required this.driver,
+    required this.passengers,
+    required this.route,
+    required this.departureTime,
+    required this.estimatedArrivalTime,
+    required this.estimatedDuration,
+    required this.availableSeats,
+    required this.totalSeats,
+  });
+
+  factory MockRide.random() {
+    return MockRide(
+      driver: MockDriver.random(),
+      passengers: [],
+      route: Route(
+        id: 0,
+        start: MockLocation.random(),
+        end: MockLocation.random(),
+      ),
+      departureTime: Duration.zero,
+      estimatedArrivalTime: DateTime.now(),
+      estimatedDuration: Duration.zero,
+      availableSeats: 4,
+      totalSeats: 4,
+    );
+  }
+}
+
+class MockRideRepository extends RideRepository {
+  List<Ride> _rideHistory = [
+    MockRide.random(),
+    MockRide.random(),
+    MockRide.random(),
+  ];
+
+  @override
+  Future<void> cancel(Ride ride) {
+    // TODO: implement cancel
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> create(Ride ride) {
+    // TODO: implement create
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Ride> fetchCurrent() {
+    // TODO: implement fetchCurrent
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Ride>> fetchMatching(RideRequest request) {
+    // TODO: implement fetchMatching
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> join(Ride ride) {
+    // TODO: implement join
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> leave(Ride ride) {
+    // TODO: implement leave
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> update(Ride ride) {
+    // TODO: implement update
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<Ride> watchCurrent() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Ride>> fetchHistory() async {
+    return _rideHistory;
+  }
+
+  @override
+  Stream<List<Ride>> watchHistory() async* {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 5));
+      yield await fetchHistory();
+    }
+  }
+
+  @override
+  Future<void> clearHistory() async {
+    _rideHistory.clear();
+  }
+
+  @override
+  Stream<List<Ride>> watchMatching(RideRequest request) {
+    // TODO: implement watchMatching
+    throw UnimplementedError();
+  }
+}

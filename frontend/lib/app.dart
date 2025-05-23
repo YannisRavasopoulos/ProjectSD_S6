@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/mocks/mock_rating_repository.dart';
+import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/mocks/mock_user_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
+import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/ui/page/profile/profile_view.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
@@ -48,6 +50,7 @@ class App extends StatelessWidget {
   // );
   final UserRepository _userRepository = MockUserRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
+  final RideRepository _rideRepository = MockRideRepository();
 
   // final LocationRepository _locationRepository = LocationRepository();
   // final AuthenticationRepository _authenticationRepository =
@@ -84,6 +87,7 @@ class App extends StatelessWidget {
   late final ProfileViewModel profileViewModel = ProfileViewModel(
     userRepository: _userRepository,
     ratingRepository: _ratingRepository,
+    rideRepository: _rideRepository,
   ); // Load user data on app start
 
   // late final RewardViewModel rewardViewModel = RewardViewModel(

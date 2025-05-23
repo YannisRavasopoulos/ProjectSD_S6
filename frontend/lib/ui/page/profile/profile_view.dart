@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/ui/page/profile/history_tab.dart';
 import 'package:frontend/ui/page/profile/profile_picture_picker.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
@@ -67,11 +66,8 @@ class ProfileView extends StatelessWidget {
                                   onSavePressed: viewModel.saveChanges,
                                 ),
                                 HistoryTab(
-                                  onClearHistory: () {
-                                    // TODO
-                                  },
-                                  // TODO
-                                  rides: [],
+                                  onClearHistory: viewModel.clearHistory,
+                                  rides: viewModel.rides,
                                 ),
                                 RatingTab(
                                   ratings: viewModel.ratings,

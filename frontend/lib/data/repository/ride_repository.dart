@@ -1,12 +1,21 @@
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 
-abstract interface class RideRepository {
+abstract class RideRepository {
   /// Fetches rides based on the given parameters.
   Future<List<Ride>> fetchMatching(RideRequest request);
 
   /// Watches for changes in matching rides.
   Stream<List<Ride>> watchMatching(RideRequest request);
+
+  /// Fetch past rides.
+  Future<List<Ride>> fetchHistory();
+
+  /// Watches for changes in past rides.
+  Stream<List<Ride>> watchHistory();
+
+  /// Clear ride history.
+  Future<void> clearHistory();
 
   /// Fetch current ride.
   Future<Ride> fetchCurrent();

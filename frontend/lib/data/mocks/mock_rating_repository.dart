@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:frontend/data/mocks/mock_user_repository.dart';
 import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
@@ -24,14 +26,14 @@ class MockRating extends Rating {
     return MockRating(
       fromUser: MockUser.random(),
       toUser: MockUser.random(),
-      stars: 5,
+      stars: Random().nextInt(5),
       comment: 'Great ride!',
     );
   }
 }
 
 class MockRatingRepository extends RatingRepository {
-  List<Rating> _ratings = [MockRating.random(), MockRating.random()];
+  List<Rating> _ratings = List.generate(10, (_) => MockRating.random());
 
   @override
   Future<List<Rating>> fetch(User user) async {
