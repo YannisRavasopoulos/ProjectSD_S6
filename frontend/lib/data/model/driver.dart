@@ -6,7 +6,9 @@
 
 import 'package:frontend/data/model/user.dart';
 
-abstract class Driver extends User {}
+abstract class Driver extends User {
+  String get name => '$firstName $lastName';
+}
 
 // @JsonSerializable()
 // class Driver extends User {

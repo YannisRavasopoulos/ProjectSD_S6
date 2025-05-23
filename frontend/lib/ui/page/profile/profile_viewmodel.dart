@@ -51,6 +51,7 @@ class ProfileViewModel extends ChangeNotifier {
   void _onUserUpdate(User user) {
     firstName = user.firstName;
     lastName = user.lastName;
+    points = user.points;
     notifyListeners();
   }
 
@@ -67,6 +68,7 @@ class ProfileViewModel extends ChangeNotifier {
   List<Rating> ratings = [];
   double averageRating = 0;
   bool isEditing = false;
+  int points = 0;
 
   // Subject to change
   String firstName = '';
@@ -102,7 +104,7 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   void saveChanges() {
-    // Save changes logic here
+    // TODO: Save changes logic here
     isEditing = false;
     notifyListeners();
   }

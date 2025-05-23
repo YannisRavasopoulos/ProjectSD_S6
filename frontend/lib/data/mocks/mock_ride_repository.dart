@@ -27,6 +27,36 @@ class MockPassenger extends Passenger {
   }
 }
 
+class MockRideRequest extends RideRequest {
+  @override
+  final Location origin;
+  @override
+  final Location destination;
+  @override
+  final DateTime departureTime;
+  @override
+  final DateTime arrivalTime;
+
+  @override
+  final Duration arrivalWindow = Duration(seconds: 0);
+
+  @override
+  final Duration departureWindow = Duration(seconds: 0);
+
+  @override
+  final Distance destinationRadius = Distance.withRadius(1);
+
+  @override
+  final Distance originRadius = Distance.withRadius(1);
+
+  MockRideRequest({
+    required this.origin,
+    required this.destination,
+    required this.departureTime,
+    required this.arrivalTime,
+  });
+}
+
 class MockDriver extends Driver {
   @override
   final String firstName;
