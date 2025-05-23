@@ -99,37 +99,66 @@ class RateView extends StatelessWidget {
   Widget _buildSubmitButton(BuildContext context) {
     return ListenableBuilder(
       listenable: viewModel,
-      builder:
-          (context, _) => SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed:
-                  viewModel.canSubmit
-                      ? () => viewModel.submitRating(toUser)
-                      : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: _buildSubmitButtonChild(),
-            ),
-          ),
-    );
-  }
+      builder: (context, _) {
+        if (viewModel.isSuccess) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Success'),
+                  content: const Text(
+                    'Your rating has been submitted successfully.',
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('OK'),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close dialog
+                        Navigator.of(
+                          context,
+                        ).pop(); // Return to previous screen
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          });
+        }
 
-  Widget _buildSubmitButtonChild() {
-    return viewModel.isLoading
-        ? const SizedBox(
-          height: 24,
-          width: 24,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        return SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed:
+                viewModel.canSubmit
+                    ? () => viewModel.submitRating(toUser)
+                    : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child:
+                viewModel.isLoading
+                    ? const SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                    : const Text(
+                      'Submit Rating',
+                      style: TextStyle(fontSize: 16),
+                    ),
           ),
-        )
-        : const Text('Submit Rating', style: TextStyle(fontSize: 16));
+        );
+      },
+    );
   }
 }

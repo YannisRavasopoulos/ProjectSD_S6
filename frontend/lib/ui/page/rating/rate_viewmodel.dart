@@ -14,6 +14,7 @@ class RateViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String _errorMessage = '';
   User? _currentUser;
+  bool _isSuccess = false;
 
   RateViewModel({
     required RatingRepository ratingRepository,
@@ -29,6 +30,7 @@ class RateViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
   bool get canSubmit => _rating > 0 && !_isLoading && _currentUser != null;
+  bool get isSuccess => _isSuccess;
 
   Future<void> _loadCurrentUser() async {
     try {
@@ -51,15 +53,9 @@ class RateViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> submitRating(User userToRate) async {
+  Future<void> submitRating(User toUser) async {
     if (_currentUser == null) {
       _errorMessage = 'User not loaded';
-      notifyListeners();
-      return;
-    }
-
-    if (_rating == 0) {
-      _errorMessage = 'Please select a rating';
       notifyListeners();
       return;
     }
@@ -72,15 +68,17 @@ class RateViewModel extends ChangeNotifier {
       await _ratingRepository.create(
         RatingImpl(
           fromUser: _currentUser!,
-          toUser: userToRate,
+          toUser: toUser,
           comment: _comment,
           stars: _rating,
         ),
       );
 
+      _isSuccess = true;
       _isLoading = false;
       notifyListeners();
     } catch (e) {
+      _isSuccess = false;
       _isLoading = false;
       _errorMessage = 'Failed to submit rating: ${e.toString()}';
       notifyListeners();
