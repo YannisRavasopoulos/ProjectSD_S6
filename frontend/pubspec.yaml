@@ -46,6 +46,7 @@ dependencies:
   location: ^5.0.3
   json_annotation: ^4.9.0
   flutter_rating_bar: ^4.0.1
+  window_size: ^0.1.0
 
 dev_dependencies:
   flutter_test:
