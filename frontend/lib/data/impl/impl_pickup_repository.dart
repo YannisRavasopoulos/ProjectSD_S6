@@ -117,6 +117,14 @@ class ImplPickupRepository implements PickupRepository {
   }
 
   @override
+  Future<void> cancelPickup(Pickup pickup) async {
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    _pendingPickups.removeWhere((p) => p.id == pickup.id);
+    _pendingController.add(List.from(_pendingPickups));
+  }
+
+  @override
   Future<void> completePickup(Pickup pickup) async {
     await Future.delayed(const Duration(milliseconds: 800));
 
