@@ -1,32 +1,34 @@
-// import 'package:frontend/data/service/pickup_service.dart';
-// import 'package:frontend/data/model/driver.dart';
-// import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/pickup.dart';
+import 'package:frontend/data/model/pickup_request.dart';
 
-// class PickupRepository {
-//   final PickupService _pickupService;
+abstract interface class PickupRepository {
+  /// Return a pickup if accepted, otherwise throw exception.
+  Future<Pickup> requestPickup(PickupRequest request);
 
-//   PickupRepository({required PickupService pickupService})
-//     : _pickupService = pickupService;
+  /// Fetch pending pickups for this ride.
+  Future<List<Pickup>> fetchPending();
 
-//   Future<bool> createPickupRequest({
-//     required String carpoolerId,
-//     required Driver driver,
-//     required Ride ride,
-//     required DateTime pickupTime,
-//     required String location,
-//   }) async {
-//     try {
-//       final response = await _pickupService.createPickup(
-//         carpoolerId: carpoolerId,
-//         driver: driver,
-//         ride: ride,
-//         pickupTime: pickupTime,
-//         location: location,
-//       );
-//       return response['success'] ?? false;
-//     } catch (e) {
-//       print('Error creating pickup request: $e');
-//       return false;
-//     }
-//   }
-// }
+  /// Fetch completed pickups for this ride.
+  Future<List<Pickup>> fetchCompleted();
+
+  /// Watch pending pickups for this ride.
+  Stream<List<Pickup>> watchPending();
+
+  /// Watch completed pickups for this ride.
+  Stream<List<Pickup>> watchCompleted();
+
+  /// Fetch pickup requests for this ride.
+  Future<List<PickupRequest>> fetchPickupRequests();
+
+  /// Watch pickup requests for this ride.
+  Stream<List<PickupRequest>> watchPickupRequests();
+
+  /// Accept a pickup request.
+  Future<void> acceptPickup(PickupRequest request);
+
+  /// Reject a pickup request.
+  Future<void> rejectPickup(PickupRequest request);
+
+  /// Complete a pickup.
+  Future<void> completePickup(Pickup pickup);
+}
