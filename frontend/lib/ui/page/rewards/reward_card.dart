@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/reward.dart';
-import 'ConfirmationDialog.dart';
+import 'reward_confirmation_dialog.dart';
 
 class RewardCard extends StatelessWidget {
   final Reward reward;
@@ -33,7 +33,7 @@ class RewardCard extends StatelessWidget {
                       context: context,
                       barrierDismissible: false,
                       builder: (BuildContext context) {
-                        return ConfirmationDialog(
+                        return RewardConfirmationDialog(
                           reward: reward,
                           onConfirm: () {
                             onRedeem(reward);
