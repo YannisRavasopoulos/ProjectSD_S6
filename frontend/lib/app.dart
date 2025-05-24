@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
 import 'package:frontend/data/model/activity.dart';
@@ -31,7 +32,7 @@ import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 
 class App extends StatelessWidget {
-  final UserRepository _userRepository = MockUserRepository();
+  final UserRepository _userRepository = ImplUserRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
   final RideRepository _rideRepository = MockRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();

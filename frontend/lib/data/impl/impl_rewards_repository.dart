@@ -1,6 +1,7 @@
-import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/reward.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 
 class RewardImpl extends Reward {
   @override
@@ -24,6 +25,18 @@ class RewardImpl extends Reward {
 }
 
 class RewardsRepositoryImpl implements RewardRepository {
+  // Singleton instance
+  static final RewardsRepositoryImpl _instance = RewardsRepositoryImpl._internal();
+  
+  factory RewardsRepositoryImpl() {
+    return _instance;
+  }
+  
+  RewardsRepositoryImpl._internal();
+
+  // Add userRepository as a singleton field
+  static final UserRepository _userRepository = ImplUserRepository();
+  
   final List<Reward> _availableRewards = [
     RewardImpl(
       id: 1,
@@ -111,18 +124,28 @@ class RewardsRepositoryImpl implements RewardRepository {
 
   @override
   Future<String> redeem(Reward reward) async {
-    // Simulate a network call
     await Future.delayed(Duration(seconds: 1));
 
     if (_availableRewards.contains(reward)) {
-      _availableRewards.remove(reward);
-      _redeemedRewards.add(reward);
-      // TODO: this is a bug, user repo stream is not updated
-      var user = MockUserRepository.user;
-      MockUserRepository.user = user.copyWith(
-        points: user.points - reward.points,
-      );
-      return reward.redemptionCode; // Return the redemption code
+      final currentUser = await _userRepository.fetchCurrent();
+      
+      if (currentUser is ImplUser) {
+        // Update user points
+        final updatedUser = currentUser.copyWith(
+          points: currentUser.points - reward.points,
+        );
+        await _userRepository.updateCurrentUser(updatedUser);
+        
+        // Find the actual reward instance from available rewards
+        final rewardToRedeem = _availableRewards.firstWhere((r) => r.id == reward.id);
+        
+        // Update rewards lists
+        _availableRewards.remove(rewardToRedeem);
+        _redeemedRewards.add(rewardToRedeem);
+        
+        return rewardToRedeem.redemptionCode;
+      }
+      throw Exception('Invalid user type');
     } else {
       throw Exception('Reward not available');
     }
