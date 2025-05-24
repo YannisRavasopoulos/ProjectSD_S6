@@ -5,16 +5,14 @@ import 'reward_confirmation_dialog.dart';
 class RewardCard extends StatelessWidget {
   final Reward reward;
   final int userPoints;
-  final bool isLoading;
   final ValueChanged<Reward> onRedeem;
 
   const RewardCard({
-    Key? key,
+    super.key,
     required this.reward,
     required this.userPoints,
-    required this.isLoading,
     required this.onRedeem,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,7 @@ class RewardCard extends StatelessWidget {
         subtitle: Text('${reward.description}\nCost: ${reward.points} Points'),
         trailing: ElevatedButton(
           onPressed:
-              hasEnoughPoints && !isLoading
+              hasEnoughPoints
                   ? () {
                     showDialog<void>(
                       context: context,
@@ -47,14 +45,7 @@ class RewardCard extends StatelessWidget {
                     );
                   }
                   : null,
-          child:
-              isLoading
-                  ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                  : const Text('Redeem'),
+          child: const Text('Redeem'),
         ),
       ),
     );

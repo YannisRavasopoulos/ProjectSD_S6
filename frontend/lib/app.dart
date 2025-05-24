@@ -113,7 +113,7 @@ class App extends StatelessWidget {
   //   reportRepository: _reportRepository,
   // );
 
-  final bool isLoggedIn = false;
+  final bool isLoggedIn = true;
 
   @override
   Widget build(BuildContext context) {
