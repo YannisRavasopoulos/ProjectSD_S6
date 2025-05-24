@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
+import 'package:latlong2/latlong.dart';
 
 class CreateActivityView extends StatefulWidget {
-  final Function(Activity) onCreate;
+  final ActivitiesViewModel viewModel;
+  final Activity? activityToEdit; // Add this for editing
 
-  const CreateActivityView({super.key, required this.onCreate});
+  const CreateActivityView({
+    super.key,
+    required this.viewModel,
+    this.activityToEdit,
+  });
 
   @override
   State<CreateActivityView> createState() => _CreateActivityViewState();
@@ -17,7 +26,27 @@ class _CreateActivityViewState extends State<CreateActivityView> {
       TextEditingController();
   final TextEditingController _endLocationController = TextEditingController();
 
+  DateTime _startTime = DateTime.now();
+  DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
+
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.activityToEdit != null) {
+      final activity = widget.activityToEdit!;
+      _nameController.text = activity.name;
+
+      if (activity is ImplActivity) {
+        _descriptionController.text = activity.description;
+        _startLocationController.text = activity.startLocation.name;
+        _endLocationController.text = activity.endLocation.name;
+        _startTime = activity.startTime;
+        _endTime = activity.endTime;
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -28,18 +57,53 @@ class _CreateActivityViewState extends State<CreateActivityView> {
     super.dispose();
   }
 
-  void _createActivity() {
+  void _createOrUpdateActivity() async {
     if (_formKey.currentState!.validate()) {
-      // final newActivity = Activity(
-      //   id: DateTime.now().toString(),
-      //   name: _nameController.text,
-      //   description: _descriptionController.text,
-      //   startLocation: _startLocationController.text,
-      //   endLocation: _endLocationController.text,
-      // );
+      final startLocation = ImplLocation(
+        id: DateTime.now().millisecondsSinceEpoch,
+        name: _startLocationController.text,
+        coordinates: const LatLng(0, 0),
+      );
 
-      // widget.onCreate(newActivity);
-      Navigator.pop(context);
+      final endLocation = ImplLocation(
+        id: DateTime.now().millisecondsSinceEpoch + 1,
+        name: _endLocationController.text,
+        coordinates: const LatLng(0, 0),
+      );
+
+      try {
+        if (widget.activityToEdit != null) {
+          final updatedActivity = ImplActivity(
+            id: widget.activityToEdit!.id,
+            name: _nameController.text,
+            description: _descriptionController.text,
+            startTime: _startTime,
+            endTime: _endTime,
+            startLocation: startLocation,
+            endLocation: endLocation,
+          );
+          await widget.viewModel.updateActivity(updatedActivity);
+        } else {
+          final newActivity = ImplActivity(
+            id: DateTime.now().millisecondsSinceEpoch + 2,
+            name: _nameController.text,
+            description: _descriptionController.text,
+            startTime: _startTime,
+            endTime: _endTime,
+            startLocation: startLocation,
+            endLocation: endLocation,
+          );
+          await widget.viewModel.createActivity(newActivity);
+        }
+        if (mounted) Navigator.pop(context);
+      } catch (e) {
+        // Show error to user
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${e.toString()}')),
+          );
+        }
+      }
     }
   }
 
@@ -118,9 +182,9 @@ class _CreateActivityViewState extends State<CreateActivityView> {
               const SizedBox(height: 32.0),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: _createActivity,
+                  onPressed: _createOrUpdateActivity,
                   icon: const Icon(Icons.add),
-                  label: const Text('Create Activity'),
+                  label: Text(widget.activityToEdit == null ? 'Create Activity' : 'Update Activity'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24.0,

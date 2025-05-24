@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_user_repository.dart';
+import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
+import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
+import 'package:frontend/ui/page/activities/activities_view.dart';
+import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
@@ -33,6 +38,8 @@ import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 
 class App extends StatelessWidget {
   final UserRepository _userRepository = ImplUserRepository();
+  final UserRepository _userRepository = MockUserRepository();
+  final ActivityRepository _activityRepository = ImplActivityRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
   final RideRepository _rideRepository = MockRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
@@ -99,9 +106,9 @@ class App extends StatelessWidget {
   //   ratingRepository: _ratingRepository,
   // );
 
-  // late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
-  //   activityRepository: _activityRepository,
-  // );
+  late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
+    activityRepository: _activityRepository,
+  );
 
   // late final ReportViewModel reportViewModel = ReportViewModel(
   //   reportRepository: _reportRepository,
@@ -133,8 +140,8 @@ class App extends StatelessWidget {
             (context) => CreateRideView(viewModel: createRideViewModel),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
-        // '/activities':
-        //     (context) => ActivitiesView(viewModel: activitiesViewModel),
+        '/activities':
+            (context) => ActivitiesView(viewModel: activitiesViewModel),
         // '/rides':
         //     (context) => RidesView(
         //       viewModel: ridesViewModel,
