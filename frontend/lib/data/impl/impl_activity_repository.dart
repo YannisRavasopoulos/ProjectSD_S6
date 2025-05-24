@@ -60,9 +60,9 @@ class ImplActivityRepository implements ActivityRepository{
 
 
   @override
-  Stream<List<Activity>> watch() {  //emits the current list of activities every time there is a change to listen for real-time updates
+  Stream<List<Activity>> watch() async* {  //emits the current list of activities every time there is a change to listen for real-time updates
     try {
-      return _activitiesController.stream;
+     _activitiesController.stream;
     } catch (e) {
       throw Exception('Failed to watch activities: $e');
     }
