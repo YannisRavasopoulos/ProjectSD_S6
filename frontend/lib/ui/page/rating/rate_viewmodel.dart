@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_rating_repository.dart';
 import 'package:frontend/data/mocks/mock_rating_repository.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
@@ -64,23 +65,20 @@ class RateViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _ratingRepository.create(
-        MockRating(
-          id: 0,
-          fromUser: _currentUser!,
-          toUser: toUser,
-          comment: _comment,
-          stars: _rating,
-        ),
+      final rating = ImplRating(
+        id: DateTime.now().millisecondsSinceEpoch,
+        fromUser: _currentUser!,
+        toUser: toUser,
+        stars: _rating,
+        comment: _comment.isEmpty ? null : _comment,
       );
 
+      await _ratingRepository.create(rating);
       _isSuccess = true;
-      _isLoading = false;
-      notifyListeners();
     } catch (e) {
-      _isSuccess = false;
+      _errorMessage = e.toString();
+    } finally {
       _isLoading = false;
-      _errorMessage = 'Failed to submit rating: ${e.toString()}';
       notifyListeners();
     }
   }

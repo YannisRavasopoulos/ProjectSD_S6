@@ -20,6 +20,10 @@ class MockLocation extends Location {
     // final delta = 0.0005 * (now % 5 == 0 ? 1 : -1);
     return MockLocation(coordinates: LatLng(38.268763 + delta, 21.748858));
   }
+  
+  @override
+  // TODO: implement name
+  String get name => throw UnimplementedError();
 }
 
 class MockLocationRepository implements LocationRepository {
