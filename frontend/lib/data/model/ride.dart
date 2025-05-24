@@ -7,7 +7,7 @@ abstract class Ride implements Model {
   Driver get driver;
   List<Passenger> get passengers;
   Route get route;
-  Duration get departureTime;
+  DateTime get departureTime;
   DateTime get estimatedArrivalTime;
   Duration get estimatedDuration;
   int get availableSeats;

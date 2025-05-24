@@ -8,6 +8,21 @@ import 'package:frontend/data/model/route.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
+class MockRoute extends Route {
+  @override
+  final int id = 0;
+  @override
+  final Location start;
+  @override
+  final Location end;
+
+  MockRoute({required this.start, required this.end});
+
+  factory MockRoute.random() {
+    return MockRoute(start: MockLocation.random(), end: MockLocation.random());
+  }
+}
+
 class MockPassenger extends Passenger {
   @override
   final String firstName;
@@ -96,7 +111,7 @@ class MockRide extends Ride {
   final Route route;
 
   @override
-  final Duration departureTime;
+  final DateTime departureTime;
 
   @override
   final DateTime estimatedArrivalTime;
@@ -125,12 +140,8 @@ class MockRide extends Ride {
     return MockRide(
       driver: MockDriver.random(),
       passengers: [],
-      route: Route(
-        id: 0,
-        start: MockLocation.random(),
-        end: MockLocation.random(),
-      ),
-      departureTime: Duration.zero,
+      route: MockRoute.random(),
+      departureTime: DateTime.now(),
       estimatedArrivalTime: DateTime.now(),
       estimatedDuration: Duration.zero,
       availableSeats: 4,

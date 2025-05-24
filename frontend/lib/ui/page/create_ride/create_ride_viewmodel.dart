@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
@@ -65,14 +66,15 @@ class CreateRideViewModel extends ChangeNotifier {
         departureTime!.hour,
         departureTime!.minute,
       );
-      final ride = Ride(
-        id: id ?? DateTime.now().millisecondsSinceEpoch,
-        driver: Driver.random(),
+      final ride = MockRide(
+        driver: MockDriver.random(), // Assuming a random driver for now
         passengers: [],
+        route: MockRoute.random(),
         departureTime: dt,
-        from: from!,
-        to: to!,
-        seats: seats,
+        estimatedArrivalTime: dt.add(Duration(hours: 1)), // Example duration
+        estimatedDuration: Duration(hours: 1),
+        availableSeats: capacity - seats,
+        totalSeats: capacity,
       );
 
       if (id != null) {

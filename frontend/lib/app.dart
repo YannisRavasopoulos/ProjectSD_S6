@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/mocks/mock_reward_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
+import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
+import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rating/rate_view.dart';
 import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/mocks/mock_rating_repository.dart';
@@ -46,6 +47,15 @@ class App extends StatelessWidget {
   late final RewardViewModel rewardViewModel = RewardViewModel(
     rewardRepository: _rewardRepository,
     userRepository: _userRepository,
+  );
+
+  late final RateViewModel rateViewModel = RateViewModel(
+    ratingRepository: _ratingRepository,
+    userRepository: _userRepository,
+  );
+
+  late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
+    rideRepository: _rideRepository,
   );
 
   // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
@@ -95,11 +105,6 @@ class App extends StatelessWidget {
   //   reportRepository: _reportRepository,
   // );
 
-  late final RateViewModel rateViewModel = RateViewModel(
-    ratingRepository: _ratingRepository,
-    userRepository: _userRepository,
-  );
-
   // late final ReportViewModel reportViewModel = ReportViewModel(
   //   reportRepository: _reportRepository,
   // );
@@ -126,8 +131,8 @@ class App extends StatelessWidget {
               toUser: MockUser(firstName: 'John', lastName: 'Doe', points: 0),
               viewModel: rateViewModel,
             ),
-        // '/create_ride':
-        //     (context) => CreateRideView(viewModel: createRideViewModel),
+        '/create_ride':
+            (context) => CreateRideView(viewModel: createRideViewModel),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         // '/activities':
