@@ -26,7 +26,11 @@ class RewardCard extends StatelessWidget {
         subtitle: Text('${reward.description}\nCost: ${reward.points} Points'),
         trailing: ElevatedButton(
           onPressed:
-              hasEnoughPoints && !isLoading ? () => onRedeem(reward) : null,
+              hasEnoughPoints && !isLoading
+                  ? () {
+                    _showConfirmationDialog(context, reward, onRedeem);
+                  }
+                  : null,
           child:
               isLoading
                   ? const SizedBox(
@@ -37,6 +41,46 @@ class RewardCard extends StatelessWidget {
                   : const Text('Redeem'),
         ),
       ),
+    );
+  }
+
+  Future<void> _showConfirmationDialog(
+    BuildContext context,
+    Reward reward,
+    ValueChanged<Reward> onRedeem,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Redemption'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  'Are you sure you want to redeem ${reward.title} for ${reward.points} points?',
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Redeem'),
+              onPressed: () {
+                onRedeem(reward);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

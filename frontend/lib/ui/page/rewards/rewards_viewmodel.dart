@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/reward.dart';
-import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 
