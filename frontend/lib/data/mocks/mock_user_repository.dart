@@ -46,10 +46,4 @@ class MockUserRepository implements UserRepository {
       yield await fetchCurrent();
     }
   }
-  
-  @override
-  Future<void> updateCurrentUser(User user) {
-    // TODO: implement updateCurrentUser
-    throw UnimplementedError();
-  }
 }
