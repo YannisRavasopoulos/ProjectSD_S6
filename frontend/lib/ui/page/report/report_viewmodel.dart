@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
+import 'package:frontend/data/model/report_reason.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'dart:math';
 
@@ -20,7 +21,7 @@ class ReportViewModel extends ChangeNotifier {
     required String reporterId,
     required String reportedUserId,
     required String rideId,
-    required String reason,
+    required ReportReason reason,
     required String details,
   }) async {
     _isLoading = true;
