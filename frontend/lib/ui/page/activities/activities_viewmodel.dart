@@ -1,41 +1,97 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 
 class ActivitiesViewModel extends ChangeNotifier {
+  final ActivityRepository activityRepository;
+  StreamSubscription<List<Activity>>? _activitiesSubscription;
+
   ActivitiesViewModel({required this.activityRepository}) {
     _init();
   }
 
-  bool isLoading = false;
+  List<Activity>? _activities;
+  bool _isLoading = true;
+  String? _errorMessage;
 
-  final ActivityRepository activityRepository;
-  List<Activity>? activities;
+  List<Activity>? get activities => _activities;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
 
-  void _init() async {
-    isLoading = true;
-    notifyListeners();
-
-    activities = await activityRepository.fetch();
-    isLoading = false;
-    notifyListeners();
+  void _init() {
+    _loadActivities();
+    _activitiesSubscription = activityRepository.watch().listen(
+      (activities) {
+        _activities = activities;
+        notifyListeners();
+      },
+      onError: (error) {
+        _errorMessage = error.toString();
+        notifyListeners();
+      },
+    );
   }
 
-  void addActivity(Activity activity) {
-    // activityRepository.insert
-    notifyListeners();
+  Future<void> _loadActivities() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+      _activities = await activityRepository.fetch();
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
-  void removeActivity(String id) {
-    // _activities.removeWhere((activity) => activity.id == id);
-    notifyListeners();
+  Future<void> createActivity(Activity activity) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await activityRepository.create(activity);
+      await _loadActivities();
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
-  void editActivity(String id, Activity updatedActivity) {
-    // final index = _activities.indexWhere((activity) => activity.id == id);
-    // if (index != -1) {
-    //   _activities[index] = updatedActivity;
-    //   notifyListeners();
-    // }
+  Future<void> updateActivity(Activity activity) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await activityRepository.update(activity);
+      await _loadActivities();
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteActivity(Activity activity) async {
+    try {
+      await activityRepository.delete(activity);
+      await _loadActivities();
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _activitiesSubscription?.cancel();
+    super.dispose();
   }
 }

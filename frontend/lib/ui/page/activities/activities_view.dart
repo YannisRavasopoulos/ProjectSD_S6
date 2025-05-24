@@ -18,6 +18,7 @@ class ActivitiesView extends StatelessWidget {
         return ActivityDeletionDialog(
           activityName: activity.name,
           onDelete: () {
+            viewModel.deleteActivity(activity);
             Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Activity "${activity.name}" deleted')),
@@ -26,23 +27,6 @@ class ActivitiesView extends StatelessWidget {
           onCancel: () {
             Navigator.of(context).pop();
           },
-        );
-      },
-    );
-  }
-
-  Widget _buildActivityList(BuildContext context) {
-    return ListView.builder(
-      itemCount: viewModel.activities?.length ?? 0,
-      itemBuilder: (context, index) {
-        final activity = viewModel.activities![index];
-        return ActivityCard(
-          activity: activity,
-          onEdit: () {
-            // Navigate to an edit screen or show a dialog
-            print('Edit activity: ${activity.name}');
-          },
-          onRemove: () => _onRemoveActivityPressed(context, activity),
         );
       },
     );
@@ -70,18 +54,39 @@ class ActivitiesView extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder:
-                  (context) => CreateActivityView(
-                    onCreate: (newActivity) {
-                      // viewModel.addActivity(newActivity);
-                    },
-                  ),
+              builder: (context) => CreateActivityView(
+                viewModel: viewModel,
+              ),
             ),
           );
         },
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: AppNavigationBar(routeName: "/activities"),
+    );
+  }
+
+  Widget _buildActivityList(BuildContext context) {
+    return ListView.builder(
+      itemCount: viewModel.activities?.length ?? 0,
+      itemBuilder: (context, index) {
+        final activity = viewModel.activities![index];
+        return ActivityCard(
+          activity: activity,
+          onEdit: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CreateActivityView(
+                  viewModel: viewModel,
+                  activityToEdit: activity,
+                ),
+              ),
+            );
+          },
+          onRemove: () => _onRemoveActivityPressed(context, activity),
+        );
+      },
     );
   }
 }
