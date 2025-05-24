@@ -18,7 +18,7 @@ class ImplActivityRepository implements ActivityRepository{
       _activities.add(activity);
       _notifyListeners();
     } catch (e) {
-      throw Exception('Failed to create activity: $e');
+      return Future.error('Failed to create activity: $e');
     }
   }
 
@@ -27,11 +27,11 @@ class ImplActivityRepository implements ActivityRepository{
     try {
       final removed = _activities.remove(activity);
       if (!removed) {
-        throw Exception('Activity not found');
+        return Future.error('Activity not found');
       }
       _notifyListeners();
     } catch (e) {
-      throw Exception('Failed to delete activity: $e');
+      return Future.error('Failed to delete activity: $e');
     }
   }
 
@@ -40,7 +40,7 @@ class ImplActivityRepository implements ActivityRepository{
     try {
       return List.unmodifiable(_activities);
     } catch (e) {
-      throw Exception('Failed to fetch activities: $e');
+      return Future.error('Failed to fetch activities: $e');
     }
   }
 
@@ -49,12 +49,12 @@ class ImplActivityRepository implements ActivityRepository{
     try {
       final index = _activities.indexWhere((a) => a == activity);
       if (index == -1) {
-        throw Exception('Activity not found');
+        return Future.error('Activity not found');
       }
       _activities[index] = activity;
       _notifyListeners();
     } catch (e) {
-      throw Exception('Failed to update activity: $e');
+      return Future.error('Failed to update activity: $e');
     }
   }
 
@@ -62,9 +62,10 @@ class ImplActivityRepository implements ActivityRepository{
   @override
   Stream<List<Activity>> watch() async* {  //emits the current list of activities every time there is a change to listen for real-time updates
     try {
-     _activitiesController.stream;
+      yield List.unmodifiable(_activities);
+      yield* _activitiesController.stream;
     } catch (e) {
-      throw Exception('Failed to watch activities: $e');
+      yield* Stream.error('Failed to watch activities: $e');
     }
   }
   

@@ -14,7 +14,7 @@ class ImplRatingRepository implements RatingRepository {
   Future<void> create(Rating rating) async {
     try {
       if (rating.stars < 1 || rating.stars > 5) {
-        throw ArgumentError('Rating stars must be between 1 and 5');
+        return Future.error('Rating stars must be between 1 and 5');
       }
 
       // Check if rating already exists
@@ -24,13 +24,13 @@ class ImplRatingRepository implements RatingRepository {
       );
 
       if (existingRating) {
-        throw StateError('Rating already exists for this user pair');
+        return Future.error('Rating already exists for this user pair');
       }
 
       _ratings.add(rating);
       _notifyListeners(rating.toUser);
     } catch (e) {
-      throw Exception('Failed to create rating: $e');
+      return Future.error('Failed to create rating: $e');
     }
   }
 
@@ -39,11 +39,11 @@ class ImplRatingRepository implements RatingRepository {
     try {
       final success = _ratings.remove(rating);
       if (!success) {
-        throw StateError('Rating not found');
+        return Future.error('Rating not found');
       }
       _notifyListeners(rating.toUser);
     } catch (e) {
-      throw Exception('Failed to delete rating: $e');
+      return Future.error('Failed to delete rating: $e');
     }
   }
 
@@ -54,7 +54,7 @@ class ImplRatingRepository implements RatingRepository {
           .where((rating) => rating.toUser.id == user.id)
           .toList();
     } catch (e) {
-      throw Exception('Failed to fetch ratings: $e');
+      return Future.error('Failed to fetch ratings: $e');
     }
   }
 
@@ -62,7 +62,7 @@ class ImplRatingRepository implements RatingRepository {
   Future<void> update(Rating rating) async {
     try {
       if (rating.stars < 1 || rating.stars > 5) {
-        throw ArgumentError('Rating stars must be between 1 and 5');
+        return Future.error('Rating stars must be between 1 and 5');
       }
 
       final index = _ratings.indexWhere((r) =>
@@ -70,22 +70,25 @@ class ImplRatingRepository implements RatingRepository {
           r.toUser.id == rating.toUser.id);
 
       if (index == -1) {
-        throw StateError('Rating not found');
+        return Future.error('Rating not found');
       }
 
       _ratings[index] = rating;
       _notifyListeners(rating.toUser);
     } catch (e) {
-      throw Exception('Failed to update rating: $e');
+      return Future.error('Failed to update rating: $e');
     }
   }
 
   @override 
   Stream<List<Rating>> watch(User user) async* {
-    // Initial data
-    _notifyListeners(user);
-    // Return stream
-    _ratingController.stream.map((ratings) => ratings.where((r) => r.toUser.id == user.id).toList());
+    try {
+      yield List.unmodifiable(_ratings.where((r) => r.toUser.id == user.id).toList());
+      yield* _ratingController.stream
+          .map((ratings) => ratings.where((r) => r.toUser.id == user.id).toList());
+    } catch (e) {
+      yield* Stream.error('Failed to watch ratings: $e');
+    }
   }
 
   // Helper method to notify listeners of changes
