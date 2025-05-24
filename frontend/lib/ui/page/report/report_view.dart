@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/report_reason.dart';
 import 'report_form.dart';
 import 'report_viewmodel.dart';
@@ -11,8 +12,8 @@ class ReportView extends StatelessWidget {
   const ReportView({super.key, required this.viewModel});
 
   Future<String> _getReportedUserName(String userId) async {
-    final userRepository = UserRepository();
-    User? user = await userRepository.fetchForId(int.parse(userId));
+    final userRepository = ImplUserRepository();
+    User? user = await userRepository.fetchCurrent();
     return user?.firstName ?? 'Unknown User';
   }
 

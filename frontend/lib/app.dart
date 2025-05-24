@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_activity_repository.dart';
+import 'package:frontend/data/impl/impl_report_repository.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
@@ -7,6 +9,7 @@ import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
+import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/ui/page/activities/activities_view.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
@@ -28,6 +31,8 @@ import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/profile/profile_view.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/rating/rate_viewmodel.dart';
+import 'package:frontend/ui/page/report/report_view.dart';
+import 'package:frontend/ui/page/report/report_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_view.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
@@ -37,7 +42,7 @@ import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 
 class App extends StatelessWidget {
   // Replace mocks with implementations
-  final UserRepository _userRepository = MockUserRepository();
+  final UserRepository _userRepository = ImplUserRepository();
   final ActivityRepository _activityRepository = ImplActivityRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
   final RideRepository _rideRepository = MockRideRepository();
@@ -45,6 +50,7 @@ class App extends StatelessWidget {
   final RewardRepository _rewardRepository = RewardsRepositoryImpl();
   final AuthenticationRepository _authenticationRepository =
       MockAuthenticationRepository();
+  final ReportRepository _reportRepository = ImplReportRepository();
 
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: _rideRepository,
@@ -109,9 +115,9 @@ class App extends StatelessWidget {
     activityRepository: _activityRepository,
   );
 
-  // late final ReportViewModel reportViewModel = ReportViewModel(
-  //   reportRepository: _reportRepository,
-  // );
+  late final ReportViewModel reportViewModel = ReportViewModel(
+    reportRepository: _reportRepository,
+  );
 
   final bool isLoggedIn = true;
 
@@ -151,7 +157,7 @@ class App extends StatelessWidget {
         //       viewModel: offerRideViewModel,
         //       activitiesViewModel: activitiesViewModel,
         //     ),
-        // '/report': (context) => ReportView(viewModel: reportViewModel),
+        '/report': (context) => ReportView(viewModel: reportViewModel),
       },
       // onGenerateRoute: (settings) {
       //   if (settings.name == '/arrange_pickup') {
