@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/reward.dart';
 import 'package:frontend/ui/page/profile/points_widget.dart';
 import 'package:frontend/ui/page/rewards/available_rewards_list.dart';
 import 'package:frontend/ui/page/rewards/redeemed_rewards_list.dart';
-import 'package:frontend/ui/page/rewards/reward_card.dart';
 import 'rewards_viewmodel.dart';
 
 class RewardView extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:frontend/data/model.dart';
 abstract class Reward implements Model {
   String get title;
   String get description;
-  String get redemptionCode;
+  String get redemptionCode; // TODO: this should not be here....
   int get points;
 }
 
