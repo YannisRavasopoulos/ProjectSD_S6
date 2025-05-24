@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
-import 'package:frontend/data/implemented_repositories/rewards_repository_impl.dart';
+import 'package:frontend/data/impl/impl_rewards_repository.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';

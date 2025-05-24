@@ -114,7 +114,6 @@ class RewardsRepositoryImpl implements RewardRepository {
     // Simulate a network call
     await Future.delayed(Duration(seconds: 1));
 
-    // Check if the reward is available
     if (_availableRewards.contains(reward)) {
       _availableRewards.remove(reward);
       _redeemedRewards.add(reward);
