@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 
-class ImplUser implements User {
+class ImplUser extends User {
   @override
   final int id;
   @override
