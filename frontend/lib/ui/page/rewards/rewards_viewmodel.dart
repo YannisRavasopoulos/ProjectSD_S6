@@ -1,34 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/reward.dart';
-import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
-import 'dart:async';
 
 class RewardViewModel extends ChangeNotifier {
   final RewardRepository rewardRepository;
   final UserRepository userRepository;
-  StreamSubscription<User>? _userSubscription;
 
   RewardViewModel({
     required this.rewardRepository,
     required this.userRepository,
   }) {
-    _init();
-  }
-
-  void _init() {
     _fetchData();
-    // Listen to user changes
-    _userSubscription = userRepository.watchCurrent().listen(_onUserUpdate);
-  }
-
-  void _onUserUpdate(User user) {
-    if (user is ImplUser) {
-      _userPoints = user.points;
-      notifyListeners();
-    }
   }
 
   List<Reward> _availableRewards = [];
@@ -64,34 +47,16 @@ class RewardViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Get current user first
-      final currentUser = await userRepository.fetchCurrent();
-      if (currentUser is ImplUser) {
-        // Update user points first
-        final updatedUser = currentUser.copyWith(
-          points: currentUser.points - reward.points,
-        );
-        await userRepository.updateCurrentUser(updatedUser);
+      final result = await rewardRepository.redeem(reward);
+      await _fetchData(); // Refresh available rewards
 
-        // Then redeem the reward
-        final code = await rewardRepository.redeem(reward);
-
-        // Finally refresh the data
-        await _fetchData();
-        return code;
-      }
-      return null;
+      return result;
     } catch (e) {
+      // Handle error as needed
       return null;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
-  }
-
-  @override
-  void dispose() {
-    _userSubscription?.cancel();
-    super.dispose();
   }
 }
