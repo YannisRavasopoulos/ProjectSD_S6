@@ -1,7 +1,7 @@
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 
-abstract class RideRepository {
+abstract interface class RideRepository {
   /// Fetches rides based on the given parameters.
   Future<List<Ride>> fetchMatching(RideRequest request);
 

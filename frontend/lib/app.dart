@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/mocks/mock_reward_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
+import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/ui/page/rating/rate_view.dart';
 import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/mocks/mock_rating_repository.dart';
@@ -15,22 +17,15 @@ import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/profile/profile_view.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/rating/rate_viewmodel.dart';
+import 'package:frontend/ui/page/rewards/rewards_view.dart';
+import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 
 class App extends StatelessWidget {
   final UserRepository _userRepository = MockUserRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
   final RideRepository _rideRepository = MockRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
-  // final RatingRepository _ratingRepository = RatingRepositoryImpl();
-
-  // final PickupRepository _pickupRepository = PickupRepository(
-  //   pickupService: PickupService(),
-  // );
-  // final AuthenticationRepository _authenticationRepository =
-  //     AuthenticationRepository();
-  // final RewardRepository _rewardRepository = RewardRepository();
-  // final ActivityRepository _activityRepository = ActivityRepository();
-  // final ReportRepository _reportRepository = ReportRepository();
+  final RewardRepository _rewardRepository = MockRewardRepository();
 
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: _rideRepository,
@@ -46,6 +41,19 @@ class App extends StatelessWidget {
     ratingRepository: _ratingRepository,
     rideRepository: _rideRepository,
   );
+
+  late final RewardViewModel rewardViewModel = RewardViewModel(
+    rewardRepository: _rewardRepository,
+    userRepository: _userRepository,
+  );
+
+  // final PickupRepository _pickupRepository = PickupRepository(
+  //   pickupService: PickupService(),
+  // );
+  // final AuthenticationRepository _authenticationRepository =
+  //     AuthenticationRepository();
+  // final ActivityRepository _activityRepository = ActivityRepository();
+  // final ReportRepository _reportRepository = ReportRepository();
 
   // late final RidesListViewModel ridesViewModel = RidesListViewModel(
   //   rideRepository: _rides,
@@ -114,7 +122,7 @@ class App extends StatelessWidget {
             ),
         // '/create_ride':
         //     (context) => CreateRideView(viewModel: createRideViewModel),
-        // // '/rewards': (context) => RewardView(viewModel: rewardViewModel),
+        '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         // '/activities':
         //     (context) => ActivitiesView(viewModel: activitiesViewModel),

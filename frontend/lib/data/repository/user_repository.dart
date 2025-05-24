@@ -1,6 +1,6 @@
 import 'package:frontend/data/model/user.dart';
 
-abstract class UserRepository {
+abstract interface class UserRepository {
   Future<User> fetchCurrent();
   Stream<User> watchCurrent();
 }

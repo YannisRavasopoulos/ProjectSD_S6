@@ -22,7 +22,7 @@ class MockLocation extends Location {
   }
 }
 
-class MockLocationRepository extends LocationRepository {
+class MockLocationRepository implements LocationRepository {
   @override
   Future<Location> fetchCurrent(User user) async {
     return MockLocation.random();

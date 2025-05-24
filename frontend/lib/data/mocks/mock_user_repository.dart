@@ -20,14 +20,22 @@ class MockUser extends User {
   factory MockUser.random() {
     return MockUser(firstName: 'John', lastName: 'Doe', points: 300);
   }
+
+  MockUser copyWith({String? firstName, String? lastName, int? points}) {
+    return MockUser(
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      points: points ?? this.points,
+    );
+  }
 }
 
-class MockUserRepository extends UserRepository {
-  User _user = MockUser.random();
+class MockUserRepository implements UserRepository {
+  static MockUser user = MockUser.random();
 
   @override
   Future<User> fetchCurrent() async {
-    return _user;
+    return user;
   }
 
   @override

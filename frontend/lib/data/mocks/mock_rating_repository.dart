@@ -60,7 +60,7 @@ class MockRating extends Rating {
   }
 }
 
-class MockRatingRepository extends RatingRepository {
+class MockRatingRepository implements RatingRepository {
   List<Rating> _ratings = List.generate(10, (_) => MockRating.random());
 
   @override

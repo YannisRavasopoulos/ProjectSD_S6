@@ -139,7 +139,7 @@ class MockRide extends Ride {
   }
 }
 
-class MockRideRepository extends RideRepository {
+class MockRideRepository implements RideRepository {
   List<Ride> _rideHistory = [
     MockRide.random(),
     MockRide.random(),

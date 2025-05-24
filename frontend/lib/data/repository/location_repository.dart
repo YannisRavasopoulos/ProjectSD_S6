@@ -1,7 +1,7 @@
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/user.dart';
 
-abstract class LocationRepository {
+abstract interface class LocationRepository {
   /// Fetches a user's location.
   Future<Location> fetchCurrent(User user);
 
