@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/reward.dart';
+import 'ConfirmationDialog.dart';
 
 class RewardCard extends StatelessWidget {
   final Reward reward;
@@ -8,12 +9,12 @@ class RewardCard extends StatelessWidget {
   final ValueChanged<Reward> onRedeem;
 
   const RewardCard({
-    super.key,
+    Key? key,
     required this.reward,
     required this.userPoints,
     required this.isLoading,
     required this.onRedeem,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,22 @@ class RewardCard extends StatelessWidget {
           onPressed:
               hasEnoughPoints && !isLoading
                   ? () {
-                    _showConfirmationDialog(context, reward, onRedeem);
+                    showDialog<void>(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return ConfirmationDialog(
+                          reward: reward,
+                          onConfirm: () {
+                            onRedeem(reward);
+                            Navigator.of(context).pop();
+                          },
+                          onCancel: () {
+                            Navigator.of(context).pop();
+                          },
+                        );
+                      },
+                    );
                   }
                   : null,
           child:
@@ -41,46 +57,6 @@ class RewardCard extends StatelessWidget {
                   : const Text('Redeem'),
         ),
       ),
-    );
-  }
-
-  Future<void> _showConfirmationDialog(
-    BuildContext context,
-    Reward reward,
-    ValueChanged<Reward> onRedeem,
-  ) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm Redemption'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(
-                  'Are you sure you want to redeem ${reward.title} for ${reward.points} points?',
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Redeem'),
-              onPressed: () {
-                onRedeem(reward);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }
