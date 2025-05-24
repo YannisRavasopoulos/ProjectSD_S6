@@ -11,6 +11,26 @@ class RewardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> onRedeem(Reward reward) async {
+      final code = await viewModel.redeem(reward);
+      if (code != null) {
+        showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text('Reward Redeemed'),
+                content: Text('Your redemption code is:\n\n$code'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+        );
+      }
+    }
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -32,7 +52,7 @@ class RewardView extends StatelessWidget {
               redeemedRewards: viewModel.redeemedRewards,
               userPoints: viewModel.userPoints,
               isLoading: viewModel.isLoading,
-              onRedeem: viewModel.redeem,
+              onRedeem: onRedeem, // Pass the callback here
             );
           },
         ),
@@ -109,7 +129,17 @@ class RewardView extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(reward.title),
-            subtitle: Text(reward.description),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(reward.description),
+                const SizedBox(height: 4),
+                Text(
+                  'Redemption code: ${(reward as dynamic).redemptionCode}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -40,17 +40,20 @@ class RewardViewModel extends ChangeNotifier {
     await _fetchData();
   }
 
-  void redeem(Reward reward) async {
-    if (_isLoading || _userPoints < reward.points) return;
+  Future<String?> redeem(Reward reward) async {
+    if (_isLoading || _userPoints < reward.points) return null;
 
     _isLoading = true;
     notifyListeners();
 
     try {
-      await rewardRepository.redeem(reward);
+      final result = await rewardRepository.redeem(reward);
       await _fetchData(); // Refresh available rewards
+
+      return result;
     } catch (e) {
       // Handle error as needed
+      return null;
     } finally {
       _isLoading = false;
       notifyListeners();
