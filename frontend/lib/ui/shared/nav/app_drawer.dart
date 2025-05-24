@@ -90,6 +90,13 @@ class AppDrawer extends StatelessWidget {
               // );
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.star_rate),
+            title: const Text('Rate (Test)'),
+            onTap: () {
+              Navigator.pushNamed(context, '/rate');
+            },
+          ),
         ],
       ),
     );
