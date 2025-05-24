@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/rating.dart';
-import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
-import 'package:frontend/data/repository/rating_repository_impl.dart';
 import 'package:frontend/ui/page/rating/rate_view.dart';
 import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/mocks/mock_rating_repository.dart';
 import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/mocks/mock_user_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
-import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
@@ -18,40 +14,14 @@ import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/profile/profile_view.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
-// import 'package:frontend/data/repository/activity_repository.dart';
-// import 'package:frontend/data/repository/authentication_repository.dart';
-// import 'package:frontend/data/repository/location_repository.dart';
-// import 'package:frontend/data/repository/reward_repository.dart';
-// import 'package:frontend/data/repository/ride_repository.dart';
-import 'package:frontend/data/repository/user_repository.dart';
-// import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
-// import 'package:frontend/data/repository/rating_repository.dart';
-// import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
-// import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
-// import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
-// import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
-// import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
-// import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
-// import 'package:frontend/ui/page/home/home_viewmodel.dart';
-// import 'package:frontend/ui/page/create_ride/rides_list_viewmodel.dart';
-// import 'package:frontend/ui/page/profile/profile_view.dart';
-// import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
-// import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
-// import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
-// import 'package:frontend/ui/page/home/home_view.dart';
-// import 'package:frontend/ui/page/activities/activities_view.dart';
-// import 'package:frontend/ui/page/create_ride/rides_list_view.dart';
-// import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
-// import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
-// import 'package:frontend/ui/page/rating/rating_viewmodel.dart';
 import 'package:frontend/ui/page/rating/rate_viewmodel.dart';
+
 class App extends StatelessWidget {
   final UserRepository _userRepository = MockUserRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
   final RideRepository _rideRepository = MockRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
-  final UserRepository _userRepository = UserRepository();
-  final RatingRepository _ratingRepository = RatingRepositoryImpl();
+  // final RatingRepository _ratingRepository = RatingRepositoryImpl();
 
   // final PickupRepository _pickupRepository = PickupRepository(
   //   pickupService: PickupService(),
@@ -94,7 +64,6 @@ class App extends StatelessWidget {
   //   userRepository: _userRepository,
   // );
 
-
   // late final RewardViewModel rewardViewModel = RewardViewModel(
   //   rewardRepository: _rewardRepository,
   //   profileViewModel: profileViewModel,
@@ -108,7 +77,6 @@ class App extends StatelessWidget {
   //   activityRepository: _activityRepository,
   // );
 
-
   // late final ReportViewModel reportViewModel = ReportViewModel(
   //   reportRepository: _reportRepository,
   // );
@@ -117,7 +85,6 @@ class App extends StatelessWidget {
     ratingRepository: _ratingRepository,
     userRepository: _userRepository,
   );
-
 
   // late final ReportViewModel reportViewModel = ReportViewModel(
   //   reportRepository: _reportRepository,
@@ -133,9 +100,8 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         visualDensity: VisualDensity.comfortable,
       ),
-      initialRoute: "/rate",
+      initialRoute: isLoggedIn ? '/home' : '/find_ride',
       routes: {
-
         // '/sign_in': (context) => SignInView(viewModel: signInViewModel),
         // '/forgot_password': (context) => ForgotPasswordView(),
         // '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
@@ -143,12 +109,7 @@ class App extends StatelessWidget {
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/rate':
             (context) => RateView(
-              toUser: User(
-                id: 1,
-                firstName: 'John',
-                lastName: 'Doe',
-                points: 0,
-              ),
+              toUser: MockUser(firstName: 'John', lastName: 'Doe', points: 0),
               viewModel: rateViewModel,
             ),
         // '/create_ride':

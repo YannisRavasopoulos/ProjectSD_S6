@@ -15,6 +15,8 @@ class MockPassenger extends Passenger {
   final String lastName;
   @override
   final int points;
+  @override
+  final int id = 0;
 
   MockPassenger({
     required this.firstName,
@@ -36,6 +38,8 @@ class MockRideRequest extends RideRequest {
   final DateTime departureTime;
   @override
   final DateTime arrivalTime;
+  @override
+  final int id = 0;
 
   @override
   final Duration arrivalWindow = Duration(seconds: 0);
@@ -59,6 +63,8 @@ class MockRideRequest extends RideRequest {
 
 class MockDriver extends Driver {
   @override
+  final int id = 0;
+  @override
   final String firstName;
   @override
   final String lastName;
@@ -77,6 +83,9 @@ class MockDriver extends Driver {
 }
 
 class MockRide extends Ride {
+  @override
+  final int id = 0;
+
   @override
   final Driver driver;
 

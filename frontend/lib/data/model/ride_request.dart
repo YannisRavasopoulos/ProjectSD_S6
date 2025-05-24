@@ -1,7 +1,8 @@
+import 'package:frontend/data/model.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:latlong2/latlong.dart';
 
-abstract class RideRequest {
+abstract class RideRequest implements Model {
   Location get origin;
   Location get destination;
 

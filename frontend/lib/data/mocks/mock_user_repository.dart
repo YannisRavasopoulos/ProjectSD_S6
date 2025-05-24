@@ -8,6 +8,8 @@ class MockUser extends User {
   final String lastName;
   @override
   final int points;
+  @override
+  final int id = 0;
 
   MockUser({
     required this.firstName,

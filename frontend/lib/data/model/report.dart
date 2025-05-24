@@ -1,9 +1,10 @@
+import 'package:frontend/data/model.dart';
 import 'package:frontend/data/model/report_reason.dart';
 import 'package:frontend/data/model/user.dart';
 
 enum ReportStatus { pending, inProgress, resolved, rejected }
 
-abstract interface class Report {
+abstract class Report implements Model {
   User get receiver;
   ReportReason get reason;
   ReportStatus get status;

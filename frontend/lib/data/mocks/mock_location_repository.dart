@@ -6,6 +6,8 @@ import 'package:latlong2/latlong.dart';
 class MockLocation extends Location {
   @override
   final LatLng coordinates;
+  @override
+  final int id = 0;
 
   MockLocation({required this.coordinates});
 
@@ -32,5 +34,11 @@ class MockLocationRepository extends LocationRepository {
       await Future.delayed(Duration(milliseconds: 100));
       yield await fetchCurrent(user);
     }
+  }
+
+  @override
+  Future<Location> fetchForQuery(String query) async {
+    // For simplicity, return a fixed location for any query
+    return MockLocation(coordinates: LatLng(38.268763, 21.748858));
   }
 }

@@ -7,6 +7,9 @@ abstract class LocationRepository {
 
   /// Watches for changes in a user's location.
   Stream<Location> watchCurrent(User user);
+
+  /// Fetches a location based on a query string
+  Future<Location> fetchForQuery(String query);
 }
 
 // import 'package:frontend/data/location_exception.dart';

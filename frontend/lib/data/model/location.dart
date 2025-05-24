@@ -1,6 +1,7 @@
+import 'package:frontend/data/model.dart';
 import 'package:latlong2/latlong.dart';
 
-abstract class Location {
+abstract class Location implements Model {
   LatLng get coordinates;
 }
 

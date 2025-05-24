@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/mocks/mock_rating_repository.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
-import 'package:frontend/data/model/rating.dart';
-import 'package:frontend/data/model/rating_impl.dart';
 
 class RateViewModel extends ChangeNotifier {
   final RatingRepository _ratingRepository;
@@ -34,7 +33,7 @@ class RateViewModel extends ChangeNotifier {
 
   Future<void> _loadCurrentUser() async {
     try {
-      _currentUser = await _userRepository.fetch();
+      _currentUser = await _userRepository.fetchCurrent();
       notifyListeners();
     } catch (e) {
       _errorMessage = 'Failed to load user: ${e.toString()}';
@@ -66,7 +65,8 @@ class RateViewModel extends ChangeNotifier {
 
     try {
       await _ratingRepository.create(
-        RatingImpl(
+        MockRating(
+          id: 0,
           fromUser: _currentUser!,
           toUser: toUser,
           comment: _comment,
