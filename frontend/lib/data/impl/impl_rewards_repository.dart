@@ -117,6 +117,7 @@ class RewardsRepositoryImpl implements RewardRepository {
     if (_availableRewards.contains(reward)) {
       _availableRewards.remove(reward);
       _redeemedRewards.add(reward);
+      // TODO: this is a bug, user repo stream is not updated
       var user = MockUserRepository.user;
       MockUserRepository.user = user.copyWith(
         points: user.points - reward.points,
