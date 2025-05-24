@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/pickup.dart';
-import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
-import 'package:frontend/ui/notification/notification_overlay.dart';
+// import 'package:frontend/data/model/pickup.dart';
+// import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
+// import 'package:frontend/ui/notification/notification_overlay.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -76,17 +76,18 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.notifications),
             title: const Text('Test Notification'),
             onTap: () {
-              // Create a test pickup
-              final testPickup = Pickup.random();
+              // TODO
+              // // Create a test pickup
+              // // final testPickup = Pickup.random();
 
-              // Close the drawer
-              Navigator.pop(context);
+              // // Close the drawer
+              // Navigator.pop(context);
 
-              // Show the notification
-              NotificationOverlay.show(
-                context,
-                PickupRequestNotification(pickup: testPickup),
-              );
+              // // Show the notification
+              // NotificationOverlay.show(
+              //   context,
+              //   PickupRequestNotification(pickup: testPickup),
+              // );
             },
           ),
         ],

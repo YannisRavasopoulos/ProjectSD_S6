@@ -1,75 +1,40 @@
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/data/model/location.dart';
+import 'package:frontend/data/model/ride_request.dart';
 
-class RideRepository {
-  List<Ride> _rides = [];
+abstract interface class RideRepository {
+  /// Fetches rides based on the given parameters.
+  Future<List<Ride>> fetchMatching(RideRequest request);
 
-  Future<List<Ride>> fetchMatching(
-    Location from,
-    Location to,
-    DateTime when,
-    // TODO add more filters
-  ) async {
-    // Simulate a network call
-    await Future.delayed(const Duration(seconds: 1));
-    return _rides;
-  }
+  /// Watches for changes in matching rides.
+  Stream<List<Ride>> watchMatching(RideRequest request);
 
-  Stream<List<Ride>> watchMatching(
-    Location from,
-    Location to,
-    DateTime when,
-  ) async* {
-    while (true) {
-      // Simulate a network call
-      await Future.delayed(const Duration(seconds: 1));
-      yield await fetchMatching(from, to, when);
-    }
-  }
+  /// Fetch past rides.
+  Future<List<Ride>> fetchHistory();
 
-  Future<List<Ride>> fetchById(int id) async {
-    // Simulate a network call
-    await Future.delayed(const Duration(seconds: 1));
-    return _rides.where((ride) => ride.id == id).toList();
-  }
+  /// Watches for changes in past rides.
+  Stream<List<Ride>> watchHistory();
 
-  Stream<List<Ride>> watchById(int id) async* {
-    while (true) {
-      // Simulate a network call
-      await Future.delayed(const Duration(seconds: 1));
-      yield await fetchById(id);
-    }
-  }
+  /// Clear ride history.
+  Future<void> clearHistory();
 
-  Future<List<Ride>> fetch() async {
-    // Simulate a network call
-    await Future.delayed(const Duration(seconds: 1));
-    return _rides;
-  }
+  /// Fetch current ride.
+  Future<Ride> fetchCurrent();
 
-  Stream<List<Ride>> watch() async* {
-    while (true) {
-      // Simulate a network call
-      await Future.delayed(const Duration(seconds: 1));
-      yield _rides;
-    }
-  }
+  /// Watches for changes in the current ride.
+  Stream<Ride> watchCurrent();
 
-  // Create a ride
-  Future<void> create(Ride ride) async {
-    _rides.add(ride);
-  }
+  /// Create a new ride.
+  Future<void> create(Ride ride);
 
-  // Update a ride
-  Future<void> update(Ride ride) async {
-    final index = _rides.indexWhere((r) => r.id == ride.id);
-    if (index != -1) {
-      _rides[index] = ride;
-    }
-  }
+  /// Update a ride.
+  Future<void> update(Ride ride);
 
-  // Delete a ride
-  Future<void> delete(int id) async {
-    _rides.removeWhere((ride) => ride.id == id);
-  }
+  /// Cancel a ride.
+  Future<void> cancel(Ride ride);
+
+  /// Join a ride.
+  Future<void> join(Ride ride);
+
+  /// Leave a ride.
+  Future<void> leave(Ride ride);
 }

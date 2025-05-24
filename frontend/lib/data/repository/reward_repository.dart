@@ -1,34 +1,18 @@
 import 'package:frontend/data/model/reward.dart';
 
-class RewardRepository {
-  final List<Reward> _rewards = List<Reward>.generate(
-    10,
-    (index) => Reward(
-      id: index,
-      name: 'Reward $index',
-      description: 'Description for reward $index',
-      code: 'Code $index',
-      points: index * 10,
-    ),
-  );
+abstract interface class RewardRepository {
+  /// Redeems a reward for the user. Returns the coupon code.
+  Future<String> redeem(Reward reward);
 
-  List<Reward> getAllRewards() {
-    return List<Reward>.from(_rewards);
-  }
+  /// Fetches the available rewards.
+  Future<List<Reward>> fetchAvailable();
 
-  Reward getRewardById(String id) {
-    try {
-      return _rewards.firstWhere((reward) => reward.id == id);
-    } catch (e) {
-      throw Exception('Reward with id $id not found');
-    }
-  }
+  /// Watches for changes in the available rewards.
+  Stream<List<Reward>> watchAvailable();
 
-  void addReward(Reward reward) {
-    _rewards.add(reward);
-  }
+  /// Fetches the redeemed rewards.
+  Future<List<Reward>> fetchRedeemed();
 
-  void removeReward(int id) {
-    _rewards.removeWhere((reward) => reward.id == id);
-  }
+  /// Watches for changes in the redeemed rewards.
+  Stream<List<Reward>> watchRedeemed();
 }
