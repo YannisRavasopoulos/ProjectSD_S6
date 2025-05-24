@@ -71,25 +71,4 @@ class RideCard extends StatelessWidget {
       ),
     );
   }
-
-  // Widget build(BuildContext context) {
-  //   return Card(
-  //     margin: const EdgeInsets.symmetric(vertical: 8.0),
-  //     child: ListTile(
-  //       leading: const Icon(Icons.directions_car),
-  //       title: Text(ride.driver.name),
-  //       subtitle: Text(ride.description),
-  //       trailing: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           Text(ride.distance),
-  //           const SizedBox(height: 4.0),
-  //           Text(ride.estimatedDuration),
-  //         ],
-  //       ),
-  //     ),
-  //     // child: ListTile(
-  //     // ),
-  //   );
-  // }
 }

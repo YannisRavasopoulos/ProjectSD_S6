@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/ui/page/profile/history_tab.dart';
+import 'package:frontend/ui/page/profile/points_widget.dart';
 import 'package:frontend/ui/page/profile/profile_picture_picker.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/profile/rating_tab.dart';
@@ -36,7 +36,7 @@ class ProfileView extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           const SizedBox(height: 24),
-                          // PointsWidget(viewModel: widget.viewModel),
+                          PointsWidget(points: viewModel.points),
                           const TabBar(
                             indicatorColor: Colors.deepPurple,
                             labelColor: Colors.deepPurple,
@@ -66,13 +66,13 @@ class ProfileView extends StatelessWidget {
                                       viewModel.onPasswordChanged,
                                   onSavePressed: viewModel.saveChanges,
                                 ),
-                                HistoryTab(onClearHistory: () {}, rides: []),
+                                HistoryTab(
+                                  onClearHistory: viewModel.clearHistory,
+                                  rides: viewModel.rides,
+                                ),
                                 RatingTab(
-                                  ratings: List.generate(
-                                    5,
-                                    (idx) => Rating.random(),
-                                  ),
-                                  averageRating: 4,
+                                  ratings: viewModel.ratings,
+                                  averageRating: viewModel.averageRating,
                                 ),
                               ],
                             ),

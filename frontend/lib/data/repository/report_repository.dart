@@ -1,15 +1,12 @@
 import 'package:frontend/data/model/report.dart';
 
-class ReportRepository {
-  final List<Report> _reports = [];
+abstract interface class ReportRepository {
+  // Create a report
+  Future<void> create(Report report);
 
-  Future<void> submitReport(Report report) async {
-    // TODO: Replace with API call
-    await Future.delayed(const Duration(milliseconds: 500));
-    _reports.add(report);
-  }
+  // Fetch reports filled by the user
+  Future<List<Report>> fetch();
 
-  List<Report> getReportsForUser(String userId) {
-    return _reports.where((r) => r.reportedUserId == userId).toList();
-  }
+  // Watch for changes in reports filled by the user
+  Stream<List<Report>> watch();
 }

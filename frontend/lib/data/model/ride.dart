@@ -2,7 +2,7 @@ import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/route.dart';
 
-abstract interface class Ride {
+abstract class Ride {
   Driver get driver;
   List<Passenger> get passengers;
   Route get route;

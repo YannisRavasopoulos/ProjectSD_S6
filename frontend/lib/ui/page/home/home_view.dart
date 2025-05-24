@@ -79,9 +79,7 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                     onSearchChanged: (value) {
                       widget.viewModel.search(value);
                     },
-                    onSuggestionSelected: (index) {
-                      // widget.viewModel.selectSuggestion(index);
-                    },
+                    onSuggestionSelected: widget.viewModel.selectSuggestion,
                   ),
                 ),
               ),
