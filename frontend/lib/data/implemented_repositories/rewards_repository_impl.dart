@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:frontend/data/mocks/mock_user_repository.dart';
 import 'package:frontend/data/model/reward.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 
-class MockReward extends Reward {
+class RewardImpl extends Reward {
   @override
   final String description;
   @override
@@ -14,33 +12,79 @@ class MockReward extends Reward {
   @override
   final String title;
 
-  MockReward({
+  RewardImpl({
     required this.description,
     required this.id,
     required this.points,
     required this.title,
   });
-
-  factory MockReward.random() {
-    return MockReward(
-      description: 'Mock Reward Description',
-      id: DateTime.now().millisecondsSinceEpoch,
-      points: Random().nextInt(100) + 1, // Random points between 1 and 100
-      title: 'Mock Reward Title',
-    );
-  }
 }
 
-class MockRewardRepository implements RewardRepository {
-  List<Reward> _availableRewards = List.generate(
-    10,
-    (index) => MockReward.random(),
-  );
+class RewardsRepositoryImpl implements RewardRepository {
+  final List<Reward> _availableRewards = [
+    RewardImpl(
+      id: 1,
+      title: 'Coffee Discount',
+      description: 'Get 50% off your next coffee',
+      points: 50,
+    ),
+    RewardImpl(
+      id: 2,
+      title: 'Free Appetizer',
+      description: 'Enjoy a free appetizer at a local restaurant',
+      points: 75,
+    ),
+    RewardImpl(
+      id: 3,
+      title: 'Movie Ticket',
+      description: 'Get a free movie ticket',
+      points: 120,
+    ),
+    RewardImpl(
+      id: 4,
+      title: 'Ride Discount',
+      description: 'Get 20% off your next ride',
+      points: 90,
+    ),
+    RewardImpl(
+      id: 5,
+      title: 'Book Discount',
+      description: 'Get 30% off a book',
+      points: 60,
+    ),
+    RewardImpl(
+      id: 6,
+      title: 'Snack Pack',
+      description: 'Get a free snack pack',
+      points: 40,
+    ),
+    RewardImpl(
+      id: 7,
+      title: 'Concert Ticket',
+      description: 'Get a free concert ticket',
+      points: 150,
+    ),
+    RewardImpl(
+      id: 8,
+      title: 'Museum Pass',
+      description: 'Get a free museum pass',
+      points: 100,
+    ),
+    RewardImpl(
+      id: 9,
+      title: 'Game Discount',
+      description: 'Get 40% off a game',
+      points: 80,
+    ),
+    RewardImpl(
+      id: 10,
+      title: 'Free Dessert',
+      description: 'Enjoy a free dessert at a local cafe',
+      points: 55,
+    ),
+  ];
 
-  List<Reward> _redeemedRewards = List.generate(
-    3,
-    (index) => MockReward.random(),
-  );
+  final List<Reward> _redeemedRewards = [];
 
   @override
   Future<List<Reward>> fetchAvailable() async {
