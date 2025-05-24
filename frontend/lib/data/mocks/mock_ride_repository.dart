@@ -5,6 +5,7 @@ import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/model/route.dart';
+import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -176,8 +177,14 @@ class MockRideRepository implements RideRepository {
   }
 
   @override
-  Future<List<Ride>> fetchMatching(RideRequest request) {
+  Future<List<Ride>> fetchMatchingRides(RideRequest request) {
     // TODO: implement fetchMatching
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<Ride>> watchMatchingRides(RideRequest request) {
+    // TODO: implement watchMatching
     throw UnimplementedError();
   }
 
@@ -223,8 +230,14 @@ class MockRideRepository implements RideRepository {
   }
 
   @override
-  Stream<List<Ride>> watchMatching(RideRequest request) {
-    // TODO: implement watchMatching
+  Future<User> fetchPotentialPassengers(Ride ride) {
+    // TODO: implement fetchPotentialPassengers
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<User>> watchPotentialPassengers(Ride ride) {
+    // TODO: implement watchPotentialPassengers
     throw UnimplementedError();
   }
 }

@@ -110,7 +110,7 @@ class FindRideViewModel extends ChangeNotifier {
 
     try {
       // TODO: fetch Matching rides
-      rides = await rideRepository.fetchMatching(
+      rides = await rideRepository.fetchMatchingRides(
         MockRideRequest(
           origin: MockLocation(coordinates: LatLng(0, 0)),
           destination: MockLocation(coordinates: LatLng(0, 0)),
