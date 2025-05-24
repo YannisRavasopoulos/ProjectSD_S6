@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
-import 'package:frontend/data/impl/impl_activity_repository.dart';
-import 'package:frontend/data/model/location.dart'; // Add this import
 
 class ActivitiesViewModel extends ChangeNotifier {
   final ActivityRepository activityRepository;
@@ -31,7 +29,7 @@ class ActivitiesViewModel extends ChangeNotifier {
       onError: (error) {
         _errorMessage = error.toString();
         notifyListeners();
-      }
+      },
     );
   }
 
@@ -49,14 +47,13 @@ class ActivitiesViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> createActivity(ImplActivity activity) async {
+  Future<void> createActivity(Activity activity) async {
     try {
       _isLoading = true;
       notifyListeners();
-      
+
       await activityRepository.create(activity);
       await _loadActivities();
-      
     } catch (e) {
       _errorMessage = e.toString();
       notifyListeners();
@@ -66,14 +63,13 @@ class ActivitiesViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateActivity(ImplActivity activity) async {
+  Future<void> updateActivity(Activity activity) async {
     try {
       _isLoading = true;
       notifyListeners();
-      
+
       await activityRepository.update(activity);
       await _loadActivities();
-      
     } catch (e) {
       _errorMessage = e.toString();
       notifyListeners();
