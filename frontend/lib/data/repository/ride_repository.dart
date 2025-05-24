@@ -10,7 +10,7 @@ abstract interface class RideRepository {
   Stream<List<Ride>> watchMatchingRides(RideRequest request);
 
   /// Returns potential passengers.
-  Future<User> fetchPotentialPassengers(Ride ride);
+  Future<List<User>> fetchPotentialPassengers(Ride ride);
 
   /// Watches potential passengers.
   Stream<List<User>> watchPotentialPassengers(Ride ride);

@@ -1,6 +1,5 @@
 import 'dart:math';
-
-import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:frontend/data/impl/mock_user_repository.dart';
 import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/mocks/mock_location_repository.dart';
-import 'package:frontend/data/mocks/mock_ride_repository.dart';
+import 'package:frontend/data/impl/implemented_ride_repository.dart';
+import 'package:frontend/data/impl/mock_location_repository.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
@@ -111,11 +111,12 @@ class FindRideViewModel extends ChangeNotifier {
     try {
       // TODO: fetch Matching rides
       rides = await rideRepository.fetchMatchingRides(
-        MockRideRequest(
+        ImplementedRideRequest(
           origin: MockLocation(coordinates: LatLng(0, 0)),
           destination: MockLocation(coordinates: LatLng(0, 0)),
           departureTime: DateTime.now(),
           arrivalTime: DateTime.now().add(Duration(hours: 1)),
+          id: 1,
         ),
       );
     } catch (e) {

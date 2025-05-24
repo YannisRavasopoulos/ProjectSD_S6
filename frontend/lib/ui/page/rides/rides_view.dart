@@ -25,8 +25,8 @@ class RidesView extends StatelessWidget {
       context: context,
       builder:
           (context) => RideDeletionDialog(
-            onDelete: () {
-              viewModel.removeRide(ride.id);
+            onDelete: () async {
+              await viewModel.removeRide(ride);
               Navigator.of(context).pop();
             },
             onCancel: () => Navigator.of(context).pop(),
@@ -64,13 +64,17 @@ class RidesView extends StatelessWidget {
                                     rideRepository: viewModel.rideRepository,
                                   )
                                   ..id = ride.id
-                                  ..from = ride.from
-                                  ..to = ride.to
+                                  // Αν έχεις τρόπο να μετατρέψεις coordinates σε string για τη φόρμα:
+                                  ..from =
+                                      ride.route.start.coordinates.toString()
+                                  ..to = ride.route.end.coordinates.toString()
                                   ..departureTime = TimeOfDay(
                                     hour: ride.departureTime.hour,
                                     minute: ride.departureTime.minute,
                                   )
-                                  ..seats = ride.seats,
+                                  ..seats =
+                                      ride.totalSeats - ride.availableSeats
+                                  ..capacity = ride.totalSeats,
                           ),
                     ),
                   );

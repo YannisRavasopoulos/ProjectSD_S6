@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/mocks/mock_authentication_repository.dart';
-import 'package:frontend/data/mocks/mock_reward_repository.dart';
+import 'package:frontend/data/impl/mock_authentication_repository.dart';
+import 'package:frontend/data/impl/mock_reward_repository.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
@@ -8,11 +8,13 @@ import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
+import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
+import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rating/rate_view.dart';
-import 'package:frontend/data/mocks/mock_location_repository.dart';
-import 'package:frontend/data/mocks/mock_rating_repository.dart';
-import 'package:frontend/data/mocks/mock_ride_repository.dart';
-import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:frontend/data/impl/mock_location_repository.dart';
+import 'package:frontend/data/impl/mock_rating_repository.dart';
+import 'package:frontend/data/impl/implemented_ride_repository.dart';
+import 'package:frontend/data/impl/mock_user_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
@@ -25,6 +27,8 @@ import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/rating/rate_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_view.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
+import 'package:frontend/ui/page/rides/rides_view.dart';
+import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
@@ -33,7 +37,7 @@ import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 class App extends StatelessWidget {
   final UserRepository _userRepository = MockUserRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
-  final RideRepository _rideRepository = MockRideRepository();
+  final RideRepository _rideRepository = ImplRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
   final RewardRepository _rewardRepository = MockRewardRepository();
   final AuthenticationRepository _authenticationRepository =
@@ -77,10 +81,13 @@ class App extends StatelessWidget {
     userRepository: _userRepository,
   );
 
-  // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
-  //   rideRepository: _rideRepository,
-  //   userRepository: _userRepository,
-  // );
+  late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
+    rideRepository: _rideRepository,
+  );
+
+  late final RidesViewModel ridesViewModel = RidesViewModel(
+    rideRepository: _rideRepository,
+  );
 
   // final PickupRepository _pickupRepository = PickupRepository(
   //   pickupService: PickupService(),
@@ -89,10 +96,6 @@ class App extends StatelessWidget {
   //     AuthenticationRepository();
   // final ActivityRepository _activityRepository = ActivityRepository();
   // final ReportRepository _reportRepository = ReportRepository();
-
-  // late final RidesListViewModel ridesViewModel = RidesListViewModel(
-  //   rideRepository: _rides,
-  // );
 
   // late final RatingViewModel rateViewModel = RatingViewModel(
   //   ratingRepository: _ratingRepository,
@@ -134,16 +137,13 @@ class App extends StatelessWidget {
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         // '/activities':
         //     (context) => ActivitiesView(viewModel: activitiesViewModel),
-        // '/rides':
-        //     (context) => RidesView(
-        //       viewModel: ridesViewModel,
-        //       createRideViewModel: createRideViewModel,
-        //     ),
-        // '/offer_ride':
-        //     (context) => OfferRideView(
-        //       viewModel: offerRideViewModel,
-        //       activitiesViewModel: activitiesViewModel,
-        //     ),
+        '/rides':
+            (context) => RidesView(
+              viewModel: ridesViewModel,
+              createRideViewModel: createRideViewModel,
+            ),
+        '/offer_ride':
+            (context) => OfferRideView(viewModel: offerRideViewModel),
         // '/report': (context) => ReportView(viewModel: reportViewModel),
       },
       // onGenerateRoute: (settings) {

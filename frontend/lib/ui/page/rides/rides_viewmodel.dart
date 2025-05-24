@@ -12,7 +12,7 @@ class RidesViewModel extends ChangeNotifier {
   Future<void> fetchCreatedRides() async {
     isLoading = true;
     notifyListeners();
-    createdRides = await rideRepository.fetch();
+    createdRides = await rideRepository.fetchHistory();
     isLoading = false;
     notifyListeners();
   }
@@ -32,8 +32,9 @@ class RidesViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> removeRide(int id) async {
-    await rideRepository.delete(id);
+  Future<void> removeRide(Ride ride) async {
+    // <-- αλλαγή εδώ
+    await rideRepository.cancel(ride); // <-- αλλαγή εδώ
     await fetchCreatedRides();
   }
 }
