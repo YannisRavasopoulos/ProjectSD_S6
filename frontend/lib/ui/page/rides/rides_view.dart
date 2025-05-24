@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
+import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
+import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
-import 'package:frontend/ui/page/rides/ride_card.dart';
+import 'package:frontend/ui/page/rides/ride_list_card.dart';
 import 'package:frontend/ui/page/rides/ride_deletion_dialog.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 
 class RidesView extends StatelessWidget {
   final RidesViewModel viewModel;
 
-  final CreateRideViewModel createRideViewModel = CreateRideViewModel(
-    rideRepository: RideRepository(),
-  );
+  final CreateRideViewModel createRideViewModel;
 
-  RidesView({super.key, required this.viewModel});
+  RidesView({
+    super.key,
+    required this.viewModel,
+    required this.createRideViewModel,
+  });
 
   void _onRemoveRidePressed(BuildContext context, Ride ride) {
     showDialog(
@@ -47,9 +51,33 @@ class RidesView extends StatelessWidget {
             itemCount: viewModel.createdRides.length,
             itemBuilder: (context, index) {
               final ride = viewModel.createdRides[index];
-              return RideCard(
+              return RideListCard(
                 ride: ride,
-                onEdit: () {}, // implement edit if needed
+                onEdit: () async {
+                  final editedRide = await Navigator.push<Ride>(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => CreateRideView(
+                            viewModel:
+                                CreateRideViewModel(
+                                    rideRepository: viewModel.rideRepository,
+                                  )
+                                  ..id = ride.id
+                                  ..from = ride.from
+                                  ..to = ride.to
+                                  ..departureTime = TimeOfDay(
+                                    hour: ride.departureTime.hour,
+                                    minute: ride.departureTime.minute,
+                                  )
+                                  ..seats = ride.seats,
+                          ),
+                    ),
+                  );
+                  if (editedRide != null) {
+                    await viewModel.updateRide(editedRide);
+                  }
+                },
                 onRemove: () => _onRemoveRidePressed(context, ride),
               );
             },
@@ -63,35 +91,15 @@ class RidesView extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder:
-                  (context) => CreateRideView(viewModel: createRideViewModel),
+                  (context) => CreateRideView(
+                    viewModel: CreateRideViewModel(
+                      rideRepository: viewModel.rideRepository,
+                    ),
+                  ),
             ),
           );
           if (newRide != null) {
-            // Μετά το create, ρώτα τον χρήστη αν θέλει να το κάνει offer ή να το κρατήσει στα created
-            final action = await showDialog<String>(
-              context: context,
-              builder:
-                  (context) => AlertDialog(
-                    title: const Text('Ride Created'),
-                    content: const Text(
-                      'Do you want to offer this ride or just save it?',
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'offer'),
-                        child: const Text('Offer Ride'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'created'),
-                        child: const Text('Save Only'),
-                      ),
-                    ],
-                  ),
-            );
-            if (action == 'created') {
-              await viewModel.addRide(newRide);
-            }
-            // Αν είναι offer, κάνε ό,τι χρειάζεται για τα offer rides
+            await viewModel.addRide(newRide);
           }
         },
       ),

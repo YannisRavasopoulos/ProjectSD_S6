@@ -40,7 +40,7 @@ class SignInViewModel extends ChangeNotifier {
         return false;
       }
 
-      await authenticationRepository.addAuthentication(email, password);
+      await authenticationRepository.authenticate(email, password);
 
       return true;
     } catch (e) {

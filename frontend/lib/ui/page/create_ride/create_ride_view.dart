@@ -3,8 +3,6 @@ import 'package:frontend/ui/page/create_ride/create_ride_form.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_success.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 
-// import 'package:frontend/ui/shared/bottom_panel.dart';
-
 class CreateRideView extends StatelessWidget {
   final CreateRideViewModel viewModel;
 
@@ -25,10 +23,11 @@ class CreateRideView extends StatelessWidget {
             return CreateRideSuccess(
               message: viewModel.successMessage!,
               onOkPressed: () {
+                final ride = viewModel.updatedRide ?? viewModel.createdRide;
+                Navigator.of(context).pop(ride); // returns ride
                 viewModel.clearMessages();
-                Navigator.of(context).pop();
               },
-              onOfferPressed: () async {
+              onOfferPressed: () {
                 viewModel.clearMessages();
                 final ride = viewModel.createdRide;
                 if (ride != null) {

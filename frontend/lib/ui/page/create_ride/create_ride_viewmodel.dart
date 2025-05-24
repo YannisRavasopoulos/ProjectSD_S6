@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/mocks/mock_ride_repository.dart';
+import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 
@@ -12,6 +14,8 @@ class CreateRideViewModel extends ChangeNotifier {
   int seats = 1;
   int capacity = 4;
   Ride? createdRide;
+  Ride? updatedRide;
+  int? id;
 
   bool isLoading = false;
   String? errorMessage;
@@ -62,11 +66,26 @@ class CreateRideViewModel extends ChangeNotifier {
         departureTime!.hour,
         departureTime!.minute,
       );
-      await rideRepository.create(
-        // TODO
-        Ride.random(),
+      final ride = MockRide(
+        driver: MockDriver.random(), // Assuming a random driver for now
+        passengers: [],
+        route: MockRoute.random(),
+        departureTime: dt,
+        estimatedArrivalTime: dt.add(Duration(hours: 1)), // Example duration
+        estimatedDuration: Duration(hours: 1),
+        availableSeats: capacity - seats,
+        totalSeats: capacity,
       );
-      successMessage = "Ride created successfully!";
+
+      if (id != null) {
+        await rideRepository.update(ride); // <-- EDIT
+        successMessage = "Ride updated successfully!";
+        updatedRide = ride;
+      } else {
+        await rideRepository.create(ride); // <-- CREATE
+        successMessage = "Ride created successfully!";
+        createdRide = ride;
+      }
     } catch (e) {
       errorMessage = "Failed to create ride: $e";
     } finally {
