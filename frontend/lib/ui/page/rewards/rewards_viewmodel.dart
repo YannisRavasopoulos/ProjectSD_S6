@@ -15,10 +15,12 @@ class RewardViewModel extends ChangeNotifier {
   }
 
   List<Reward> _availableRewards = [];
+  List<Reward> _redeemedRewards = [];
   int _userPoints = 0;
   bool _isLoading = true;
 
   List<Reward> get availableRewards => _availableRewards;
+  List<Reward> get redeemedRewards => _redeemedRewards;
   int get userPoints => _userPoints;
   bool get isLoading => _isLoading;
 
@@ -27,6 +29,7 @@ class RewardViewModel extends ChangeNotifier {
     notifyListeners();
 
     _availableRewards = await rewardRepository.fetchAvailable();
+    _redeemedRewards = await rewardRepository.fetchRedeemed();
     var user = await userRepository.fetchCurrent();
     _userPoints = user.points;
     _isLoading = false;
