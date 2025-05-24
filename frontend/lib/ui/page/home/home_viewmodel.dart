@@ -10,47 +10,54 @@ import 'package:latlong2/latlong.dart';
 class HomeViewModel extends ChangeNotifier {
   final LocationRepository locationRepository;
   final UserRepository userRepository;
-  User? user;
+
+  // TODO: this should go to locationRepository
+  Stream<Location> watchCurrentLocation() async* {
+    var user = await userRepository.fetchCurrent();
+    yield* locationRepository.watchCurrent(user);
+  }
+
+  // TODO: this should go to locationRepository
+  Future<Location> fetchCurrentLocation() async {
+    var user = await userRepository.fetchCurrent();
+    return locationRepository.fetchCurrent(user);
+  }
+
+  bool shouldAnimateToLocation = true;
+
+  LatLng? destination;
+  LatLng currentLocation = LatLng(0, 0);
+  List<String> suggestions = [];
 
   HomeViewModel({
     required this.locationRepository,
     required this.userRepository,
   }) {
-    _init();
+    _locationSubscription = watchCurrentLocation().listen(_onLocationUpdate);
+    refreshLocation();
   }
 
-  late final StreamSubscription<Location>? _locationSubscription;
-
-  void _init() async {
-    user = await userRepository.fetchCurrent();
-    _locationSubscription = locationRepository
-        .watchCurrent(user!)
-        .listen(_onLocationUpdate);
-    await refreshLocation();
-  }
+  late final StreamSubscription<Location> _locationSubscription;
 
   void _onLocationUpdate(Location location) {
-    _location = location;
-    source = location.coordinates;
+    currentLocation = location.coordinates;
     notifyListeners();
+    if (shouldAnimateToLocation) {
+      shouldAnimateToLocation = false; // Prevent further animations
+    }
   }
 
   @override
   void dispose() {
-    _locationSubscription?.cancel();
+    _locationSubscription.cancel();
     super.dispose();
   }
 
-  Location? _location;
-  LatLng? destination;
-  LatLng source = LatLng(0, 0);
-
-  List<String> suggestions = [];
-
   Future<void> refreshLocation() async {
     try {
-      var location = await locationRepository.fetchCurrent(user!);
+      var location = await fetchCurrentLocation();
       _onLocationUpdate(location);
+      shouldAnimateToLocation = true;
     } catch (e) {
       // Handle error
       print(e);
@@ -58,7 +65,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void search(String query) async {
-    suggestions.add("NIGGA");
+    // suggestions.add("NIGGA");
     notifyListeners();
   }
 
