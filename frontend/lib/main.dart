@@ -8,9 +8,9 @@ void main() async {
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     // setWindowTitle('Loop App');
-    setWindowFrame(
-      const Rect.fromLTWH(300, 500, 600, 900),
-    ); // Default size and position
+    var size = const Size(500, 800);
+    setWindowMaxSize(size);
+    setWindowMinSize(size);
   }
 
   runApp(App());
