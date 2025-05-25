@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class CreateRideSuccess extends StatelessWidget {
   final String message;
-  final VoidCallback onOkPressed;
+  final VoidCallback onSavePressed;
   final VoidCallback? onOfferPressed;
 
   const CreateRideSuccess({
     super.key,
     required this.message,
-    required this.onOkPressed,
+    required this.onSavePressed,
     this.onOfferPressed,
   });
 
@@ -23,7 +23,10 @@ class CreateRideSuccess extends StatelessWidget {
             style: const TextStyle(color: Colors.green, fontSize: 16),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(onPressed: onOkPressed, child: const Text("OK")),
+          ElevatedButton(
+            onPressed: onSavePressed,
+            child: const Text("Save and Close"),
+          ),
           if (onOfferPressed != null) ...[
             const SizedBox(height: 10),
             ElevatedButton.icon(

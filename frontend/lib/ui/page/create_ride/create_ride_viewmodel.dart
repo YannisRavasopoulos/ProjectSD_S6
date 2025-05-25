@@ -71,16 +71,15 @@ class CreateRideViewModel extends ChangeNotifier {
         departureTime!.minute,
       );
 
-      // Δημιουργία Location αντικειμένων με dummy coordinates (ή βάλε geocoding αν έχεις)
       final startLocation = LocationImpl(
         id: DateTime.now().millisecondsSinceEpoch,
         coordinates: LatLng(37.0, 23.0),
-        name: '',
+        name: from!,
       );
       final endLocation = LocationImpl(
-        name: '',
         id: DateTime.now().millisecondsSinceEpoch + 1,
         coordinates: LatLng(37.5, 23.5),
+        name: to!,
       );
 
       final route = ImplementedRoute(
@@ -106,15 +105,9 @@ class CreateRideViewModel extends ChangeNotifier {
         totalSeats: capacity,
       );
 
-      if (id != null) {
-        await rideRepository.update(ride);
-        successMessage = "Ride updated successfully!";
-        updatedRide = ride;
-      } else {
-        await rideRepository.create(ride);
-        successMessage = "Ride created successfully!";
-        createdRide = ride;
-      }
+      await rideRepository.create(ride);
+      successMessage = "Ride created successfully!";
+      createdRide = ride;
     } catch (e) {
       errorMessage = "Failed to create ride: $e";
     } finally {

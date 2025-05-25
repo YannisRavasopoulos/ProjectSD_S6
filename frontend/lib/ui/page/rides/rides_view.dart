@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/rides/ride_list_card.dart';
 import 'package:frontend/ui/page/rides/ride_deletion_dialog.dart';
@@ -26,7 +24,7 @@ class RidesView extends StatelessWidget {
       builder:
           (context) => RideDeletionDialog(
             onDelete: () {
-              viewModel.removeRide(ride.id);
+              viewModel.removeRide(ride);
               Navigator.of(context).pop();
             },
             onCancel: () => Navigator.of(context).pop(),
@@ -64,13 +62,16 @@ class RidesView extends StatelessWidget {
                                     rideRepository: viewModel.rideRepository,
                                   )
                                   ..id = ride.id
-                                  ..from = ride.from
-                                  ..to = ride.to
+                                  ..from = ride.route.start.name
+                                  ..to = ride.route.end.name
                                   ..departureTime = TimeOfDay(
                                     hour: ride.departureTime.hour,
                                     minute: ride.departureTime.minute,
                                   )
-                                  ..seats = ride.seats,
+                                  ..seats =
+                                      ride.totalSeats - ride.availableSeats
+                                  ..capacity = ride.totalSeats,
+                            ridesViewModel: viewModel,
                           ),
                     ),
                   );
@@ -93,8 +94,9 @@ class RidesView extends StatelessWidget {
               builder:
                   (context) => CreateRideView(
                     viewModel: CreateRideViewModel(
-                      rideRepository: viewModel.rideRepository,
+                      rideRepository: createRideViewModel.rideRepository,
                     ),
+                    ridesViewModel: viewModel,
                   ),
             ),
           );

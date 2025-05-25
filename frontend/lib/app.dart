@@ -50,7 +50,7 @@ class App extends StatelessWidget {
   final UserRepository _userRepository = ImplUserRepository();
   final ActivityRepository _activityRepository = ImplActivityRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
-  final RideRepository _rideRepository = MockRideRepository();
+  final RideRepository _rideRepository = ImplRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
   final RewardRepository _rewardRepository = RewardsRepositoryImpl();
   final AuthenticationRepository _authenticationRepository =
@@ -146,15 +146,18 @@ class App extends StatelessWidget {
               viewModel: rateViewModel,
             ),
         '/create_ride':
-            (context) => CreateRideView(viewModel: createRideViewModel),
+            (context) => CreateRideView(
+              viewModel: createRideViewModel,
+              ridesViewModel: ridesViewModel,
+            ),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/rides':
             (context) => RidesView(
-              viewModel: ridesViewModel,
               createRideViewModel: createRideViewModel,
+              viewModel: ridesViewModel,
             ),
         '/offer_ride':
             (context) => OfferRideView(
