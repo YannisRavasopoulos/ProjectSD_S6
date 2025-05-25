@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:frontend/data/model/user.dart';
-import 'package:frontend/ui/page/rating/rate_viewmodel.dart';
+import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
 
 class RateView extends StatelessWidget {
   final User toUser;
