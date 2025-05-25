@@ -36,15 +36,14 @@ class RewardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void redeem(Reward reward) async {
+  Future<String?> redeem(Reward reward) async {
     _isLoading = true;
     notifyListeners();
 
     try {
       final result = await rewardRepository.redeem(reward);
       await _fetchData(); // Refresh available rewards
-
-      // return result;
+      return result; // Return the redemption code
     } catch (e) {
       // Handle error as needed
       return null;
