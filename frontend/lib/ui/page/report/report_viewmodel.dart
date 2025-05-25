@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/report.dart';
+import 'package:frontend/data/impl/impl_report_repository.dart';
+import 'package:frontend/data/model/report_reason.dart';
 import 'package:frontend/data/repository/report_repository.dart';
-import 'package:uuid/uuid.dart';
+import 'dart:math';
 
 class ReportViewModel extends ChangeNotifier {
   final ReportRepository reportRepository;
@@ -20,7 +21,7 @@ class ReportViewModel extends ChangeNotifier {
     required String reporterId,
     required String reportedUserId,
     required String rideId,
-    required String reason,
+    required ReportReason reason,
     required String details,
   }) async {
     _isLoading = true;
@@ -29,8 +30,8 @@ class ReportViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final report = Report(
-        id: const Uuid().v4(),
+      final report = ImplReport(
+        id: Random().nextInt(1000000),
         reporterId: reporterId,
         reportedUserId: reportedUserId,
         rideId: rideId,
@@ -38,7 +39,7 @@ class ReportViewModel extends ChangeNotifier {
         details: details,
         createdAt: DateTime.now(),
       );
-      await reportRepository.submitReport(report);
+      await reportRepository.create(report);
       _submitted = true;
     } catch (e) {
       _errorMessage = 'Failed to submit report: $e';
