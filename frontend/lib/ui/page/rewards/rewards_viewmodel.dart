@@ -37,8 +37,6 @@ class RewardViewModel extends ChangeNotifier {
   }
 
   void redeem(Reward reward) async {
-    if (_isLoading || _userPoints < reward.points) return null;
-
     _isLoading = true;
     notifyListeners();
 

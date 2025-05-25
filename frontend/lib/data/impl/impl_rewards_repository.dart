@@ -119,6 +119,9 @@ class RewardsRepositoryImpl implements RewardRepository {
       _redeemedRewards.add(reward);
       // TODO: this is a bug, user repo stream is not updated
       var user = MockUserRepository.user;
+      if (user.points < reward.points) {
+        throw Exception('Not enough points');
+      }
       MockUserRepository.user = user.copyWith(
         points: user.points - reward.points,
       );

@@ -29,6 +29,7 @@ class RewardView extends StatelessWidget {
                   Expanded(
                     child: TabBarView(
                       children: [
+                        // TODO this should show a window with the redemption code
                         AvailableRewardsList(
                           availableRewards: viewModel.availableRewards,
                           userPoints: viewModel.userPoints,
