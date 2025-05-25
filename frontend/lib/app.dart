@@ -9,6 +9,7 @@ import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
+import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
