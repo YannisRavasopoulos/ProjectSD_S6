@@ -8,11 +8,11 @@ class RewardCard extends StatelessWidget {
   final ValueChanged<Reward> onRedeem;
 
   const RewardCard({
-    super.key,
+    Key? key,
     required this.reward,
     required this.userPoints,
     required this.onRedeem,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -49,6 +49,7 @@ class RewardViewModel extends ChangeNotifier {
       // return result;
     } catch (e) {
       // Handle error as needed
+      return null;
     } finally {
       _isLoading = false;
       notifyListeners();
