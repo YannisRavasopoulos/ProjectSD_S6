@@ -12,14 +12,14 @@ class RewardImpl extends Reward {
   @override
   final String title;
 
-  final String redemptionCode; // Add this line
+  final String redemptionCode;
 
   RewardImpl({
     required this.description,
     required this.id,
     required this.points,
     required this.title,
-    required this.redemptionCode, // Add this line
+    required this.redemptionCode,
   });
 }
 
@@ -149,7 +149,7 @@ class RewardsRepositoryImpl implements RewardRepository {
   Stream<List<Reward>> watchRedeemed() async* {
     while (true) {
       await Future.delayed(Duration(seconds: 5));
-      yield _redeemedRewards; // Emit the current redeemed rewards
+      yield _redeemedRewards;
     }
   }
 }
