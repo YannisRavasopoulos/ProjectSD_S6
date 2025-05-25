@@ -29,6 +29,9 @@ abstract interface class PickupRepository {
   /// Reject a pickup request.
   Future<void> rejectPickup(PickupRequest request);
 
+  /// Cancel a pickup.
+  Future<void> cancelPickup(Pickup pickup);
+
   /// Complete a pickup.
   Future<void> completePickup(Pickup pickup);
 }
