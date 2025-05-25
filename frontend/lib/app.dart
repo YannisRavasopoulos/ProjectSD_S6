@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/address_repository_impl.dart';
 import 'package:frontend/data/repository/address_repository.dart';
-import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
+import 'package:frontend/data/impl/impl_activity_repository.dart';
+import 'package:frontend/data/impl/impl_rating_repository.dart';
+import 'package:frontend/data/impl/impl_report_repository.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
+import 'package:frontend/data/mocks/mock_authentication_repository.dart';
+import 'package:frontend/data/impl/impl_rewards_repository.dart';
+import 'package:frontend/data/mocks/mock_authentication_repository.dart';
+import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/repository/activity_repository.dart';
+import 'package:frontend/data/repository/authentication_repository.dart';
+import 'package:frontend/data/repository/rating_repository.dart';
+import 'package:frontend/data/repository/report_repository.dart';
+import 'package:frontend/data/repository/reward_repository.dart';
+import 'package:frontend/ui/page/activities/activities_view.dart';
+import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
+import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
+import 'package:frontend/ui/page/rate/rate_view.dart';
+import 'package:frontend/data/mocks/mock_location_repository.dart';
+import 'package:frontend/data/mocks/mock_rating_repository.dart';
+import 'package:frontend/data/mocks/mock_ride_repository.dart';
+import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/repository/ride_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
@@ -12,8 +35,11 @@ import 'package:frontend/ui/page/rewards/rewards_view.dart';
 import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 import 'package:frontend/ui/page/profile/profile_view.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
-import 'package:frontend/ui/page/rating/rate_view.dart';
-import 'package:frontend/ui/page/rating/rate_viewmodel.dart';
+import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
+import 'package:frontend/ui/page/report/report_view.dart';
+import 'package:frontend/ui/page/report/report_viewmodel.dart';
+import 'package:frontend/ui/page/rewards/rewards_view.dart';
+import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
@@ -32,15 +58,19 @@ import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/mocks/mock_user_repository.dart';
 import 'package:geocode/geocode.dart';
 
+
 class App extends StatelessWidget {
-  final UserRepository _userRepository = MockUserRepository();
-  final RatingRepository _ratingRepository = MockRatingRepository();
+  // Replace mocks with implementations
+  final UserRepository _userRepository = ImplUserRepository();
+  final ActivityRepository _activityRepository = ImplActivityRepository();
+  final RatingRepository _ratingRepository = ImplRatingRepository();
   final RideRepository _rideRepository = MockRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
-  final RewardRepository _rewardRepository = MockRewardRepository();
+  final RewardRepository _rewardRepository = RewardsRepositoryImpl();
   final AuthenticationRepository _authenticationRepository =
       MockAuthenticationRepository();
   final AddressRepository _addressRepository = AddressRepositoryImpl();
+  final ReportRepository _reportRepository = ImplReportRepository();
 
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: _rideRepository,
@@ -102,13 +132,13 @@ class App extends StatelessWidget {
   //   ratingRepository: _ratingRepository,
   // );
 
-  // late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
-  //   activityRepository: _activityRepository,
-  // );
+  late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
+    activityRepository: _activityRepository,
+  );
 
-  // late final ReportViewModel reportViewModel = ReportViewModel(
-  //   reportRepository: _reportRepository,
-  // );
+  late final ReportViewModel reportViewModel = ReportViewModel(
+    reportRepository: _reportRepository,
+  );
 
   final bool isLoggedIn = true;
 
@@ -129,15 +159,15 @@ class App extends StatelessWidget {
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/rate':
             (context) => RateView(
-              toUser: MockUser(firstName: 'John', lastName: 'Doe', points: 0),
+              toUser: ImplUser(firstName: 'John', lastName: 'Doe', points: 0, id: 0),
               viewModel: rateViewModel,
             ),
         '/create_ride':
             (context) => CreateRideView(viewModel: createRideViewModel),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
-        // '/activities':
-        //     (context) => ActivitiesView(viewModel: activitiesViewModel),
+        '/activities':
+            (context) => ActivitiesView(viewModel: activitiesViewModel),
         // '/rides':
         //     (context) => RidesView(
         //       viewModel: ridesViewModel,
@@ -148,7 +178,7 @@ class App extends StatelessWidget {
         //       viewModel: offerRideViewModel,
         //       activitiesViewModel: activitiesViewModel,
         //     ),
-        // '/report': (context) => ReportView(viewModel: reportViewModel),
+        '/report': (context) => ReportView(viewModel: reportViewModel),
       },
       // onGenerateRoute: (settings) {
       //   if (settings.name == '/arrange_pickup') {

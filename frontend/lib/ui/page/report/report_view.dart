@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
+import 'package:frontend/data/model/report_reason.dart';
 import 'report_form.dart';
 import 'report_viewmodel.dart';
 import 'package:frontend/data/repository/user_repository.dart';
@@ -10,8 +12,8 @@ class ReportView extends StatelessWidget {
   const ReportView({super.key, required this.viewModel});
 
   Future<String> _getReportedUserName(String userId) async {
-    final userRepository = UserRepository();
-    User? user = await userRepository.fetchForId(int.parse(userId));
+    final userRepository = ImplUserRepository();
+    User? user = await userRepository.fetchCurrent();
     return user?.firstName ?? 'Unknown User';
   }
 
@@ -73,11 +75,10 @@ class ReportView extends StatelessWidget {
                                         details: detailsValue,
                                         isLoading: loading,
                                         reportedUserName: reportedUserName,
-                                        reasons: const [
-                                          'Inappropriate behavior',
-                                          'Unsafe driving',
-                                          'No-show',
-                                          'Spam or scam',
+                                        reasons: [
+                                          'Inappropriate Behavior',
+                                          'Harassment',
+                                          'Spam',
                                           'Other',
                                         ],
                                         onReasonChanged: (val) {
@@ -94,16 +95,50 @@ class ReportView extends StatelessWidget {
                                                 'Please select a reason';
                                             return;
                                           }
+
                                           isLoading.value = true;
+
+                                          // Conversion giati htan string choices kai zhtaw ReportReason sto model
+                                          ReportReason reasonEnum;
+                                          switch (selectedReason.value!) {
+                                            case 'Inappropriate Behavior':
+                                              reasonEnum =
+                                                  ReportReason
+                                                      .inappropriateBehavior;
+                                              break;
+                                            case 'Harassment':
+                                              reasonEnum =
+                                                  ReportReason.harassment;
+                                              break;
+                                            case 'Spam':
+                                              reasonEnum = ReportReason.spam;
+                                              break;
+                                            case 'Other':
+                                              reasonEnum = ReportReason.other;
+                                              break;
+                                            default:
+                                              errorMessage.value =
+                                                  'Invalid reason selected';
+                                              isLoading.value = false;
+                                              return;
+                                          }
+
                                           await viewModel.submitReport(
                                             reporterId: '1',
                                             reportedUserId: reportedUserId,
                                             rideId: 'test_ride',
-                                            reason: selectedReason.value!,
+                                            reason: reasonEnum,
                                             details: details.value,
                                           );
-                                          isLoading.value = false;
-                                          submitted.value = true;
+
+                                          if (viewModel.errorMessage != null) {
+                                            errorMessage.value =
+                                                viewModel.errorMessage;
+                                            isLoading.value = false;
+                                          } else if (viewModel.submitted) {
+                                            isLoading.value = false;
+                                            submitted.value = true;
+                                          }
                                         },
                                       );
                                     },

@@ -1,1 +1,1 @@
-enum ReportReason { inappropriateBehavior, other }
+enum ReportReason { inappropriateBehavior, harassment, spam, other }
