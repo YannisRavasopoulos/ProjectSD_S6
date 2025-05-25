@@ -17,21 +17,11 @@ class ImplReport extends Report {
   @override
   final User receiver = MockUser.random();
 
-  final String reporterId;
-
-  final String reportedUserId;
-
-  final String rideId;
-
   final String details;
-
   final DateTime createdAt;
 
   ImplReport({
     required this.id,
-    required this.reporterId,
-    required this.reportedUserId,
-    required this.rideId,
     required this.reason,
     required this.details,
     required this.createdAt,
