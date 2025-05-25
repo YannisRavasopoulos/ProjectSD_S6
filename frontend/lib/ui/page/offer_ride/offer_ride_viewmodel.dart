@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/data/repository/offer_ride_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 
 class OfferRideViewModel extends ChangeNotifier {
@@ -8,27 +7,35 @@ class OfferRideViewModel extends ChangeNotifier {
 
   OfferRideViewModel({required this.rideRepository});
 
-  List<Ride> get createdRides =>
+  List<Ride> _createdRides = [];
+  List<Ride> get createdRides => _createdRides;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  void addRide(Ride ride) {
-    offerRideRepository.addRide(ride);
+  Future<void> fetchCreatedRides() async {
+    _isLoading = true;
+    notifyListeners();
+    _createdRides = await rideRepository.fetchHistory();
+    _isLoading = false;
     notifyListeners();
   }
 
-  void removeRide(int id) {
-    offerRideRepository.removeRide(id);
-    notifyListeners();
+  Future<void> addRide(Ride ride) async {
+    await rideRepository.create(ride);
+    await fetchCreatedRides();
   }
 
-  // // Dummy function for demo
-  // Future<List<String>> findNearbyCarpoolers(String rideId) async {
-  //   await Future.delayed(const Duration(milliseconds: 500));
-  //   final ride = createdRides.firstWhere((r) => r.id.toString() == rideId);
-  //   if (ride == null) return [];
-  //   // Επιστρέφει τόσα ονόματα όσοι οι διαθέσιμες θέσεις
-  //   return List.generate(ride.availableSeats, (i) => 'Carpooler ${i + 1}');
-  // }
+  Future<void> removeRide(Ride ride) async {
+    await rideRepository.cancel(ride);
+    await fetchCreatedRides();
+  }
+
+  // Dummy function for demo
+  Future<List<String>> findNearbyCarpoolers(String rideId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final ride = _createdRides.firstWhere((r) => r.id.toString() == rideId);
+    if (ride == null) return [];
+    return List.generate(ride.availableSeats, (i) => 'Carpooler ${i + 1}');
+  }
 }
