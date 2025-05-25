@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-// import 'package:frontend/data/model/pickup.dart';
-// import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
-// import 'package:frontend/ui/notification/notification_overlay.dart';
+import 'package:frontend/data/impl/impl_pickup_repository.dart';
+import 'package:frontend/data/mocks/mock_location_repository.dart';
+import 'package:frontend/data/model/location.dart';
+import 'package:frontend/data/mocks/mock_passenger_repo.dart';
+import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
+import 'package:frontend/ui/notification/notification_overlay.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -76,18 +79,21 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.notifications),
             title: const Text('Test Notification'),
             onTap: () {
-              // TODO
-              // // Create a test pickup
-              // // final testPickup = Pickup.random();
+              final testPickup = ImplPickup(
+                id: 12345,
+                passenger: MockPassenger.test(),
+                location: MockLocation.random(),
+                time: DateTime.now(),
+              );
 
-              // // Close the drawer
-              // Navigator.pop(context);
+              // Close the drawer
+              Navigator.pop(context);
 
-              // // Show the notification
-              // NotificationOverlay.show(
-              //   context,
-              //   PickupRequestNotification(pickup: testPickup),
-              // );
+              // Show the notification
+              NotificationOverlay.show(
+                context,
+                PickupRequestNotification(pickup: testPickup),
+              );
             },
           ),
           ListTile(

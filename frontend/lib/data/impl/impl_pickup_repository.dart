@@ -28,21 +28,30 @@ class ImplPickup extends Pickup {
 }
 
 class ImplPickupRepository implements PickupRepository {
-  final List<Pickup> _pendingPickups = [];
-  final List<Pickup> _completedPickups = [];
-  final List<PickupRequest> _pickupRequests = [];
+  final List<PickupRequest> _pickupRequests =
+      []; // Requests awaiting driver approval
+  final List<Pickup> _pendingPickups =
+      []; // Pickups accepted by driver, awaiting passenger acceptance/completion
+  final List<Pickup> _completedPickups = []; // Completed pickups
 
+  final StreamController<List<PickupRequest>> _requestsController =
+      StreamController<List<PickupRequest>>.broadcast();
   final StreamController<List<Pickup>> _pendingController =
       StreamController<List<Pickup>>.broadcast();
   final StreamController<List<Pickup>> _completedController =
       StreamController<List<Pickup>>.broadcast();
-  final StreamController<List<PickupRequest>> _requestsController =
-      StreamController<List<PickupRequest>>.broadcast();
+
+  // ==== Passenger methods ====
 
   @override
   Future<Pickup> requestPickup(PickupRequest request) async {
     await Future.delayed(const Duration(seconds: 1));
 
+    // Vazoume to request sta pending requests (awaiting driver approval)
+    _pickupRequests.add(request);
+    _requestsController.add(List.from(_pickupRequests));
+
+    // dummy returning pickup instance - testing purposes
     final pickup = ImplPickup(
       id: Random().nextInt(10000),
       passenger: request.passenger,
@@ -50,10 +59,51 @@ class ImplPickupRepository implements PickupRepository {
       time: request.time,
     );
 
-    _pendingPickups.add(pickup);
-    _pendingController.add(List.from(_pendingPickups));
-
     return pickup;
+  }
+
+  @override
+  Future<void> acceptPickup(Pickup pickup) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Passenger accepts the pickup - this confirms they want to proceed
+    // The pickup should already be in pending state (driver has accepted the request)
+    if (!_pendingPickups.any((p) => p.id == pickup.id)) {
+      _pendingPickups.add(pickup);
+      _pendingController.add(List.from(_pendingPickups));
+    }
+  }
+
+  @override
+  Future<void> rejectPickup(Pickup pickup) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Passenger rejects the pickup
+    _pendingPickups.removeWhere((p) => p.id == pickup.id);
+    _pendingController.add(List.from(_pendingPickups));
+  }
+
+  // ==== Driver methods ====
+
+  @override
+  Future<void> acceptPickupRequest(PickupRequest request, Pickup pickup) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Driver accepts the request - apo requests se pending pickups
+    _pickupRequests.removeWhere((r) => r.id == request.id);
+    _pendingPickups.add(pickup);
+
+    _requestsController.add(List.from(_pickupRequests));
+    _pendingController.add(List.from(_pendingPickups));
+  }
+
+  @override
+  Future<void> rejectPickupRequest(PickupRequest request) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Driver rejects the request
+    _pickupRequests.removeWhere((r) => r.id == request.id);
+    _requestsController.add(List.from(_pickupRequests));
   }
 
   @override
@@ -63,19 +113,8 @@ class ImplPickupRepository implements PickupRepository {
   }
 
   @override
-  Future<List<Pickup>> fetchCompleted() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    return List.from(_completedPickups);
-  }
-
-  @override
   Stream<List<Pickup>> watchPending() {
     return _pendingController.stream;
-  }
-
-  @override
-  Stream<List<Pickup>> watchCompleted() {
-    return _completedController.stream;
   }
 
   @override
@@ -89,37 +128,24 @@ class ImplPickupRepository implements PickupRepository {
     return _requestsController.stream;
   }
 
+  // ==== General methods ====
+
   @override
-  Future<void> acceptPickup(PickupRequest request) async {
+  Future<List<Pickup>> fetchCompleted() async {
     await Future.delayed(const Duration(milliseconds: 500));
-
-    _pickupRequests.removeWhere((r) => r.id == request.id);
-
-    final pickup = ImplPickup(
-      id: Random().nextInt(10000),
-      passenger: request.passenger,
-      location: request.location,
-      time: request.time,
-    );
-
-    _pendingPickups.add(pickup);
-    _requestsController.add(List.from(_pickupRequests));
-    _pendingController.add(List.from(_pendingPickups));
+    return List.from(_completedPickups);
   }
 
   @override
-  Future<void> rejectPickup(PickupRequest request) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    _pickupRequests.removeWhere((r) => r.id == request.id);
-
-    _requestsController.add(List.from(_pickupRequests));
+  Stream<List<Pickup>> watchCompleted() {
+    return _completedController.stream;
   }
 
   @override
   Future<void> cancelPickup(Pickup pickup) async {
     await Future.delayed(const Duration(milliseconds: 800));
 
+    // Afairw to pickup (at any stage)
     _pendingPickups.removeWhere((p) => p.id == pickup.id);
     _pendingController.add(List.from(_pendingPickups));
   }
@@ -128,6 +154,7 @@ class ImplPickupRepository implements PickupRepository {
   Future<void> completePickup(Pickup pickup) async {
     await Future.delayed(const Duration(milliseconds: 800));
 
+    // Move pickup apo pending se completed
     _pendingPickups.removeWhere((p) => p.id == pickup.id);
     _completedPickups.add(pickup);
 
@@ -136,14 +163,14 @@ class ImplPickupRepository implements PickupRepository {
   }
 
   void dispose() {
+    _requestsController.close();
     _pendingController.close();
     _completedController.close();
-    _requestsController.close();
   }
 
-  // Testing Method - gia manual access
-  // void addPickupRequest(PickupRequest request) {
-  //   _pickupRequests.add(request);
-  //   _requestsController.add(List.from(_pickupRequests));
-  // }
+  // Testing method for adding pickup requests manually
+  void addPickupRequest(PickupRequest request) {
+    _pickupRequests.add(request);
+    _requestsController.add(List.from(_pickupRequests));
+  }
 }
