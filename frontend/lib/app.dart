@@ -41,7 +41,6 @@ import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 
-
 class App extends StatelessWidget {
   // Replace mocks with implementations
   final UserRepository _userRepository = ImplUserRepository();
@@ -49,7 +48,9 @@ class App extends StatelessWidget {
   final RatingRepository _ratingRepository = ImplRatingRepository();
   final RideRepository _rideRepository = MockRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
-  final RewardRepository _rewardRepository = RewardsRepositoryImpl();
+  late final RewardRepository _rewardRepository = RewardsRepositoryImpl(
+    userRepository: _userRepository as ImplUserRepository,
+  );
   final AuthenticationRepository _authenticationRepository =
       MockAuthenticationRepository();
   final ReportRepository _reportRepository = ImplReportRepository();
@@ -140,7 +141,12 @@ class App extends StatelessWidget {
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/rate':
             (context) => RateView(
-              toUser: ImplUser(firstName: 'John', lastName: 'Doe', points: 0, id: 0),
+              toUser: ImplUser(
+                firstName: 'John',
+                lastName: 'Doe',
+                points: 0,
+                id: 0,
+              ),
               viewModel: rateViewModel,
             ),
         '/create_ride':
