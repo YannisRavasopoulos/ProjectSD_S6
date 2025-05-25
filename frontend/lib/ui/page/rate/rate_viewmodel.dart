@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_rating_repository.dart';
-import 'package:frontend/data/mocks/mock_rating_repository.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
