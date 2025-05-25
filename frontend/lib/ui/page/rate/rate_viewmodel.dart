@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_rating_repository.dart';
+import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
@@ -7,6 +10,7 @@ import 'package:frontend/data/repository/user_repository.dart';
 class RateViewModel extends ChangeNotifier {
   final RatingRepository _ratingRepository;
   final UserRepository _userRepository;
+  StreamSubscription<List<Rating>>? _ratingsSubscription;
 
   int _rating = 0;
   String _comment = '';
@@ -31,25 +35,22 @@ class RateViewModel extends ChangeNotifier {
   bool get canSubmit => _rating > 0 && !_isLoading && _currentUser != null;
   bool get isSuccess => _isSuccess;
 
+  @override
+  void dispose() {
+    _ratingsSubscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> _loadCurrentUser() async {
     try {
       _currentUser = await _userRepository.fetchCurrent();
+      // Start watching ratings after user is loaded
+      _watchRatings(_currentUser!);
       notifyListeners();
     } catch (e) {
       _errorMessage = 'Failed to load user: ${e.toString()}';
       notifyListeners();
     }
-  }
-
-  void setRating(double value) {
-    _rating = value.toInt();
-    _errorMessage = '';
-    notifyListeners();
-  }
-
-  void setComment(String value) {
-    _comment = value;
-    notifyListeners();
   }
 
   Future<void> submitRating(User toUser) async {
@@ -64,6 +65,9 @@ class RateViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      // Start watching the target user BEFORE creating the rating
+      _watchRatings(toUser); // Watch the user being rated
+
       final rating = ImplRating(
         id: DateTime.now().millisecondsSinceEpoch,
         fromUser: _currentUser!,
@@ -73,12 +77,56 @@ class RateViewModel extends ChangeNotifier {
       );
 
       await _ratingRepository.create(rating);
-      _isSuccess = true;
+      
+      // Set loading to false after creation
+      _isLoading = false;
+      notifyListeners();
     } catch (e) {
       _errorMessage = e.toString();
-    } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void _watchRatings(User toUser) {
+    _ratingsSubscription?.cancel();
+    _ratingsSubscription = _ratingRepository.watch(toUser).listen(
+      (ratings) {
+        // Check if our new rating exists
+        final hasNewRating = ratings.any((r) => 
+          r.fromUser.id == _currentUser?.id && 
+          r.toUser.id == toUser.id &&
+          r.stars == _rating
+        );
+        
+        if (hasNewRating) {
+          _isSuccess = true;
+          notifyListeners();
+        }
+      },
+      onError: (error) {
+        _errorMessage = error.toString();
+        notifyListeners();
+      }
+    );
+  }
+
+  void setRating(double value) {
+    _rating = value.toInt();
+    _errorMessage = '';
+    _isSuccess = false; // Reset success when user changes rating
+    notifyListeners();
+  }
+
+  void setComment(String value) {
+    _comment = value;
+    _isSuccess = false; // Reset success when user changes comment
+    notifyListeners();
+  }
+
+  // Add this method to reset after dialog is closed
+  void resetSuccess() {
+    _isSuccess = false;
+    notifyListeners();
   }
 }

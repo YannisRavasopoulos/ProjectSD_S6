@@ -59,6 +59,7 @@ class ProfileViewModel extends ChangeNotifier {
     this.ratings = ratings;
     averageRating =
         ratings.fold(0, (sum, rating) => sum + rating.stars) / ratings.length;
+    print('Average rating: $averageRating');
     notifyListeners();
   }
 
