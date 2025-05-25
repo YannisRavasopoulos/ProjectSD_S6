@@ -16,13 +16,18 @@ class RatingTab extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             'Your Rating',
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${averageRating.toStringAsFixed(1)}/5',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
           _buildAverageRating(context),
@@ -33,7 +38,7 @@ class RatingTab extends StatelessWidget {
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Expanded(child: _buildReviewsList()),
         ],
       ),
@@ -42,6 +47,7 @@ class RatingTab extends StatelessWidget {
 
   Widget _buildAverageRating(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(5, (index) {
         return Icon(
           index < averageRating.floor()
@@ -56,7 +62,6 @@ class RatingTab extends StatelessWidget {
   Widget _buildReviewsList() {
     return ListView.separated(
       itemCount: ratings.length,
-
       separatorBuilder: (_, __) => const Divider(),
       itemBuilder: (context, index) {
         final rating = ratings[index];
