@@ -65,9 +65,11 @@ class RatingTab extends StatelessWidget {
 
   Widget _buildRatingItem(BuildContext context, Rating rating) {
     return ListTile(
-      leading: CircleAvatar(child: Text("TODO ID")),
+      leading: CircleAvatar(
+        child: Text(rating.fromUser.firstName[0]), // Use first letter of name
+      ),
       title: Text(
-        'User ${rating.fromUser.firstName} ${rating.fromUser.lastName}',
+        '${rating.fromUser.firstName} ${rating.fromUser.lastName}',
       ),
       subtitle: rating.comment != null ? Text(rating.comment!) : null,
       trailing: Row(

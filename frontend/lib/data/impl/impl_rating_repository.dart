@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
@@ -25,8 +26,45 @@ class ImplRating extends Rating {
 }
 
 class ImplRatingRepository implements RatingRepository {
+  // Change to non-final and initialize with dummy data
+  final List<Rating> _ratings = [
+    ImplRating(
+      id: 1,
+      fromUser: ImplUser(id: 101, firstName: "Emma", lastName: "Watson", points: 120),
+      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      stars: 5,
+      comment: "Very punctual and friendly driver!",
+    ),
+    ImplRating(
+      id: 2,
+      fromUser: ImplUser(id: 102, firstName: "Michael", lastName: "Chen", points: 85),
+      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      stars: 4,
+      comment: "Good conversation, made the journey enjoyable",
+    ),
+    ImplRating(
+      id: 3,
+      fromUser: ImplUser(id: 103, firstName: "Sophie", lastName: "Martinez", points: 95),
+      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      stars: 5,
+      comment: "Great music selection and comfortable ride",
+    ),
+    ImplRating(
+      id: 4,
+      fromUser: ImplUser(id: 104, firstName: "David", lastName: "Kim", points: 75),
+      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      stars: 4,
+      comment: "Safe driver, would ride again",
+    ),
+    ImplRating(
+      id: 5,
+      fromUser: ImplUser(id: 105, firstName: "Aisha", lastName: "Patel", points: 110),
+      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      stars: 5,
+      comment: "Very professional and friendly",
+    ),
+  ];
 
-  final List<Rating> _ratings = [];
   final _ratingController = StreamController<List<Rating>>.broadcast();
 
 
