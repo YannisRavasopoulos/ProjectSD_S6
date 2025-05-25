@@ -22,11 +22,6 @@ class HomeView extends StatefulWidget {
 class _HomeView extends State<HomeView> with TickerProviderStateMixin {
   MapController get mapController => _customMapController.mapController;
 
-  void _onLocationPressed() async {
-    await widget.viewModel.refreshLocation();
-    _customMapController.animateTo(dest: widget.viewModel.source, zoom: 15.0);
-  }
-
   late final AnimatedMapController _customMapController = AnimatedMapController(
     vsync: this,
     duration: const Duration(milliseconds: 500),
@@ -34,9 +29,15 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
     cancelPreviousAnimations: false,
   );
 
+  void _onLocationPressed() async {
+    await widget.viewModel.refreshLocation();
+  }
+
   void _onMapTapped(TapPosition tapPosition, LatLng point) {
     widget.viewModel.selectPoint(point);
   }
+
+  bool firstRender = true;
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +45,29 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
       body: ListenableBuilder(
         listenable: widget.viewModel,
         builder: (context, _) {
+          // Make sure the map is not animated on the first render
+          if (firstRender) {
+            firstRender = false;
+          } else if (widget.viewModel.shouldAnimateToLocation) {
+            _customMapController.animateTo(
+              dest: widget.viewModel.currentLocation,
+              zoom: 15.0,
+            );
+          }
           return Stack(
             children: [
               FlutterMap(
                 mapController: mapController,
                 options: MapOptions(
                   onTap: _onMapTapped,
-                  initialCenter: widget.viewModel.source,
+                  initialCenter: widget.viewModel.currentLocation,
                   initialZoom: 8,
                 ),
                 children: [
                   OpenStreetMapsTileLayer(),
                   MarkerLayer(
                     markers: [
-                      HereMarker(widget.viewModel.source),
+                      HereMarker(widget.viewModel.currentLocation),
                       if (widget.viewModel.destination != null)
                         DestinationMarker(widget.viewModel.destination),
                     ],
@@ -76,9 +86,7 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: MapSearchBar(
                     suggestionsBuilder: widget.viewModel.getSuggestions,
-                    onSearchChanged: (value) {
-                      widget.viewModel.search(value);
-                    },
+                    onSearchChanged: widget.viewModel.search,
                     onSuggestionSelected: widget.viewModel.selectSuggestion,
                   ),
                 ),
@@ -87,7 +95,6 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
           );
         },
       ),
-      // appBar: AppBar(title: const Text('Loop App')),
       drawer: AppDrawer(),
       bottomNavigationBar: AppNavigationBar(routeName: "/home"),
       floatingActionButton: FloatingActionButton(

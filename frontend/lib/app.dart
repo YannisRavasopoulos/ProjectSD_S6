@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/address_repository_impl.dart';
+import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/impl/impl_rating_repository.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
@@ -29,6 +31,8 @@ import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
+import 'package:frontend/ui/page/rewards/rewards_view.dart';
+import 'package:frontend/ui/page/rewards/rewards_viewmodel.dart';
 import 'package:frontend/ui/page/profile/profile_view.dart';
 import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
@@ -40,6 +44,19 @@ import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
+import 'package:frontend/data/repository/authentication_repository.dart';
+import 'package:frontend/data/repository/reward_repository.dart';
+import 'package:frontend/data/repository/rating_repository.dart';
+import 'package:frontend/data/repository/ride_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
+import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/mocks/mock_reward_repository.dart';
+import 'package:frontend/data/mocks/mock_authentication_repository.dart';
+import 'package:frontend/data/mocks/mock_location_repository.dart';
+import 'package:frontend/data/mocks/mock_rating_repository.dart';
+import 'package:frontend/data/mocks/mock_ride_repository.dart';
+import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:geocode/geocode.dart';
 
 
 class App extends StatelessWidget {
@@ -52,6 +69,7 @@ class App extends StatelessWidget {
   final RewardRepository _rewardRepository = RewardsRepositoryImpl();
   final AuthenticationRepository _authenticationRepository =
       MockAuthenticationRepository();
+  final AddressRepository _addressRepository = AddressRepositoryImpl();
   final ReportRepository _reportRepository = ImplReportRepository();
 
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
@@ -61,6 +79,7 @@ class App extends StatelessWidget {
   late final HomeViewModel homeViewModel = HomeViewModel(
     userRepository: _userRepository,
     locationRepository: _locationRepository,
+    addressRepository: _addressRepository,
   );
 
   late final ProfileViewModel profileViewModel = ProfileViewModel(
@@ -134,8 +153,8 @@ class App extends StatelessWidget {
       initialRoute: isLoggedIn ? '/home' : '/sign_in',
       routes: {
         '/sign_in': (context) => SignInView(viewModel: signInViewModel),
-        '/forgot_password': (context) => ForgotPasswordView(),
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
+        '/forgot_password': (context) => ForgotPasswordView(),
         '/home': (context) => HomeView(viewModel: homeViewModel),
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/rate':
