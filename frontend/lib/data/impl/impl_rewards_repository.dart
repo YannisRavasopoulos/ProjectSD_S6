@@ -11,7 +11,7 @@ class RewardImpl extends Reward {
   final int points;
   @override
   final String title;
-  @override
+
   final String redemptionCode; // Add this line
 
   RewardImpl({
@@ -125,7 +125,8 @@ class RewardsRepositoryImpl implements RewardRepository {
       MockUserRepository.user = user.copyWith(
         points: user.points - reward.points,
       );
-      return reward.redemptionCode; // Return the redemption code
+
+      return (reward as RewardImpl).redemptionCode;
     } else {
       throw Exception('Reward not available');
     }
