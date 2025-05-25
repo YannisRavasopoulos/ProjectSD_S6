@@ -9,6 +9,40 @@ import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
+// Concrete implementation of Ride
+class ImplRide implements Ride {
+  @override
+  final int id;
+  @override
+  final Driver driver;
+  @override
+  final List<Passenger> passengers;
+  @override
+  final Route route;
+  @override
+  final DateTime departureTime;
+  @override
+  final DateTime estimatedArrivalTime;
+  @override
+  final Duration estimatedDuration;
+  @override
+  final int availableSeats;
+  @override
+  final int totalSeats;
+
+  ImplRide({
+    required this.id,
+    required this.driver,
+    required this.passengers,
+    required this.route,
+    required this.departureTime,
+    required this.estimatedArrivalTime,
+    required this.estimatedDuration,
+    required this.availableSeats,
+    required this.totalSeats,
+  });
+}
+
 class ImplRideRepository implements RideRepository {
   final List<Ride> _rides = [];
   final StreamController<List<Ride>> _rideController =
