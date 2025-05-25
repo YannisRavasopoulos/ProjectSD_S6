@@ -1,10 +1,10 @@
 import 'package:frontend/data/model/ride.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/data/repository/pickup_repository.dart';
+import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/model/driver.dart';
 
 class ArrangePickupViewModel extends ChangeNotifier {
-  final PickupRepository _repository;
+  final ImplPickupRepository _repository;
   final Driver _driver;
   final int _rideId;
   bool _isLoading = false;
@@ -13,7 +13,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
   String _location = '';
 
   ArrangePickupViewModel({
-    required PickupRepository repository,
+    required ImplPickupRepository repository,
     required Driver driver,
     required int rideId,
   }) : _repository = repository,
