@@ -44,7 +44,9 @@ class RatingTab extends StatelessWidget {
     return Row(
       children: List.generate(5, (index) {
         return Icon(
-          index < averageRating ? Icons.star : Icons.star_border,
+          index < averageRating.floor()
+              ? Icons.star
+              : (index < averageRating ? Icons.star_half : Icons.star_border),
           color: Colors.amber,
         );
       }),
@@ -68,9 +70,7 @@ class RatingTab extends StatelessWidget {
       leading: CircleAvatar(
         child: Text(rating.fromUser.firstName[0]), // Use first letter of name
       ),
-      title: Text(
-        '${rating.fromUser.firstName} ${rating.fromUser.lastName}',
-      ),
+      title: Text('${rating.fromUser.firstName} ${rating.fromUser.lastName}'),
       subtitle: rating.comment != null ? Text(rating.comment!) : null,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
