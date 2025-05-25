@@ -18,9 +18,9 @@ class RideListCard extends StatelessWidget {
     return Card(
       child: ListTile(
         title: Text(
-          '${ride.route.start.name},${ride.route.start.name}'
+          '${ride.route.start.name}'
           ' → '
-          '${ride.route.end.name},${ride.route.end.name}',
+          '${ride.route.end.name}',
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

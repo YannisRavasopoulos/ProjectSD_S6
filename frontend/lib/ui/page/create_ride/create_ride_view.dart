@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_form.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_success.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
@@ -31,21 +30,10 @@ class CreateRideView extends StatelessWidget {
             return CreateRideSuccess(
               message: viewModel.successMessage!,
               onSavePressed: () async {
-                final newRide = await Navigator.push<Ride>(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => CreateRideView(
-                          viewModel: CreateRideViewModel(
-                            rideRepository: ridesViewModel.rideRepository,
-                          ),
-                          ridesViewModel: ridesViewModel,
-                        ),
-                  ),
-                );
-                if (newRide != null) {
-                  await ridesViewModel.addRide(newRide);
+                if (viewModel.createdRide != null) {
+                  Navigator.pop(context, viewModel.createdRide);
                 }
+                viewModel.clearMessages();
               },
               onOfferPressed: () async {
                 viewModel.clearMessages();
@@ -66,7 +54,10 @@ class CreateRideView extends StatelessWidget {
               },
             );
           }
-          return CreateRideForm(viewModel: viewModel);
+          return CreateRideForm(
+            viewModel: viewModel,
+            ridesViewModel: ridesViewModel,
+          );
         },
       ),
     );

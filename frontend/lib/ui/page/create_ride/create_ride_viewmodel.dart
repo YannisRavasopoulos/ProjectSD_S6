@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
+import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -20,6 +24,10 @@ class CreateRideViewModel extends ChangeNotifier {
   int? id;
   Location? startLocation;
   Location? endLocation;
+  String firstName = "John";
+  String lastName = "Doe";
+  int points = 300; // Default points for the driver
+  Driver? driver;
 
   bool isLoading = false;
   String? errorMessage;
@@ -50,11 +58,11 @@ class CreateRideViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createRide() async {
+  Future<Ride?> createRide() async {
     if (from == null || to == null || departureTime == null || seats < 1) {
       errorMessage = "Please fill in all fields.";
       notifyListeners();
-      return;
+      return null;
     }
     isLoading = true;
     errorMessage = null;
@@ -71,45 +79,49 @@ class CreateRideViewModel extends ChangeNotifier {
         departureTime!.minute,
       );
 
-      final startLocation = LocationImpl(
+      final startLocation = ImplLocation(
         id: DateTime.now().millisecondsSinceEpoch,
         coordinates: LatLng(37.0, 23.0),
         name: from!,
       );
-      final endLocation = LocationImpl(
+      final endLocation = ImplLocation(
+        name: to!,
         id: DateTime.now().millisecondsSinceEpoch + 1,
         coordinates: LatLng(37.5, 23.5),
-        name: to!,
       );
 
-      final route = ImplementedRoute(
-        id: DateTime.now().millisecondsSinceEpoch,
+      final driver = ImplUser(
+        id: id ?? DateTime.now().millisecondsSinceEpoch,
+        firstName: firstName,
+        lastName: lastName,
+        points: points,
+      );
+
+      final route = ImplRoute(
+        id: id ?? DateTime.now().millisecondsSinceEpoch,
         start: startLocation,
         end: endLocation,
       );
 
-      final ride = RideImpl(
-        id: DateTime.now().millisecondsSinceEpoch,
-        driver: ImplementedDriver(
-          id: 1,
-          firstName: 'Demo',
-          lastName: 'Driver',
-          points: 100,
-        ),
+      final ride = ImplRide(
+        id: id ?? DateTime.now().millisecondsSinceEpoch,
+        driver: driver as Driver,
         passengers: [],
-        route: route,
         departureTime: dt,
         estimatedArrivalTime: dt.add(const Duration(hours: 1)),
         estimatedDuration: const Duration(hours: 1),
         availableSeats: capacity - seats,
         totalSeats: capacity,
+        route: route,
       );
 
       await rideRepository.create(ride);
       successMessage = "Ride created successfully!";
       createdRide = ride;
+      return ride;
     } catch (e) {
       errorMessage = "Failed to create ride: $e";
+      return null;
     } finally {
       isLoading = false;
       notifyListeners();

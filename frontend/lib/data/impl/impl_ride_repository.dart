@@ -9,6 +9,17 @@ import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
+class ImplRoute implements Route {
+  @override
+  final Location start;
+  @override
+  final Location end;
+  @override
+  final int id;
+
+  ImplRoute({required this.id, required this.start, required this.end});
+}
+
 // Concrete implementation of Ride
 class ImplRide implements Ride {
   @override

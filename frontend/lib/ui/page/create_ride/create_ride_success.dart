@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class CreateRideSuccess extends StatelessWidget {
   final String message;
-  final VoidCallback onSavePressed;
+  final VoidCallback? onSavePressed;
   final VoidCallback? onOfferPressed;
 
   const CreateRideSuccess({
     super.key,
     required this.message,
-    required this.onSavePressed,
+    this.onSavePressed,
     this.onOfferPressed,
   });
 

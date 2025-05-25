@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 
-class ImplUser extends User {
+class ImplUser extends User implements Driver {
   @override
   final int id;
   @override
@@ -43,7 +44,7 @@ class ImplUserRepository implements UserRepository {
     lastName: 'Doe',
     points: 300,
   );
-  
+
   ImplUser? _currentUser;
   final _userController = StreamController<User>.broadcast();
 
@@ -51,8 +52,8 @@ class ImplUserRepository implements UserRepository {
   Future<void> updateCurrentUser(User user) async {
     try {
       if (user is ImplUser) {
-        _currentUser = user;  // Store the updated user
-        _userController.add(user);  // Notify listeners
+        _currentUser = user; // Store the updated user
+        _userController.add(user); // Notify listeners
         return Future.value(); // Explicitly return success
       } else {
         throw Exception('Invalid user type');

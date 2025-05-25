@@ -27,14 +27,16 @@ class RidesViewModel extends ChangeNotifier {
   }
 
   Future<void> addRide(Ride ride) async {
-    await rideRepository.create(ride);
-    createdRides.add(ride);
-    notifyListeners();
+    if (!createdRides.any((r) => r.id == ride.id)) {
+      createdRides.add(ride);
+      notifyListeners();
+    }
   }
 
   Future<void> removeRide(Ride ride) async {
     await rideRepository.cancel(ride);
-    await fetchCreatedRides();
+    createdRides.removeWhere((r) => r.id == ride.id);
+
     notifyListeners();
   }
 }
