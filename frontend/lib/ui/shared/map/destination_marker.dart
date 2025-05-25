@@ -7,7 +7,11 @@ class DestinationMarker extends Marker {
         point: point,
         child: Builder(
           builder: (context) {
-            return const Icon(Icons.location_on, color: Colors.red, size: 32.0);
+            return const Icon(
+              Icons.circle,
+              color: Color.fromARGB(255, 255, 0, 0), // Red color
+              size: 16.0,
+            );
           },
         ),
       );

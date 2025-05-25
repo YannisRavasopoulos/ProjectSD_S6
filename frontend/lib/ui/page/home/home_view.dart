@@ -95,7 +95,6 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
           );
         },
       ),
-      // appBar: AppBar(title: const Text('Loop App')),
       drawer: AppDrawer(),
       bottomNavigationBar: AppNavigationBar(routeName: "/home"),
       floatingActionButton: FloatingActionButton(

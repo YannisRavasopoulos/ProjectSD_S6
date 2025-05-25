@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/address_repository_impl.dart';
+import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
@@ -28,6 +30,7 @@ import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/mocks/mock_rating_repository.dart';
 import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:geocode/geocode.dart';
 
 class App extends StatelessWidget {
   final UserRepository _userRepository = MockUserRepository();
@@ -37,6 +40,7 @@ class App extends StatelessWidget {
   final RewardRepository _rewardRepository = MockRewardRepository();
   final AuthenticationRepository _authenticationRepository =
       MockAuthenticationRepository();
+  final AddressRepository _addressRepository = AddressRepositoryImpl();
 
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: _rideRepository,
@@ -45,6 +49,7 @@ class App extends StatelessWidget {
   late final HomeViewModel homeViewModel = HomeViewModel(
     userRepository: _userRepository,
     locationRepository: _locationRepository,
+    addressRepository: _addressRepository,
   );
 
   late final ProfileViewModel profileViewModel = ProfileViewModel(

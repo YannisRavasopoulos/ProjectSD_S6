@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/location.dart';
-import 'package:frontend/data/model/user.dart';
+import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:latlong2/latlong.dart';
@@ -10,6 +11,7 @@ import 'package:latlong2/latlong.dart';
 class HomeViewModel extends ChangeNotifier {
   final LocationRepository locationRepository;
   final UserRepository userRepository;
+  final AddressRepository addressRepository;
 
   // TODO: this should go to locationRepository
   Stream<Location> watchCurrentLocation() async* {
@@ -32,6 +34,7 @@ class HomeViewModel extends ChangeNotifier {
   HomeViewModel({
     required this.locationRepository,
     required this.userRepository,
+    required this.addressRepository,
   }) {
     _locationSubscription = watchCurrentLocation().listen(_onLocationUpdate);
     refreshLocation();
@@ -65,13 +68,12 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void search(String query) async {
-    // suggestions.add("NIGGA");
+    print(query);
+    var addresses = addressRepository.fetchForQuery(query);
     notifyListeners();
   }
 
-  void selectSuggestion(String suggestion) async {
-    // Handle suggestion selection
-  }
+  void selectSuggestion(String suggestion) async {}
 
   Iterable<String> getSuggestions(TextEditingValue textEditingValue) {
     var query = textEditingValue.text;
@@ -82,8 +84,5 @@ class HomeViewModel extends ChangeNotifier {
     destination = point;
     print("Selected ${point}");
     notifyListeners();
-
-    // var location = await _locationRepository.getLocation(point);
-    // print(location.name);
   }
 }
