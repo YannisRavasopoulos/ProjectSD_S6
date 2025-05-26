@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Repositories
 import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
@@ -66,7 +67,6 @@ import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 
-
 class App extends StatelessWidget {
   // Replace mocks with implementations
   final UserRepository _userRepository = ImplUserRepository();
@@ -120,7 +120,7 @@ class App extends StatelessWidget {
   late final SignUpViewModel signUpViewModel = SignUpViewModel(
     userRepository: _userRepository,
   );
-  
+
   late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
     activityRepository: _activityRepository,
   );
@@ -143,7 +143,6 @@ class App extends StatelessWidget {
   //   rideRepository: _rides,
   // );
 
-  
   final bool isLoggedIn = true;
 
   @override
