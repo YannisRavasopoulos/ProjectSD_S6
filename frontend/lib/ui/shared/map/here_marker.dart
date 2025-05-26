@@ -8,9 +8,9 @@ class HereMarker extends Marker {
         child: Builder(
           builder: (context) {
             return const Icon(
-              Icons.location_on,
-              color: Colors.blue,
-              size: 32.0,
+              Icons.circle,
+              color: Color.fromARGB(255, 0, 107, 214), // Blue color
+              size: 16.0,
             );
           },
         ),

@@ -16,13 +16,18 @@ class RatingTab extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             'Your Rating',
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${averageRating.toStringAsFixed(1)}/5',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
           _buildAverageRating(context),
@@ -33,7 +38,7 @@ class RatingTab extends StatelessWidget {
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Expanded(child: _buildReviewsList()),
         ],
       ),
@@ -42,9 +47,12 @@ class RatingTab extends StatelessWidget {
 
   Widget _buildAverageRating(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(5, (index) {
         return Icon(
-          index < averageRating ? Icons.star : Icons.star_border,
+          index < averageRating.floor()
+              ? Icons.star
+              : (index < averageRating ? Icons.star_half : Icons.star_border),
           color: Colors.amber,
         );
       }),
@@ -54,7 +62,6 @@ class RatingTab extends StatelessWidget {
   Widget _buildReviewsList() {
     return ListView.separated(
       itemCount: ratings.length,
-
       separatorBuilder: (_, __) => const Divider(),
       itemBuilder: (context, index) {
         final rating = ratings[index];
@@ -65,10 +72,10 @@ class RatingTab extends StatelessWidget {
 
   Widget _buildRatingItem(BuildContext context, Rating rating) {
     return ListTile(
-      leading: CircleAvatar(child: Text("TODO ID")),
-      title: Text(
-        'User ${rating.fromUser.firstName} ${rating.fromUser.lastName}',
+      leading: CircleAvatar(
+        child: Text(rating.fromUser.firstName[0]), // Use first letter of name
       ),
+      title: Text('${rating.fromUser.firstName} ${rating.fromUser.lastName}'),
       subtitle: rating.comment != null ? Text(rating.comment!) : null,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

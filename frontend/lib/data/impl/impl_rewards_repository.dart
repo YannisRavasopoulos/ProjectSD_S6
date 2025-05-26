@@ -1,4 +1,4 @@
-import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/reward.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 
@@ -11,19 +11,23 @@ class RewardImpl extends Reward {
   final int points;
   @override
   final String title;
-  @override
-  final String redemptionCode; // Add this line
+
+  final String redemptionCode;
 
   RewardImpl({
     required this.description,
     required this.id,
     required this.points,
     required this.title,
-    required this.redemptionCode, // Add this line
+    required this.redemptionCode,
   });
 }
 
 class RewardsRepositoryImpl implements RewardRepository {
+  final ImplUserRepository userRepository;
+
+  RewardsRepositoryImpl({required this.userRepository});
+
   final List<Reward> _availableRewards = [
     RewardImpl(
       id: 1,
@@ -117,15 +121,17 @@ class RewardsRepositoryImpl implements RewardRepository {
     if (_availableRewards.contains(reward)) {
       _availableRewards.remove(reward);
       _redeemedRewards.add(reward);
-      // TODO: this is a bug, user repo stream is not updated
-      var user = MockUserRepository.user;
+
+      final user = await userRepository.fetchCurrent();
       if (user.points < reward.points) {
         throw Exception('Not enough points');
       }
-      MockUserRepository.user = user.copyWith(
+      final updatedUser = (user as ImplUser).copyWith(
         points: user.points - reward.points,
       );
-      return reward.redemptionCode; // Return the redemption code
+      await userRepository.updateCurrentUser(updatedUser);
+
+      return (reward as RewardImpl).redemptionCode;
     } else {
       throw Exception('Reward not available');
     }
@@ -135,7 +141,7 @@ class RewardsRepositoryImpl implements RewardRepository {
   Stream<List<Reward>> watchAvailable() async* {
     while (true) {
       await Future.delayed(Duration(seconds: 5));
-      yield _availableRewards; // Emit the current available rewards
+      yield _availableRewards;
     }
   }
 
@@ -143,7 +149,7 @@ class RewardsRepositoryImpl implements RewardRepository {
   Stream<List<Reward>> watchRedeemed() async* {
     while (true) {
       await Future.delayed(Duration(seconds: 5));
-      yield _redeemedRewards; // Emit the current redeemed rewards
+      yield _redeemedRewards;
     }
   }
 }
