@@ -58,7 +58,6 @@ import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/mocks/mock_user_repository.dart';
 import 'package:geocode/geocode.dart';
 
-
 class App extends StatelessWidget {
   // Replace mocks with implementations
   final UserRepository _userRepository = ImplUserRepository();
@@ -66,7 +65,9 @@ class App extends StatelessWidget {
   final RatingRepository _ratingRepository = ImplRatingRepository();
   final RideRepository _rideRepository = MockRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
-  final RewardRepository _rewardRepository = RewardsRepositoryImpl();
+  late final RewardRepository _rewardRepository = RewardsRepositoryImpl(
+    userRepository: _userRepository as ImplUserRepository,
+  );
   final AuthenticationRepository _authenticationRepository =
       MockAuthenticationRepository();
   final AddressRepository _addressRepository = AddressRepositoryImpl();
@@ -159,7 +160,12 @@ class App extends StatelessWidget {
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/rate':
             (context) => RateView(
-              toUser: ImplUser(firstName: 'John', lastName: 'Doe', points: 0, id: 0),
+              toUser: ImplUser(
+                firstName: 'John',
+                lastName: 'Doe',
+                points: 0,
+                id: 0,
+              ),
               viewModel: rateViewModel,
             ),
         '/create_ride':

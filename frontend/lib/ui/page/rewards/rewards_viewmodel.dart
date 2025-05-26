@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/reward.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
@@ -7,11 +8,15 @@ class RewardViewModel extends ChangeNotifier {
   final RewardRepository rewardRepository;
   final UserRepository userRepository;
 
+  StreamSubscription<List<Reward>>? _availableSub;
+  StreamSubscription<List<Reward>>? _redeemedSub;
+
   RewardViewModel({
     required this.rewardRepository,
     required this.userRepository,
   }) {
-    _fetchData();
+    _startWatchingRewards();
+    _fetchUserPoints();
   }
 
   List<Reward> _availableRewards = [];
@@ -24,33 +29,53 @@ class RewardViewModel extends ChangeNotifier {
   int get userPoints => _userPoints;
   bool get isLoading => _isLoading;
 
-  Future<void> _fetchData() async {
+  void _startWatchingRewards() async {
     _isLoading = true;
     notifyListeners();
 
     _availableRewards = await rewardRepository.fetchAvailable();
     _redeemedRewards = await rewardRepository.fetchRedeemed();
+
+    _isLoading = false;
+    notifyListeners();
+
+    _availableSub = rewardRepository.watchAvailable().listen((rewards) {
+      _availableRewards = rewards;
+      notifyListeners();
+    });
+
+    _redeemedSub = rewardRepository.watchRedeemed().listen((rewards) {
+      _redeemedRewards = rewards;
+      notifyListeners();
+    });
+  }
+
+  Future<void> _fetchUserPoints() async {
     var user = await userRepository.fetchCurrent();
     _userPoints = user.points;
-    _isLoading = false;
     notifyListeners();
   }
 
-  void redeem(Reward reward) async {
+  Future<String?> redeem(Reward reward) async {
     _isLoading = true;
     notifyListeners();
 
     try {
       final result = await rewardRepository.redeem(reward);
-      await _fetchData(); // Refresh available rewards
-
-      // return result;
+      await _fetchUserPoints();
+      return result;
     } catch (e) {
-      // Handle error as needed
       return null;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    _availableSub?.cancel();
+    _redeemedSub?.cancel();
+    super.dispose();
   }
 }
