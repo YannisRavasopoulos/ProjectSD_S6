@@ -8,7 +8,7 @@ import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/model/ride.dart';
 
 // Implementation of PickupRequest
-class ImplPickupRequest implements PickupRequest {
+class ImplPickupRequest extends PickupRequest {
   @override
   final int id;
   @override

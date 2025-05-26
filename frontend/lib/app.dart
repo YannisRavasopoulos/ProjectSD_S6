@@ -7,6 +7,7 @@ import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
 import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
@@ -170,7 +171,7 @@ class App extends StatelessWidget {
             return null;
           }
 
-          final pickupRequest = args['pickupRequest'] as ImplPickupRequest;
+          final pickupRequest = args['pickupRequest'] as PickupRequest;
           final driver = args['driver'] as Driver;
           final rideId = args['rideId'] as int;
 

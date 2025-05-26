@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/impl/impl_ride_request.dart';
-import 'package:frontend/data/mocks/mock_location_repository.dart';
-import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
