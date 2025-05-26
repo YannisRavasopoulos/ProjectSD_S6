@@ -2,7 +2,7 @@ import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:latlong2/latlong.dart';
 
-class ImplRideRequest implements RideRequest {
+class ImplRideRequest extends RideRequest {
   @override
   final int id;
   @override

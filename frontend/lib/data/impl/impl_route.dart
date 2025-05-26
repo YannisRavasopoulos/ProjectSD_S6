@@ -2,7 +2,7 @@ import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/route.dart';
 
-class ImplRoute implements Route {
+class ImplRoute extends Route {
   @override
   final int id;
   @override
@@ -10,7 +10,7 @@ class ImplRoute implements Route {
   @override
   final Location end;
 
-  const ImplRoute({required this.id, required this.start, required this.end});
+  ImplRoute({required this.id, required this.start, required this.end});
 
   factory ImplRoute.test() {
     return ImplRoute(
