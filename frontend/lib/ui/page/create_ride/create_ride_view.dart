@@ -29,10 +29,7 @@ class CreateRideView extends StatelessWidget {
             return CreateRideSuccess(
               message: viewModel.successMessage!,
               onSavePressed: () async {
-                if (viewModel.createdRide != null) {
-                  await ridesViewModel.addRide(viewModel.createdRide!);
-                  Navigator.pop(context, viewModel.createdRide);
-                }
+                Navigator.pop(context, viewModel.createdRide);
                 viewModel.clearMessages();
               },
               onOfferPressed: () async {

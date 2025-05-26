@@ -90,9 +90,6 @@ class RidesView extends StatelessWidget {
                   ),
             ),
           );
-          if (newRide != null) {
-            await viewModel.fetchCreatedRides();
-          }
         },
       ),
     );

@@ -112,10 +112,7 @@ class CreateRideForm extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () async {
-          final ride = await viewModel.saveRide();
-          if (ride != null) {
-            viewModel.createdRide = ride;
-          }
+          await viewModel.saveRide();
         },
         icon: const Icon(Icons.check),
         label: const Text("Create a Ride"),
