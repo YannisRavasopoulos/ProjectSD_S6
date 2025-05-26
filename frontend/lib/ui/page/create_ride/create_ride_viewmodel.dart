@@ -5,14 +5,27 @@ import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
 class CreateRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
+  final Ride? initialRide;
 
-  CreateRideViewModel({required this.rideRepository});
+  CreateRideViewModel({required this.rideRepository, this.initialRide}) {
+    if (initialRide != null) {
+      id = initialRide!.id;
+      from = initialRide!.route.start.name;
+      to = initialRide!.route.end.name;
+      departureTime = TimeOfDay(
+        hour: initialRide!.departureTime.hour,
+        minute: initialRide!.departureTime.minute,
+      );
+      seats = initialRide!.totalSeats - initialRide!.availableSeats;
+      capacity = initialRide!.totalSeats;
+      driver = initialRide!.driver;
+    }
+  }
 
   String? from;
   String? to;
@@ -58,7 +71,7 @@ class CreateRideViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Ride?> createRide() async {
+  Future<Ride?> saveRide() async {
     if (from == null || to == null || departureTime == null || seats < 1) {
       errorMessage = "Please fill in all fields.";
       notifyListeners();
@@ -80,33 +93,42 @@ class CreateRideViewModel extends ChangeNotifier {
       );
 
       final startLocation = ImplLocation(
-        id: DateTime.now().millisecondsSinceEpoch,
+        id:
+            initialRide?.route.start.id ??
+            DateTime.now().millisecondsSinceEpoch,
         coordinates: LatLng(37.0, 23.0),
         name: from!,
       );
       final endLocation = ImplLocation(
         name: to!,
-        id: DateTime.now().millisecondsSinceEpoch + 1,
+        id:
+            initialRide?.route.end.id ??
+            DateTime.now().millisecondsSinceEpoch + 1,
         coordinates: LatLng(37.5, 23.5),
       );
 
-      final driver = ImplUser(
-        id: id ?? DateTime.now().millisecondsSinceEpoch,
-        firstName: firstName,
-        lastName: lastName,
-        points: points,
-      );
+      final driver =
+          initialRide?.driver ??
+          ImplUser(
+            id: id ?? DateTime.now().millisecondsSinceEpoch,
+            firstName: firstName,
+            lastName: lastName,
+            points: points,
+          );
 
       final route = ImplRoute(
-        id: id ?? DateTime.now().millisecondsSinceEpoch,
+        id:
+            initialRide?.route.id ??
+            id ??
+            DateTime.now().millisecondsSinceEpoch,
         start: startLocation,
         end: endLocation,
       );
 
       final ride = ImplRide(
-        id: id ?? DateTime.now().millisecondsSinceEpoch,
+        id: initialRide?.id ?? id ?? DateTime.now().millisecondsSinceEpoch,
         driver: driver as Driver,
-        passengers: [],
+        passengers: initialRide?.passengers ?? [],
         departureTime: dt,
         estimatedArrivalTime: dt.add(const Duration(hours: 1)),
         estimatedDuration: const Duration(hours: 1),
@@ -115,17 +137,80 @@ class CreateRideViewModel extends ChangeNotifier {
         route: route,
       );
 
-      await rideRepository.create(ride);
-      successMessage = "Ride created successfully!";
-      createdRide = ride;
+      if (initialRide != null) {
+        await rideRepository.update(ride);
+        successMessage = "Ride updated successfully!";
+        updatedRide = ride;
+      } else {
+        await rideRepository.create(ride);
+        successMessage = "Ride created successfully!";
+        createdRide = ride;
+      }
       return ride;
     } catch (e) {
-      errorMessage = "Failed to create ride: $e";
+      errorMessage = "Failed to save ride: $e";
       return null;
     } finally {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<Ride?> buildRide() async {
+    if (from == null || to == null || departureTime == null || seats < 1) {
+      errorMessage = "Please fill in all fields.";
+      notifyListeners();
+      return null;
+    }
+    final now = DateTime.now();
+    final dt = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      departureTime!.hour,
+      departureTime!.minute,
+    );
+
+    final startLocation = ImplLocation(
+      id: initialRide?.route.start.id ?? DateTime.now().millisecondsSinceEpoch,
+      coordinates: LatLng(37.0, 23.0),
+      name: from!,
+    );
+    final endLocation = ImplLocation(
+      name: to!,
+      id:
+          initialRide?.route.end.id ??
+          DateTime.now().millisecondsSinceEpoch + 1,
+      coordinates: LatLng(37.5, 23.5),
+    );
+
+    final driver =
+        initialRide?.driver ??
+        ImplUser(
+          id: id ?? DateTime.now().millisecondsSinceEpoch,
+          firstName: firstName,
+          lastName: lastName,
+          points: points,
+        );
+
+    final route = ImplRoute(
+      id: initialRide?.route.id ?? id ?? DateTime.now().millisecondsSinceEpoch,
+      start: startLocation,
+      end: endLocation,
+    );
+
+    final ride = ImplRide(
+      id: initialRide?.id ?? id ?? DateTime.now().millisecondsSinceEpoch,
+      driver: driver as Driver,
+      passengers: initialRide?.passengers ?? [],
+      departureTime: dt,
+      estimatedArrivalTime: dt.add(const Duration(hours: 1)),
+      estimatedDuration: const Duration(hours: 1),
+      availableSeats: capacity - seats,
+      totalSeats: capacity,
+      route: route,
+    );
+    return ride;
   }
 
   void clearMessages() {

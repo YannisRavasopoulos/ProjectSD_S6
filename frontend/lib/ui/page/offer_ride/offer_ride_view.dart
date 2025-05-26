@@ -20,12 +20,6 @@ class OfferRideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Ride? newRide = ModalRoute.of(context)?.settings.arguments as Ride?;
-    if (newRide != null &&
-        !viewModel.createdRides.any((r) => r.id == newRide.id)) {
-      viewModel.addRide(newRide);
-    }
-
     final modeNotifier = ValueNotifier<OfferRideMode>(
       OfferRideMode.createdRides,
     );
@@ -44,7 +38,15 @@ class OfferRideView extends StatelessWidget {
               valueListenable: modeNotifier,
               builder: (context, mode, _) {
                 if (mode == OfferRideMode.createdRides) {
-                  return CreatedRidesList(viewModel: viewModel);
+                  return FutureBuilder(
+                    future: viewModel.fetchCreatedRides(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      return CreatedRidesList(viewModel: viewModel);
+                    },
+                  );
                 } else {
                   return ActivitiesList(
                     viewModel: activitiesViewModel,

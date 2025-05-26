@@ -44,9 +44,9 @@ class CreatedRidesList extends StatelessWidget {
                   child: const Icon(Icons.directions_car, color: Colors.white),
                 ),
                 title: Text(
-                  '${ride.route.start.name},${ride.route.start.name}'
+                  '${ride.route.start.name}'
                   ' → '
-                  '${ride.route.end.name},${ride.route.end.name}',
+                  '${ride.route.end.name}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,

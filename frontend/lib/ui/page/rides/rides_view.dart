@@ -57,20 +57,10 @@ class RidesView extends StatelessWidget {
                     MaterialPageRoute(
                       builder:
                           (context) => CreateRideView(
-                            viewModel:
-                                CreateRideViewModel(
-                                    rideRepository: viewModel.rideRepository,
-                                  )
-                                  ..id = ride.id
-                                  ..from = ride.route.start.name
-                                  ..to = ride.route.end.name
-                                  ..departureTime = TimeOfDay(
-                                    hour: ride.departureTime.hour,
-                                    minute: ride.departureTime.minute,
-                                  )
-                                  ..seats =
-                                      ride.totalSeats - ride.availableSeats
-                                  ..capacity = ride.totalSeats,
+                            viewModel: CreateRideViewModel(
+                              rideRepository: viewModel.rideRepository,
+                              initialRide: ride,
+                            ),
                             ridesViewModel: viewModel,
                           ),
                     ),
@@ -101,7 +91,7 @@ class RidesView extends StatelessWidget {
             ),
           );
           if (newRide != null) {
-            await viewModel.addRide(newRide);
+            await viewModel.fetchCreatedRides();
           }
         },
       ),

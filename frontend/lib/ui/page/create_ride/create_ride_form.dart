@@ -53,7 +53,7 @@ class CreateRideForm extends StatelessWidget {
                   style: const TextStyle(color: Colors.red),
                 ),
               const SizedBox(height: 20),
-              _buildCreateButton(),
+              _buildCreateButton(context),
             ],
           ),
         ),
@@ -107,14 +107,14 @@ class CreateRideForm extends StatelessWidget {
     );
   }
 
-  Widget _buildCreateButton() {
+  Widget _buildCreateButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () async {
-          final ride = await viewModel.createRide();
+          final ride = await viewModel.saveRide();
           if (ride != null) {
-            await ridesViewModel.addRide(ride); // <-- προσθήκη
+            viewModel.createdRide = ride;
           }
         },
         icon: const Icon(Icons.check),

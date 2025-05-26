@@ -30,6 +30,7 @@ class CreateRideView extends StatelessWidget {
               message: viewModel.successMessage!,
               onSavePressed: () async {
                 if (viewModel.createdRide != null) {
+                  await ridesViewModel.addRide(viewModel.createdRide!);
                   Navigator.pop(context, viewModel.createdRide);
                 }
                 viewModel.clearMessages();
@@ -38,9 +39,9 @@ class CreateRideView extends StatelessWidget {
                 viewModel.clearMessages();
                 final ride = viewModel.createdRide;
                 if (ride != null) {
-                  Navigator.of(
-                    context,
-                  ).pushReplacementNamed('/offer_ride', arguments: ride);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Ride offer successfully!')),
+                  );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Ride not found!')),
