@@ -79,8 +79,10 @@ class App extends StatelessWidget {
   final AuthenticationRepository _authenticationRepository =
       MockAuthenticationRepository();
   final AddressRepository _addressRepository = AddressRepositoryImpl();
-  final ReportRepository _reportRepository = ImplReportRepository();
-  final PickupRepository _pickupRepository = ImplPickupRepository();
+  late final ReportRepository _reportRepository = ImplReportRepository(
+    userRepository: _userRepository as ImplUserRepository,
+  );
+
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: _rideRepository,
   );

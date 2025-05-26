@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:frontend/data/impl/impl_user_repository.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/report.dart';
 import 'package:frontend/data/model/report_reason.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 
 class ImplReport extends Report {
@@ -30,7 +32,7 @@ class ImplReport extends Report {
 
 class ImplReportRepository implements ReportRepository {
   // This sucks and is ugly but must be done for now...
-  ImplReportRepository({required ImplUserRepository userRepository})
+  ImplReportRepository(ImplUserRepository userRepository)
     : _userRepository = userRepository;
 
   final ImplUserRepository _userRepository;
@@ -53,10 +55,26 @@ class ImplReportRepository implements ReportRepository {
     print('Penalty applied to user ${user.name}.');
   }
 
+  bool _shouldApplyPenalty(User user) {
+    // Must have at least 3 reports to apply a penalty
+    final reports = _reports.where((report) => report.receiver.id == user.id);
+    return reports.length >= 3;
+  }
+
+  void _applyPenalty(User user) {
+    // TODO
+    print('Penalty applied to user ${user.name}.');
+  }
+
   @override
   Future<void> create(Report report) async {
     try {
       _reports.add(report);
+
+      if (_shouldApplyPenalty(report.receiver)) {
+        _applyPenalty(report.receiver);
+      }
+
 
       if (_shouldApplyPenalty(report.receiver)) {
         _applyPenalty(report.receiver);
