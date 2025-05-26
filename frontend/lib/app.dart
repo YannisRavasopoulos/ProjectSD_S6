@@ -9,13 +9,9 @@ import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
-import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
-import 'package:frontend/data/repository/location_repository.dart';
-import 'package:frontend/data/repository/ride_repository.dart';
-import 'package:frontend/data/repository/user_repository.dart';
 
 // Pages
 import 'package:frontend/ui/page/activities/activities_view.dart';
@@ -41,6 +37,8 @@ import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
+import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_view.dart';
+import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_viewmodel.dart';
 
 // Repository Implementations
 import 'package:frontend/data/impl/address_repository_impl.dart';
@@ -49,24 +47,16 @@ import 'package:frontend/data/impl/impl_rating_repository.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
 import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
-import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
-import 'package:frontend/data/impl/impl_report_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
-import 'package:frontend/data/impl/impl_user_repository.dart';
-import 'package:frontend/data/impl/impl_rewards_repository.dart';
 
 // Mocks
 import 'package:frontend/data/mocks/mock_location_repository.dart';
-import 'package:frontend/data/mocks/mock_rating_repository.dart';
-import 'package:frontend/data/mocks/mock_user_repository.dart';
-import 'package:frontend/data/mocks/mock_location_repository.dart';
-import 'package:frontend/data/mocks/mock_ride_repository.dart';
-import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/pickup_request.dart';
+import 'package:frontend/data/model/pickup.dart';
 
 class App extends StatelessWidget {
   // Replace mocks with implementations
@@ -214,6 +204,30 @@ class App extends StatelessWidget {
                 ),
           );
         }
+
+        // --- Add this block for /confirm_pickup ---
+        if (settings.name == '/confirm_pickup') {
+          final args = settings.arguments as Map<String, dynamic>?;
+
+          if (args == null || !args.containsKey('pickup')) {
+            return null;
+          }
+
+          final pickup = args['pickup'] as Pickup;
+
+          return MaterialPageRoute(
+            builder:
+                (context) => ConfirmPickupView(
+                  pickup: pickup,
+                  viewModel: ConfirmPickupViewModel(
+                    pickupRepository: _pickupRepository,
+                    pickup: pickup,
+                  ),
+                ),
+          );
+        }
+        // --- End of /confirm_pickup block ---
+
         return null;
       },
     );

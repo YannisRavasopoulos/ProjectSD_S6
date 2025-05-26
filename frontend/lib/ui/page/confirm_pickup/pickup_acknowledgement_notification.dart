@@ -46,10 +46,7 @@ class PickupAcknowledgementNotification extends StatelessWidget {
               children: [
                 const Text(
                   'Pickup Acknowledged',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'Driver: ${pickup.passenger.name}',
@@ -67,13 +64,14 @@ class PickupAcknowledgementNotification extends StatelessWidget {
               NotificationOverlay.dismiss();
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ConfirmPickupView(
-                    pickup: pickup,
-                    viewModel: ConfirmPickupViewModel(
-                      pickupRepository: ImplPickupRepository(),
-                      pickup: pickup,
-                    ),
-                  ),
+                  builder:
+                      (context) => ConfirmPickupView(
+                        pickup: pickup,
+                        viewModel: ConfirmPickupViewModel(
+                          pickupRepository: ImplPickupRepository(),
+                          pickup: pickup,
+                        ),
+                      ),
                 ),
               );
             },
