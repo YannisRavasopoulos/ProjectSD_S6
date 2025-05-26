@@ -120,10 +120,7 @@ class ImplRideRepository implements RideRepository {
 
   @override
   Future<List<Ride>> fetchHistory() async {
-    final now = DateTime.now();
-    return _rides
-        .where((ride) => ride.estimatedArrivalTime.isBefore(now))
-        .toList();
+    return _rides;
   }
 
   @override
