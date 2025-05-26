@@ -9,14 +9,6 @@ class RidesViewModel extends ChangeNotifier {
 
   RidesViewModel({required this.rideRepository});
 
-  Future<void> fetchCreatedRides() async {
-    isLoading = true;
-    notifyListeners();
-    createdRides = await rideRepository.fetchHistory();
-    isLoading = false;
-    notifyListeners();
-  }
-
   Future<void> updateRide(Ride updatedRide) async {
     await rideRepository.update(updatedRide);
     final index = createdRides.indexWhere((r) => r.id == updatedRide.id);

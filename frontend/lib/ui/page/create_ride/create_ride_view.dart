@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_form.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_success.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 
 class CreateRideView extends StatelessWidget {
@@ -39,10 +38,6 @@ class CreateRideView extends StatelessWidget {
                 viewModel.clearMessages();
                 final ride = viewModel.createdRide;
                 if (ride != null) {
-                  final offerRideViewModel = OfferRideViewModel(
-                    rideRepository: viewModel.rideRepository,
-                  );
-                  await offerRideViewModel.addRide(ride);
                   Navigator.of(
                     context,
                   ).pushReplacementNamed('/offer_ride', arguments: ride);
