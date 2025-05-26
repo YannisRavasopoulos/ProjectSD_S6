@@ -1,32 +1,39 @@
+import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/location.dart';
+import 'package:latlong2/latlong.dart';
 
 class ArrangePickupViewModel extends ChangeNotifier {
   final ImplPickupRepository _repository;
-  final Driver _driver;
-  final int _rideId;
+  final ImplPickup _pickupRequest;
   bool _isLoading = false;
   String? _errorMessage;
   DateTime? _selectedTime;
-  String _location = '';
+  Location _location = ImplLocation(
+    id: 0,
+    name: '',
+    coordinates: LatLng(0.0, 0.0), // Default coordinates
+  );
 
   ArrangePickupViewModel({
     required ImplPickupRepository repository,
-    required Driver driver,
-    required int rideId,
+    required ImplPickup pickupRequest,
   }) : _repository = repository,
-       _driver = driver,
-       _rideId = rideId;
+       _pickupRequest = pickupRequest;
 
   // Getters
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   DateTime? get selectedTime => _selectedTime;
-  String get location => _location;
-  Driver get driver => _driver;
-  int get rideId => _rideId;
+  Location get location => _location;
+
+  // Expose data from pickup request
+  Ride get ride => _pickupRequest.ride;
+  Driver get driver => _pickupRequest.ride.driver;
+  int get rideId => _pickupRequest.ride.id;
 
   // update state
   void setPickupTime(DateTime time) {
@@ -34,7 +41,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLocation(String newLocation) {
+  void setLocation(Location newLocation) {
     _location = newLocation;
     notifyListeners();
   }
@@ -47,7 +54,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
       return false;
     }
 
-    if (_location.isEmpty) {
+    if (_location.id == 0 || _location.name.isEmpty) {
       _errorMessage = 'Please select a pickup location';
       notifyListeners();
       return false;
@@ -64,28 +71,31 @@ class ArrangePickupViewModel extends ChangeNotifier {
   }
 
   // business logic
-  Future<bool> arrangePickup({
-    required String carpoolerId,
-    required Driver driver,
-    required Ride ride,
-  }) async {
+  Future<bool> arrangePickup() async {
     try {
       _isLoading = true;
       _errorMessage = null;
       notifyListeners();
 
-      final success = await _repository.createPickupRequest(
-        carpoolerId: carpoolerId,
-        driver: driver,
-        ride: ride,
-        pickupTime: _selectedTime!,
+      // Update the pickup request with current form data
+      final pickupProposal = ImplPickup(
+        id: _pickupRequest.id,
+        ride: _pickupRequest.ride,
+        passenger: _pickupRequest.passenger,
         location: _location,
+        time: _selectedTime!,
+      );
+
+      // Use the standard repository interface method
+      final pickup = await _repository.acceptPickupRequest(
+        _pickupRequest,
+        pickupProposal,
       );
 
       _isLoading = false;
       notifyListeners();
 
-      return success;
+      return true; // Success if pickup is created
     } catch (e) {
       _isLoading = false;
       _errorMessage = 'Failed to arrange pickup: ${e.toString()}';

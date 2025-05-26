@@ -5,10 +5,13 @@ import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
+import 'package:frontend/data/model/ride.dart';
 
 class ImplPickup extends Pickup {
   @override
   final int id;
+  @override
+  final Ride ride;
   @override
   final Passenger passenger;
   @override
@@ -20,6 +23,7 @@ class ImplPickup extends Pickup {
 
   ImplPickup({
     required this.id,
+    required this.ride,
     required this.passenger,
     required this.location,
     required this.time,
@@ -54,6 +58,7 @@ class ImplPickupRepository implements PickupRepository {
     // dummy returning pickup instance - testing purposes
     final pickup = ImplPickup(
       id: Random().nextInt(10000),
+      ride: request.ride,
       passenger: request.passenger,
       location: request.location,
       time: request.time,

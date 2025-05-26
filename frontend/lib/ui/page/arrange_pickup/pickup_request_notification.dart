@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/model/pickup.dart';
+import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
 import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
@@ -11,9 +13,13 @@ import 'dart:math';
 import 'package:frontend/ui/notification/notification_overlay.dart';
 
 class PickupRequestNotification extends StatelessWidget {
-  final Pickup pickup;
+  final PickupRequest pickupRequest;
 
-  const PickupRequestNotification({super.key, required this.pickup});
+  const PickupRequestNotification({
+    super.key,
+    required this.pickupRequest,
+    required ImplPickup pickup,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +66,7 @@ class PickupRequestNotification extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      pickup.time.toString(),
+                      pickupRequest.time.toString(),
                       style: TextStyle(
                         fontSize: 11,
                         color: Theme.of(context).textTheme.bodySmall?.color,
@@ -69,7 +75,7 @@ class PickupRequestNotification extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  'Pickup request from ${pickup.driver.id}',
+                  'Pickup request for ride: ${pickupRequest.ride.id}',
                   style: const TextStyle(fontSize: 11),
                 ),
               ],
@@ -102,23 +108,13 @@ class PickupRequestNotification extends StatelessWidget {
                 tooltip: 'Accept',
                 onPressed: () {
                   NotificationOverlay.dismiss();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder:
-                          (context) => ArrangePickupView(
-                            viewModel: ArrangePickupViewModel(
-                              repository: PickupRepository(
-                                pickupService: PickupService(),
-                              ),
-                              driver: Driver.random(),
-                              // TODO
-                              rideId: 5,
-                            ),
-                            carpoolerId: "TODO",
-                            driver: Driver.random(),
-                            selectedRide: Ride.random(),
-                          ),
-                    ),
+                  Navigator.of(context).pushNamed(
+                    '/arrange_pickup',
+                    arguments: {
+                      'pickupRequest': pickupRequest,
+                      'driver': pickupRequest.ride.driver,
+                      'rideId': pickupRequest.ride.id,
+                    },
                   );
                 },
               ),

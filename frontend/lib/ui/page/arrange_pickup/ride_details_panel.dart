@@ -34,7 +34,7 @@ class RideDetailsPanel extends StatelessWidget {
                   child: _buildDetailRow(
                     icon: Icons.directions_car,
                     label: 'Vehicle',
-                    value: ride.driver.vehicle.description,
+                    value: 'Not implemented yet', // TODO: ride.vehicle
                   ),
                 ),
               ],

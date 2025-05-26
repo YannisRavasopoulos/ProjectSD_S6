@@ -1,23 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 import 'package:frontend/ui/page/arrange_pickup/pickup_form.dart';
-import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/page/arrange_pickup/ride_details_panel.dart';
-import 'package:frontend/data/model/driver.dart';
 
 class ArrangePickupView extends StatelessWidget {
-  final String carpoolerId;
-  final Driver driver;
-  final Ride selectedRide;
   final ArrangePickupViewModel viewModel;
 
-  const ArrangePickupView({
-    super.key,
-    required this.carpoolerId,
-    required this.driver,
-    required this.selectedRide,
-    required this.viewModel,
-  });
+  const ArrangePickupView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +27,7 @@ class ArrangePickupView extends StatelessWidget {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                RideDetailsPanel(ride: selectedRide),
+                RideDetailsPanel(ride: viewModel.ride),
                 const SizedBox(height: 24),
                 Card(
                   child: Padding(
@@ -88,11 +77,7 @@ class ArrangePickupView extends StatelessWidget {
       return;
     }
 
-    final success = await viewModel.arrangePickup(
-      carpoolerId: carpoolerId,
-      driver: driver,
-      ride: selectedRide,
-    );
+    final success = await viewModel.arrangePickup();
 
     if (!context.mounted) return;
 

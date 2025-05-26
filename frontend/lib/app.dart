@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_activity_repository.dart';
+import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
 import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/pickup.dart';
+import 'package:frontend/data/model/pickup_request.dart';
+import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
@@ -13,6 +18,8 @@ import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/ui/page/activities/activities_view.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
+import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
+import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
@@ -95,9 +102,7 @@ class App extends StatelessWidget {
   //   userRepository: _userRepository,
   // );
 
-  // final PickupRepository _pickupRepository = PickupRepository(
-  //   pickupService: PickupService(),
-  // );
+  final ImplPickupRepository _pickupRepository = ImplPickupRepository();
   // final AuthenticationRepository _authenticationRepository =
   //     AuthenticationRepository();
   // final ActivityRepository _activityRepository = ActivityRepository();
@@ -159,36 +164,33 @@ class App extends StatelessWidget {
         //     ),
         '/report': (context) => ReportView(viewModel: reportViewModel),
       },
-      // onGenerateRoute: (settings) {
-      //   if (settings.name == '/arrange_pickup') {
-      //     final args = settings.arguments as Map<String, dynamic>?;
+      onGenerateRoute: (settings) {
+        if (settings.name == '/arrange_pickup') {
+          final args = settings.arguments as Map<String, dynamic>?;
 
-      //     if (args == null ||
-      //         !args.containsKey('carpoolerId') ||
-      //         !args.containsKey('driver') ||
-      //         !args.containsKey('selectedRide')) {
-      //       return null;
-      //     }
+          if (args == null ||
+              !args.containsKey('pickupRequest') ||
+              !args.containsKey('driver') ||
+              !args.containsKey('rideId')) {
+            return null;
+          }
 
-      //     final driver = args['driver'] as Driver;
-      //     final ride = args['selectedRide'] as Ride;
+          final pickupRequest = args['pickupRequest'] as ImplPickup;
+          final driver = args['driver'] as Driver;
+          final rideId = args['rideId'] as int;
 
-      //     return MaterialPageRoute(
-      //       builder:
-      //           (context) => ArrangePickupView(
-      //             viewModel: ArrangePickupViewModel(
-      //               repository: _pickupRepository,
-      //               driver: driver,
-      //               rideId: ride.id,
-      //             ),
-      //             carpoolerId: args['carpoolerId'] as String,
-      //             driver: driver,
-      //             selectedRide: ride,
-      //           ),
-      //     );
-      //   }
-      //   return null;
-      // },
+          return MaterialPageRoute(
+            builder:
+                (context) => ArrangePickupView(
+                  viewModel: ArrangePickupViewModel(
+                    repository: _pickupRepository,
+                    pickupRequest: pickupRequest,
+                  ),
+                ),
+          );
+        }
+        return null;
+      },
     );
   }
 }

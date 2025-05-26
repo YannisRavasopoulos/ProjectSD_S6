@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_driver_repository';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
+import 'package:frontend/data/impl/impl_ride_repository.dart';
 import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/mocks/mock_passenger_repo.dart';
@@ -84,6 +86,18 @@ class AppDrawer extends StatelessWidget {
                 passenger: MockPassenger.test(),
                 location: MockLocation.random(),
                 time: DateTime.now(),
+                ride: ImplRide(
+                  id: 1,
+                  driver: ,
+                  passengers: [],
+                  route:  ,
+                  departureTime: DateTime.now(),
+                  estimatedArrivalTime: DateTime.now().add(
+                    Duration(minutes: 30),
+                  ),
+                  totalSeats: 4,
+                  estimatedDuration: Duration(minutes: 30),
+                ),
               );
 
               // Close the drawer
@@ -92,7 +106,7 @@ class AppDrawer extends StatelessWidget {
               // Show the notification
               NotificationOverlay.show(
                 context,
-                PickupRequestNotification(pickup: testPickup),
+                PickupRequestNotification(testPickup),
               );
             },
           ),

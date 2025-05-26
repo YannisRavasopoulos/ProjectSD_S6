@@ -1,0 +1,49 @@
+import 'dart:math';
+import 'package:frontend/data/model/user.dart';
+import 'package:frontend/data/model/vehicle.dart';
+
+abstract class Driver extends User {
+  Vehicle get vehicle;
+  String get name => '$firstName $lastName';
+}
+
+class ImplDriver extends Driver {
+  @override
+  final int id;
+  @override
+  final String firstName;
+  @override
+  final String lastName;
+  @override
+  final int points;
+  @override
+  final Vehicle vehicle;
+
+  ImplDriver({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.points,
+    required this.vehicle,
+  });
+
+
+  factory ImplDriver.random() {
+    final random = Random();
+    final firstNames = ['John', 'Jane', 'Mike', 'Sarah', 'David', 'Emma'];
+    final lastNames = ['Doe', 'Smith', 'Johnson', 'Brown', 'Davis', 'Wilson'];
+    
+    return ImplDriver(
+      id: random.nextInt(10000),
+      firstName: firstNames[random.nextInt(firstNames.length)],
+      lastName: lastNames[random.nextInt(lastNames.length)],
+      points: random.nextInt(1000),
+      vehicle: Vehicle.random(), // Assuming Vehicle has a random factory
+    );
+  }
+
+  @override
+  String toString() {
+    return 'ImplDriver{id: $id, name: $name, points: $points, vehicle: $vehicle}';
+  }
+}
