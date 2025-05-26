@@ -7,6 +7,32 @@ import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/model/ride.dart';
 
+// Implementation of PickupRequest
+class ImplPickupRequest implements PickupRequest {
+  @override
+  final int id;
+  @override
+  final Ride ride;
+  @override
+  final Passenger passenger;
+  @override
+  final Location location;
+  @override
+  final DateTime time;
+  @override
+  final DateTime createdAt;
+
+  ImplPickupRequest({
+    required this.id,
+    required this.ride,
+    required this.passenger,
+    required this.location,
+    required this.time,
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
+}
+
+// Existing ImplPickup implementation
 class ImplPickup extends Pickup {
   @override
   final int id;

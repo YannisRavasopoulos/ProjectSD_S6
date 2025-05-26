@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
+import 'package:frontend/data/impl/impl_ride_repository.dart';
 import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
-import 'package:frontend/data/mocks/mock_authentication_repository.dart';
-import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/model/pickup.dart';
-import 'package:frontend/data/model/pickup_request.dart';
-import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
@@ -26,7 +22,6 @@ import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/page/rate/rate_view.dart';
 import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/mocks/mock_rating_repository.dart';
-import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/mocks/mock_user_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
@@ -52,7 +47,7 @@ class App extends StatelessWidget {
   final UserRepository _userRepository = ImplUserRepository();
   final ActivityRepository _activityRepository = ImplActivityRepository();
   final RatingRepository _ratingRepository = MockRatingRepository();
-  final RideRepository _rideRepository = MockRideRepository();
+  final RideRepository _rideRepository = ImplRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
   final RewardRepository _rewardRepository = RewardsRepositoryImpl();
   final AuthenticationRepository _authenticationRepository =
@@ -175,7 +170,7 @@ class App extends StatelessWidget {
             return null;
           }
 
-          final pickupRequest = args['pickupRequest'] as ImplPickup;
+          final pickupRequest = args['pickupRequest'] as ImplPickupRequest;
           final driver = args['driver'] as Driver;
           final rideId = args['rideId'] as int;
 

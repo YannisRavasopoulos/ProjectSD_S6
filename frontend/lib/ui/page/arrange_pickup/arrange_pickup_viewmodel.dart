@@ -8,7 +8,7 @@ import 'package:latlong2/latlong.dart';
 
 class ArrangePickupViewModel extends ChangeNotifier {
   final ImplPickupRepository _repository;
-  final ImplPickup _pickupRequest;
+  final ImplPickupRequest _pickupRequest;
   bool _isLoading = false;
   String? _errorMessage;
   DateTime? _selectedTime;
@@ -20,7 +20,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
 
   ArrangePickupViewModel({
     required ImplPickupRepository repository,
-    required ImplPickup pickupRequest,
+    required ImplPickupRequest pickupRequest,
   }) : _repository = repository,
        _pickupRequest = pickupRequest;
 

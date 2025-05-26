@@ -1,6 +1,6 @@
 import 'package:frontend/data/model/passenger.dart';
 
-class MockPassenger extends Passenger {
+class ImplPassenger extends Passenger {
   @override
   final int id;
   @override
@@ -10,7 +10,7 @@ class MockPassenger extends Passenger {
   @override
   final int points;
 
-  MockPassenger({
+  ImplPassenger({
     required this.id,
     required this.firstName,
     required this.lastName,
@@ -18,8 +18,8 @@ class MockPassenger extends Passenger {
     DateTime? createdAt,
   });
 
-  factory MockPassenger.test() {
-    return MockPassenger(
+  factory ImplPassenger.test() {
+    return ImplPassenger(
       id: 999,
       firstName: 'Test',
       lastName: 'Passenger',

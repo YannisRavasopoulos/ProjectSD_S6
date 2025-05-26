@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_driver_repository';
+import 'package:frontend/data/impl/impl_driver.dart';
+import 'package:frontend/data/impl/impl_passenger.dart';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
+import 'package:frontend/data/impl/impl_route.dart';
 import 'package:frontend/data/mocks/mock_location_repository.dart';
-import 'package:frontend/data/model/location.dart';
-import 'package:frontend/data/mocks/mock_passenger_repo.dart';
 import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
 
@@ -81,16 +81,16 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.notifications),
             title: const Text('Test Notification'),
             onTap: () {
-              final testPickup = ImplPickup(
+              final pickupRequest = ImplPickupRequest(
                 id: 12345,
-                passenger: MockPassenger.test(),
+                passenger: ImplPassenger.test(),
                 location: MockLocation.random(),
                 time: DateTime.now(),
                 ride: ImplRide(
                   id: 1,
-                  driver: ,
+                  driver: ImplDriver.test(),
                   passengers: [],
-                  route:  ,
+                  route: ImplRoute.test(),
                   departureTime: DateTime.now(),
                   estimatedArrivalTime: DateTime.now().add(
                     Duration(minutes: 30),
@@ -106,7 +106,7 @@ class AppDrawer extends StatelessWidget {
               // Show the notification
               NotificationOverlay.show(
                 context,
-                PickupRequestNotification(testPickup),
+                PickupRequestNotification(pickupRequest: pickupRequest),
               );
             },
           ),

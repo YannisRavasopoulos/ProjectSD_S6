@@ -1,25 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_pickup_repository.dart';
-import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/pickup_request.dart';
-import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
-import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
-import 'package:frontend/data/repository/pickup_repository.dart';
-import 'package:frontend/data/service/pickup_service.dart';
-import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/data/model/vehicle.dart';
-import 'dart:math';
 import 'package:frontend/ui/notification/notification_overlay.dart';
 
 class PickupRequestNotification extends StatelessWidget {
   final PickupRequest pickupRequest;
 
-  const PickupRequestNotification({
-    super.key,
-    required this.pickupRequest,
-    required ImplPickup pickup,
-  });
+  const PickupRequestNotification({super.key, required this.pickupRequest});
 
   @override
   Widget build(BuildContext context) {
