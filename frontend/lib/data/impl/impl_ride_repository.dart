@@ -20,7 +20,6 @@ class ImplRoute implements Route {
   ImplRoute({required this.id, required this.start, required this.end});
 }
 
-// Concrete implementation of Ride
 class ImplRide implements Ride {
   @override
   final int id;
@@ -59,13 +58,13 @@ class ImplRideRepository implements RideRepository {
   final StreamController<List<Ride>> _rideController =
       StreamController.broadcast();
 
-  User? currentUser; // current user for joining/leaving rides
+  User? currentUser;
 
-  void notifyListeners() {
+  // Ενημερώνει το stream με την τρέχουσα λίστα rides
+  void _notifyStream() {
     _rideController.add(List.unmodifiable(_rides));
   }
 
-  // Private method to check if a ride matches the request
   bool _matches(Ride ride, RideRequest request) {
     final distance = Distance();
 
@@ -125,19 +124,14 @@ class ImplRideRepository implements RideRepository {
 
   @override
   Stream<List<Ride>> watchHistory() {
-    return _rideController.stream.map((rides) {
-      final now = DateTime.now();
-      return rides
-          .where((ride) => ride.estimatedArrivalTime.isBefore(now))
-          .toList();
-    });
+    return _rideController.stream.map((rides) => List.unmodifiable(rides));
   }
 
   @override
   Future<void> clearHistory() async {
     final now = DateTime.now();
     _rides.removeWhere((ride) => ride.estimatedArrivalTime.isBefore(now));
-    notifyListeners();
+    _notifyStream();
   }
 
   @override
@@ -167,7 +161,7 @@ class ImplRideRepository implements RideRepository {
   @override
   Future<void> create(Ride ride) async {
     _rides.add(ride);
-    notifyListeners();
+    _notifyStream();
   }
 
   @override
@@ -175,7 +169,7 @@ class ImplRideRepository implements RideRepository {
     final index = _rides.indexWhere((r) => r.id == ride.id);
     if (index != -1) {
       _rides[index] = ride;
-      notifyListeners();
+      _notifyStream();
     } else {
       throw Exception('Ride not found');
     }
@@ -186,7 +180,7 @@ class ImplRideRepository implements RideRepository {
     final index = _rides.indexWhere((r) => r.id == ride.id);
     if (index != -1) {
       _rides.removeAt(index);
-      notifyListeners();
+      _notifyStream();
     } else {
       throw Exception('Ride not found');
     }
@@ -201,7 +195,7 @@ class ImplRideRepository implements RideRepository {
       if (!passengers.contains(currentUser) &&
           _rides[index].availableSeats > 0) {
         passengers.add(currentUser as dynamic);
-        notifyListeners();
+        _notifyStream();
       }
     } else {
       throw Exception('Ride not found');
@@ -215,7 +209,7 @@ class ImplRideRepository implements RideRepository {
     if (index != -1) {
       final passengers = _rides[index].passengers;
       passengers.remove(currentUser);
-      notifyListeners();
+      _notifyStream();
     } else {
       throw Exception('Ride not found');
     }
