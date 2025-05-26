@@ -32,7 +32,11 @@ class ImplReport extends Report {
 
 class ImplReportRepository implements ReportRepository {
   // This sucks and is ugly but must be done for now...
+<<<<<<< HEAD
   ImplReportRepository({required ImplUserRepository userRepository})
+=======
+  ImplReportRepository(ImplUserRepository userRepository)
+>>>>>>> 3c393a0 (Honor kostakis)
     : _userRepository = userRepository;
 
   final ImplUserRepository _userRepository;
