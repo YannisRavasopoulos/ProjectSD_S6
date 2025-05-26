@@ -1,11 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
+import 'package:frontend/data/impl/impl_ride_repository.dart';
 
 class OfferRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
-
-  OfferRideViewModel({required this.rideRepository});
+  StreamSubscription<List<Ride>>? _ridesSubscription;
 
   List<Ride> _createdRides = [];
   List<Ride> get createdRides => _createdRides;
@@ -13,22 +14,47 @@ class OfferRideViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  Future<void> fetchCreatedRides() async {
+  OfferRideViewModel({required this.rideRepository}) {
+    _init();
+  }
+
+  void _init() {
     _isLoading = true;
     notifyListeners();
-    _createdRides = await rideRepository.fetchHistory();
+    _ridesSubscription = rideRepository.watchHistory().listen(
+      (rides) {
+        final currentUser = (rideRepository as ImplRideRepository).currentUser;
+        if (currentUser != null) {
+          _createdRides =
+              rides.where((r) => r.driver.id == currentUser.id).toList();
+        } else {
+          _createdRides = [];
+        }
+        _isLoading = false;
+        notifyListeners();
+      },
+      onError: (error) {
+        _createdRides = [];
+        _isLoading = false;
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> addRide(Ride ride) async {
+    _isLoading = true;
+    notifyListeners();
+    await rideRepository.create(ride);
     _isLoading = false;
     notifyListeners();
   }
 
-  Future<void> addRide(Ride ride) async {
-    await rideRepository.create(ride);
-    await fetchCreatedRides();
-  }
-
   Future<void> removeRide(Ride ride) async {
+    _isLoading = true;
+    notifyListeners();
     await rideRepository.cancel(ride);
-    await fetchCreatedRides();
+    _isLoading = false;
+    notifyListeners();
   }
 
   // Dummy function for demo
@@ -37,5 +63,11 @@ class OfferRideViewModel extends ChangeNotifier {
     final ride = _createdRides.firstWhere((r) => r.id.toString() == rideId);
     if (ride == null) return [];
     return List.generate(ride.availableSeats, (i) => 'Carpooler ${i + 1}');
+  }
+
+  @override
+  void dispose() {
+    _ridesSubscription?.cancel();
+    super.dispose();
   }
 }

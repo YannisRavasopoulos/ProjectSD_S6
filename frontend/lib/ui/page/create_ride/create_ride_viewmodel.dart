@@ -137,14 +137,7 @@ class CreateRideViewModel extends ChangeNotifier {
           points: 300,
         );
       }
-      final currentUser = repo.currentUser!;
-
-      final driver = ImplUser(
-        id: currentUser.id,
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        points: currentUser.points,
-      );
+      final driver = repo.currentUser!; // <-- το ίδιο instance
 
       final route = ImplRoute(
         id: id ?? DateTime.now().millisecondsSinceEpoch,
@@ -157,7 +150,7 @@ class CreateRideViewModel extends ChangeNotifier {
 
       final ride = ImplRide(
         id: rideId,
-        driver: driver as Driver,
+        driver: driver as Driver, // <-- το ίδιο instance
         passengers: [],
         departureTime: dt,
         estimatedArrivalTime: dt.add(const Duration(hours: 1)),

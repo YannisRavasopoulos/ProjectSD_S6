@@ -38,15 +38,7 @@ class OfferRideView extends StatelessWidget {
               valueListenable: modeNotifier,
               builder: (context, mode, _) {
                 if (mode == OfferRideMode.createdRides) {
-                  return FutureBuilder(
-                    future: viewModel.fetchCreatedRides(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      return CreatedRidesList(viewModel: viewModel);
-                    },
-                  );
+                  return CreatedRidesList(viewModel: viewModel);
                 } else {
                   return ActivitiesList(
                     viewModel: activitiesViewModel,

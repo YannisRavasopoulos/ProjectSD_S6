@@ -50,40 +50,6 @@ class ActivitiesList extends StatelessWidget {
               '${activity.location.name} - ${activity.time.format(context)}',
             ),
             trailing: const Icon(Icons.arrow_forward_ios, color: Colors.orange),
-            onTap: () async {
-              final carpoolers = await fetchCarpoolers(activity.id.toString());
-              showDialog(
-                context: context,
-                builder:
-                    (_) => AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      title: Text('Nearby Carpoolers for "${activity.name}"'),
-                      content:
-                          carpoolers.isEmpty
-                              ? const Text('No carpoolers found.')
-                              : Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children:
-                                    carpoolers
-                                        .map(
-                                          (c) => ListTile(
-                                            leading: const Icon(Icons.person),
-                                            title: Text(c),
-                                          ),
-                                        )
-                                        .toList(),
-                              ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Close'),
-                        ),
-                      ],
-                    ),
-              );
-            },
           ),
         );
       },
