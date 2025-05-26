@@ -10,60 +10,61 @@ class ArrangePickupView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: viewModel,
-      builder: (context, _) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(
-                  'Arrange Pickup Details',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                RideDetailsPanel(ride: viewModel.ride),
-                const SizedBox(height: 24),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Set Pickup Details',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: 16),
-                        if (viewModel.isLoading)
-                          const Center(child: CircularProgressIndicator())
-                        else
-                          PickupForm(
-                            selectedTime: viewModel.selectedTime,
-                            location: viewModel.location,
-                            onTimeSelected: viewModel.setPickupTime,
-                            onLocationChanged: viewModel.setLocation,
-                            onSubmit: () => _handleSubmit(context),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Arrange Pickup Details')),
+      body: ListenableBuilder(
+        listenable: viewModel,
+        builder: (context, _) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 16),
+                  RideDetailsPanel(ride: viewModel.ride),
+                  const SizedBox(height: 24),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Set Pickup Details',
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
-                      ],
+                          const SizedBox(height: 16),
+                          if (viewModel.isLoading)
+                            const Center(child: CircularProgressIndicator())
+                          else
+                            PickupForm(
+                              selectedTime: viewModel.selectedTime,
+                              location: viewModel.location,
+                              onTimeSelected: viewModel.setPickupTime,
+                              onLocationChanged: viewModel.setLocation,
+                              onSubmit: () => _handleSubmit(context),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => _handleSubmit(context),
-                  child: const Text('Send Pickup Proposal'),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => _handleSubmit(context),
+                    child: const Text('Send Pickup Proposal'),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
+      // Optionally, add your navigation drawer here:
+      // drawer: AppDrawer(),
     );
   }
 

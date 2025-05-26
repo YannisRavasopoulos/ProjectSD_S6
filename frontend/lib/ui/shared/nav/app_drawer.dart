@@ -78,8 +78,8 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.notifications),
-            title: const Text('Test Notification'),
+            leading: const Icon(Icons.notifications_active),
+            title: const Text('Pickup Notification (Test)'),
             onTap: () {
               final pickupRequest = ImplPickupRequest(
                 id: 12345,
