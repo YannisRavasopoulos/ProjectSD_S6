@@ -22,7 +22,7 @@ class ConfirmPickupViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
     try {
-      await pickupRepository.completePickup(pickup);
+      await pickupRepository.acceptPickup(pickup);
       _isLoading = false;
       notifyListeners();
       return true;
@@ -39,7 +39,7 @@ class ConfirmPickupViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
     try {
-      await pickupRepository.cancelPickup(pickup);
+      await pickupRepository.rejectPickup(pickup);
       _isLoading = false;
       notifyListeners();
       return false;
