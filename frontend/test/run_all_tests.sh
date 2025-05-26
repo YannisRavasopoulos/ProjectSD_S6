@@ -11,4 +11,8 @@ echo "Running reports repository tests..."
 dart test -r expanded reports_repository_testing.dart
 
 echo ""
+echo "Running rewards repository tests..."
+dart test -r expanded rewards_repository_testing.dart
+
+echo ""
 echo "All tests completed."
