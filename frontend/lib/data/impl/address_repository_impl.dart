@@ -138,6 +138,7 @@ class AddressImpl implements Address {
 class AddressRepositoryImpl implements AddressRepository {
   // @override
   Future<Address> fetchForLocation(Location location) async {
+    throw UnimplementedError('fetchForLocation is not implemented yet');
     // var address = await GeoHelper.reverseGeocode(
     //   location.coordinates.latitude,
     //   location.coordinates.longitude,
@@ -156,6 +157,7 @@ class AddressRepositoryImpl implements AddressRepository {
 
   @override
   Future<List<Address>> fetchForQuery(String query) async {
+    throw UnimplementedError('fetchForQuery is not implemented yet');
     // var results = await GeoHelper.geocode(query);
 
     // print(results);
