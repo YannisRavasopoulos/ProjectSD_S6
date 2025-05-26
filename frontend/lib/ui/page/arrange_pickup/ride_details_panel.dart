@@ -34,7 +34,8 @@ class RideDetailsPanel extends StatelessWidget {
                   child: _buildDetailRow(
                     icon: Icons.directions_car,
                     label: 'Vehicle',
-                    value: ride.driver.vehicle.description,
+                    value:
+                        ride.driver.vehicle.description, // TODO: ride.vehicle
                   ),
                 ),
               ],
@@ -45,7 +46,7 @@ class RideDetailsPanel extends StatelessWidget {
                 Expanded(
                   child: _buildDetailRow(
                     icon: Icons.group,
-                    label: 'Seats',
+                    label: 'Available Seats',
                     value: '${ride.availableSeats}/${ride.totalSeats}',
                   ),
                 ),
@@ -53,8 +54,7 @@ class RideDetailsPanel extends StatelessWidget {
                   child: _buildDetailRow(
                     icon: Icons.schedule,
                     label: 'Duration',
-                    value: "TODO",
-                    // value: ride.estimatedDuration,
+                    value: "${ride.estimatedDuration.inMinutes} mins",
                   ),
                 ),
               ],
@@ -64,17 +64,9 @@ class RideDetailsPanel extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildDetailRow(
-                    icon: Icons.route,
-                    label: 'Distance',
-                    value: "TODO",
-                    // value: ride.distance,
-                  ),
-                ),
-                Expanded(
-                  child: _buildDetailRow(
-                    icon: Icons.info_outline,
-                    label: 'Description',
-                    value: "TODO",
+                    icon: Icons.location_on,
+                    label: 'Starting Point',
+                    value: ride.route.start.name,
                     // value: ride.description,
                   ),
                 ),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/location.dart';
 import 'package:frontend/ui/page/arrange_pickup/pickup_map_view.dart';
 
 class PickupForm extends StatefulWidget {
   final DateTime? selectedTime;
-  final String location;
+  final Location location;
   final Function(DateTime) onTimeSelected;
-  final Function(String) onLocationChanged;
+  final Function(Location) onLocationChanged;
   final Function() onSubmit;
 
   const PickupForm({
@@ -52,7 +53,18 @@ class _PickupFormState extends State<PickupForm> {
               },
             ),
             const SizedBox(height: 16),
-            PickupMapView(onLocationChanged: widget.onLocationChanged),
+            PickupMapView(
+              location: widget.location,
+              onLocationChanged: widget.onLocationChanged,
+            ),
+            if (widget.location.coordinates.latitude != 0.0 ||
+                widget.location.coordinates.longitude != 0.0)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  'Selected location: ${widget.location.coordinates.latitude}, ${widget.location.coordinates.longitude}',
+                ),
+              ),
             const SizedBox(height: 16),
           ],
         ),

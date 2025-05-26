@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 // Repositories
 import 'package:frontend/data/repository/address_repository.dart';
+import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/repository/ride_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
@@ -15,6 +18,8 @@ import 'package:frontend/data/repository/user_repository.dart';
 // Pages
 import 'package:frontend/ui/page/activities/activities_view.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
+import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
+import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
@@ -42,18 +47,32 @@ import 'package:frontend/data/impl/impl_rating_repository.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
 import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
+import 'package:frontend/data/impl/impl_activity_repository.dart';
+import 'package:frontend/data/impl/impl_pickup_repository.dart';
+import 'package:frontend/data/impl/impl_report_repository.dart';
+import 'package:frontend/data/impl/impl_ride_repository.dart';
+import 'package:frontend/data/impl/impl_user_repository.dart';
+import 'package:frontend/data/impl/impl_rewards_repository.dart';
 
 // Mocks
 import 'package:frontend/data/mocks/mock_location_repository.dart';
+import 'package:frontend/data/mocks/mock_rating_repository.dart';
+import 'package:frontend/data/mocks/mock_user_repository.dart';
+import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
+import 'package:frontend/data/mocks/mock_authentication_repository.dart';
+
+import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/pickup_request.dart';
+
 
 class App extends StatelessWidget {
   // Replace mocks with implementations
   final UserRepository _userRepository = ImplUserRepository();
   final ActivityRepository _activityRepository = ImplActivityRepository();
+  final RideRepository _rideRepository = ImplRideRepository();
   final RatingRepository _ratingRepository = ImplRatingRepository();
-  final RideRepository _rideRepository = MockRideRepository();
   final LocationRepository _locationRepository = MockLocationRepository();
   late final RewardRepository _rewardRepository = RewardsRepositoryImpl(
     userRepository: _userRepository as ImplUserRepository,
@@ -62,7 +81,7 @@ class App extends StatelessWidget {
       MockAuthenticationRepository();
   final AddressRepository _addressRepository = AddressRepositoryImpl();
   final ReportRepository _reportRepository = ImplReportRepository();
-
+  final PickupRepository _pickupRepository = ImplPickupRepository();
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     rideRepository: _rideRepository,
   );
@@ -101,15 +120,20 @@ class App extends StatelessWidget {
   late final SignUpViewModel signUpViewModel = SignUpViewModel(
     userRepository: _userRepository,
   );
+  
+  late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
+    activityRepository: _activityRepository,
+  );
+
+  late final ReportViewModel reportViewModel = ReportViewModel(
+    reportRepository: _reportRepository,
+  );
 
   // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
   //   rideRepository: _rideRepository,
   //   userRepository: _userRepository,
   // );
 
-  // final PickupRepository _pickupRepository = PickupRepository(
-  //   pickupService: PickupService(),
-  // );
   // final AuthenticationRepository _authenticationRepository =
   //     AuthenticationRepository();
   // final ActivityRepository _activityRepository = ActivityRepository();
@@ -119,14 +143,7 @@ class App extends StatelessWidget {
   //   rideRepository: _rides,
   // );
 
-  late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
-    activityRepository: _activityRepository,
-  );
-
-  late final ReportViewModel reportViewModel = ReportViewModel(
-    reportRepository: _reportRepository,
-  );
-
+  
   final bool isLoggedIn = true;
 
   @override
@@ -172,36 +189,33 @@ class App extends StatelessWidget {
         //     ),
         '/report': (context) => ReportView(viewModel: reportViewModel),
       },
-      // onGenerateRoute: (settings) {
-      //   if (settings.name == '/arrange_pickup') {
-      //     final args = settings.arguments as Map<String, dynamic>?;
+      onGenerateRoute: (settings) {
+        if (settings.name == '/arrange_pickup') {
+          final args = settings.arguments as Map<String, dynamic>?;
 
-      //     if (args == null ||
-      //         !args.containsKey('carpoolerId') ||
-      //         !args.containsKey('driver') ||
-      //         !args.containsKey('selectedRide')) {
-      //       return null;
-      //     }
+          if (args == null ||
+              !args.containsKey('pickupRequest') ||
+              !args.containsKey('driver') ||
+              !args.containsKey('rideId')) {
+            return null;
+          }
 
-      //     final driver = args['driver'] as Driver;
-      //     final ride = args['selectedRide'] as Ride;
+          final pickupRequest = args['pickupRequest'] as PickupRequest;
+          final driver = args['driver'] as Driver;
+          final rideId = args['rideId'] as int;
 
-      //     return MaterialPageRoute(
-      //       builder:
-      //           (context) => ArrangePickupView(
-      //             viewModel: ArrangePickupViewModel(
-      //               repository: _pickupRepository,
-      //               driver: driver,
-      //               rideId: ride.id,
-      //             ),
-      //             carpoolerId: args['carpoolerId'] as String,
-      //             driver: driver,
-      //             selectedRide: ride,
-      //           ),
-      //     );
-      //   }
-      //   return null;
-      // },
+          return MaterialPageRoute(
+            builder:
+                (context) => ArrangePickupView(
+                  viewModel: ArrangePickupViewModel(
+                    repository: _pickupRepository,
+                    pickupRequest: pickupRequest,
+                  ),
+                ),
+          );
+        }
+        return null;
+      },
     );
   }
 }
