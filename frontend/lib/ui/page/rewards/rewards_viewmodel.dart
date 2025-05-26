@@ -29,13 +29,18 @@ class RewardViewModel extends ChangeNotifier {
   int get userPoints => _userPoints;
   bool get isLoading => _isLoading;
 
-  void _startWatchingRewards() {
+  void _startWatchingRewards() async {
     _isLoading = true;
+    notifyListeners();
+
+    _availableRewards = await rewardRepository.fetchAvailable();
+    _redeemedRewards = await rewardRepository.fetchRedeemed();
+
+    _isLoading = false;
     notifyListeners();
 
     _availableSub = rewardRepository.watchAvailable().listen((rewards) {
       _availableRewards = rewards;
-      _isLoading = false;
       notifyListeners();
     });
 
