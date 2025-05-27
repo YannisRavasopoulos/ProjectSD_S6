@@ -1,341 +1,848 @@
 @startuml
-skinparam linetype ortho
-skinparam nodesep 50
 
-' App
+skinparam linetype ortho
+skinparam nodesep 100
+
+' TODO: create should change to not take in models, but rather use a factory
+
+'
+'Views
+'
+LoopApp ---> ActivitiesView
+LoopApp ---> CreateActivityView
+' Missing
+LoopApp ---> EditActivityView
+LoopApp ---> ArrangePickupView
+LoopApp ---> ConfirmPickupView
+LoopApp ---> CreateRideView
+LoopApp ---> FindRideView
+LoopApp ---> ForgotPasswordView
+LoopApp ---> HomeView
+LoopApp ---> JoinRideView
+LoopApp ---> OfferRideView
+LoopApp ---> ProfileView
+LoopApp ---> RateView
+LoopApp ---> ReportView
+LoopApp ---> RewardsView
+LoopApp ---> RidesView
 LoopApp ---> SignInView
 LoopApp ---> SignUpView
-LoopApp ---> ForgotPasswordView
+
+'
+'ViewModels
+'
+LoopApp ---> ActivitiesViewModel
+'Missing
+LoopApp ---> CreateActivityViewModel
+'Missing
+LoopApp ---> EditActivityViewModel
+LoopApp ---> ArrangePickupViewModel
+LoopApp ---> ConfirmPickupViewModel
+LoopApp ---> CreateRideViewModel
+LoopApp ---> FindRideViewModel
+'Missing
+LoopApp ---> ForgotPasswordViewModel
+LoopApp ---> HomeViewModel
+LoopApp ---> JoinRideViewModel
+LoopApp ---> OfferRideViewModel
+LoopApp ---> ProfileViewModel
+LoopApp ---> RateViewModel
+LoopApp ---> ReportViewModel
+LoopApp ---> RewardsViewModel
+LoopApp ---> RidesViewModel
 LoopApp ---> SignInViewModel
 LoopApp ---> SignUpViewModel
-LoopApp ---> ForgotPasswordViewModel
-LoopApp ---> HomeView
-LoopApp ---> HomeViewModel
+
+'
+'Repositories
+'
+LoopApp ---> ActivityRepository
+LoopApp ---> AddressRepository
 LoopApp ---> AuthenticationRepository
-LoopApp ---> UserRepository
+LoopApp ---> LocationRepository
+LoopApp ---> PickupRepository
 LoopApp ---> RideRepository
+LoopApp ---> RatingRepository
+LoopApp ---> ReportRepository
 LoopApp ---> RewardRepository
-LoopApp ---> ReportUserView
-LoopApp ---> UserDetailsView
-LoopApp ---> HttpUserRepository
-LoopApp ---> CachedUserRepository
+LoopApp ---> RideRepository
+LoopApp ---> UserRepository
 
-' ViewModels
-SignInViewModel ---|> ViewModelBase
-SignUpViewModel ---|> ViewModelBase
-ForgotPasswordViewModel ---|> ViewModelBase
-HomeViewModel ---|> ViewModelBase
-RewardViewModel ---|> ViewModelBase
-ReportUserViewModel ---|> ViewModelBase
-UserDetailsViewModel ---|> ViewModelBase
-AccountViewModel ---|> ViewModelBase
-RideDetailsViewModel ---|> ViewModelBase
-
-' Views -> ViewModels, Widgets
-SignInView ...> SignInViewModel
-SignUpView ...> SignUpViewModel
-ForgotPasswordView ...> ForgotPasswordViewModel
-HomeView ...> HomeViewModel
-HomeView ...> MapProvider
-RewardView ...> RewardViewModel
-ReportUserView ...> ReportUserViewModel
-UserDetailsView ...> UserDetailsViewModel
-AccountView ...> AccountViewModel
-RideDetailsView ...> RideDetailsViewModel
-
-class RideDetailsView {
-
-}
-
-class RideDetailsViewModel {
-
-}
-
-
-class AccountView {
-
-}
-
-class AccountViewModel {
-
-}
-
-' ViewModels -> Repositories, Models
-SignInViewModel ....> AuthenticationRepository
-SignInViewModel ...> UserRepository
-SignUpViewModel ...> AuthenticationRepository
-SignUpViewModel ...> UserRepository
-ForgotPasswordViewModel ...> AuthenticationRepository
-ForgotPasswordViewModel ...> UserRepository
-ReportUserViewModel ...> UserRepository
-ReportUserViewModel ...> ReportRepository
-UserDetailsViewModel ...> UserRepository
-UserDetailsViewModel ...> User
-RewardViewModel ...> RewardRepository
-
-' Repositories
-AuthenticationRepository ---> AuthenticationToken
-UserRepository ---> User
-RideRepository ---> Ride
-RewardRepository ---> Reward
-HttpUserRepository ...|> UserRepository
-CachedUserRepository ...|> UserRepository
-
-'Models and misc
-JsonWebToken ...|> AuthenticationToken
-Reward ---> RewardStatus
-ReportRepository ---> Report
-User ---> Report
-Report ---> User
-Report ---> ReportReason
-Ride ---> Driver
-Ride ---> Passenger
-Ride ---> RideParticipant
-Ride ---> RideStatus
-Passenger ---|> RideParticipant
-Driver ---|> RideParticipant
-RideParticipant ---|> User
-PickupPoint ---|> RoutePoint
-DropoffPoint ---|> RoutePoint
-RoutePoint ---|> StartPoint
-RoutePoint ---|> EndPoint
-Route ---> RoutePoint
-Route ---> DropoffPoint
-Route ---> PickupPoint
-Route ---> StartPoint
-Route ---> EndPoint
-Ride ---> Route
-DropoffPoint ---> RidePassenger
-PickupPoint ---> RidePassenger
-GoogleMapProvider ...|> MapProvider
-MapProvider ---> Route
-MapProvider ---> RoutePoint
-User ---> Rating
-Driver ---> Vehicle
-Vehicle ---> User
-Motorbike ...|> Vehicle
-Car ...|> Vehicle
-
-class RewardView {
-
-}
-
-class RewardViewModel {
-
-}
-
-enum RewardStatus {
-
-}
-
-class Motorbike {
-
-}
-
-class Car {
-
-}
-
-class Vehicle {
-
-}
-
-class Route {
-
-}
-
-class StartPoint {
-
-}
-
-class EndPoint {
-
-}
-
-
-class RoutePoint {
-
-}
-
-class DropoffPoint {
-
-}
-
-class PickupPoint {
-
-}
-
-
-enum RideStatus {
-
-}
-
-class Passenger {
-
-}
-
-class Driver {
-
-}
-
-class RideParticipant {
-
-}
-
-class UserDetailsViewModel {
-
-}
-
-interface MapProvider {
-
-}
-
-class GoogleMapProvider {
-
-}
-
-enum ReportReason {
-
-}
-
-
-class ReportRepository {
-}
 
 class LoopApp {
 
 }
 
-class ViewModelBase {
+View ---|> StatelessWidget
+abstract class View {
 
 }
 
-class ReportUserViewModel {
+ViewModel ---|> ChangeNotifier
+abstract class ViewModel {
 
 }
 
-class RideRepository {
-
+abstract class Model {
+    +id: int
+    +createdAt: DateTime
 }
 
-class SignInView {
-    +onSignInClick()
-    +onForgotPasswordClick()
-    +onSignUpClick()
+
+ActivitiesView ..> ActivitiesViewModel
+ActivitiesView ---|> View
+class ActivitiesView {
+    - viewModel: ActivitiesViewModel
+    - onCreateActivityPressed()
+    - onEditActivityPressed()
+    - onDeleteActivityPressed()
+    ' TODO
 }
 
-class SignInViewModel {
-    +email
-    +password
-    +signIn()
+ActivitiesViewModel ---|> ViewModel
+ActivitiesViewModel ..> ActivityRepository
+ActivitiesViewModel ..> Activity
+class ActivitiesViewModel {
+    - activityRepository: ActivityRepository
+    + activities: List<Activity>
+    + createActivity(activity: Activity)
+    + editActivity(activity: Activity)
+    + deleteActivity(activity: Activity)
+    - onActivitiesUpdated(activities: List<Activity>)
 }
 
-class SignUpView {
-    +onSignUpClick()
-    +onSignInClick()
+CreateActivityView ..> CreateActivityViewModel
+CreateActivityView ---|> View
+class CreateActivityView {
+    - viewModel: CreateActivityViewModel
+    - onCreatePressed()
+    - onCancelPressed()
 }
 
-class SignUpViewModel {
-    +name
-    +email
-    +password
-    +confirmPassword
-    +signUp()
+CreateActivityViewModel ..> ActivityRepository
+CreateActivityViewModel ---|> ViewModel
+class CreateActivityViewModel {
+    - activityRepository: ActivityRepository
+    + activityName: String
+    + activityTimeOfDay: TimeOfDay
+    + createActivity()
+    ' TODO
 }
 
+EditActivityView ..> EditActivityViewModel
+EditActivityView ---|> View
+class EditActivityView {
+    - viewModel: EditActivityViewModel
+    ' TODO
+}
+
+EditActivityViewModel ---|> ViewModel
+class EditActivityViewModel {
+    ' TODO
+}
+
+ArrangePickupView ..> ArrangePickupViewModel
+ArrangePickupView ---|> View
+class ArrangePickupView {
+    - viewModel: ArrangePickupViewModel
+    ' TODO
+}
+
+ArrangePickupViewModel ---|> ViewModel
+class ArrangePickupViewModel {
+    ' TODO
+}
+
+ConfirmPickupView ..> ConfirmPickupViewModel
+ConfirmPickupView ---|> View
+class ConfirmPickupView {
+    - viewModel: ConfirmPickupViewModel
+    ' TODO
+}
+
+ConfirmPickupViewModel ---|> ViewModel
+class ConfirmPickupViewModel {
+    ' TODO
+}
+
+CreateRideView ..> CreateRideViewModel
+CreateRideView ---|> View
+class CreateRideView {
+    - viewModel: CreateRideViewModel
+    ' TODO
+}
+
+CreateRideViewModel ---|> ViewModel
+class CreateRideViewModel {
+    ' TODO
+}
+
+FindRideView ..> FindRideViewModel
+FindRideView ---|> View
+class FindRideView {
+    - viewModel: FindRideViewModel
+    ' TODO
+}
+
+FindRideViewModel ---|> ViewModel
+class FindRideViewModel {
+    ' TODO
+}
+
+ForgotPasswordView ..> ForgotPasswordViewModel
+ForgotPasswordView ---|> View
 class ForgotPasswordView {
-    +email
-    +onResetPasswordClick()
+    ' TODO
 }
 
+ForgotPasswordViewModel ---|> ViewModel
 class ForgotPasswordViewModel {
-    +email
-    +resetPassword()
+    ' TODO
 }
 
+HomeView ..> HomeViewModel
+HomeView ---|> View
 class HomeView {
-
+    - viewModel: HomeViewModel
+    ' TODO
 }
 
+HomeViewModel ---|> ViewModel
 class HomeViewModel {
+    ' TODO
+}
+
+JoinRideView ..> JoinRideViewModel
+JoinRideView ---|> View
+class JoinRideView {
+    - viewModel: JoinRideViewModel
+    ' TODO
+}
+
+JoinRideViewModel ---|> ViewModel
+class JoinRideViewModel {
+    ' TODO
+}
+
+OfferRideView ..> OfferRideViewModel
+OfferRideView ---|> View
+class OfferRideView {
+    - viewModel: OfferRideViewModel
+    ' TODO
+}
+
+OfferRideViewModel ---|> ViewModel
+class OfferRideViewModel {
+    ' TODO
+}
+
+ProfileView ..> ProfileViewModel
+ProfileView ---|> View
+class ProfileView {
+    - viewModel: ProfileViewModel
+    - onEditProfilePressed()
+    - onViewRideHistoryPressed()
+    - onViewRatingPressed()
+}
+
+ProfileViewModel ---|> ViewModel
+class ProfileViewModel {
+    ' TODO
+}
+
+RateView ..> RateViewModel
+RateView ---|> View
+class RateView {
+    - viewModel: RateViewModel
+    - onRatePressed()
+    - onCancelPressed()
+}
+
+RateViewModel ..> UserRepository
+RateViewModel ..> RatingRepository
+RateViewModel ..> User
+RateViewModel ---|> ViewModel
+class RateViewModel {
+    - ratingRepository: RatingRepository
+    + user: User
+    + stars: Int
+    + comment: String
+    + rate()
+}
+
+ReportView ..> ReportViewModel
+ReportView ---|> View
+class ReportView {
+    - viewModel: ReportViewModel
+    - onReportPressed()
+    - onCancelPressed()
+}
+
+ReportViewModel ..> ReportRepository
+ReportViewModel ..> User
+ReportViewModel ---|> ViewModel
+class ReportViewModel {
+    - reportRepository: ReportRepository
+    + user: User
+    + reportReason: ReportReason
+    + description: String
+    + report()
+}
+
+RewardsView ..> RewardsViewModel
+RewardsView ---|> View
+class RewardsView {
+    - viewModel: RewardsViewModel
+    - onRedeemPressed()
+}
+
+RewardsViewModel ..> RewardRepository
+RewardsViewModel ..> RedeemedReward
+RewardsViewModel ..> Reward
+RewardsViewModel ---|> ViewModel
+class RewardsViewModel {
+    + availableRewards: List<Reward>
+    + redeemedRewards: List<RedeemedReward>
+    + redeemReward(reward: Reward)
+    - onAvailableRewardsUpdated(rewards: List<Reward>)
+    - onRedeemedRewardsUpdated(rewards: List<RedeemedReward>)
+    - rewardRepository: RewardRepository
+}
+
+RidesView ..> RidesViewModel
+RidesView ---|> View
+class RidesView {
+    - viewModel: RidesViewModel
+    - onCreateRidePressed()
+    - onOfferRidePressed()
+    ' TODO
+}
+
+RidesViewModel ..> RideRepository
+RidesViewModel ..> Ride
+RidesViewModel ---|> ViewModel
+class RidesViewModel {
+    - rideRepository: RideRepository
+    + rides: List<Ride>
+    + createRide()
+    + offerRide(ride: Ride)
+    - onRidesUpdated(rides: List<Ride>)
+}
+
+SignInView ..> SignInViewModel
+SignInView ---|> View
+class SignInView {
+    - viewModel: SignInViewModel
+    - onSignInPressed()
+    - onForgotPasswordPressed()
+    - onSignUpPressed()
+}
+
+SignInViewModel ..> AuthenticationRepository
+SignInViewModel ---|> ViewModel
+class SignInViewModel {
+    - authenticationRepository: AuthenticationRepository
+    + email: String
+    + password: String
+    + signIn()
+}
+
+SignUpView ..> SignUpViewModel
+SignUpView ---|> View
+class SignUpView {
+    - onSignUpPressed()
+    - onSignInPressed()
+}
+
+SignUpViewModel ..> UserRepository
+SignUpViewModel ---|> ViewModel
+class SignUpViewModel {
+    - userRepository: UserRepository
+    + name: String
+    + email: String
+    + password: String
+    + confirmPassword: String
+    + signUp()
+}
+
+interface ActivityRepository {
+    + create(activity: Activity): Future<void>
+    + fetch(): Future<List<Activity>>
+    + watch(): Stream<List<Activity>>
+    + update(activity: Activity): Future<void>
+    + delete(activity: Activity): Future<void>
+}
+
+interface AddressRepository {
 }
 
 interface AuthenticationRepository {
-    +login()
-    +logout()
 }
 
+interface LocationRepository {
+}
+
+PickupRepository ..> Pickup
+PickupRepository ..> PickupRequest
+interface PickupRepository {
+    + requestPickup(request: PickupRequest): Future<Pickup>
+    + fetchPickupRequests(): Future<List<PickupRequest>>
+    + watchPickupRequests(): Stream<List<PickupRequest>>
+    + acceptPickup(pickup: Pickup): Future<void>
+    + rejectPickup(pickup: Pickup): Future<void>
+    + acceptPickupRequest(request: PickupRequest, pickup: Pickup): Future<void>
+    + rejectPickupRequest(request: PickupRequest): Future<void>
+    + fetchPending(): Future<List<Pickup>>
+    + watchPending(): Stream<List<Pickup>>
+    + watchCompleted(): Stream<List<Pickup>>
+    + fetchCompleted(): Future<List<Pickup>>
+    + cancelPickup(pickup: Pickup): Future<void>
+    + completePickup(pickup: Pickup): Future<void>
+}
+
+RideRepository ...> Ride
+RideRepository ...> Passenger
+interface RideRepository {
+    + fetchMatchingRides(request: RideRequest): Future<List<Ride>>
+    + watchMatchingRides(request: RideRequest): Stream<List<Ride>>
+    + fetchPotentialPassengers(ride: Ride): Future<Passenger>
+    + watchPotentialPassengers(ride: Ride): Stream<List<Passenger>>
+    + fetchHistory(): Future<List<Ride>>
+    + watchHistory(): Stream<List<Ride>>
+    + clearHistory(): Future<void>
+    + fetchJoined(): Future<List<Ride>>
+    + watchJoined(): Stream<List<Ride>>
+    + fetchCurrent(): Future<Ride>
+    + watchCurrent(): Stream<Ride>
+    + create(ride: Ride): Future<void>
+    + cancel(ride: Ride): Future<void>
+    + join(ride: Ride): Future<void>
+    + leave(ride: Ride): Future<void>
+}
+
+RatingRepository ...> Rating
+RatingRepository ...> User
+interface RatingRepository {
+    + fetch(user: User): Future<List<Rating>>
+    + watch(user: User): Stream<List<Rating>>
+    + create(rating: Rating): Future<void>
+    + delete(rating: Rating): Future<void>
+}
+
+ReportRepository ...> Report
+interface ReportRepository {
+    + create(report: Report): Future<void>
+    + fetchReceived(): Future<List<Report>>
+    + watchReceived(): Stream<List<Report>>
+    + fetchCreated(): Future<List<Report>>
+    + watchCreated(): Stream<List<Report>>
+}
+
+ReportRepository ...> Reward
+ReportRepository ...> RedeemedReward
+interface RewardRepository {
+    + redeem(reward: Reward): Future<String>
+    + fetchAvailable(): Future<List<Reward>>
+    + watchAvailable(): Stream<List<Reward>>
+    + fetchRedeemed(): Future<List<RedeemedReward>>
+    + watchRedeemed(): Stream<List<RedeemedReward>>
+}
+
+UserRepository ...> User
 interface UserRepository {
-    +createUser()
-    +getUser()
-    +updateUser()
-    +deleteUser()
+    + fetchCurrent(): Future<User>
+    + watchCurrent(): Stream<User>
 }
 
-interface AuthenticationToken {
-
+ActivityRepositoryImpl ..|> ActivityRepository
+class ActivityRepositoryImpl {
 }
 
-class CachedUserRepository {
+AddressRepositoryImpl ..|> AddressRepository
+class AddressRepositoryImpl {
 }
 
-class JsonWebToken {
+AuthenticationRepositoryImpl ..|> AuthenticationRepository
+class AuthenticationRepositoryImpl {
 }
 
-class RideRepository {
-
+LocationRepositoryImpl ..|> LocationRepository
+class LocationRepositoryImpl {
 }
 
-class RewardRepository {
-    +getRewards()
+PickupRepositoryImpl ..|> PickupRepository
+class PickupRepositoryImpl {
 }
 
-class Reward {
-    +requiredPoints
-    +name
-    +description
-    +image
-    +expirationDate
-    +couponCode
+RideRepositoryImpl ..|> RideRepository
+class RideRepositoryImpl {
 }
 
-class UserDetailsView {
-    +onRateUserClick()
-    +onReportUserClick()
+RatingRepositoryImpl ..|> RatingRepository
+class RatingRepositoryImpl {
 }
 
-class ReportUserView {
-    -reasonSelector
-    -descriptionField
-    -onConfirmClick()
-    -onCancelClick()
+ReportRepositoryImpl ..|> ReportRepository
+class ReportRepositoryImpl {
 }
 
+RewardRepositoryImpl ..|> RewardRepository
+class RewardRepositoryImpl {
+}
+
+UserRepositoryImpl ..|> UserRepository
+class UserRepositoryImpl {
+}
+
+Activity ---|> Model
+Activity ---> Location
+class Activity {
+    +name: String
+    +location: Location
+    +time: TimeOfDay
+}
+
+Address ---|> Model
+class Address {
+    +city: String
+    +street: String
+    +number: int
+    +postalCode: String
+}
+
+Location ---|> Model
+class Location {
+    +coordinates: LatLng
+    +name: String
+}
+
+Passenger ---|> User
+class Passenger {
+}
+
+Pickup ---|> Model
+Pickup ---> Ride
+Pickup ---> Passenger
+Pickup ---> Location
+class Pickup {
+    +ride: Ride
+    +passenger: Passenger
+    +location: Location
+    +time: DateTime
+}
+
+PickupRequest ---|> Model
+PickupRequest ---> Ride
+PickupRequest ---> Passenger
+PickupRequest ---> Location
+class PickupRequest {
+    +ride: Ride
+    +passenger: Passenger
+    +location: Location
+    +time: DateTime
+}
+
+Rating ---|> Model
+Rating ---> User
 class Rating {
-    +stars
-    +comment
-    +timestamp
+    +fromUser: User
+    +toUser: User
+    +comment: String
+    +stars: int
 }
 
+enum ReportStatus {
+    pending
+    inProgress
+    resolved
+    rejected
+}
+
+Report ---|> Model
+Report ---> ReportReason
+Report ---> User
+Report ---> ReportStatus
 class Report {
-    +from
-    +to
-    +timestamp
-    +reason
-    +description
+    +receiver: User
+    +reason: ReportReason
+    +status: ReportStatus
 }
 
-class User {
-    +id
-    +name
-    +email
-    +password
-    +ratings
-    +reports
+enum ReportReason {
+    inappropriateBehavior
+    harassment
+    spam
+    other
 }
 
+Reward ---|> Model
+class Reward {
+    +title: String
+    +description: String
+    +points: int
+}
+
+RedeemedReward ---|> Reward
+class RedeemedReward {
+    +redeemedAt: DateTime
+    +couponCode: String
+}
+
+Ride ---|> Model
+Ride ---> Driver
+Ride ---> Passenger
+Ride ---> Route
 class Ride {
+    +driver: Driver
+    +passengers: List<Passenger>
+    +route: Route
+    +departureTime: DateTime
+    +estimatedArrivalTime: DateTime
+    +estimatedDuration: Duration
+    +availableSeats: int
+    +totalSeats: int
 }
+
+class RideRequest {
+    +origin: Location
+    +destination: Location
+    +departureTime: DateTime
+    +arrivalTime: DateTime
+    +originRadius: Distance
+    +destinationRadius: Distance
+    +departureWindow: Duration
+    +arrivalWindow: Duration
+}
+
+Route ---|> Model
+Route ---> Location
+class Route {
+    +start: Location
+    +end: Location
+}
+
+User ---|> Model
+class User {
+    +firstName: String
+    +lastName: String
+    +points: int
+}
+
+Vehicle ---|> Model
+class Vehicle {
+    +id: int
+    +description: String
+    +capacity: int
+}
+
+' ' Repositories
+' AuthenticationRepository ---> AuthenticationToken
+' UserRepository ---> User
+' RideRepository ---> Ride
+' RewardRepository ---> Reward
+' HttpUserRepository ...|> UserRepository
+' CachedUserRepository ...|> UserRepository
+
+' 'Models and misc
+' JsonWebToken ...|> AuthenticationToken
+' Reward ---> RewardStatus
+' ReportRepository ---> Report
+' User ---> Report
+' Report ---> User
+' Report ---> ReportReason
+' Ride ---> Driver
+' Ride ---> Passenger
+' Ride ---> RideParticipant
+' Ride ---> RideStatus
+' Passenger ---|> RideParticipant
+' Driver ---|> RideParticipant
+' RideParticipant ---|> User
+' PickupPoint ---|> RoutePoint
+' DropoffPoint ---|> RoutePoint
+' RoutePoint ---|> StartPoint
+' RoutePoint ---|> EndPoint
+' Route ---> RoutePoint
+' Route ---> DropoffPoint
+' Route ---> PickupPoint
+' Route ---> StartPoint
+' Route ---> EndPoint
+' Ride ---> Route
+' DropoffPoint ---> RidePassenger
+' PickupPoint ---> RidePassenger
+' GoogleMapProvider ...|> MapProvider
+' MapProvider ---> Route
+' MapProvider ---> RoutePoint
+' User ---> Rating
+' Driver ---> Vehicle
+' Vehicle ---> User
+' Motorbike ...|> Vehicle
+' Car ...|> Vehicle
+
+' class RewardView {
+
+' }
+
+' class RewardViewModel {
+
+' }
+
+' enum RewardStatus {
+
+' }
+
+' class Motorbike {
+
+' }
+
+' class Car {
+
+' }
+
+' class Vehicle {
+
+' }
+
+' class Route {
+
+' }
+
+' class StartPoint {
+
+' }
+
+' class EndPoint {
+
+' }
+
+
+' class RoutePoint {
+
+' }
+
+' class DropoffPoint {
+
+' }
+
+' class PickupPoint {
+
+' }
+
+
+' enum RideStatus {
+
+' }
+
+' class Passenger {
+
+' }
+
+' class Driver {
+
+' }
+
+' class RideParticipant {
+
+' }
+
+' class UserDetailsViewModel {
+
+' }
+
+' interface MapProvider {
+
+' }
+
+' class GoogleMapProvider {
+
+' }
+
+' enum ReportReason {
+
+' }
+
+
+' class ReportRepository {
+' }
+
+
+
+
+' interface AuthenticationRepository {
+'     +login()
+'     +logout()
+' }
+
+' interface UserRepository {
+'     +createUser()
+'     +getUser()
+'     +updateUser()
+'     +deleteUser()
+' }
+
+' interface AuthenticationToken {
+
+' }
+
+' class CachedUserRepository {
+' }
+
+' class JsonWebToken {
+' }
+
+' class RideRepository {
+
+' }
+
+' class RewardRepository {
+'     +getRewards()
+' }
+
+' class Reward {
+'     +requiredPoints
+'     +name
+'     +description
+'     +image
+'     +expirationDate
+'     +couponCode
+' }
+
+' class UserDetailsView {
+'     +onRateUserClick()
+'     +onReportUserClick()
+' }
+
+' class ReportUserView {
+'     -reasonSelector
+'     -descriptionField
+'     -onConfirmClick()
+'     -onCancelClick()
+' }
+
+' class Rating {
+'     +stars
+'     +comment
+'     +timestamp
+' }
+
+' class Report {
+'     +from
+'     +to
+'     +timestamp
+'     +reason
+'     +description
+' }
+
+' class User {
+'     +id
+'     +name
+'     +email
+'     +password
+'     +ratings
+'     +reports
+' }
+
+' class Ride {
+' }
 
 
 @enduml
