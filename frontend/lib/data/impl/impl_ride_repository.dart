@@ -134,6 +134,8 @@ class ImplRideRepository implements RideRepository {
   final StreamController<Ride> _currentRideController =
       StreamController<Ride>.broadcast();
 
+  final Map<int, List<Ride>> _createdRidesByDriver = {};
+
   @override
   Future<List<Ride>> fetchMatchingRides(RideRequest request) async {
     await Future.delayed(const Duration(milliseconds: 300));
@@ -225,6 +227,19 @@ class ImplRideRepository implements RideRepository {
   Future<void> create(Ride ride) async {
     _rides.add(ride);
     _ridesController.add(List.unmodifiable(_rides));
+    _rideHistory.add(ride);
+    _historyController.add(List.unmodifiable(_rideHistory));
+    final driverId = ride.driver.id;
+    _createdRidesByDriver.putIfAbsent(driverId, () => []);
+    _createdRidesByDriver[driverId]!.add(ride);
+
+    // Set the current ride to the newly created ride
+    _currentRide = ride;
+    _currentRideController.add(ride);
+  }
+
+  List<Ride> getCreatedRidesForDriver(int driverId) {
+    return List.unmodifiable(_createdRidesByDriver[driverId] ?? []);
   }
 
   @override
@@ -234,12 +249,19 @@ class ImplRideRepository implements RideRepository {
       _rides[index] = ride;
       _ridesController.add(List.unmodifiable(_rides));
     }
+    final histIndex = _rideHistory.indexWhere((r) => r.id == ride.id);
+    if (histIndex != -1) {
+      _rideHistory[histIndex] = ride;
+      _historyController.add(List.unmodifiable(_rideHistory));
+    }
   }
 
   @override
   Future<void> cancel(Ride ride) async {
     _rides.removeWhere((r) => r.id == ride.id);
     _ridesController.add(List.unmodifiable(_rides));
+    _rideHistory.removeWhere((r) => r.id == ride.id);
+    _historyController.add(List.unmodifiable(_rideHistory));
   }
 
   @override
