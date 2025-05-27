@@ -62,8 +62,8 @@ class ImplRideRepository implements RideRepository {
       ],
       route: ImplRoute(
         id: 1,
-        start: ImplLocation.test('start'),
-        end: ImplLocation.test('end'),
+        start: originLocations[2],
+        end: destinationLocations[1],
       ),
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
@@ -140,22 +140,13 @@ class ImplRideRepository implements RideRepository {
   Future<List<Ride>> fetchMatchingRides(RideRequest request) async {
     await Future.delayed(const Duration(milliseconds: 300));
     return _rides.where((ride) {
-      // Match by origin and destination location id
-      final bool originMatch = ride.route.start.id == request.origin.id;
-      final bool destinationMatch = ride.route.end.id == request.destination.id;
-      // Match by departure time window
-      final DateTime rideDeparture = ride.departureTime;
-      final DateTime reqDeparture = request.departureTime;
-      final Duration window = request.departureWindow;
-
-      final bool timeMatch =
-          rideDeparture.isAfter(reqDeparture.subtract(window)) &&
-          rideDeparture.isBefore(reqDeparture.add(window));
-
-      // Must have available seats
-      final bool seatsAvailable = ride.availableSeats > 0;
-
-      return originMatch && destinationMatch && timeMatch && seatsAvailable;
+      // Match by origin name only (case-insensitive, trimmed)
+      final bool originMatch =
+          (ride.route.start.name.trim().toLowerCase() ==
+                  request.origin.name.trim().toLowerCase() ||
+              ride.route.end.name.trim().toLowerCase() ==
+                  request.destination.name.trim().toLowerCase());
+      return originMatch;
     }).toList();
   }
 

@@ -1,5 +1,6 @@
 // External libraries
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/passenger.dart';
 
@@ -58,7 +59,6 @@ import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
 
 // Mocks
-import 'package:frontend/data/mocks/mock_location_repository.dart';
 import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 
 import 'package:frontend/data/model/driver.dart';
@@ -72,7 +72,7 @@ class App extends StatelessWidget {
   final ActivityRepository _activityRepository = ImplActivityRepository();
   final RideRepository _rideRepository = ImplRideRepository();
   final RatingRepository _ratingRepository = ImplRatingRepository();
-  final LocationRepository _locationRepository = MockLocationRepository();
+  final LocationRepository _locationRepository = ImplLocationRepository();
   late final RewardRepository _rewardRepository = RewardsRepositoryImpl(
     userRepository: _userRepository as ImplUserRepository,
   );
