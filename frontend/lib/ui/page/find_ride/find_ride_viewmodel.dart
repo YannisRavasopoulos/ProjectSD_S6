@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/impl/impl_ride_request.dart';
@@ -49,7 +48,7 @@ class FindRideViewModel extends ChangeNotifier {
     );
     _source = match;
     print(
-      'Selected source: ${_source.name} (id: ${_source.id})',
+      'Selected source: ${_source.name} (id: ${_source.id})\nSelected destination: ${_destination.name} (id: ${_destination.id})',
     ); // for debugging
     fetchRides();
     notifyListeners();
