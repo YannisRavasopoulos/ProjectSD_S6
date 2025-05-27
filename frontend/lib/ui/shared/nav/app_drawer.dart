@@ -73,14 +73,14 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             //VGALTO EINAI GIA TEST
-            leading: const Icon(Icons.report),
+            leading: const Icon(Icons.bug_report),
             title: const Text('Report User (Test)'),
             onTap: () {
               Navigator.pushNamed(context, '/report');
             },
           ),
           ListTile(
-            leading: const Icon(Icons.notifications_active),
+            leading: const Icon(Icons.bug_report),
             title: const Text('Arrange Pickup Notification (Test)'),
             onTap: () {
               final pickupRequest = ImplPickupRequest(
@@ -113,7 +113,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.notifications_active),
+            leading: const Icon(Icons.bug_report),
             title: const Text('Confirm Pickup Notification (Test)'),
             onTap: () {
               final pickup = ImplPickup(
@@ -146,7 +146,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.star_rate),
+            leading: const Icon(Icons.bug_report),
             title: const Text('Rate (Test)'),
             onTap: () {
               Navigator.pushNamed(context, '/rate');
@@ -154,7 +154,7 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.bug_report),
-            title: const Text('Test Join Ride'),
+            title: const Text('Join Ride Screen (Test)'),
             onTap: () async {
               // Example test data for Join Ride
               final ride = ImplRide(
@@ -163,7 +163,9 @@ class AppDrawer extends StatelessWidget {
                 passengers: [],
                 route: ImplRoute.test(),
                 departureTime: DateTime.now().add(const Duration(hours: 1)),
-                estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
+                estimatedArrivalTime: DateTime.now().add(
+                  const Duration(hours: 2),
+                ),
                 totalSeats: 4,
                 estimatedDuration: const Duration(hours: 1),
               );
