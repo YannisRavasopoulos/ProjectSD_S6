@@ -377,6 +377,11 @@ interface AddressRepository {
 }
 
 interface AuthenticationRepository {
+    + login(email: String, password: String): Future<Authentication>
+    + logout(): Future<void>
+    + refresh(): Future<Authentication>
+    + fetch(): Future<Authentication>
+    + watch(): Stream<Authentication>
 }
 
 interface LocationRepository {
