@@ -96,7 +96,7 @@ void main() {
       );
       expect(
         () async => await activityRepository.delete(nonExistentActivity),
-        throwsA(isA<Object>()),
+        throwsA('Activity not found'),
       );
     });
 
@@ -112,7 +112,7 @@ void main() {
       );
       expect(
         () async => await activityRepository.update(nonExistentActivity),
-        throwsA(isA<Object>()),
+        throwsA('Activity not found'),
       );
     });
 
@@ -121,14 +121,32 @@ void main() {
 
       final future = expectLater(
         stream,
-        emitsInOrder([
+        emits(
           predicate<List>(
             (activities) => activities.isNotEmpty && activities.first.id == 1,
           ),
-        ]),
+        ),
       );
 
       await activityRepository.create(activity1);
+      await future;
+    });
+
+    test('stream emits on create and delete ', () async {
+      final stream = activityRepository.watch();
+
+      final future = expectLater(
+        stream,
+        emitsInOrder([
+          predicate<List>(
+            (activities) =>
+                activities.isNotEmpty && activities.first.id == activity1.id,
+          ),
+          predicate<List>((activities) => activities.isEmpty),
+        ]),
+      );
+      await activityRepository.create(activity1);
+      await activityRepository.delete(activity1);
       await future;
     });
   });
