@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_vehicle.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
@@ -6,6 +8,9 @@ import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/model/route.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
+import 'package:frontend/data/impl/impl_driver.dart';
+import 'package:frontend/data/impl/impl_passenger.dart';
+import 'package:frontend/data/impl/impl_route.dart';
 
 class ImplRide extends Ride {
   @override
@@ -41,8 +46,85 @@ class ImplRide extends Ride {
 }
 
 class ImplRideRepository implements RideRepository {
-  final List<Ride> _rides = [];
-  final List<Ride> _rideHistory = [];
+  // --- Hardcoded rides ---
+  final List<Ride> _rides = [
+    ImplRide(
+      id: 1,
+      driver: ImplDriver(
+        id: 1,
+        firstName: 'Alice',
+        lastName: 'Smith',
+        vehicle: ImplVehicle(id: 1, description: 'Red Sedan', capacity: 4),
+        points: 100,
+      ),
+      passengers: [
+        ImplPassenger(id: 94, firstName: 'Bob', lastName: 'Brown', points: 60),
+      ],
+      route: ImplRoute(
+        id: 1,
+        start: ImplLocation.test('start'),
+        end: ImplLocation.test('end'),
+      ),
+      departureTime: DateTime.now().add(const Duration(hours: 1)),
+      estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
+      estimatedDuration: const Duration(hours: 1),
+      totalSeats: 4,
+    ),
+    ImplRide(
+      id: 2,
+      driver: ImplDriver(
+        id: 2,
+        firstName: 'John',
+        lastName: 'Pork',
+        vehicle: ImplVehicle(id: 1, description: 'Dababy car', capacity: 10),
+        points: 40,
+      ),
+      passengers: [
+        ImplPassenger(id: 10, firstName: 'Tim', lastName: 'Cheese', points: 60),
+        ImplPassenger(id: 11, firstName: 'Yo', lastName: 'Gurt', points: 90),
+      ],
+      route: ImplRoute(
+        id: 2,
+        start: ImplLocation.test('start'),
+        end: ImplLocation.test('end'),
+      ),
+      departureTime: DateTime.now().add(const Duration(hours: 1)),
+      estimatedArrivalTime: DateTime.now().add(const Duration(hours: 3)),
+      estimatedDuration: const Duration(hours: 4),
+      totalSeats: 10, // ??? TODO - liability
+    ),
+  ];
+
+  // --- Hardcoded ride history ---
+  final List<Ride> _rideHistory = [
+    ImplRide(
+      id: 1,
+      driver: ImplDriver(
+        id: 1,
+        firstName: 'Crocodillo',
+        lastName: 'Bombardiro',
+        vehicle: ImplVehicle(
+          id: 1,
+          description: 'Flying Aligator',
+          capacity: 100,
+        ),
+        points: 30,
+      ),
+      passengers: [
+        ImplPassenger(id: 33, firstName: 'Tung', lastName: 'Tung', points: 70),
+      ],
+      route: ImplRoute(
+        id: 1,
+        start: ImplLocation.test('start'),
+        end: ImplLocation.test('end'),
+      ),
+      departureTime: DateTime.now().add(const Duration(hours: 1)),
+      estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
+      estimatedDuration: const Duration(hours: 1),
+      totalSeats: 100,
+    ),
+  ];
+
   Ride? _currentRide;
 
   final StreamController<List<Ride>> _ridesController =
@@ -59,7 +141,6 @@ class ImplRideRepository implements RideRepository {
       // Match by origin and destination location id
       final bool originMatch = ride.route.start.id == request.origin.id;
       final bool destinationMatch = ride.route.end.id == request.destination.id;
-
       // Match by departure time window
       final DateTime rideDeparture = ride.departureTime;
       final DateTime reqDeparture = request.departureTime;
@@ -74,6 +155,12 @@ class ImplRideRepository implements RideRepository {
 
       return originMatch && destinationMatch && timeMatch && seatsAvailable;
     }).toList();
+  }
+
+  @override
+  Future<List<Ride>> fetchAllRides() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return List.unmodifiable(_rides);
   }
 
   @override

@@ -2,26 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:frontend/ui/page/join_ride/join_ride_viewmodel.dart';
 import 'package:frontend/ui/page/join_ride/detail_row.dart';
 
-
 class JoinRideView extends StatelessWidget {
   final JoinRideViewModel viewModel;
 
-  const JoinRideView({
-    super.key,
-    required this.viewModel,
-  });
+  const JoinRideView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
- 
-      final pickupRequest = viewModel.joinRide();
- 
+    final pickupRequest = viewModel.joinRide();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Joining Ride'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text('Joining Ride'), elevation: 0),
       body: AnimatedBuilder(
         animation: viewModel,
         builder: (context, _) {
@@ -66,9 +57,8 @@ class JoinRideView extends StatelessWidget {
                         children: [
                           Text(
                             'Ride Details',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 24),
                           DetailRow(
@@ -104,8 +94,12 @@ class JoinRideView extends StatelessWidget {
                           DetailRow(
                             icon: Icons.event_seat,
                             label: 'Available Seats',
-                            value: '${viewModel.ride.availableSeats}/${viewModel.ride.totalSeats}',
+                            value:
+                                '${viewModel.ride.availableSeats}/${viewModel.ride.totalSeats}',
                           ),
+                          // Add the progress indicator here
+                          const SizedBox(height: 32),
+                          const Center(child: CircularProgressIndicator()),
                         ],
                       ),
                     ),
