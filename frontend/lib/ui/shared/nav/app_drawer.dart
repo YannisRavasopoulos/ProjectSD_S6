@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
-// import 'package:frontend/data/model/pickup.dart';
-// import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
-// import 'package:frontend/ui/notification/notification_overlay.dart';
+import 'package:frontend/data/impl/impl_driver.dart';
+import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_passenger.dart';
+import 'package:frontend/data/impl/impl_pickup_repository.dart';
+import 'package:frontend/data/impl/impl_ride_repository.dart';
+import 'package:frontend/data/impl/impl_route.dart';
+import 'package:frontend/data/mocks/mock_location_repository.dart';
+import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
+import 'package:frontend/ui/notification/notification_overlay.dart';
+import 'package:frontend/ui/page/confirm_pickup/pickup_acknowledgement_notification.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -66,35 +73,116 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             //VGALTO EINAI GIA TEST
-            leading: const Icon(Icons.report),
+            leading: const Icon(Icons.bug_report),
             title: const Text('Report User (Test)'),
             onTap: () {
               Navigator.pushNamed(context, '/report');
             },
           ),
           ListTile(
-            leading: const Icon(Icons.notifications),
-            title: const Text('Test Notification'),
+            leading: const Icon(Icons.bug_report),
+            title: const Text('Arrange Pickup Notification (Test)'),
             onTap: () {
-              // TODO
-              // // Create a test pickup
-              // // final testPickup = Pickup.random();
+              final pickupRequest = ImplPickupRequest(
+                id: 12345,
+                passenger: ImplPassenger.test(),
+                location: MockLocation.random(),
+                time: DateTime.now(),
+                ride: ImplRide(
+                  id: 1,
+                  driver: ImplDriver.test(),
+                  passengers: [],
+                  route: ImplRoute.test(),
+                  departureTime: DateTime.now(),
+                  estimatedArrivalTime: DateTime.now().add(
+                    Duration(minutes: 30),
+                  ),
+                  totalSeats: 4,
+                  estimatedDuration: Duration(minutes: 30),
+                ),
+              );
 
-              // // Close the drawer
-              // Navigator.pop(context);
+              // Close the drawer
+              Navigator.pop(context);
 
-              // // Show the notification
-              // NotificationOverlay.show(
-              //   context,
-              //   PickupRequestNotification(pickup: testPickup),
-              // );
+              // Show the notification
+              NotificationOverlay.show(
+                context,
+                PickupRequestNotification(pickupRequest: pickupRequest),
+              );
             },
           ),
           ListTile(
-            leading: const Icon(Icons.star_rate),
+            leading: const Icon(Icons.bug_report),
+            title: const Text('Confirm Pickup Notification (Test)'),
+            onTap: () {
+              final pickup = ImplPickup(
+                id: 12345,
+                passenger: ImplPassenger.test(),
+                location: ImplLocation.test('start'),
+                time: DateTime.now(),
+                ride: ImplRide(
+                  id: 1,
+                  driver: ImplDriver.test(),
+                  passengers: [],
+                  route: ImplRoute.test(),
+                  departureTime: DateTime.now(),
+                  estimatedArrivalTime: DateTime.now().add(
+                    Duration(minutes: 90),
+                  ),
+                  totalSeats: 4,
+                  estimatedDuration: Duration(minutes: 90),
+                ),
+              );
+
+              // Close the drawer
+              Navigator.pop(context);
+
+              // Show the notification
+              NotificationOverlay.show(
+                context,
+                PickupAcknowledgementNotification(pickup: pickup),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.bug_report),
             title: const Text('Rate (Test)'),
             onTap: () {
               Navigator.pushNamed(context, '/rate');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.bug_report),
+            title: const Text('Join Ride Screen (Test)'),
+            onTap: () async {
+              // Example test data for Join Ride
+              final ride = ImplRide(
+                id: 42,
+                driver: ImplDriver.test(),
+                passengers: [],
+                route: ImplRoute.test(),
+                departureTime: DateTime.now().add(const Duration(hours: 1)),
+                estimatedArrivalTime: DateTime.now().add(
+                  const Duration(hours: 2),
+                ),
+                totalSeats: 4,
+                estimatedDuration: const Duration(hours: 1),
+              );
+              final passenger = ImplPassenger.test();
+              final location = ImplLocation.test('start');
+
+              // Navigate to join ride screen
+              Navigator.pop(context);
+              Navigator.pushNamed(
+                context,
+                '/join_ride',
+                arguments: {
+                  'ride': ride,
+                  'passenger': passenger,
+                  'location': location,
+                },
+              );
             },
           ),
         ],

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/mocks/mock_location_repository.dart';
-import 'package:frontend/data/mocks/mock_ride_repository.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
-import 'package:latlong2/latlong.dart';
 
 class FindRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
@@ -110,14 +107,20 @@ class FindRideViewModel extends ChangeNotifier {
 
     try {
       // TODO: fetch Matching rides
-      rides = await rideRepository.fetchMatchingRides(
-        MockRideRequest(
-          origin: MockLocation(coordinates: LatLng(0, 0)),
-          destination: MockLocation(coordinates: LatLng(0, 0)),
-          departureTime: DateTime.now(),
-          arrivalTime: DateTime.now().add(Duration(hours: 1)),
-        ),
-      );
+      // rides = await rideRepository.fetchMatchingRides(
+      //   ImplRideRequest(
+      //     id: 0,
+      //     origin: ImplLocation.test('status: start'),
+      //     destination: ImplLocation.test('status: end'),
+      //     departureTime: DateTime.now(),
+      //     arrivalTime: DateTime.now().add(const Duration(hours: 1)),
+      //     originRadius: Distance.withRadius(1000), // 1 km radius
+      //     destinationRadius: Distance.withRadius(1000), // 1 km radius
+      //     departureWindow: const Duration(minutes: 15),
+      //     arrivalWindow: const Duration(minutes: 15),
+      //   ),
+      // );
+      rides = await rideRepository.fetchAllRides();
     } catch (e) {
       errorMessage = e.toString();
     } finally {

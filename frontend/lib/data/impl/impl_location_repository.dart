@@ -14,4 +14,21 @@ class ImplLocation extends Location {
     required this.name,
     required this.coordinates,
   });
+
+  factory ImplLocation.test(status) {
+    if (status == 'start') {
+      return ImplLocation(
+        id: 1,
+        name: 'Test Location START',
+        coordinates: LatLng(48.8566, 2.3522),
+      );
+    } else if (status == 'end') {
+      return ImplLocation(
+        id: 1,
+        name: 'Test Location END',
+        coordinates: LatLng(48.8640, 2.3499),
+      );
+    }
+    throw ArgumentError('Invalid location type: $status');
+  }
 }

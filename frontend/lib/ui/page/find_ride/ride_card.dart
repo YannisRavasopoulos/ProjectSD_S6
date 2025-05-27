@@ -11,11 +11,9 @@ class RideCard extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ExpansionTile(
-        // TODO
-        // leading: const Icon(Icons.directions_car),
         leading: CircleAvatar(),
         title: Text(ride.driver.name),
-        subtitle: Text("TODO"),
+        subtitle: Text(ride.driver.vehicle.description),
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -26,12 +24,14 @@ class RideCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Distance: TODO'),
-                      const SizedBox(height: 8.0),
-                      Text('Estimated Duration: TODO'),
+                      Text('Arrival estimation: ${ride.estimatedArrivalTime}'),
                       const SizedBox(height: 8.0),
                       Text(
-                        'Additional Details: ${ride.availableSeats}/${ride.totalSeats}',
+                        'Estimated Duration: ${ride.estimatedDuration} mins',
+                      ),
+                      const SizedBox(height: 8.0),
+                      Text(
+                        'Available seats: ${ride.availableSeats}/${ride.totalSeats}',
                       ),
                     ],
                   ),
@@ -40,22 +40,10 @@ class RideCard extends StatelessWidget {
                   onPressed:
                       ride.availableSeats > 0
                           ? () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Not Implemented'),
-                                  content: const Text(
-                                    'This feature is not implemented yet.',
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
+                            Navigator.pushNamed(
+                              context,
+                              '/join_ride',
+                              arguments: {'ride': ride},
                             );
                           }
                           : null,

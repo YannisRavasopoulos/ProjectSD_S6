@@ -44,4 +44,7 @@ abstract interface class RideRepository {
 
   /// Leave a ride.
   Future<void> leave(Ride ride);
+
+  /// Fetches all rides.
+  Future<List<Ride>> fetchAllRides();
 }

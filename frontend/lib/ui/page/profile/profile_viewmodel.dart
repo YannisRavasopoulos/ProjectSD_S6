@@ -55,14 +55,18 @@ class ProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _onRatingsUpdate(List<Rating> ratings) {
+void _onRatingsUpdate(List<Rating> ratings) {
     this.ratings = ratings;
-    averageRating =
-        ratings.fold(0, (sum, rating) => sum + rating.stars) / ratings.length;
+    if (ratings.isEmpty) {
+      averageRating = 0;
+    } else {
+      averageRating =
+          ratings.fold(0, (sum, rating) => sum + rating.stars) / ratings.length;
+    }
     print('Average rating: $averageRating');
     notifyListeners();
   }
-
+  
   // State
   bool isLoading = true;
   List<Ride> rides = [];
