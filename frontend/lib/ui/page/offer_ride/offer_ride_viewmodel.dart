@@ -4,7 +4,6 @@ import 'package:frontend/data/impl/impl_passenger.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/data/impl/impl_ride_repository.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 

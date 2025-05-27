@@ -30,7 +30,7 @@ class ActivityListCard extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(activity.name),
-        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.teal),
+        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.orange),
         onTap: onCarpoolTap,
       ),
     );

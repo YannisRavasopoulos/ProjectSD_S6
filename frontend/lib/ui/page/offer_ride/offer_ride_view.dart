@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/page/offer_ride/activities_list.dart';
 import 'package:frontend/ui/page/offer_ride/created_ride_list.dart';
@@ -38,11 +39,24 @@ class OfferRideView extends StatelessWidget {
               valueListenable: modeNotifier,
               builder: (context, mode, _) {
                 if (mode == OfferRideMode.createdRides) {
-                  return CreatedRidesList(viewModel: viewModel);
+                  return AnimatedBuilder(
+                    animation: viewModel,
+                    builder: (context, _) => CreatedRidesList(
+                      isLoading: viewModel.isLoading,
+                      createdRides: viewModel.createdRides,
+                      potentialPassengers: viewModel.potentialPassengers,
+                      onSelectRide: viewModel.selectRide,
+                    ),
+                  );
                 } else {
-                  return ActivitiesList(
-                    viewModel: activitiesViewModel,
-                    offerRideViewModel: viewModel, // Pass the offer ride viewmodel
+                  return AnimatedBuilder(
+                    animation: activitiesViewModel,
+                    builder: (context, _) => ActivitiesList(
+                      isLoading: activitiesViewModel.isLoading,
+                      activities: (activitiesViewModel.activities ?? []).cast<ImplActivity>(),
+                      potentialPassengers: viewModel.potentialPassengers,
+                      onSelectActivity: viewModel.selectActivity,
+                    ),
                   );
                 }
               },
