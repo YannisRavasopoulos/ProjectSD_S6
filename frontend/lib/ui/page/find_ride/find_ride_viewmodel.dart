@@ -1,6 +1,11 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_ride_request.dart';
+import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
+import 'package:latlong2/latlong.dart';
 
 class FindRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
@@ -9,8 +14,8 @@ class FindRideViewModel extends ChangeNotifier {
   String? errorMessage;
   bool isLoading = false;
 
-  String _source = '';
-  String _destination = '';
+  Location _source = ImplLocation.test('status: start');
+  Location _destination = ImplLocation.test('status: end');
 
   String departureTime = 'Now';
   String arrivalTime = 'Soonest';
@@ -37,14 +42,22 @@ class FindRideViewModel extends ChangeNotifier {
     fetchRides();
   }
 
-  void setSource(String source) {
-    _source = source;
+  void setSource(String sourceName) {
+    final match = patrasLocations.firstWhere(
+      (loc) => loc.name.toLowerCase() == sourceName.toLowerCase(),
+      orElse: () => patrasLocations[0], // fallback
+    );
+    _source = match;
     fetchRides();
     notifyListeners();
   }
 
-  void setDestination(String destination) {
-    _destination = destination;
+  void setDestination(String destinationName) {
+    final match = patrasLocations.firstWhere(
+      (loc) => loc.name.toLowerCase() == destinationName.toLowerCase(),
+      orElse: () => patrasLocations[1], // fallback
+    );
+    _destination = match;
     fetchRides();
     notifyListeners();
   }
@@ -107,20 +120,20 @@ class FindRideViewModel extends ChangeNotifier {
 
     try {
       // TODO: fetch Matching rides
-      // rides = await rideRepository.fetchMatchingRides(
-      //   ImplRideRequest(
-      //     id: 0,
-      //     origin: ImplLocation.test('status: start'),
-      //     destination: ImplLocation.test('status: end'),
-      //     departureTime: DateTime.now(),
-      //     arrivalTime: DateTime.now().add(const Duration(hours: 1)),
-      //     originRadius: Distance.withRadius(1000), // 1 km radius
-      //     destinationRadius: Distance.withRadius(1000), // 1 km radius
-      //     departureWindow: const Duration(minutes: 15),
-      //     arrivalWindow: const Duration(minutes: 15),
-      //   ),
-      // );
-      rides = await rideRepository.fetchAllRides();
+      rides = await rideRepository.fetchMatchingRides(
+        ImplRideRequest(
+          id: 0,
+          origin: ImplLocation.test('status: start'),
+          destination: ImplLocation.test('status: end'),
+          departureTime: DateTime.now(),
+          arrivalTime: DateTime.now().add(const Duration(hours: 1)),
+          originRadius: Distance.withRadius(1000), // 1 km radius
+          destinationRadius: Distance.withRadius(1000), // 1 km radius
+          departureWindow: const Duration(minutes: 15),
+          arrivalWindow: const Duration(minutes: 15),
+        ),
+      );
+      // rides = await rideRepository.fetchAllRides(); //Applied for testing the repo access
     } catch (e) {
       errorMessage = e.toString();
     } finally {
