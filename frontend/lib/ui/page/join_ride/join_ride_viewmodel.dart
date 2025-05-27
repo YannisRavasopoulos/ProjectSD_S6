@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
+import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
@@ -12,11 +13,9 @@ class JoinRideViewModel extends ChangeNotifier {
 
   bool isLoading = false;
   String? errorMessage;
+  Pickup? pickup;
 
-  JoinRideViewModel({
-    required this.ride,
-    required this.pickupRepository,
-  });
+  JoinRideViewModel({required this.ride, required this.pickupRepository});
 
   Future<PickupRequest?> joinRide() async {
     isLoading = true;
@@ -31,7 +30,7 @@ class JoinRideViewModel extends ChangeNotifier {
         location: ImplLocation.test('start'),
         time: DateTime.now(),
       );
-      await pickupRepository.requestPickup(pickupRequest);
+      pickup = await pickupRepository.requestPickup(pickupRequest);
       isLoading = false;
       notifyListeners();
       return pickupRequest;
