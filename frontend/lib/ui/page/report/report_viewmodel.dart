@@ -32,9 +32,6 @@ class ReportViewModel extends ChangeNotifier {
     try {
       final report = ImplReport(
         id: Random().nextInt(1000000),
-        reporterId: reporterId,
-        reportedUserId: reportedUserId,
-        rideId: rideId,
         reason: reason,
         details: details,
         createdAt: DateTime.now(),
