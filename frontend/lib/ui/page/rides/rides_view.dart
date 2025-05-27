@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/rides/ride_list_card.dart';
 import 'package:frontend/ui/page/rides/ride_deletion_dialog.dart';
@@ -26,7 +24,7 @@ class RidesView extends StatelessWidget {
       builder:
           (context) => RideDeletionDialog(
             onDelete: () {
-              viewModel.removeRide(ride.id);
+              viewModel.removeRide(ride);
               Navigator.of(context).pop();
             },
             onCancel: () => Navigator.of(context).pop(),
@@ -44,13 +42,13 @@ class RidesView extends StatelessWidget {
           if (viewModel.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (viewModel.createdRides.isEmpty) {
+          if (viewModel.allRides.isEmpty) {
             return const Center(child: Text('No rides created.'));
           }
           return ListView.builder(
-            itemCount: viewModel.createdRides.length,
+            itemCount: viewModel.allRides.length,
             itemBuilder: (context, index) {
-              final ride = viewModel.createdRides[index];
+              final ride = viewModel.allRides[index];
               return RideListCard(
                 ride: ride,
                 onEdit: () async {
@@ -59,18 +57,11 @@ class RidesView extends StatelessWidget {
                     MaterialPageRoute(
                       builder:
                           (context) => CreateRideView(
-                            viewModel:
-                                CreateRideViewModel(
-                                    rideRepository: viewModel.rideRepository,
-                                  )
-                                  ..id = ride.id
-                                  ..from = ride.from
-                                  ..to = ride.to
-                                  ..departureTime = TimeOfDay(
-                                    hour: ride.departureTime.hour,
-                                    minute: ride.departureTime.minute,
-                                  )
-                                  ..seats = ride.seats,
+                            viewModel: CreateRideViewModel(
+                              rideRepository: viewModel.rideRepository,
+                              initialRide: ride,
+                            ),
+                            ridesViewModel: viewModel,
                           ),
                     ),
                   );
@@ -93,14 +84,12 @@ class RidesView extends StatelessWidget {
               builder:
                   (context) => CreateRideView(
                     viewModel: CreateRideViewModel(
-                      rideRepository: viewModel.rideRepository,
+                      rideRepository: createRideViewModel.rideRepository,
                     ),
+                    ridesViewModel: viewModel,
                   ),
             ),
           );
-          if (newRide != null) {
-            await viewModel.addRide(newRide);
-          }
         },
       ),
     );

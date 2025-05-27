@@ -23,6 +23,8 @@ import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
+import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
+import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
@@ -35,6 +37,7 @@ import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
 import 'package:frontend/ui/page/report/report_view.dart';
 import 'package:frontend/ui/page/report/report_viewmodel.dart';
+import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
@@ -125,10 +128,13 @@ class App extends StatelessWidget {
     reportRepository: _reportRepository,
   );
 
-  // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
-  //   rideRepository: _rideRepository,
-  //   userRepository: _userRepository,
-  // );
+  late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
+    rideRepository: _rideRepository,
+  );
+
+  late final RidesViewModel ridesViewModel = RidesViewModel(
+    rideRepository: _rideRepository,
+  );
 
   // final AuthenticationRepository _authenticationRepository =
   //     AuthenticationRepository();
@@ -166,23 +172,15 @@ class App extends StatelessWidget {
               ),
               viewModel: rateViewModel,
             ),
-        '/create_ride':
-            (context) => CreateRideView(viewModel: createRideViewModel),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
-        // '/rides':
-        //     (context) => RidesView(
-        //       viewModel: ridesViewModel,
-        //       createRideViewModel: createRideViewModel,
-        //     ),
-        // '/offer_ride':
-        //     (context) => OfferRideView(
-        //       viewModel: offerRideViewModel,
-        //       activitiesViewModel: activitiesViewModel,
-        //     ),
         '/report': (context) => ReportView(viewModel: reportViewModel),
+        '/create_ride': (context) => CreateRideView(
+              viewModel: createRideViewModel,
+              ridesViewModel: ridesViewModel,
+            ),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/arrange_pickup') {
@@ -248,6 +246,27 @@ class App extends StatelessWidget {
                 ),
           );
         }
+
+        if (settings.name == '/offer_ride') {
+          final args = settings.arguments;
+          Ride? ride;
+          if (args is Map<String, dynamic> && args.containsKey('ride')) {
+            ride = args['ride'] as Ride?;
+          } else if (args is Ride) {
+            ride = args;
+          } else {
+            ride = null;
+          }
+
+          return MaterialPageRoute(
+            builder: (context) => OfferRideView(
+              viewModel: OfferRideViewModel(rideRepository: _rideRepository),
+              activitiesViewModel: activitiesViewModel,
+              // Optionally pass ride to the viewmodel if needed
+            ),
+          );
+        }
+
         return null;
       },
     );
