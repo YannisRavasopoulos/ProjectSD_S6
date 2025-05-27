@@ -89,7 +89,11 @@ class FindRideView extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     itemCount: viewModel.rides.length,
                     itemBuilder: (context, index) {
-                      return RideCard(ride: viewModel.rides[index]);
+                      final ride = viewModel.rides[index];
+                      return RideCard(
+                        ride: ride,
+                        onJoinRide: () => viewModel.rideRepository.join(ride),
+                      );
                     },
                   ),
                 ),
