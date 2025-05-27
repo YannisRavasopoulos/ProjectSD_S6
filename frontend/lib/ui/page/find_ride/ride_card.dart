@@ -3,8 +3,9 @@ import 'package:frontend/data/model/ride.dart';
 
 class RideCard extends StatelessWidget {
   final Ride ride;
+  final Future<void> Function() onJoinRide;
 
-  const RideCard({super.key, required this.ride});
+  RideCard({super.key, required this.ride, required this.onJoinRide});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,8 @@ class RideCard extends StatelessWidget {
                 FilledButton(
                   onPressed:
                       ride.availableSeats > 0
-                          ? () {
+                          ? () async {
+                            await onJoinRide(); // <-- Call the callback!
                             Navigator.pushNamed(
                               context,
                               '/join_ride',
