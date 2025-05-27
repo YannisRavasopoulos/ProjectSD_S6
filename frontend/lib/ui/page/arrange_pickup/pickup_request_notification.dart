@@ -43,21 +43,30 @@ class PickupRequestNotification extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Text(
-                      'New Pickup Request',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
+                    RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color:
+                              Colors
+                                  .black, // or Theme.of(context).colorScheme.onSurface
+                        ),
+                        children: [
+                          const TextSpan(
+                            text: 'New Pickup Request ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text:
+                                '${pickupRequest.passenger.firstName} ${pickupRequest.passenger.lastName}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      pickupRequest.time.toString(),
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Theme.of(context).textTheme.bodySmall?.color,
-                      ),
-                    ),
                   ],
                 ),
                 Text(

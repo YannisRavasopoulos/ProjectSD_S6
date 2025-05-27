@@ -39,6 +39,9 @@ import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_view.dart';
 import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/join_ride/join_ride_view.dart';
+import 'package:frontend/ui/page/join_ride/join_ride_viewmodel.dart';
+
 
 // Repository Implementations
 import 'package:frontend/data/impl/address_repository_impl.dart';
@@ -57,6 +60,10 @@ import 'package:frontend/data/mocks/mock_authentication_repository.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/pickup.dart';
+import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/passenger.dart';
+import 'package:frontend/data/model/location.dart';
+
 
 class App extends StatelessWidget {
   // Replace mocks with implementations
@@ -205,6 +212,7 @@ class App extends StatelessWidget {
           );
         }
 
+
         // --- Add this block for /confirm_pickup ---
         if (settings.name == '/confirm_pickup') {
           final args = settings.arguments as Map<String, dynamic>?;
@@ -227,7 +235,27 @@ class App extends StatelessWidget {
           );
         }
         // --- End of /confirm_pickup block ---
+        if (settings.name == '/join_ride') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          if (args == null ||
+              !args.containsKey('ride') ||
+              !args.containsKey('passenger') ||
+              !args.containsKey('location')) {
+            return null;
+          }
+          final ride = args['ride'] as Ride;
+          // final passenger = args['passenger'] as Passenger;
+          // final location = args['location'] as Location;
 
+          return MaterialPageRoute(
+            builder: (context) => JoinRideView(
+              viewModel: JoinRideViewModel(
+                ride: ride,
+                pickupRepository: _pickupRepository,
+              ),
+            ),
+          );
+        }
         return null;
       },
     );
