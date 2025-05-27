@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_driver.dart';
+import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
@@ -115,6 +116,37 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Rate (Test)'),
             onTap: () {
               Navigator.pushNamed(context, '/rate');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.bug_report),
+            title: const Text('Test Join Ride'),
+            onTap: () async {
+              // Example test data for Join Ride
+              final ride = ImplRide(
+                id: 42,
+                driver: ImplDriver.test(),
+                passengers: [],
+                route: ImplRoute.test(),
+                departureTime: DateTime.now().add(const Duration(hours: 1)),
+                estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
+                totalSeats: 4,
+                estimatedDuration: const Duration(hours: 1),
+              );
+              final passenger = ImplPassenger.test();
+              final location = ImplLocation.test('start');
+
+              // Navigate to join ride screen
+              Navigator.pop(context);
+              Navigator.pushNamed(
+                context,
+                '/join_ride',
+                arguments: {
+                  'ride': ride,
+                  'passenger': passenger,
+                  'location': location,
+                },
+              );
             },
           ),
         ],
