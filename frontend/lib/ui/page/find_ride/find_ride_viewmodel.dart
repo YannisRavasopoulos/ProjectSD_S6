@@ -14,8 +14,8 @@ class FindRideViewModel extends ChangeNotifier {
   String? errorMessage;
   bool isLoading = false;
 
-  Location _source = ImplLocation.test('status: start');
-  Location _destination = ImplLocation.test('status: end');
+  Location _source = ImplLocation.test('start');
+  Location _destination = ImplLocation.test('end');
 
   String departureTime = 'Now';
   String arrivalTime = 'Soonest';
@@ -43,19 +43,22 @@ class FindRideViewModel extends ChangeNotifier {
   }
 
   void setSource(String sourceName) {
-    final match = patrasLocations.firstWhere(
-      (loc) => loc.name.toLowerCase() == sourceName.toLowerCase(),
-      orElse: () => patrasLocations[0], // fallback
+    final match = originLocations.firstWhere(
+      (loc) => loc.name.toLowerCase().trim() == sourceName.toLowerCase().trim(),
+      orElse: () => originLocations[0],
     );
     _source = match;
+    print(
+      'Selected source: ${_source.name} (id: ${_source.id})',
+    ); // for debugging
     fetchRides();
     notifyListeners();
   }
 
   void setDestination(String destinationName) {
-    final match = patrasLocations.firstWhere(
+    final match = destinationLocations.firstWhere(
       (loc) => loc.name.toLowerCase() == destinationName.toLowerCase(),
-      orElse: () => patrasLocations[1], // fallback
+      orElse: () => destinationLocations[1], // fallback
     );
     _destination = match;
     fetchRides();
@@ -119,21 +122,19 @@ class FindRideViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // TODO: fetch Matching rides
       rides = await rideRepository.fetchMatchingRides(
         ImplRideRequest(
           id: 0,
-          origin: ImplLocation.test('status: start'),
-          destination: ImplLocation.test('status: end'),
+          origin: _source,
+          destination: _destination,
           departureTime: DateTime.now(),
           arrivalTime: DateTime.now().add(const Duration(hours: 1)),
-          originRadius: Distance.withRadius(1000), // 1 km radius
-          destinationRadius: Distance.withRadius(1000), // 1 km radius
+          originRadius: Distance.withRadius(1000),
+          destinationRadius: Distance.withRadius(1000),
           departureWindow: const Duration(minutes: 15),
           arrivalWindow: const Duration(minutes: 15),
         ),
       );
-      // rides = await rideRepository.fetchAllRides(); //Applied for testing the repo access
     } catch (e) {
       errorMessage = e.toString();
     } finally {

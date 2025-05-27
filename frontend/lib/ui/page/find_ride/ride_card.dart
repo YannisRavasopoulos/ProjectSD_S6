@@ -27,11 +27,14 @@ class RideCard extends StatelessWidget {
                       Text('Arrival estimation: ${ride.estimatedArrivalTime}'),
                       const SizedBox(height: 8.0),
                       Text(
-                        'Estimated Duration: ${ride.estimatedDuration} mins',
+                        'Estimated Duration: ${ride.estimatedDuration.inMinutes} mins',
                       ),
                       const SizedBox(height: 8.0),
                       Text(
                         'Available seats: ${ride.availableSeats}/${ride.totalSeats}',
+                      ),
+                      Text(
+                        'Route: ${ride.route.start.name} to ${ride.route.end.name}',
                       ),
                     ],
                   ),
