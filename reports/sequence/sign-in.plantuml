@@ -25,25 +25,25 @@ activate SignInView
 == Sign In ==
 User -> SignInView: Enters email
 User -> SignInView: Enters password
-User -> SignInView : Presses "Sign In"
+User -> SignInView: Presses "Sign In"
 SignInView -> SignInView: onSignInPressed()
-SignInView -> SignInViewModel : signIn()
-SignInViewModel -> AuthenticationRepository : login(email, password)
+SignInView -> SignInViewModel: signIn()
+SignInViewModel -> AuthenticationRepository: login(email, password)
 
 alt Success
-AuthenticationRepository --> SignInViewModel : authentication
-SignInViewModel --> SignInView : ok
-SignInView -> Navigator : pushNamed("/home")
+AuthenticationRepository --> SignInViewModel: return authentication
+SignInViewModel --> SignInView: ok
+SignInView -> Navigator: pushNamed("/home")
 
 else User not found
-    AuthenticationRepository --> SignInViewModel : User not found
+    AuthenticationRepository --> SignInViewModel: error "User not found"
     SignInViewModel -> SignInViewModel: setErrorMessage("User not found")
-    SignInViewModel --> SignInView : failure
+    SignInViewModel --> SignInView: error
     SignInView -> SignInView: showErrorMessage()
 else Wrong password
-    AuthenticationRepository --> SignInViewModel : Wrong password
+    AuthenticationRepository --> SignInViewModel: error "Wrong password"
     SignInViewModel -> SignInViewModel: setErrorMessage("Wrong password")
-    SignInViewModel --> SignInView : failure
+    SignInViewModel --> SignInView: error
     SignInView -> SignInView: showErrorMessage()
 end
 
@@ -56,19 +56,46 @@ Navigator -> LoopApp: "/forgot-password"
 LoopApp -> ForgotPasswordView: ForgotPasswordView(forgotPasswordViewModel)
 activate ForgotPasswordView
 User -> ForgotPasswordView: Enters email
-User -> ForgotPasswordView: Press "Send Reset Link"
-ForgotPasswordView -> ForgotPasswordView: onSendResetLinkPressed()
-ForgotPasswordView -> ForgotPasswordViewModel: sendResetLink()
-ForgotPasswordViewModel -> AuthenticationRepository: sendResetLink(email)
+User -> ForgotPasswordView: Press "Send Reset Code"
+ForgotPasswordView -> ForgotPasswordView: onSendResetCodePressed()
+ForgotPasswordView -> ForgotPasswordViewModel: sendResetCode()
+ForgotPasswordViewModel -> AuthenticationRepository: sendResetCode(email)
 alt Success
-    AuthenticationRepository --> ForgotPasswordViewModel: success
+    AuthenticationRepository --> ForgotPasswordViewModel: ok
     ForgotPasswordViewModel --> ForgotPasswordView: ok
     User -> ForgotPasswordView: Enters reset code
-    ' TODO
+    ForgotPasswordView -> ForgotPasswordView: onResetCodeEntered()
+    ForgotPasswordView -> ForgotPasswordViewModel: checkResetCode()
+    ForgotPasswordViewModel -> AuthenticationRepository: checkResetCode(email, resetCode)
+    alt Success
+        AuthenticationRepository --> ForgotPasswordViewModel: ok
+        ForgotPasswordViewModel --> ForgotPasswordView: ok
+        alt Success
+            User -> ForgotPasswordView: Enters new password
+            User -> ForgotPasswordView: Enters new password confirmation
+            User -> ForgotPasswordView: Presses "Reset Password"
+            ForgotPasswordView -> ForgotPasswordView: onResetPasswordPressed()
+            ForgotPasswordView -> ForgotPasswordViewModel: resetPassword()
+            ForgotPasswordViewModel -> AuthenticationRepository: resetPassword(email, resetCode, newPassword)
+            AuthenticationRepository --> ForgotPasswordViewModel: ok
+            ForgotPasswordViewModel --> ForgotPasswordView: ok
+            ForgotPasswordView -> Navigator: popUntil("/sign-in")
+        else Error resetting password
+            ' AuthenticationRepository --> ForgotPasswordViewModel: error "Error resetting password"
+            ' ForgotPasswordViewModel -> ForgotPasswordViewModel: setErrorMessage("Error resetting password")
+            ' ForgotPasswordViewModel --> ForgotPasswordView: error
+            ' ForgotPasswordView -> ForgotPasswordView: showErrorMessage()
+        end
+    else Invalid reset code
+        AuthenticationRepository --> ForgotPasswordViewModel: error "Invalid reset code"
+        ForgotPasswordViewModel -> ForgotPasswordViewModel: setErrorMessage("Invalid reset code")
+        ForgotPasswordViewModel --> ForgotPasswordView: error
+        ForgotPasswordView -> ForgotPasswordView: showErrorMessage()
+    end
 else User not found
     AuthenticationRepository --> ForgotPasswordViewModel: User not found
     ForgotPasswordViewModel -> ForgotPasswordViewModel: setErrorMessage("User not found")
-    ForgotPasswordViewModel --> ForgotPasswordView: failure
+    ForgotPasswordViewModel --> ForgotPasswordView: error
     ForgotPasswordView -> ForgotPasswordView: showErrorMessage()
 end
 
