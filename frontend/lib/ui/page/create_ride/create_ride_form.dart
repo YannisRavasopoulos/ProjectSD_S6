@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
-import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 
 class CreateRideForm extends StatelessWidget {
   final CreateRideViewModel viewModel;
-  final RidesViewModel ridesViewModel;
 
-  const CreateRideForm({
-    super.key,
-    required this.viewModel,
-    required this.ridesViewModel,
-  });
+  const CreateRideForm({super.key, required this.viewModel});
 
   Future<void> _pickDepartureTime(BuildContext context) async {
     final picked = await showTimePicker(
@@ -53,7 +47,7 @@ class CreateRideForm extends StatelessWidget {
                   style: const TextStyle(color: Colors.red),
                 ),
               const SizedBox(height: 20),
-              _buildCreateButton(context),
+              _buildCreateButton(),
             ],
           ),
         ),
@@ -107,13 +101,11 @@ class CreateRideForm extends StatelessWidget {
     );
   }
 
-  Widget _buildCreateButton(BuildContext context) {
+  Widget _buildCreateButton() {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
-        onPressed: () async {
-          await viewModel.saveRide();
-        },
+        onPressed: viewModel.createRide,
         icon: const Icon(Icons.check),
         label: const Text("Create a Ride"),
         style: ElevatedButton.styleFrom(
