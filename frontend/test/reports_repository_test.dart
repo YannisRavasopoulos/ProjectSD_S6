@@ -1,3 +1,4 @@
+import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:test/test.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
 import 'package:frontend/data/model/report.dart';
@@ -10,15 +11,14 @@ void main() {
     late ImplReportRepository reportRepository;
 
     setUp(() {
-      reportRepository = ImplReportRepository();
+      reportRepository = ImplReportRepository(
+        userRepository: ImplUserRepository(),
+      );
     });
 
     test('create adds a report', () async {
       final report = ImplReport(
         id: 1,
-        reporterId: 'user1',
-        reportedUserId: 'user2',
-        rideId: 'ride1',
         reason: ReportReason.spam,
         details: 'Spam report',
         createdAt: DateTime.now(),
@@ -33,18 +33,12 @@ void main() {
     test('fetch returns all reports', () async {
       final report1 = ImplReport(
         id: 1,
-        reporterId: 'user1',
-        reportedUserId: 'user2',
-        rideId: 'ride1',
         reason: ReportReason.spam,
         details: 'Spam report',
         createdAt: DateTime.now(),
       );
       final report2 = ImplReport(
         id: 2,
-        reporterId: 'user3',
-        reportedUserId: 'user4',
-        rideId: 'ride2',
         reason: ReportReason.harassment,
         details: 'Harassment report',
         createdAt: DateTime.now(),
@@ -59,9 +53,6 @@ void main() {
     test('watch emits report updates', () async {
       final report = ImplReport(
         id: 1,
-        reporterId: 'user1',
-        reportedUserId: 'user2',
-        rideId: 'ride1',
         reason: ReportReason.spam,
         details: 'Spam report',
         createdAt: DateTime.now(),
@@ -82,6 +73,5 @@ void main() {
     });
   });
 }
-
 
 //note that the stream does not emit the initial state
