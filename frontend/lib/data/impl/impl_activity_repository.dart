@@ -46,13 +46,7 @@ class ImplActivity extends Activity {
 }
 
 class ImplActivityRepository implements ActivityRepository {
-  static final ImplActivityRepository _instance = ImplActivityRepository._internal();
-  
-  factory ImplActivityRepository() {
-    return _instance;
-  }
-
-  ImplActivityRepository._internal();
+  ImplActivityRepository(); // Default constructor
 
   final List<Activity> _activities = [];
   final StreamController<List<Activity>> _activitiesController =
