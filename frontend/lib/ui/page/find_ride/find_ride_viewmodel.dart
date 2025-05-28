@@ -18,6 +18,9 @@ class FindRideViewModel extends ChangeNotifier {
   String? errorMessage;
   bool isLoading = false;
 
+  late final TextEditingController fromController;
+  late final TextEditingController toController;
+
   Location _source = ImplLocation.test('start');
   Location _destination = ImplLocation.test('end');
 
@@ -48,31 +51,52 @@ class FindRideViewModel extends ChangeNotifier {
     required this.rideRepository,
   }) : departureTimes = _fixedDepartureTimes,
        arrivalTimes = _fixedArrivalTimes {
+    // Create controllers ONCE in the constructor
+    fromController = TextEditingController(text: _source.name);
+    toController = TextEditingController(text: _destination.name);
+
+    // Listen for changes and update the model
+    fromController.addListener(() {
+      setSource(fromController.text, notify: false);
+    });
+    toController.addListener(() {
+      setDestination(toController.text, notify: false);
+    });
+
     fetchRides();
     fetchActivities();
   }
 
-  void setSource(String sourceName) {
+  // Optionally, dispose controllers if you ever dispose the viewmodel
+  @override
+  void dispose() {
+    fromController.dispose();
+    toController.dispose();
+    super.dispose();
+  }
+
+  void setSource(String sourceName, {bool notify = true}) {
     final match = originLocations.firstWhere(
       (loc) => loc.name.toLowerCase().trim() == sourceName.toLowerCase().trim(),
       orElse: () => originLocations[0],
     );
     _source = match;
-    print(
-      'Selected source: ${_source.name} (id: ${_source.id})\nSelected destination: ${_destination.name} (id: ${_destination.id})',
-    ); // for debugging
-    fetchRides();
-    notifyListeners();
+    if (notify) {
+      fetchRides();
+      notifyListeners();
+    }
   }
 
-  void setDestination(String destinationName) {
+  void setDestination(String destinationName, {bool notify = true}) {
     final match = destinationLocations.firstWhere(
       (loc) => loc.name.toLowerCase() == destinationName.toLowerCase(),
       orElse: () => destinationLocations[1], // fallback
     );
     _destination = match;
-    fetchRides();
-    notifyListeners();
+    if (notify) {
+      fetchRides();
+      notifyListeners();
+    }
   }
 
   bool selectingDepartureTime = false;
