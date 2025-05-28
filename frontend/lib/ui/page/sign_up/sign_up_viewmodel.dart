@@ -46,7 +46,6 @@ class SignUpViewModel extends ViewModel implements SignUpViewModelInterface {
   @override
   bool get canSignUp =>
       isEmailValid && isNameValid && isPasswordValid && doPasswordsMatch;
-
   @override
   String get email => emailController.text.trim();
   @override
@@ -55,16 +54,12 @@ class SignUpViewModel extends ViewModel implements SignUpViewModelInterface {
   String get password => passwordController.text;
   @override
   String get confirmPassword => confirmPasswordController.text;
-
   @override
   final TextEditingController emailController = TextEditingController();
-
   @override
   final TextEditingController nameController = TextEditingController();
-
   @override
   final TextEditingController passwordController = TextEditingController();
-
   @override
   final TextEditingController confirmPasswordController =
       TextEditingController();
