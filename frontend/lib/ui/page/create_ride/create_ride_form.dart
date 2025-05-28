@@ -49,8 +49,8 @@ class CreateRideForm extends StatelessWidget {
           child: Column(
             children: [
               RideLocationSelectors(
-                fromController: TextEditingController(text: from ?? ''),
-                toController: TextEditingController(text: to ?? ''),
+                fromLocationController: TextEditingController(text: from ?? ''),
+                toLocationController: TextEditingController(text: to ?? ''),
                 onFromLocationChanged: onFromChanged,
                 onToLocationChanged: onToChanged,
               ),
