@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/ui/page/find_ride/activity_selection_panel.dart';
 import 'package:frontend/ui/page/find_ride/ride_card.dart';
 import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
 import 'package:frontend/ui/page/find_ride/ride_time_selectors.dart';
@@ -30,7 +31,10 @@ class FindRideView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Find a Ride')),
+      appBar: AppBar(
+        title: const Text('Find a Ride'),
+        backgroundColor: const Color.fromARGB(255, 23, 143, 117),
+      ),
       body: ListenableBuilder(
         listenable: viewModel,
         builder: (context, _) {
@@ -51,10 +55,62 @@ class FindRideView extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.calendar_month),
+                    label: const Text('Select from activities'),
+                    onPressed: () async {
+                      final selected = await showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(24),
+                          ),
+                        ),
+                        builder:
+                            (context) => ActivitySelectionPanel(
+                              onActivitySelected: (activity) {
+                                viewModel.selectActivity(activity);
+                                Navigator.pop(context, activity);
+                              },
+                              activities: viewModel.activities,
+                            ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              // --- Separator with text and icon ---
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    const Expanded(child: Divider(thickness: 1)),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.flash_on, color: Colors.amber),
+                    const SizedBox(width: 4),
+                    const Text(
+                      'Insta-Ride',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Expanded(child: Divider(thickness: 1)),
+                  ],
+                ),
+              ),
+              // --- End separator ---
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Form(
                   child: Column(
                     children: [
                       RideLocationSelectors(
+                        fromLocation: viewModel.fromLocation,
+                        toLocation: viewModel.toLocation,
                         onFromLocationChanged: viewModel.setSource,
                         onToLocationChanged: viewModel.setDestination,
                       ),
@@ -101,9 +157,29 @@ class FindRideView extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: viewModel.fetchRides,
-        child: const Icon(Icons.refresh),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              heroTag: 'activitiesBtn',
+              backgroundColor: const Color.fromARGB(255, 117, 202, 160),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/activities');
+              },
+              tooltip: 'Manage Activities',
+              child: const Icon(Icons.calendar_month),
+            ),
+            const SizedBox(height: 16),
+            FloatingActionButton(
+              heroTag: 'refreshBtn',
+              onPressed: viewModel.fetchRides,
+              child: const Icon(Icons.refresh),
+            ),
+          ],
+        ),
       ),
     );
   }

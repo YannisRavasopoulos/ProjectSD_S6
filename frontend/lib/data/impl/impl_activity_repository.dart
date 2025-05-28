@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
+
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/model/location.dart';
@@ -13,10 +13,12 @@ class ImplActivity extends Activity {
   @override
   final String description;
   @override
-  final DateTime startTime;
+  final TimeOfDay startTime;
   @override
-  final DateTime endTime;
+  final TimeOfDay endTime = TimeOfDay(hour: 0, minute: 0); // Default value
+  @override
   final Location startLocation;
+  @override
   final Location endLocation;
 
   ImplActivity({
@@ -24,16 +26,9 @@ class ImplActivity extends Activity {
     required this.name,
     required this.description,
     required this.startTime,
-    required this.endTime,
     required this.startLocation,
     required this.endLocation,
   });
-
-  @override
-  Location get location => startLocation; // Use startLocation as the primary location
-
-  @override
-  TimeOfDay get time => TimeOfDay.fromDateTime(startTime); // Convert startTime to TimeOfDay
 
   @override
   bool operator ==(Object other) {
@@ -46,7 +41,14 @@ class ImplActivity extends Activity {
 }
 
 class ImplActivityRepository implements ActivityRepository {
-  ImplActivityRepository(); // Default constructor
+  static final ImplActivityRepository _instance =
+      ImplActivityRepository._internal();
+
+  factory ImplActivityRepository() {
+    return _instance;
+  }
+
+  ImplActivityRepository._internal();
 
   final List<Activity> _activities = [];
   final StreamController<List<Activity>> _activitiesController =
@@ -116,3 +118,4 @@ class ImplActivityRepository implements ActivityRepository {
     _activitiesController.close();
   }
 }
+

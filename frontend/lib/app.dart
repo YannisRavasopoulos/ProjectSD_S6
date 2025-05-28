@@ -77,8 +77,10 @@ class App extends StatelessWidget {
   late final ReportRepository _reportRepository = ImplReportRepository(
     userRepository: _userRepository as ImplUserRepository,
   );
+  final PickupRepository _pickupRepository = ImplPickupRepository();
 
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
+    activityRepository: _activityRepository,
     rideRepository: _rideRepository,
   );
 
@@ -171,6 +173,8 @@ class App extends StatelessWidget {
         '/report': (context) => ReportView(viewModel: reportViewModel),
         '/create_ride':
             (context) => CreateRideView(
+        '/create_ride':
+            (context) => CreateRideView(
               viewModel: createRideViewModel,
               ridesViewModel: ridesViewModel,
             ),
@@ -257,6 +261,14 @@ class App extends StatelessWidget {
           }
 
           return MaterialPageRoute(
+            builder:
+                (context) => OfferRideView(
+                  viewModel: OfferRideViewModel(
+                    rideRepository: _rideRepository,
+                  ),
+                  activitiesViewModel: activitiesViewModel,
+                  // Optionally pass ride to the viewmodel if needed
+                ),
             builder:
                 (context) => OfferRideView(
                   viewModel: OfferRideViewModel(
