@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/repository/user_repository.dart';
-import 'package:frontend/ui/view.dart';
+import 'package:frontend/ui/viewmodel.dart';
 
 class SignUpViewModel extends ViewModel {
   final RegExp _emailRegex = RegExp(
