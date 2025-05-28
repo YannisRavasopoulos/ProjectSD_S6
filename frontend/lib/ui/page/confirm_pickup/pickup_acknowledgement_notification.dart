@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
-import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_view.dart';
-import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_viewmodel.dart';
-import 'package:frontend/data/impl/impl_pickup_repository.dart';
 
 class PickupAcknowledgementNotification extends StatelessWidget {
   final Pickup pickup;
@@ -49,7 +46,7 @@ class PickupAcknowledgementNotification extends StatelessWidget {
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'Driver: ${pickup.passenger.name}',
+                  'Driver: ${pickup.ride.driver.name}',
                   style: const TextStyle(fontSize: 11),
                 ),
                 Text(
@@ -62,18 +59,9 @@ class PickupAcknowledgementNotification extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               NotificationOverlay.dismiss();
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder:
-                      (context) => ConfirmPickupView(
-                        pickup: pickup,
-                        viewModel: ConfirmPickupViewModel(
-                          pickupRepository: ImplPickupRepository(),
-                          pickup: pickup,
-                        ),
-                      ),
-                ),
-              );
+              Navigator.of(
+                context,
+              ).pushNamed('/confirm_pickup', arguments: {'pickup': pickup});
             },
             child: const Text('Proceed'),
           ),

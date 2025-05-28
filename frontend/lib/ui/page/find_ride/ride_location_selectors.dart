@@ -25,11 +25,17 @@ class _RideLocationSelectorsState extends State<RideLocationSelectors> {
     toLocationController = TextEditingController();
 
     fromLocationController.addListener(() {
-      widget.onFromLocationChanged(fromLocationController.text);
+      final text = fromLocationController.text;
+      if (text.isNotEmpty) {
+        widget.onFromLocationChanged(text);
+      }
     });
 
     toLocationController.addListener(() {
-      widget.onToLocationChanged(toLocationController.text);
+      final text = toLocationController.text;
+      if (text.isNotEmpty) {
+        widget.onToLocationChanged(text);
+      }
     });
   }
 

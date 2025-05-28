@@ -3,8 +3,9 @@ import 'package:frontend/data/model/ride.dart';
 
 class RideCard extends StatelessWidget {
   final Ride ride;
+  final Future<void> Function() onJoinRide;
 
-  const RideCard({super.key, required this.ride});
+  RideCard({super.key, required this.ride, required this.onJoinRide});
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +28,14 @@ class RideCard extends StatelessWidget {
                       Text('Arrival estimation: ${ride.estimatedArrivalTime}'),
                       const SizedBox(height: 8.0),
                       Text(
-                        'Estimated Duration: ${ride.estimatedDuration} mins',
+                        'Estimated Duration: ${ride.estimatedDuration.inMinutes} mins',
                       ),
                       const SizedBox(height: 8.0),
                       Text(
                         'Available seats: ${ride.availableSeats}/${ride.totalSeats}',
+                      ),
+                      Text(
+                        'Route: ${ride.route.start.name} to ${ride.route.end.name}',
                       ),
                     ],
                   ),
@@ -39,7 +43,8 @@ class RideCard extends StatelessWidget {
                 FilledButton(
                   onPressed:
                       ride.availableSeats > 0
-                          ? () {
+                          ? () async {
+                            await onJoinRide(); // <-- Call the callback!
                             Navigator.pushNamed(
                               context,
                               '/join_ride',
