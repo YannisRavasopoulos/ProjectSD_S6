@@ -51,70 +51,17 @@ class CarpoolerSelectionSheet extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        if (ride != null) {
-                          // Normal ride flow
-                          final pickupRequest = ImplPickupRequest(
-                            id: DateTime.now().millisecondsSinceEpoch,
-                            ride: ride!,
-                            passenger: carpooler,
-                            location: ride!.route.start,
-                            time: DateTime.now().add(const Duration(minutes: 10)),
-                          );
-                          Navigator.pop(context); // Close dialog
-                          Navigator.pop(context); // Close bottom sheet
-                          Navigator.pushNamed(
-                            context,
-                            '/arrange_pickup',
-                            arguments: {
-                              'pickupRequest': pickupRequest,
-                              'driver': ride!.driver,
-                              'rideId': ride!.id,
-                            },
-                          );
-                        } else if (activity != null) {
-                          // Activity flow: create a pickup request using activity info
-                          // Use the first hardcoded ride as a template
-                          final testRide = ImplRide(
-                            id: 9999, // Unique id for this pseudo-ride
-                            driver: ImplDriver(
-                              id: 1,
-                              firstName: 'Activity',
-                              lastName: 'Driver',
-                              vehicle: ImplVehicle.test(),
-                              points: 0,
-                            ),
-                            passengers: [],
-                            route: ImplRoute(
-                              id: 9999,
-                              start: activity!.startLocation,
-                              end: activity!.endLocation,
-                            ),
-                            departureTime: activity!.startTime,
-                            estimatedArrivalTime: activity!.endTime,
-                            estimatedDuration: activity!.endTime.difference(activity!.startTime),
-                            totalSeats: 5,
-                          );
-
-                          final pickupRequest = ImplPickupRequest(
-                            id: DateTime.now().millisecondsSinceEpoch,
-                            ride: testRide,
-                            passenger: carpooler,
-                            location: activity!.startLocation,
-                            time: activity!.startTime,
-                          );
-
-                          Navigator.pop(context); // Close dialog
-                          Navigator.pop(context); // Close bottom sheet
-                          Navigator.pushNamed(
-                            context,
-                            '/arrange_pickup',
-                            arguments: {
-                              'pickupRequest': pickupRequest,
-                              'driver': testRide.driver,
-                              'rideId': testRide.id,
-                            },
-                          );
-                        }
+                        Navigator.pop(context); // Close dialog
+                        Navigator.pop(context); // Close bottom sheet
+                        Navigator.pushNamed(
+                          context,
+                          '/arrange_pickup',
+                          arguments: {
+                            'carpooler': carpooler,
+                            'ride': ride,
+                            'activity': activity,
+                          },
+                        );
                       },
                       child: const Text('Arrange Pickup'),
                     ),

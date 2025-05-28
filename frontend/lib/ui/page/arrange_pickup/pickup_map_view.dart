@@ -62,7 +62,11 @@ class _PickupMapViewState extends State<PickupMapView>
               selectedLocation = point;
             });
             widget.onLocationChanged(
-              ImplLocation(id: 0, name: '', coordinates: point),
+              ImplLocation(
+                id: DateTime.now().millisecondsSinceEpoch, // Unique id
+                name: 'Custom Location',                   // Non-empty name
+                coordinates: point,
+              ),
             );
           },
           initialCenter: selectedLocation ?? const LatLng(0, 0),

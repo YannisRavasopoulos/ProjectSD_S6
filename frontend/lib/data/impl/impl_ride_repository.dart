@@ -19,6 +19,18 @@ class ImplRide extends Ride {
   final Driver driver;
   @override
   final List<Passenger> passengers;
+
+  ImplRide({
+    required this.id,
+    required this.driver,
+    required List<Passenger> passengers,
+    required this.route,
+    required this.departureTime,
+    required this.estimatedArrivalTime,
+    required this.estimatedDuration,
+    required this.totalSeats,
+  }) : passengers = List.unmodifiable(passengers);
+
   @override
   final Route route;
   @override
@@ -30,19 +42,8 @@ class ImplRide extends Ride {
   @override
   final int totalSeats;
 
-  ImplRide({
-    required this.id,
-    required this.driver,
-    required this.passengers,
-    required this.route,
-    required this.departureTime,
-    required this.estimatedArrivalTime,
-    required this.estimatedDuration,
-    required this.totalSeats,
-  });
-
   @override
-  int get availableSeats => totalSeats - passengers.length - 1;
+  int get availableSeats => totalSeats - passengers.length;
 }
 
 class ImplRideRepository implements RideRepository {

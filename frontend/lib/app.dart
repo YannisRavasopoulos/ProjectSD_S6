@@ -188,25 +188,30 @@ class App extends StatelessWidget {
         if (settings.name == '/arrange_pickup') {
           final args = settings.arguments as Map<String, dynamic>?;
 
-          if (args == null ||
-              !args.containsKey('pickupRequest') ||
-              !args.containsKey('driver') ||
-              !args.containsKey('rideId')) {
+          if (args == null || !args.containsKey('carpooler') || !args.containsKey('ride')) {
             return null;
           }
 
-          final pickupRequest = args['pickupRequest'] as PickupRequest;
-          final driver = args['driver'] as Driver;
-          final rideId = args['rideId'] as int;
+          final carpooler = args['carpooler'] as Passenger;
+          final ride = args['ride'] as Ride;
+
+          // Only now create the PickupRequest (does NOT mutate ride/passengers)
+          final pickupRequest = ImplPickupRequest(
+            id: DateTime.now().millisecondsSinceEpoch,
+            ride: ride,
+            passenger: carpooler,
+            location: ride.route.start,
+            time: DateTime.now().add(const Duration(minutes: 10)),
+          );
 
           return MaterialPageRoute(
-            builder:
-                (context) => ArrangePickupView(
-                  viewModel: ArrangePickupViewModel(
-                    repository: _pickupRepository,
-                    pickupRequest: pickupRequest,
-                  ),
-                ),
+            builder: (context) => ArrangePickupView(
+              viewModel: ArrangePickupViewModel(
+                pickupRepository: _pickupRepository,
+                rideRepository: _rideRepository, 
+                pickupRequest: pickupRequest,
+              ),
+            ),
           );
         }
 
@@ -264,7 +269,6 @@ class App extends StatelessWidget {
             builder: (context) => OfferRideView(
               viewModel: OfferRideViewModel(rideRepository: _rideRepository),
               activitiesViewModel: activitiesViewModel,
-              // Optionally pass ride to the viewmodel if needed
             ),
           );
         }
