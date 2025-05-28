@@ -109,8 +109,8 @@ class FindRideView extends StatelessWidget {
                   child: Column(
                     children: [
                       RideLocationSelectors(
-                        fromLocation: viewModel.fromLocation,
-                        toLocation: viewModel.toLocation,
+                        fromController: viewModel.fromController,
+                        toController: viewModel.toController,
                         onFromLocationChanged: viewModel.setSource,
                         onToLocationChanged: viewModel.setDestination,
                       ),

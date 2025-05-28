@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 
 class RideLocationSelectors extends StatelessWidget {
+  final TextEditingController fromController;
+  final TextEditingController toController;
   final ValueChanged<String> onFromLocationChanged;
   final ValueChanged<String> onToLocationChanged;
-  final String fromLocation;
-  final String toLocation;
 
   const RideLocationSelectors({
     super.key,
-    required this.fromLocation,
-    required this.toLocation,
+    required this.fromController,
+    required this.toController,
     required this.onFromLocationChanged,
     required this.onToLocationChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    final fromController = TextEditingController(text: fromLocation);
-    final toController = TextEditingController(text: toLocation);
-
     return Column(
       children: [
         TextField(
