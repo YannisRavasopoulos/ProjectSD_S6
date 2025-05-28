@@ -147,7 +147,7 @@ class App extends StatelessWidget {
   //   rideRepository: _rides,
   // );
 
-  final bool isLoggedIn = true;
+  final bool isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +179,8 @@ class App extends StatelessWidget {
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/report': (context) => ReportView(viewModel: reportViewModel),
-        '/create_ride': (context) => CreateRideView(
+        '/create_ride':
+            (context) => CreateRideView(
               viewModel: createRideViewModel,
               ridesViewModel: ridesViewModel,
             ),
@@ -261,11 +262,14 @@ class App extends StatelessWidget {
           }
 
           return MaterialPageRoute(
-            builder: (context) => OfferRideView(
-              viewModel: OfferRideViewModel(rideRepository: _rideRepository),
-              activitiesViewModel: activitiesViewModel,
-              // Optionally pass ride to the viewmodel if needed
-            ),
+            builder:
+                (context) => OfferRideView(
+                  viewModel: OfferRideViewModel(
+                    rideRepository: _rideRepository,
+                  ),
+                  activitiesViewModel: activitiesViewModel,
+                  // Optionally pass ride to the viewmodel if needed
+                ),
           );
         }
 

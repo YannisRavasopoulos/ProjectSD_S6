@@ -5,10 +5,10 @@ import 'package:frontend/ui/shared/form/email_field.dart';
 import 'package:frontend/ui/shared/form/name_field.dart';
 import 'package:frontend/ui/shared/form/password_field.dart';
 
-class SignUpView extends StatelessWidget {
-  const SignUpView({super.key, required this.viewModel});
+import 'package:frontend/ui/view.dart';
 
-  final SignUpViewModel viewModel;
+class SignUpView extends ViewBase<SignUpViewModel> {
+  const SignUpView({super.key, required super.viewModel});
 
   void _onSignUpPressed(BuildContext context) async {
     final success = await viewModel.signUp();
@@ -23,49 +23,69 @@ class SignUpView extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildView(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
+      appBar: AppBar(),
+      // title: const Text('Sign Up')
       body: Container(
-        alignment: Alignment.center,
+        alignment: Alignment.topCenter,
         padding: const EdgeInsets.all(32.0),
         child: SingleChildScrollView(
-          child: ListenableBuilder(
-            listenable: viewModel,
-            builder: (context, _) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Sign Up',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  EmailField(controller: viewModel.emailController),
-                  const SizedBox(height: 16),
-                  NameField(controller: viewModel.nameController),
-                  const SizedBox(height: 16),
-                  PasswordField(controller: viewModel.passwordController),
-                  const SizedBox(height: 16),
-                  PasswordField(
-                    labelText: 'Confirm Password',
-                    controller: viewModel.confirmPasswordController,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    viewModel.doPasswordsMatch ? '' : 'Passwords do not match',
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 24),
-                  LoadingButton(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(height: 48),
+              EmailField(controller: viewModel.emailController),
+              Text(
+                viewModel.isEmailValid
+                    ? ''
+                    : 'Please enter a valid email address',
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+              SizedBox(height: 8),
+              NameField(controller: viewModel.nameController),
+              Text(
+                viewModel.isNameValid ? '' : 'Please enter your full name',
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+              SizedBox(height: 8),
+              PasswordField(controller: viewModel.passwordController),
+              Text(
+                viewModel.isPasswordValid
+                    ? ''
+                    : 'Password must be at least 8 characters long',
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+              SizedBox(height: 8),
+              PasswordField(
+                labelText: 'Confirm Password',
+                controller: viewModel.confirmPasswordController,
+              ),
+              SizedBox(height: 8),
+              Text(
+                viewModel.doPasswordsMatch ? '' : 'Passwords do not match',
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+              SizedBox(height: 48),
+              Center(
+                child: SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: LoadingButton(
                     onPressed: () => _onSignUpPressed(context),
                     isLoading: viewModel.isLoading,
-                    child: const Text('Sign Up'),
+                    child: Text('Sign Up'),
                   ),
-                ],
-              );
-            },
+                ),
+              ),
+            ],
           ),
         ),
       ),
