@@ -38,17 +38,17 @@ SignInViewModel -> AuthenticationRepository: login(email, password)
 
 alt Success
 AuthenticationRepository --> SignInViewModel: return authentication
-SignInViewModel --> SignInView: ok
+SignInViewModel --> SignInView: return ok
 SignInView -> Navigator: pushNamed("/home")
 else User not found
-    AuthenticationRepository --> SignInViewModel: error "User not found"
+    AuthenticationRepository --> SignInViewModel: return error "User not found"
     SignInViewModel -> SignInViewModel: setErrorMessage("User not found")
-    SignInViewModel --> SignInView: error
+    SignInViewModel --> SignInView: return error
     SignInView -> SignInView: showErrorMessage()
 else Wrong password
-    AuthenticationRepository --> SignInViewModel: error "Wrong password"
+    AuthenticationRepository --> SignInViewModel: return error "Wrong password"
     SignInViewModel -> SignInViewModel: setErrorMessage("Wrong password")
-    SignInViewModel --> SignInView: error
+    SignInViewModel --> SignInView: return error
     SignInView -> SignInView: showErrorMessage()
 end
 
@@ -68,15 +68,15 @@ ForgotPasswordView -> ForgotPasswordView: onSendResetCodePressed()
 ForgotPasswordView -> ForgotPasswordViewModel: sendResetCode()
 ForgotPasswordViewModel -> AuthenticationRepository: sendResetCode(email)
 alt Success
-    AuthenticationRepository --> ForgotPasswordViewModel: ok
-    ForgotPasswordViewModel --> ForgotPasswordView: ok
+    AuthenticationRepository --> ForgotPasswordViewModel: return ok
+    ForgotPasswordViewModel --> ForgotPasswordView: return ok
     User -> ForgotPasswordView: Enters reset code
     ForgotPasswordView -> ForgotPasswordView: onResetCodeEntered()
     ForgotPasswordView -> ForgotPasswordViewModel: checkResetCode()
     ForgotPasswordViewModel -> AuthenticationRepository: checkResetCode(email, resetCode)
     alt Success
-        AuthenticationRepository --> ForgotPasswordViewModel: ok
-        ForgotPasswordViewModel --> ForgotPasswordView: ok
+        AuthenticationRepository --> ForgotPasswordViewModel: return ok
+        ForgotPasswordViewModel --> ForgotPasswordView: return ok
         alt Success
             User -> ForgotPasswordView: Enters new password
             User -> ForgotPasswordView: Enters new password confirmation
@@ -84,25 +84,25 @@ alt Success
             ForgotPasswordView -> ForgotPasswordView: onResetPasswordPressed()
             ForgotPasswordView -> ForgotPasswordViewModel: resetPassword()
             ForgotPasswordViewModel -> AuthenticationRepository: resetPassword(email, resetCode, newPassword)
-            AuthenticationRepository --> ForgotPasswordViewModel: ok
-            ForgotPasswordViewModel --> ForgotPasswordView: ok
+            AuthenticationRepository --> ForgotPasswordViewModel: return ok
+            ForgotPasswordViewModel --> ForgotPasswordView: return ok
             ForgotPasswordView -> Navigator: popUntil("/sign-in")
         else Error resetting password
-            AuthenticationRepository --> ForgotPasswordViewModel: error "Error resetting password"
+            AuthenticationRepository --> ForgotPasswordViewModel: return error "Error resetting password"
             ForgotPasswordViewModel -> ForgotPasswordViewModel: setErrorMessage("Error resetting password")
-            ForgotPasswordViewModel --> ForgotPasswordView: error
+            ForgotPasswordViewModel --> ForgotPasswordView: return error
             ForgotPasswordView -> ForgotPasswordView: showErrorMessage()
         end
     else Invalid reset code
-        AuthenticationRepository --> ForgotPasswordViewModel: error "Invalid reset code"
+        AuthenticationRepository --> ForgotPasswordViewModel: return error "Invalid reset code"
         ForgotPasswordViewModel -> ForgotPasswordViewModel: setErrorMessage("Invalid reset code")
-        ForgotPasswordViewModel --> ForgotPasswordView: error
+        ForgotPasswordViewModel --> ForgotPasswordView: return error
         ForgotPasswordView -> ForgotPasswordView: showErrorMessage()
     end
 else User not found
     AuthenticationRepository --> ForgotPasswordViewModel: User not found
     ForgotPasswordViewModel -> ForgotPasswordViewModel: setErrorMessage("User not found")
-    ForgotPasswordViewModel --> ForgotPasswordView: error
+    ForgotPasswordViewModel --> ForgotPasswordView: return error
     ForgotPasswordView -> ForgotPasswordView: showErrorMessage()
 end
 
@@ -124,18 +124,18 @@ SignUpView -> SignUpView: onSignUpPressed()
 SignUpView -> SignUpViewModel: signUp()
 SignUpViewModel -> UserRepository: create(email, password)
 alt Success
-    UserRepository --> SignUpViewModel: ok
-    SignUpViewModel --> SignUpView: ok
+    UserRepository --> SignUpViewModel: return ok
+    SignUpViewModel --> SignUpView: return ok
     SignUpView -> Navigator: popUntil("/sign-in")
 else User already exists
-    UserRepository --> SignUpViewModel: error "User already exists"
+    UserRepository --> SignUpViewModel: return error "User already exists"
     SignUpViewModel -> SignUpViewModel: setErrorMessage("User already exists")
-    SignUpViewModel --> SignUpView: error
+    SignUpViewModel --> SignUpView: return error
     SignUpView -> SignUpView: showErrorMessage()
 else Weak password
-    UserRepository --> SignUpViewModel: error "Weak password"
+    UserRepository --> SignUpViewModel: return error "Weak password"
     SignUpViewModel -> SignUpViewModel: setErrorMessage("Weak password")
-    SignUpViewModel --> SignUpView: error
+    SignUpViewModel --> SignUpView: return error
     SignUpView -> SignUpView: showErrorMessage()
 end
 @enduml

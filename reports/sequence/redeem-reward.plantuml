@@ -31,13 +31,13 @@ RewardsView -> RewardsViewModel: redeemReward(reward)
 RewardsViewModel -> RewardRepository: redeem(reward)
 alt Success
     RewardRepository --> RewardsViewModel: redemptionCode
-    RewardsViewModel -> RewardsView: ok
+    RewardsViewModel -> RewardsView: return ok
     RewardsView -> RewardsView: showRedemptionCode(redemptionCode)
 else Insufficient points
-    RewardRepository --> RewardsViewModel: error "Not enough points"
+    RewardRepository --> RewardsViewModel: return error "Not enough points"
     RewardsViewModel -> RewardsView: showError("Not enough points")
 else Reward not found
-    RewardRepository --> RewardsViewModel: error "Reward not found"
+    RewardRepository --> RewardsViewModel: return error "Reward not found"
     RewardsViewModel -> RewardsView: showError("Reward not found")
 end
 else Cancel
