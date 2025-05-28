@@ -10,6 +10,8 @@ participant RewardRepository
 participant RedeemConfirmationDialog
 participant LoopApp
 participant HomeView
+participant Reward
+participant RedeemedReward
 
 activate Navigator
 activate RewardsViewModel
@@ -24,9 +26,10 @@ HomeView -> Navigator: pushNamed("/rewards")
 Navigator -> LoopApp: "/rewards"
 LoopApp -> RewardsView: RewardsView(rewardsViewModel)
 activate RewardsView
-RewardsView --> LoopApp: rewardsView
-LoopApp --> Navigator: rewardsView
+RewardsView --> LoopApp: return rewardsView
+LoopApp --> Navigator: return rewardsView
 Navigator -> RewardsView: build(context)
+' TODO: fetch rewards
 RewardsView -> RewardCard: RewardCard(reward, onRedeemPressed)
 activate RewardCard
 RewardCard --> RewardsView: return rewardCard
@@ -42,25 +45,32 @@ RedeemConfirmationDialog -> RewardCard: onConfirmPressed()
 RewardCard -> RewardsView: onRedeemReward(reward)
 RewardsView -> RewardsViewModel: redeemReward(reward)
 RewardsViewModel -> RewardRepository: redeem(reward)
-deactivate RedeemConfirmationDialog
 alt Success
+deactivate RedeemConfirmationDialog
     RewardRepository --> RewardsViewModel: return redemptionCode
     RewardsViewModel -> RewardsViewModel: updateRewards()
     RewardsViewModel -> RewardRepository: fetchAvailableRewards()
+    RewardRepository -> Reward: Reward(...)
+    activate Reward
+    Reward --> RewardRepository: return reward
     RewardRepository --> RewardsViewModel: return availableRewards
     RewardsViewModel -> RewardRepository: fetchRedeemedRewards()
+    RewardRepository -> RedeemedReward: RedeemedReward(...)
+    activate RedeemedReward
+    Reward --> RewardRepository: return redeemedReward
     RewardRepository --> RewardsViewModel: return redeemedRewards
     RewardsViewModel --> RewardsView: return ok
     RewardsView -> RewardsView: showRedemptionCode(redemptionCode)
+    deactivate RedeemedReward
+    deactivate Reward
 else Insufficient points
     RewardRepository --> RewardsViewModel: return error "Not enough points"
     RewardsViewModel -> RewardsView: showError("Not enough points")
 else Reward not found
     RewardRepository --> RewardsViewModel: return error "Reward not found"
     RewardsViewModel -> RewardsView: showError("Reward not found")
-end
-RedeemConfirmationDialog -> RedeemConfirmationDialog
 activate RedeemConfirmationDialog
+end
 else Cancel
 User -> RedeemConfirmationDialog: Presses "Cancel"
 RedeemConfirmationDialog --> RewardCard: onCancelPressed()

@@ -59,8 +59,8 @@ SignInView -> Navigator: pushNamed("/forgot-password")
 Navigator -> LoopApp: "/forgot-password"
 LoopApp -> ForgotPasswordView: ForgotPasswordView(forgotPasswordViewModel)
 activate ForgotPasswordView
-ForgotPasswordView --> LoopApp: forgotPasswordView
-LoopApp --> Navigator: forgotPasswordView
+ForgotPasswordView --> LoopApp: return forgotPasswordView
+LoopApp --> Navigator: return forgotPasswordView
 Navigator -> ForgotPasswordView: build(context)
 User -> ForgotPasswordView: Enters email
 User -> ForgotPasswordView: Press "Send Reset Code"
@@ -113,8 +113,8 @@ SignInView -> Navigator: pushNamed("/sign-up")
 Navigator -> LoopApp: "/sign-up"
 LoopApp -> SignUpView: SignUpView(signUpViewModel)
 activate SignUpView
-SignUpView --> LoopApp: signUpView
-LoopApp --> Navigator: signUpView
+SignUpView --> LoopApp: return signUpView
+LoopApp --> Navigator: return signUpView
 Navigator -> SignUpView: build(context)
 User -> SignUpView: Enters email
 User -> SignUpView: Enters password
