@@ -2,7 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/ui/viewmodel.dart';
 
-class SignUpViewModel extends ViewModel {
+abstract interface class SignUpViewModelInterface {
+  bool get isEmailValid;
+  bool get isNameValid;
+  bool get isPasswordValid;
+  bool get doPasswordsMatch;
+  bool get canSignUp;
+
+  String get email;
+  String get name;
+  String get password;
+  String get confirmPassword;
+
+  TextEditingController get emailController;
+  TextEditingController get nameController;
+  TextEditingController get passwordController;
+  TextEditingController get confirmPasswordController;
+
+  Future<bool> signUp();
+
+  void togglePasswordVisibility();
+  void toggleConfirmPasswordVisibility();
+}
+
+class SignUpViewModel extends ViewModel implements SignUpViewModelInterface {
   final RegExp _emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
@@ -12,15 +35,39 @@ class SignUpViewModel extends ViewModel {
 
   final RegExp _passwordRegex = RegExp(r'^.{8,}$');
 
+  @override
   bool get isEmailValid => _emailRegex.hasMatch(email);
+  @override
   bool get isNameValid => _nameRegex.hasMatch(name);
+  @override
   bool get isPasswordValid => _passwordRegex.hasMatch(password);
+  @override
   bool get doPasswordsMatch => password == confirmPassword;
+  @override
+  bool get canSignUp =>
+      isEmailValid && isNameValid && isPasswordValid && doPasswordsMatch;
 
+  @override
   String get email => emailController.text.trim();
+  @override
   String get name => nameController.text.trim();
+  @override
   String get password => passwordController.text;
+  @override
   String get confirmPassword => confirmPasswordController.text;
+
+  @override
+  final TextEditingController emailController = TextEditingController();
+
+  @override
+  final TextEditingController nameController = TextEditingController();
+
+  @override
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   SignUpViewModel({required this.userRepository}) {
     emailController.addListener(notifyListeners);
@@ -30,11 +77,6 @@ class SignUpViewModel extends ViewModel {
   }
 
   final UserRepository userRepository;
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
 
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
@@ -42,6 +84,7 @@ class SignUpViewModel extends ViewModel {
   bool isLoading = false;
   String errorMessage = '';
 
+  @override
   Future<bool> signUp() async {
     isLoading = true;
     notifyListeners();
@@ -54,11 +97,13 @@ class SignUpViewModel extends ViewModel {
     return false;
   }
 
+  @override
   void togglePasswordVisibility() {
     isPasswordVisible = !isPasswordVisible;
     notifyListeners();
   }
 
+  @override
   void toggleConfirmPasswordVisibility() {
     isConfirmPasswordVisible = !isConfirmPasswordVisible;
     notifyListeners();

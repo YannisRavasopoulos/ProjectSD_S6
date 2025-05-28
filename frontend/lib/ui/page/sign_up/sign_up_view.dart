@@ -26,7 +26,6 @@ class SignUpView extends ViewBase<SignUpViewModel> {
   Widget buildView(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      // title: const Text('Sign Up')
       body: Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.all(32.0),
@@ -79,7 +78,10 @@ class SignUpView extends ViewBase<SignUpViewModel> {
                   width: 200,
                   height: 40,
                   child: LoadingButton(
-                    onPressed: () => _onSignUpPressed(context),
+                    onPressed:
+                        viewModel.canSignUp
+                            ? () => _onSignUpPressed(context)
+                            : null,
                     isLoading: viewModel.isLoading,
                     child: Text('Sign Up'),
                   ),
