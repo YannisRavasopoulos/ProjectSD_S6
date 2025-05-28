@@ -26,8 +26,7 @@ class _CreateActivityViewState extends State<CreateActivityView> {
       TextEditingController();
   final TextEditingController _endLocationController = TextEditingController();
 
-  DateTime _startTime = DateTime.now();
-  DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
+  TimeOfDay _startTime = TimeOfDay.now();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -38,13 +37,10 @@ class _CreateActivityViewState extends State<CreateActivityView> {
       final activity = widget.activityToEdit!;
       _nameController.text = activity.name;
 
-      if (activity is ImplActivity) {
-        _descriptionController.text = activity.description;
-        _startLocationController.text = activity.startLocation.name;
-        _endLocationController.text = activity.endLocation.name;
-        _startTime = activity.startTime;
-        _endTime = activity.endTime;
-      }
+      _descriptionController.text = activity.description;
+      _startLocationController.text = activity.startLocation.name;
+      _endLocationController.text = activity.endLocation.name;
+      _startTime = activity.startTime;
     }
   }
 
@@ -78,7 +74,6 @@ class _CreateActivityViewState extends State<CreateActivityView> {
             name: _nameController.text,
             description: _descriptionController.text,
             startTime: _startTime,
-            endTime: _endTime,
             startLocation: startLocation,
             endLocation: endLocation,
           );
@@ -89,7 +84,6 @@ class _CreateActivityViewState extends State<CreateActivityView> {
             name: _nameController.text,
             description: _descriptionController.text,
             startTime: _startTime,
-            endTime: _endTime,
             startLocation: startLocation,
             endLocation: endLocation,
           );
@@ -99,9 +93,9 @@ class _CreateActivityViewState extends State<CreateActivityView> {
       } catch (e) {
         // Show error to user
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${e.toString()}')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
         }
       }
     }
@@ -184,7 +178,11 @@ class _CreateActivityViewState extends State<CreateActivityView> {
                 child: ElevatedButton.icon(
                   onPressed: _createOrUpdateActivity,
                   icon: const Icon(Icons.add),
-                  label: Text(widget.activityToEdit == null ? 'Create Activity' : 'Update Activity'),
+                  label: Text(
+                    widget.activityToEdit == null
+                        ? 'Create Activity'
+                        : 'Update Activity',
+                  ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24.0,

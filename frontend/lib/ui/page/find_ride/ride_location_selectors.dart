@@ -1,62 +1,34 @@
 import 'package:flutter/material.dart';
 
-class RideLocationSelectors extends StatefulWidget {
+class RideLocationSelectors extends StatelessWidget {
   final ValueChanged<String> onFromLocationChanged;
   final ValueChanged<String> onToLocationChanged;
+  final String fromLocation;
+  final String toLocation;
 
   const RideLocationSelectors({
     super.key,
+    required this.fromLocation,
+    required this.toLocation,
     required this.onFromLocationChanged,
     required this.onToLocationChanged,
   });
 
   @override
-  _RideLocationSelectorsState createState() => _RideLocationSelectorsState();
-}
-
-class _RideLocationSelectorsState extends State<RideLocationSelectors> {
-  late TextEditingController fromLocationController;
-  late TextEditingController toLocationController;
-
-  @override
-  void initState() {
-    super.initState();
-    fromLocationController = TextEditingController();
-    toLocationController = TextEditingController();
-
-    fromLocationController.addListener(() {
-      final text = fromLocationController.text;
-      if (text.isNotEmpty) {
-        widget.onFromLocationChanged(text);
-      }
-    });
-
-    toLocationController.addListener(() {
-      final text = toLocationController.text;
-      if (text.isNotEmpty) {
-        widget.onToLocationChanged(text);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    fromLocationController.dispose();
-    toLocationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final fromController = TextEditingController(text: fromLocation);
+    final toController = TextEditingController(text: toLocation);
+
     return Column(
       children: [
         TextField(
-          controller: fromLocationController,
+          controller: fromController,
           decoration: const InputDecoration(
             labelText: 'From',
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.location_pin),
           ),
+          onChanged: onFromLocationChanged,
         ),
         Stack(
           alignment: Alignment.center,
@@ -70,10 +42,9 @@ class _RideLocationSelectorsState extends State<RideLocationSelectors> {
                 child: IconButton(
                   icon: const Icon(Icons.swap_vert),
                   onPressed: () {
-                    // Swap the two fields
-                    final temp = fromLocationController.text;
-                    fromLocationController.text = toLocationController.text;
-                    toLocationController.text = temp;
+                    // Call parent with swapped values
+                    onFromLocationChanged(toController.text);
+                    onToLocationChanged(fromController.text);
                   },
                 ),
               ),
@@ -81,12 +52,13 @@ class _RideLocationSelectorsState extends State<RideLocationSelectors> {
           ],
         ),
         TextField(
-          controller: toLocationController,
+          controller: toController,
           decoration: const InputDecoration(
             labelText: 'To',
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.location_searching),
           ),
+          onChanged: onToLocationChanged,
         ),
       ],
     );

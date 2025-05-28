@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/impl/impl_ride_request.dart';
+import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
 class FindRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
+  final ActivityRepository activityRepository;
+
+  final List<Activity> activities = [];
 
   List<Ride> rides = [];
   String? errorMessage;
@@ -15,6 +20,9 @@ class FindRideViewModel extends ChangeNotifier {
 
   Location _source = ImplLocation.test('start');
   Location _destination = ImplLocation.test('end');
+
+  String get fromLocation => _source.name;
+  String get toLocation => _destination.name;
 
   String departureTime = 'Now';
   String arrivalTime = 'Soonest';
@@ -35,10 +43,13 @@ class FindRideViewModel extends ChangeNotifier {
   List<String> departureTimes;
   List<String> arrivalTimes;
 
-  FindRideViewModel({required this.rideRepository})
-    : departureTimes = _fixedDepartureTimes,
-      arrivalTimes = _fixedArrivalTimes {
+  FindRideViewModel({
+    required this.activityRepository,
+    required this.rideRepository,
+  }) : departureTimes = _fixedDepartureTimes,
+       arrivalTimes = _fixedArrivalTimes {
     fetchRides();
+    fetchActivities();
   }
 
   void setSource(String sourceName) {
@@ -66,6 +77,28 @@ class FindRideViewModel extends ChangeNotifier {
 
   bool selectingDepartureTime = false;
   bool selectingArrivalTime = false;
+
+  DateTime timeOfDayToString(TimeOfDay t) {
+    final now = new DateTime.now();
+    return DateTime(now.year, now.month, now.day, t.hour, t.minute);
+  }
+
+  void selectActivity(Activity activity) {
+    _source = activity.startLocation;
+    _destination = activity.endLocation;
+    departureTime = timeOfDayToString(activity.startTime).toString();
+    arrivalTime = timeOfDayToString(activity.endTime).toString();
+
+    // Reset times to fixed options
+    departureTimes = _fixedDepartureTimes;
+    arrivalTimes = _fixedArrivalTimes;
+
+    selectingDepartureTime = false;
+    selectingArrivalTime = false;
+
+    fetchRides();
+    notifyListeners();
+  }
 
   void selectArrivalTime(String? arrivalTime) {
     if (arrivalTime != null) {
@@ -112,6 +145,17 @@ class FindRideViewModel extends ChangeNotifier {
 
     this.departureTime = departureTime;
     fetchRides();
+    notifyListeners();
+  }
+
+  Future<void> fetchActivities() async {
+    try {
+      activities.clear();
+      final fetchedActivities = await activityRepository.fetch();
+      activities.addAll(fetchedActivities);
+    } catch (e) {
+      errorMessage = e.toString();
+    }
     notifyListeners();
   }
 
