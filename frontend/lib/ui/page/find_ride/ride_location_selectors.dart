@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
 class RideLocationSelectors extends StatelessWidget {
-  final TextEditingController fromController;
-  final TextEditingController toController;
-  final ValueChanged<String> onFromLocationChanged;
-  final ValueChanged<String> onToLocationChanged;
+  final TextEditingController fromLocationController;
+  final TextEditingController toLocationController;
+  final ValueChanged<String>? onFromLocationChanged;
+  final ValueChanged<String>? onToLocationChanged;
 
   const RideLocationSelectors({
     super.key,
-    required this.fromController,
-    required this.toController,
-    required this.onFromLocationChanged,
-    required this.onToLocationChanged,
+    required this.fromLocationController,
+    required this.toLocationController,
+
+    // TODO: these are hear because of shit code in create ride...
+    this.onFromLocationChanged,
+    this.onToLocationChanged,
   });
 
   @override
@@ -19,7 +21,7 @@ class RideLocationSelectors extends StatelessWidget {
     return Column(
       children: [
         TextField(
-          controller: fromController,
+          controller: fromLocationController,
           decoration: const InputDecoration(
             labelText: 'From',
             border: OutlineInputBorder(),
@@ -39,9 +41,9 @@ class RideLocationSelectors extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(Icons.swap_vert),
                   onPressed: () {
-                    // Call parent with swapped values
-                    onFromLocationChanged(toController.text);
-                    onToLocationChanged(fromController.text);
+                    var temp = fromLocationController.text;
+                    fromLocationController.text = toLocationController.text;
+                    toLocationController.text = temp;
                   },
                 ),
               ),
@@ -49,7 +51,7 @@ class RideLocationSelectors extends StatelessWidget {
           ],
         ),
         TextField(
-          controller: toController,
+          controller: toLocationController,
           decoration: const InputDecoration(
             labelText: 'To',
             border: OutlineInputBorder(),
