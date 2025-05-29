@@ -13,12 +13,20 @@ class ActivitiesView extends StatelessWidget {
   void _onDeleteActivityConfirmPressed(
     BuildContext context,
     Activity activity,
-  ) {
-    viewModel.deleteActivity(activity);
+  ) async {
     Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Activity "${activity.name}" deleted')),
-    );
+    bool success = await viewModel.deleteActivity(activity);
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Activity "${activity.name}" deleted')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete activity: ${viewModel.errorMessage}'),
+        ),
+      );
+    }
   }
 
   void _onCreateActivityPressed(BuildContext context) {

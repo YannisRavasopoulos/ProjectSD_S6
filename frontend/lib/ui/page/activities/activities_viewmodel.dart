@@ -9,6 +9,7 @@ class ActivitiesViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
   List<Activity> get activities => _activities;
+  String? get errorMessage => _errorMessage;
 
   bool _isLoading = true;
   List<Activity> _activities = [];
@@ -42,55 +43,14 @@ class ActivitiesViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  // Future<void> _loadActivities() async {
-  //   try {
-  //     _isLoading = true;
-  //     notifyListeners();
-  //     _activities = await activityRepository.fetch();
-  //     _errorMessage = null;
-  //   } catch (e) {
-  //     _errorMessage = e.toString();
-  //   } finally {
-  //     _isLoading = false;
-  //     notifyListeners();
-  //   }
-  // }
-
-  Future<void> createActivity(Activity activity) async {
-    try {
-      _isLoading = true;
-      notifyListeners();
-
-      await _activityRepository.create(activity);
-    } catch (e) {
-      _errorMessage = e.toString();
-      notifyListeners();
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> updateActivity(Activity activity) async {
-    try {
-      _isLoading = true;
-      notifyListeners();
-
-      await _activityRepository.update(activity);
-    } catch (e) {
-      _errorMessage = e.toString();
-      notifyListeners();
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> deleteActivity(Activity activity) async {
+  Future<bool> deleteActivity(Activity activity) async {
     try {
       await _activityRepository.delete(activity);
+      return true;
     } catch (e) {
       _errorMessage = e.toString();
+      return false;
+    } finally {
       notifyListeners();
     }
   }
