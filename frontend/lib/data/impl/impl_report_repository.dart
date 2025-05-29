@@ -4,8 +4,6 @@ import 'package:frontend/data/model/report.dart';
 import 'package:frontend/data/model/report_reason.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/report_repository.dart';
-import 'package:frontend/data/mocks/mock_user_repository.dart';
-import 'package:frontend/data/repository/user_repository.dart';
 
 class ImplReport extends Report {
   @override
@@ -15,7 +13,7 @@ class ImplReport extends Report {
   @override
   final ReportStatus status = ReportStatus.pending;
   @override
-  final User receiver = MockUser.random();
+  final User receiver = ImplUser.random();
 
   final String details;
   final DateTime createdAt;

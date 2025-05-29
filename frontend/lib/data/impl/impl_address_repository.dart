@@ -7,12 +7,12 @@ import 'package:frontend/data/model/user.dart';
 // Repository implementation
 class ImplAddressRepository implements AddressRepository {
   @override
-  Future<Address> fetchCurrent(User user) async {
+  Future<Address> fetchCurrentOf(User user) async {
     return _places[0].address;
   }
 
   @override
-  Stream<Address> watchCurrent(User user) async* {
+  Stream<Address> watchCurrentOf(User user) async* {
     // TODO
     while (true) {
       await Future.delayed(Duration(seconds: 5));
@@ -22,13 +22,10 @@ class ImplAddressRepository implements AddressRepository {
 
   @override
   Future<List<Address>> fetchForQuery(String query) async {
-    // Simple search by name
-    return _places
-        .where(
-          (place) => place.name.toLowerCase().contains(query.toLowerCase()),
-        )
-        .map((place) => place.address)
-        .toList();
+    print('Searching for: $query');
+
+    _places.shuffle();
+    return _places.take(3).map((place) => place.address).toList();
   }
 
   int _distance(LatLng p1, LatLng p2) {
@@ -152,4 +149,19 @@ class ImplAddressRepository implements AddressRepository {
       ),
     ),
   ];
+
+  @override
+  Future<Address> fetchCurrent() async {
+    // For simplicity, return the first place's address
+    return _places[0].address;
+  }
+
+  @override
+  Stream<Address> watchCurrent() async* {
+    // TODO
+    while (true) {
+      await Future.delayed(Duration(seconds: 5));
+      yield _places[0].address;
+    }
+  }
 }

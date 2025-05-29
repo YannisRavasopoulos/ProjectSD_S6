@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_address_repository.dart';
-import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:latlong2/latlong.dart';
@@ -38,8 +36,7 @@ class _CreateActivityViewState extends State<CreateActivityView> {
       _nameController.text = activity.name;
 
       _descriptionController.text = activity.description;
-      _startLocationController.text = activity.startLocation.name;
-      _endLocationController.text = activity.endLocation.name;
+      _startLocationController.text = activity.address.toString();
       _startTime = activity.startTime;
     }
   }
@@ -79,7 +76,7 @@ class _CreateActivityViewState extends State<CreateActivityView> {
           );
           await widget.viewModel.updateActivity(updatedActivity);
         } else {
-          final newActivity = ImplActivity(
+          final newActivity = Activity(
             id: DateTime.now().millisecondsSinceEpoch + 2,
             name: _nameController.text,
             description: _descriptionController.text,

@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_ride_request.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
-import 'package:frontend/data/repository/location_repository.dart';
+import 'package:frontend/data/repository/address_repository.dart';
+import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -13,10 +14,10 @@ class FindRideViewModel extends ChangeNotifier {
   FindRideViewModel({
     required ActivityRepository activityRepository,
     required RideRepository rideRepository,
-    required LocationRepository locationRepository,
+    required AddressRepository addressRepository,
   }) : _activityRepository = activityRepository,
        _rideRepository = rideRepository,
-       _locationRepository = locationRepository {
+       _addressRepository = addressRepository {
     // Listen for changes and update the model
     fromLocationController.addListener(fetchRides);
     toLocationController.addListener(fetchRides);
@@ -55,7 +56,7 @@ class FindRideViewModel extends ChangeNotifier {
 
   final RideRepository _rideRepository;
   final ActivityRepository _activityRepository;
-  final LocationRepository _locationRepository;
+  final AddressRepository _addressRepository;
 
   void _onActivitiesUpdated(List<Activity> activities) {
     _activities = activities;
@@ -120,8 +121,11 @@ class FindRideViewModel extends ChangeNotifier {
   }
 
   Future<void> selectActivity(Activity activity) async {
-    fromLocationController.text = activity.startLocation.name;
-    toLocationController.text = activity.endLocation.name;
+    var currentAddress = await _addressRepository.fetchCurrent();
+
+    // From should be the current location of the user
+    fromLocationController.text = currentAddress.toString();
+    toLocationController.text = activity.address.toString();
     departureTimeController.text = "Now";
     arrivalTimeController.text = _timeOfDayToString(activity.startTime);
     await fetchRides();
@@ -142,16 +146,17 @@ class FindRideViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // TODO
-      var source = await _locationRepository.fetchForQuery(fromLocation);
-      var destination = await _locationRepository.fetchForQuery(toLocation);
+      var source = await _addressRepository.fetchForQuery(fromLocation);
+      var destination = await _addressRepository.fetchForQuery(toLocation);
+
+      if (source.isEmpty || destination.isEmpty) {
+        _errorMessage = "Please provide valid source and destination.";
+        return;
+      }
       _rides = await _rideRepository.fetchMatchingRides(
-        ImplRideRequest(
-          id: 0,
-          origin: source,
-          destination: destination,
-          // origin: ImplLocation.test('start'),
-          // destination: ImplLocation.test('end'),
+        RideRequest(
+          origin: source[0],
+          destination: destination[0],
           departureTime: DateTime.now(),
           arrivalTime: DateTime.now().add(const Duration(hours: 1)),
           originRadius: Distance.withRadius(1000),

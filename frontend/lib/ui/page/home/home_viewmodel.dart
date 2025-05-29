@@ -3,24 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/repository/address_repository.dart';
-import 'package:frontend/data/repository/user_repository.dart';
 import 'package:latlong2/latlong.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final AddressRepository addressRepository;
-  final UserRepository userRepository;
-
-  // TODO: this should go to addressRepository
-  Stream<Address> watchCurrentAddress() async* {
-    var user = await userRepository.fetchCurrent();
-    yield* addressRepository.watchCurrent(user);
-  }
-
-  // TODO: this should go to addressRepository
-  Future<Address> fetchCurrentLocation() async {
-    var user = await userRepository.fetchCurrent();
-    return addressRepository.fetchCurrent(user);
-  }
 
   bool shouldAnimateToLocation = true;
 
@@ -28,11 +14,10 @@ class HomeViewModel extends ChangeNotifier {
   LatLng currentLocation = LatLng(0, 0);
   List<String> suggestions = [];
 
-  HomeViewModel({
-    required this.addressRepository,
-    required this.userRepository,
-  }) {
-    _locationSubscription = watchCurrentAddress().listen(_onAddressUpdate);
+  HomeViewModel({required this.addressRepository}) {
+    _locationSubscription = addressRepository.watchCurrent().listen(
+      _onAddressUpdate,
+    );
     refreshLocation();
   }
 
@@ -54,7 +39,7 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> refreshLocation() async {
     try {
-      var location = await fetchCurrentLocation();
+      var location = await addressRepository.fetchCurrent();
       _onAddressUpdate(location);
       shouldAnimateToLocation = true;
     } catch (e) {

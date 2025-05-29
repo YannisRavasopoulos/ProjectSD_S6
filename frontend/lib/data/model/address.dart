@@ -17,11 +17,11 @@ class Address {
 
   factory Address.fake() {
     return Address(
-      coordinates: LatLng(0, 0),
-      city: 'Fake City',
-      street: 'Fake Street',
-      number: 123,
-      postalCode: '00000',
+      coordinates: LatLng(38.261700, 21.745800),
+      city: 'Patras',
+      street: 'Agyia Area',
+      number: 0,
+      postalCode: '',
     );
   }
 

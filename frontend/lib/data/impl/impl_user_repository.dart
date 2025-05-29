@@ -21,6 +21,10 @@ class ImplUser extends User {
     required this.points,
   });
 
+  factory ImplUser.random() {
+    return ImplUser(id: 0, firstName: 'John', lastName: 'Doe', points: 300);
+  }
+
   ImplUser copyWith({
     int? id,
     String? firstName,

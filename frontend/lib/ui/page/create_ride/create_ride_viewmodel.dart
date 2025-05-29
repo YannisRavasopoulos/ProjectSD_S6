@@ -42,8 +42,8 @@ class CreateRideViewModel extends ChangeNotifier {
   CreateRideViewModel({this.initialRide, required this.rideRepository}) {
     if (initialRide != null) {
       id = initialRide!.id;
-      from = initialRide!.route.start.toString();
-      to = initialRide!.route.end.toString();
+      from = initialRide!.route.start.name;
+      to = initialRide!.route.end.name;
       departureTime = TimeOfDay(
         hour: initialRide!.departureTime.hour,
         minute: initialRide!.departureTime.minute,
@@ -120,7 +120,8 @@ class CreateRideViewModel extends ChangeNotifier {
         departureTime!.minute,
       );
 
-      final startLocation = Location(
+      final startLocation = ImplLocation(
+        id: DateTime.now().millisecondsSinceEpoch,
         coordinates: LatLng(37.0, 23.0),
         name: from!,
       );

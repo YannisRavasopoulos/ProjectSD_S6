@@ -13,21 +13,22 @@ import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
+import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
+import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 
 // Pages
-import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
 // import 'package:frontend/ui/page/activities/activities_view.dart';
 // import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 // import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
 // import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 // import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
 // import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
-// import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_view.dart';
-// import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
-// import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
+import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
+import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
+import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_view.dart';
@@ -81,14 +82,13 @@ class App extends StatelessWidget {
   );
   final PickupRepository _pickupRepository = ImplPickupRepository();
 
-  // late final FindRideViewModel findRideViewModel = FindRideViewModel(
-  //   activityRepository: _activityRepository,
-  //   rideRepository: _rideRepository,
-  //   locationRepository: _locationRepository,
-  // );
+  late final FindRideViewModel findRideViewModel = FindRideViewModel(
+    activityRepository: _activityRepository,
+    rideRepository: _rideRepository,
+    addressRepository: _addressRepository,
+  );
 
   late final HomeViewModel homeViewModel = HomeViewModel(
-    userRepository: _userRepository,
     addressRepository: _addressRepository,
   );
 
@@ -117,17 +117,17 @@ class App extends StatelessWidget {
     userRepository: _userRepository,
   );
 
-  // late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
-  //   rideRepository: _rideRepository,
-  // );
+  late final ReportViewModel reportViewModel = ReportViewModel(
+    reportRepository: _reportRepository,
+  );
 
   // late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
   //   activityRepository: _activityRepository,
   // );
 
-  // late final ReportViewModel reportViewModel = ReportViewModel(
-  //   reportRepository: _reportRepository,
-  // );
+  late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
+    rideRepository: _rideRepository,
+  );
 
   // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
   //   rideRepository: _rideRepository,
@@ -165,15 +165,12 @@ class App extends StatelessWidget {
             ),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
-        // '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
+        '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         // '/activities':
-        //     (context) => ActivitiesView(viewModel: activitiesViewModel),
-        // '/report': (context) => ReportView(viewModel: reportViewModel),
-        // '/create_ride':
-        //     (context) => CreateRideView(
-        //       viewModel: createRideViewModel,
-        //       ridesViewModel: ridesViewModel,
-        //     ),
+        // (context) => ActivitiesView(viewModel: activitiesViewModel),
+        '/report': (context) => ReportView(viewModel: reportViewModel),
+        '/create_ride':
+            (context) => CreateRideView(viewModel: createRideViewModel),
       },
       //   onGenerateRoute: (settings) {
       //     if (settings.name == '/arrange_pickup') {

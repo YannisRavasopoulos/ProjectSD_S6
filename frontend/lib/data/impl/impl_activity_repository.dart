@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 
 class ImplActivityRepository implements ActivityRepository {
@@ -13,7 +15,24 @@ class ImplActivityRepository implements ActivityRepository {
 
   ImplActivityRepository._internal();
 
-  final List<Activity> _activities = [];
+  final List<Activity> _activities = [
+    Activity(
+      id: 1,
+      name: 'Activity 1',
+      description: 'Activity 1 description',
+      startTime: TimeOfDay(hour: 10, minute: 30),
+      endTime: TimeOfDay(hour: 12, minute: 0),
+      address: Address.fake(),
+    ),
+    Activity(
+      id: 2,
+      name: 'Activity 2',
+      description: 'Activity 2 description',
+      startTime: TimeOfDay(hour: 14, minute: 0),
+      endTime: TimeOfDay(hour: 15, minute: 30),
+      address: Address.fake(),
+    ),
+  ];
   final StreamController<List<Activity>> _activitiesController =
       StreamController<List<Activity>>.broadcast();
 
