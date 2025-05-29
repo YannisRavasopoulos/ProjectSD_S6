@@ -41,23 +41,22 @@ class OfferRideView extends StatelessWidget {
                 if (mode == OfferRideMode.createdRides) {
                   return AnimatedBuilder(
                     animation: viewModel,
-                    builder: (context, _) => CreatedRidesList(
-                      isLoading: viewModel.isLoading,
-                      createdRides: viewModel.createdRides,
-                      potentialPassengers: viewModel.potentialPassengers,
-                      onSelectRide: viewModel.selectRide,
-                    ),
+                    builder:
+                        (context, _) => CreatedRidesList(
+                          currentAddress: viewModel.currentAddress,
+                          isLoading: viewModel.isLoading,
+                          createdRides: viewModel.createdRides,
+                          potentialPassengers: viewModel.potentialPassengers,
+                          onSelectRide: viewModel.selectRide,
+                        ),
                   );
                 } else {
-                  return AnimatedBuilder(
-                    animation: activitiesViewModel,
-                    builder: (context, _) => ActivitiesList(
-                      isLoading: activitiesViewModel.isLoading,
-                      activities: (activitiesViewModel.activities ?? []).cast<ImplActivity>(),
-                      potentialPassengers: viewModel.potentialPassengers,
-                      onSelectActivity: viewModel.selectActivity,
-                    ),
-                  );
+                  return ActivitiesList(
+                    isLoading: viewModel.areActivitiesLoading,
+                    activities: viewModel.activities,
+                    potentialPassengers: viewModel.potentialPassengers,
+                    onSelectActivity: viewModel.selectActivity,
+                  ),
                 }
               },
             ),

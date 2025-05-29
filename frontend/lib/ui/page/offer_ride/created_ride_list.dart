@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/page/offer_ride/carpooler_selection_sheet.dart';
 
 class CreatedRidesList extends StatelessWidget {
+  final Address currentAddress;
   final bool isLoading;
   final List<Ride> createdRides;
   final List<Passenger> potentialPassengers;
@@ -11,6 +13,7 @@ class CreatedRidesList extends StatelessWidget {
 
   const CreatedRidesList({
     super.key,
+    required this.currentAddress,
     required this.isLoading,
     required this.createdRides,
     required this.potentialPassengers,
@@ -51,25 +54,20 @@ class CreatedRidesList extends StatelessWidget {
               child: const Icon(Icons.directions_car, color: Colors.white),
             ),
             title: Text(
-              '${ride.route.start.name} → ${ride.route.end.name}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+              '${ride.route.start.toString()} → ${ride.route.end.toString()}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            subtitle: Text('Ride ID: ${ride.id}'),
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.teal,
-            ),
+            trailing: const Icon(Icons.arrow_forward_ios, color: Colors.teal),
             onTap: () async {
               await onSelectRide(ride);
               showModalBottomSheet(
                 context: context,
-                builder: (_) => CarpoolerSelectionSheet(
-                  carpoolers: potentialPassengers,
-                  ride: ride,
-                ),
+                builder:
+                    (_) => CarpoolerSelectionSheet(
+                      currentAddress: currentAddress,
+                      carpoolers: potentialPassengers,
+                      ride: ride,
+                    ),
               );
             },
           ),
@@ -78,4 +76,3 @@ class CreatedRidesList extends StatelessWidget {
     );
   }
 }
-

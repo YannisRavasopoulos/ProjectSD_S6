@@ -2,13 +2,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
 import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/user.dart';
+import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 
 class OfferRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
+  final AddressRepository addressRepository;
 
   List<Ride> _createdRides = [];
   List<Ride> get createdRides => _createdRides;
@@ -25,14 +28,21 @@ class OfferRideViewModel extends ChangeNotifier {
   Activity? _selectedActivity;
   Activity? get selectedActivity => _selectedActivity;
 
+  Address currentAddress;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  OfferRideViewModel({required this.rideRepository}) {
+  OfferRideViewModel({
+    required this.currentAddress,
+    required this.addressRepository,
+    required this.rideRepository,
+  }) {
     _init();
   }
 
-  void _init() {
+  Future<void> _init() async {
+    currentAddress = await addressRepository.fetchCurrent();
     _isLoading = true;
     notifyListeners();
     _ridesSubscription = rideRepository.watchHistory().listen(
@@ -99,11 +109,11 @@ class OfferRideViewModel extends ChangeNotifier {
     _potentialPassengersSubscription = rideRepository
         .watchPotentialPassengers(ride)
         .listen((users) {
-      _potentialPassengers = users.cast<Passenger>();
-      // For testing, always add a test passenger
-      _potentialPassengers.add(ImplPassenger.test());
-      notifyListeners();
-    });
+          _potentialPassengers = users.cast<Passenger>();
+          // For testing, always add a test passenger
+          _potentialPassengers.add(ImplPassenger.test());
+          notifyListeners();
+        });
   }
 
   Future<void> selectActivity(Activity activity) async {

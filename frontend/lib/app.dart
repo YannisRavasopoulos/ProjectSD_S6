@@ -13,6 +13,10 @@ import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
+import 'package:frontend/ui/page/activities/activities_view.dart';
+import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
+import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
+import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 
 // Pages
 // import 'package:frontend/ui/page/activities/activities_view.dart';
@@ -119,9 +123,9 @@ class App extends StatelessWidget {
     reportRepository: _reportRepository,
   );
 
-  // late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
-  //   activityRepository: _activityRepository,
-  // );
+  late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
+    activityRepository: _activityRepository,
+  );
 
   // late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
   //   rideRepository: _rideRepository,
@@ -164,37 +168,35 @@ class App extends StatelessWidget {
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
-        // '/activities':
-        // (context) => ActivitiesView(viewModel: activitiesViewModel),
+        '/activities':
+            (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/report': (context) => ReportView(viewModel: reportViewModel),
         // '/create_ride':
         // (context) => CreateRideView(viewModel: createRideViewModel),
       },
       onGenerateRoute: (settings) {
-        //     if (settings.name == '/arrange_pickup') {
-        //       final args = settings.arguments as Map<String, dynamic>?;
+        if (settings.name == '/arrange_pickup') {
+          final args = settings.arguments as Map<String, dynamic>?;
 
-        //       if (args == null ||
-        //           !args.containsKey('pickupRequest') ||
-        //           !args.containsKey('driver') ||
-        //           !args.containsKey('rideId')) {
-        //         return null;
-        //       }
+          if (args == null ||
+              !args.containsKey('pickupRequest') ||
+              !args.containsKey('driver')) {
+            return null;
+          }
 
-        //       final pickupRequest = args['pickupRequest'] as PickupRequest;
-        //       final driver = args['driver'] as Driver;
-        //       final rideId = args['rideId'] as int;
+          final pickupRequest = args['pickupRequest'] as PickupRequest;
+          final driver = args['driver'] as Driver;
 
-        //       return MaterialPageRoute(
-        //         builder:
-        //             (context) => ArrangePickupView(
-        //               viewModel: ArrangePickupViewModel(
-        //                 repository: _pickupRepository,
-        //                 pickupRequest: pickupRequest,
-        //               ),
-        //             ),
-        //       );
-        //     }
+          return MaterialPageRoute(
+            builder:
+                (context) => ArrangePickupView(
+                  viewModel: ArrangePickupViewModel(
+                    repository: _pickupRepository,
+                    pickupRequest: pickupRequest,
+                  ),
+                ),
+          );
+        }
 
         if (settings.name == '/confirm_pickup') {
           final args = settings.arguments as Map<String, dynamic>?;
