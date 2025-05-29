@@ -18,9 +18,11 @@ void main() {
     late RideRequest testRequest;
     late Driver testDriver;
     late Passenger testPassenger;
+    late int initialRides;
 
     setUp(() {
       rideRepository = ImplRideRepository();
+      initialRides = 2;
       testDriver = ImplDriver(
         id: 1,
         firstName: 'DriverFirst',
@@ -65,14 +67,15 @@ void main() {
     test('fetchAllRides returns all rides', () async {
       final rides = await rideRepository.fetchAllRides();
       expect(rides, isA<List<Ride>>());
+      expect(rides.length, initialRides);
     });
 
     test('create adds a ride', () async {
-      final initialCount = (await rideRepository.fetchAllRides()).length;
+      
       await rideRepository.create(testRide);
       final rides = await rideRepository.fetchAllRides();
-      expect(rides.length, initialCount + 1);
-      expect(rides.any((r) => r.driver.id == testDriver.id), isTrue);
+      expect(rides.length, initialRides + 1);
+      expect(rides[initialRides].driver.id ==testDriver.id, isTrue);
     });
 
     test('fetchMatchingRides returns rides near origin', () async {
@@ -80,16 +83,24 @@ void main() {
       final rides = await rideRepository.fetchMatchingRides(testRequest);
       expect(rides, isA<List<Ride>>());
     });
-
+  test('clearHistory clears the ride history', () async {
+        await rideRepository.clearHistory();
+        final history = await rideRepository.fetchHistory();
+        expect(history, isEmpty);
+      });
     test('watchMatchingRides emits matching rides', () async {
+      await rideRepository.clearHistory();
       await rideRepository.create(testRide);
       final stream = rideRepository.watchMatchingRides(testRequest);
       expectLater(stream, emits(isA<List<Ride>>()));
     });
 
     test('fetchHistory returns ride history', () async {
+      await rideRepository.create(testRide);
       final history = await rideRepository.fetchHistory();
       expect(history, isA<List<Ride>>());
+      expect(history.isNotEmpty, isTrue);
+      expect(history.last.driver.id, testDriver.id);
     });
 
     test('watchHistory emits ride history', () async {
@@ -97,11 +108,7 @@ void main() {
       expectLater(stream, emits(isA<List<Ride>>()));
     });
 
-    test('clearHistory clears the ride history', () async {
-      await rideRepository.clearHistory();
-      final history = await rideRepository.fetchHistory();
-      expect(history, isEmpty);
-    });
+   
 
     test('fetchCurrent throws if no current ride', () async {
       expect(() async => await rideRepository.fetchCurrent(), throwsA(isA<Exception>()));
