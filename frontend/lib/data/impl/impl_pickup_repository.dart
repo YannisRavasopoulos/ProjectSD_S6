@@ -66,7 +66,7 @@ class ImplPickupRepository implements PickupRepository {
     await Future.delayed(const Duration(milliseconds: 500));
 
     // Driver accepts the request - apo requests se pending pickups
-    _pickupRequests.removeWhere((r) => r.id == request.id);
+    _pickupRequests.removeWhere((r) => r.ride == request.ride);
     _pendingPickups.add(pickup);
 
     _requestsController.add(List.from(_pickupRequests));
@@ -78,7 +78,7 @@ class ImplPickupRepository implements PickupRepository {
     await Future.delayed(const Duration(milliseconds: 500));
 
     // Driver rejects the request
-    _pickupRequests.removeWhere((r) => r.id == request.id);
+    _pickupRequests.removeWhere((r) => r.ride == request.ride);
     _requestsController.add(List.from(_pickupRequests));
   }
 
