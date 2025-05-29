@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
 class RideTimeSelectors extends StatelessWidget {
-  final ValueChanged<String> onDepartureTimeChanged;
-  final ValueChanged<String> onArrivalTimeChanged;
+  // final ValueChanged<String> onDepartureTimeChanged;
+  // final ValueChanged<String> onArrivalTimeChanged;
 
   final TextEditingController departureTimeController;
   final TextEditingController arrivalTimeController;
-
   final List<String> departureTimes;
   final List<String> arrivalTimes;
+  final ValueChanged<String> onDepartureTimeSelected;
+  final ValueChanged<String> onArrivalTimeSelected;
 
   RideTimeSelectors({
     super.key,
-    required this.onDepartureTimeChanged,
-    required this.onArrivalTimeChanged,
-    required this.arrivalTimes,
+    required this.departureTimeController,
+    required this.arrivalTimeController,
     required this.departureTimes,
-    required String departureTime,
-    required String arrivalTime,
-  }) : departureTimeController = TextEditingController(text: departureTime),
-       arrivalTimeController = TextEditingController(text: arrivalTime);
+    required this.arrivalTimes,
+    required this.onDepartureTimeSelected,
+    required this.onArrivalTimeSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class RideTimeSelectors extends StatelessWidget {
                     .map((time) => DropdownMenuEntry(value: time, label: time))
                     .toList(),
             requestFocusOnTap: false,
-            onSelected: (value) => onDepartureTimeChanged(value!),
+            onSelected: (value) => onDepartureTimeSelected(value!),
           ),
         ),
         SizedBox(width: 16),
@@ -50,7 +50,7 @@ class RideTimeSelectors extends StatelessWidget {
                     .map((time) => DropdownMenuEntry(value: time, label: time))
                     .toList(),
             requestFocusOnTap: false,
-            onSelected: (value) => onArrivalTimeChanged(value!),
+            onSelected: (value) => onArrivalTimeSelected(value!),
           ),
         ),
       ],

@@ -7,8 +7,16 @@ abstract class Activity implements Model {
   String get name;
 
   /// The location where the activity takes place.
-  Location get location;
+  // Location get location;
 
   /// The time of day when the activity occurs.
-  TimeOfDay get time;
+  TimeOfDay get startTime;
+  TimeOfDay get endTime;
+
+  /// A description of the activity.
+  String get description;
+
+  /// The unique identifier for the activity.
+  Location get startLocation;
+  Location get endLocation;
 }
