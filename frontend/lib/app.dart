@@ -1,7 +1,7 @@
 // External libraries
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_address_repository.dart';
-import 'package:frontend/data/model/passenger.dart';
+import 'package:frontend/data/model/activity.dart';
 
 // Repositories
 import 'package:frontend/data/repository/address_repository.dart';
@@ -15,8 +15,8 @@ import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/ui/page/activities/activities_view.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
-import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
-import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/activities/create_activity_view.dart';
+import 'package:frontend/ui/page/activities/create_activity_viewmodel.dart';
 
 // Pages
 // import 'package:frontend/ui/page/activities/activities_view.dart';
@@ -170,33 +170,52 @@ class App extends StatelessWidget {
         '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
+        '/activities/create':
+            (context) => CreateActivityView(
+              viewModel: CreateActivityViewModel(
+                activityRepository: _activityRepository,
+              ),
+            ),
         '/report': (context) => ReportView(viewModel: reportViewModel),
-        // '/create_ride':
-        // (context) => CreateRideView(viewModel: createRideViewModel),
       },
       onGenerateRoute: (settings) {
-        if (settings.name == '/arrange_pickup') {
-          final args = settings.arguments as Map<String, dynamic>?;
-
-          if (args == null ||
-              !args.containsKey('pickupRequest') ||
-              !args.containsKey('driver')) {
-            return null;
-          }
-
-          final pickupRequest = args['pickupRequest'] as PickupRequest;
-          final driver = args['driver'] as Driver;
-
-          return MaterialPageRoute(
-            builder:
-                (context) => ArrangePickupView(
-                  viewModel: ArrangePickupViewModel(
-                    repository: _pickupRepository,
-                    pickupRequest: pickupRequest,
+        switch (settings.name) {
+          case "/activities/edit":
+            final activity = settings.arguments as Activity;
+            return MaterialPageRoute(
+              builder:
+                  (context) => CreateActivityView(
+                    viewModel: CreateActivityViewModel(
+                      activityRepository: _activityRepository,
+                      activity: activity,
+                    ),
                   ),
-                ),
-          );
+            );
         }
+        // '/create_ride':
+        //     (context) => CreateRideView(viewModel: createRideViewModel),
+        // if (settings.name == '/arrange_pickup') {
+        //   final args = settings.arguments as Map<String, dynamic>?;
+
+        //   if (args == null ||
+        //       !args.containsKey('pickupRequest') ||
+        //       !args.containsKey('driver')) {
+        //     return null;
+        //   }
+
+        //   final pickupRequest = args['pickupRequest'] as PickupRequest;
+        //   final driver = args['driver'] as Driver;
+
+        //   return MaterialPageRoute(
+        //     builder:
+        //         (context) => ArrangePickupView(
+        //           viewModel: ArrangePickupViewModel(
+        //             repository: _pickupRepository,
+        //             pickupRequest: pickupRequest,
+        //           ),
+        //         ),
+        //   );
+        // }
 
         if (settings.name == '/confirm_pickup') {
           final args = settings.arguments as Map<String, dynamic>?;

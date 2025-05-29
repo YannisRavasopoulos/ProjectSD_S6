@@ -5,7 +5,6 @@ class Activity {
   final int id;
   final String name;
   final TimeOfDay startTime;
-  final TimeOfDay endTime;
   final String description;
   final Address address;
 
@@ -13,7 +12,6 @@ class Activity {
     required this.id,
     required this.name,
     required this.startTime,
-    required this.endTime,
     required this.description,
     required this.address,
   });

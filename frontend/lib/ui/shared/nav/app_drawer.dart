@@ -86,7 +86,6 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Arrange Pickup Notification (Test)'),
             onTap: () {
               final pickupRequest = PickupRequest(
-                id: 12345,
                 passenger: ImplPassenger.test(),
                 address: Address.fake(),
                 time: DateTime.now(),

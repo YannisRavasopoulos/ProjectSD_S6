@@ -21,7 +21,6 @@ class ImplActivityRepository implements ActivityRepository {
       name: 'Activity 1',
       description: 'Activity 1 description',
       startTime: TimeOfDay(hour: 10, minute: 30),
-      endTime: TimeOfDay(hour: 12, minute: 0),
       address: Address.fake(),
     ),
     Activity(
@@ -29,7 +28,6 @@ class ImplActivityRepository implements ActivityRepository {
       name: 'Activity 2',
       description: 'Activity 2 description',
       startTime: TimeOfDay(hour: 14, minute: 0),
-      endTime: TimeOfDay(hour: 15, minute: 30),
       address: Address.fake(),
     ),
   ];

@@ -31,7 +31,6 @@ class JoinRideViewModel extends ChangeNotifier {
     try {
       await rideRepository.join(ride);
       final pickupRequest = PickupRequest(
-        id: DateTime.now().millisecondsSinceEpoch,
         ride: ride,
         passenger: ImplPassenger.test(),
         address: Address.fake(),
