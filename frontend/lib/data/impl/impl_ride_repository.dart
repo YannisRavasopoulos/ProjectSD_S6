@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/impl/impl_vehicle.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/passenger.dart';

@@ -1,10 +1,10 @@
 import 'package:frontend/data/model.dart';
-import 'package:frontend/data/model/location.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:latlong2/latlong.dart';
 
 abstract class RideRequest implements Model {
-  Location get origin;
-  Location get destination;
+  Address get origin;
+  Address get destination;
 
   DateTime get departureTime;
   DateTime get arrivalTime;

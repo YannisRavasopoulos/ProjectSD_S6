@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:frontend/data/model/location.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:frontend/config.dart';
 

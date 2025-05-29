@@ -1,6 +1,6 @@
 // External libraries
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/passenger.dart';
 

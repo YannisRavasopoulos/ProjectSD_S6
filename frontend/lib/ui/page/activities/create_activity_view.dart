@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';

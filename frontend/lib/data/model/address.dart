@@ -1,8 +1,17 @@
-import 'package:frontend/data/model.dart';
+import 'package:latlong2/latlong.dart';
 
-abstract interface class Address implements Model {
-  String get city;
-  String get street;
-  int get number;
-  String get postalCode;
+class Address {
+  final LatLng coordinates;
+  final String city;
+  final String street;
+  final int number;
+  final String postalCode;
+
+  Address({
+    required this.coordinates,
+    required this.city,
+    required this.street,
+    required this.number,
+    required this.postalCode,
+  });
 }

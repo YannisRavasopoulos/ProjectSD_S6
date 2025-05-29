@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';

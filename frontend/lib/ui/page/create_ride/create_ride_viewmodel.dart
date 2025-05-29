@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
 import 'package:frontend/data/impl/impl_route.dart';
 import 'package:frontend/data/impl/impl_user_repository.dart';
@@ -144,7 +144,11 @@ class CreateRideViewModel extends ChangeNotifier {
           id: 999,
           firstName: "Test",
           lastName: "Driver",
-          vehicle: ImplVehicle(id: 1, description: "Test Car", capacity: capacity),
+          vehicle: ImplVehicle(
+            id: 1,
+            description: "Test Car",
+            capacity: capacity,
+          ),
           points: 100,
         );
       }
@@ -155,7 +159,8 @@ class CreateRideViewModel extends ChangeNotifier {
         end: endLocation,
       );
 
-      final rideId = id ?? initialRide?.id ?? DateTime.now().millisecondsSinceEpoch;
+      final rideId =
+          id ?? initialRide?.id ?? DateTime.now().millisecondsSinceEpoch;
 
       final ride = ImplRide(
         id: rideId,

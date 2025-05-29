@@ -1,10 +1,9 @@
-import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:latlong2/latlong.dart';
 
