@@ -11,7 +11,7 @@ class RideLocationSelectors extends StatelessWidget {
     required this.fromLocationController,
     required this.toLocationController,
 
-    // TODO: these are hear because of shit code in create ride...
+    // TODO: these are here because of shit code in create ride...
     this.onFromLocationChanged,
     this.onToLocationChanged,
   });

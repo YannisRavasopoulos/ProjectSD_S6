@@ -43,14 +43,16 @@ class CreateRideView extends StatelessWidget {
           }
           // Pass only primitive values and callbacks, not the viewmodel itself
           return CreateRideForm(
-            from: viewModel.from,
-            to: viewModel.to,
+            from: viewModel.startLocation,
+            to: viewModel.endLocation,
             departureTime: viewModel.departureTime,
             seats: viewModel.seats,
             errorMessage: viewModel.errorMessage,
             onCreateRide: () async => await viewModel.saveRide(),
             onFromChanged: viewModel.setFrom,
             onToChanged: viewModel.setTo,
+            onFromLocation: viewModel.fromLocationController,
+            onToLocation: viewModel.toLocationController,
             onDepartureTimeChanged: viewModel.setDepartureTime,
             onSeatsChanged: viewModel.setSeats,
           );

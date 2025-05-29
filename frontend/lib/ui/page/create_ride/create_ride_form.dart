@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
 
 class CreateRideForm extends StatelessWidget {
-  final String? from;
-  final String? to;
+  final Address? from;
+  final Address? to;
   final TimeOfDay? departureTime;
   final int seats;
   final String? errorMessage;
   final VoidCallback onCreateRide;
-  final ValueChanged<String> onFromChanged;
-  final ValueChanged<String> onToChanged;
+  final ValueChanged<Address> onFromChanged;
+  final ValueChanged<Address> onToChanged;
+  final TextEditingController onFromLocation;
+  final TextEditingController onToLocation;
   final ValueChanged<TimeOfDay> onDepartureTimeChanged;
   final ValueChanged<int> onSeatsChanged;
 
@@ -23,6 +26,8 @@ class CreateRideForm extends StatelessWidget {
     required this.onCreateRide,
     required this.onFromChanged,
     required this.onToChanged,
+    required this.onFromLocation,
+    required this.onToLocation,
     required this.onDepartureTimeChanged,
     required this.onSeatsChanged,
   });
@@ -49,10 +54,8 @@ class CreateRideForm extends StatelessWidget {
           child: Column(
             children: [
               RideLocationSelectors(
-                fromLocationController: TextEditingController(text: from ?? ''),
-                toLocationController: TextEditingController(text: to ?? ''),
-                onFromLocationChanged: onFromChanged,
-                onToLocationChanged: onToChanged,
+                fromLocationController: onFromLocation,
+                toLocationController: onToLocation,
               ),
               const SizedBox(height: 16),
               Row(

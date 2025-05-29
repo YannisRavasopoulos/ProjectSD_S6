@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/location.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/ui/page/arrange_pickup/pickup_map_view.dart';
 
 class PickupForm extends StatefulWidget {
   final DateTime? selectedTime;
-  final Location location;
+  final Address location;
   final Function(DateTime) onTimeSelected;
-  final Function(Location) onLocationChanged;
+  final Function(Address) onLocationChanged;
   final Function() onSubmit;
 
   const PickupForm({

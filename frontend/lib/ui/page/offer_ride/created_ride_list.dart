@@ -6,7 +6,6 @@ import 'package:frontend/ui/page/offer_ride/carpooler_selection_sheet.dart';
 
 class CreatedRidesList extends StatelessWidget {
   final Address currentAddress;
-  final bool isLoading;
   final List<Ride> createdRides;
   final List<Passenger> potentialPassengers;
   final Future<void> Function(Ride) onSelectRide;
@@ -14,7 +13,6 @@ class CreatedRidesList extends StatelessWidget {
   const CreatedRidesList({
     super.key,
     required this.currentAddress,
-    required this.isLoading,
     required this.createdRides,
     required this.potentialPassengers,
     required this.onSelectRide,
@@ -22,9 +20,6 @@ class CreatedRidesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
     if (createdRides.isEmpty) {
       return const Center(
         child: Text(
