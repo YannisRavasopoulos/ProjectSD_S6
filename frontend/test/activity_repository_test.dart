@@ -1,98 +1,102 @@
 import 'package:test/test.dart';
 import 'package:frontend/data/impl/impl_activity_repository.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/activity.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter/material.dart'; 
 
 void main() {
   group('ImplActivityRepository', () {
     late ImplActivityRepository activityRepository;
-    late ImplLocation startLocation;
-    late ImplLocation endLocation;
-    late ImplActivity activity1;
-    late ImplActivity activity2;
+    late Address address1;
+    late Address address2;
+    late Activity activity1;
+    late Activity activity2;
+    late int initialActivitiesNum;
 
     setUp(() {
+
+       
       activityRepository = ImplActivityRepository();
-      startLocation = ImplLocation(
-        id: 1,
-        name: 'Start Location',
+      initialActivitiesNum = 2; //assuming there are 2 initial activities in the repository
+      address1 = Address(
         coordinates: LatLng(0.0, 0.0),
+        city: 'City1',
+        street: 'Street1',
+        number: 1,
+        postalCode: '11111',
       );
-      endLocation = ImplLocation(
-        id: 2,
-        name: 'End Location',
+      address2 = Address(
         coordinates: LatLng(1.0, 1.0),
+        city: 'City2',
+        street: 'Street2',
+        number: 2,
+        postalCode: '22222',
       );
-      activity1 = ImplActivity(
-        id: 1,
+      activity1 = Activity(
+        id: 3,
         name: 'Test Activity 1',
         description: 'Test Description 1',
-        startTime: DateTime.now(),
-        endTime: DateTime.now().add(Duration(hours: 1)),
-        startLocation: startLocation,
-        endLocation: endLocation,
+        startTime: TimeOfDay(hour: 10, minute: 0),
+        address: address1,
       );
-      activity2 = ImplActivity(
-        id: 2,
+      activity2 = Activity(
+        id: 4,
         name: 'Test Activity 2',
         description: 'Test Description 2',
-        startTime: DateTime.now(),
-        endTime: DateTime.now().add(Duration(hours: 1)),
-        startLocation: startLocation,
-        endLocation: endLocation,
+        startTime: TimeOfDay(hour: 11, minute: 0),
+        address: address2,
       );
+      
     });
 
     test('create adds an activity', () async {
+
       await activityRepository.create(activity1);
       final activities = await activityRepository.fetch();
-      expect(activities.length, 1);
-      expect(activities.first.id, 1);
+      expect(activities.length, initialActivitiesNum + 1);
+      expect(activities[initialActivitiesNum].id, initialActivitiesNum+1);
     });
 
     test('fetch returns all activities', () async {
       await activityRepository.create(activity1);
       await activityRepository.create(activity2);
       final activities = await activityRepository.fetch();
-      expect(activities.length, 2);
-      expect(activities[0].name, 'Test Activity 1');
-      expect(activities[1].name, 'Test Activity 2');
+      expect(activities.length, initialActivitiesNum + 2);
+      expect(activities[initialActivitiesNum].name, 'Test Activity 1');
+      expect(activities[initialActivitiesNum+1].name, 'Test Activity 2');
     });
 
     test('update modifies an existing activity', () async {
       await activityRepository.create(activity1);
 
-      final updatedActivity = ImplActivity(
-        id: 1,
+      final updatedActivity = Activity(
+        id: 3,
         name: 'Updated Activity',
         description: 'Updated Description',
         startTime: activity1.startTime,
-        endTime: activity1.endTime,
-        startLocation: startLocation,
-        endLocation: endLocation,
+        address: address1,
       );
       await activityRepository.update(updatedActivity);
       final activities = await activityRepository.fetch();
-      expect(activities.length, 1);
-      expect(activities.first.name, 'Updated Activity');
+      expect(activities.length, initialActivitiesNum + 1);
+      expect(activities[initialActivitiesNum].name, 'Updated Activity');
     });
 
     test('delete removes an activity', () async {
       await activityRepository.create(activity1);
       await activityRepository.delete(activity1);
       final activities = await activityRepository.fetch();
-      expect(activities.isEmpty, true);
+      expect(activities.length, initialActivitiesNum);
     });
 
     test('delete throws error if activity not found', () async {
-      final nonExistentActivity = ImplActivity(
+      final nonExistentActivity = Activity(
         id: 999,
         name: 'Nonexistent Activity',
         description: 'Does not exist',
-        startTime: DateTime.now(),
-        endTime: DateTime.now().add(Duration(hours: 1)),
-        startLocation: startLocation,
-        endLocation: endLocation,
+        startTime: TimeOfDay(hour: 12, minute: 0),
+        address: address1,
       );
       expect(
         () async => await activityRepository.delete(nonExistentActivity),
@@ -101,14 +105,12 @@ void main() {
     });
 
     test('update throws error if activity not found', () async {
-      final nonExistentActivity = ImplActivity(
+      final nonExistentActivity = Activity(
         id: 999,
         name: 'Nonexistent Activity',
         description: 'Does not exist',
-        startTime: DateTime.now(),
-        endTime: DateTime.now().add(Duration(hours: 1)),
-        startLocation: startLocation,
-        endLocation: endLocation,
+        startTime: TimeOfDay(hour: 12, minute: 0),
+        address: address1,
       );
       expect(
         () async => await activityRepository.update(nonExistentActivity),
@@ -123,7 +125,7 @@ void main() {
         stream,
         emits(
           predicate<List>(
-            (activities) => activities.isNotEmpty && activities.first.id == 1,
+            (activities) => activities.isNotEmpty && activities.last.id == activity1.id,
           ),
         ),
       );
@@ -132,7 +134,7 @@ void main() {
       await future;
     });
 
-    test('stream emits on create and delete ', () async {
+    test('stream emits on create and delete', () async {
       final stream = activityRepository.watch();
 
       final future = expectLater(
@@ -140,9 +142,13 @@ void main() {
         emitsInOrder([
           predicate<List>(
             (activities) =>
-                activities.isNotEmpty && activities.first.id == activity1.id,
+                activities.length == initialActivitiesNum+1 && activities.last.id == activity1.id,
           ),
-          predicate<List>((activities) => activities.isEmpty),
+          predicate<List>(
+            (activities) =>
+                activities.length == initialActivitiesNum  &&
+                activities.every((a) => a.id != activity1.id),
+          ),
         ]),
       );
       await activityRepository.create(activity1);
