@@ -13,6 +13,7 @@ import 'package:latlong2/latlong.dart';
 
 void main() {
   group('RideRepository', () {
+  
     late ImplRideRepository rideRepository;
     late Ride testRide;
     late RideRequest testRequest;
@@ -75,7 +76,7 @@ void main() {
       await rideRepository.create(testRide);
       final rides = await rideRepository.fetchAllRides();
       expect(rides.length, initialRides + 1);
-      expect(rides[initialRides].driver.id ==testDriver.id, isTrue);
+      expect(rides[initialRides].driver.id ==testDriver.id, isTrue); //use ride id when ride repo is updated
     });
 
     test('fetchMatchingRides returns rides near origin', () async {
@@ -100,7 +101,7 @@ void main() {
       final history = await rideRepository.fetchHistory();
       expect(history, isA<List<Ride>>());
       expect(history.isNotEmpty, isTrue);
-      expect(history.last.driver.id, testDriver.id);
+      expect(history.last.driver.id, testDriver.id); //use ride id when ride repo is updated
     });
 
     test('watchHistory emits ride history', () async {
@@ -118,7 +119,7 @@ void main() {
       await rideRepository.create(testRide);
       await rideRepository.join(testRide);
       final current = await rideRepository.fetchCurrent();
-      expect(current.driver.id, testDriver.id);
+      expect(current.driver.id, testDriver.id); //use ride id when ride repo is updated
     });
 
     test('leave clears current ride', () async {
@@ -129,10 +130,10 @@ void main() {
     });
 
     test('update modifies a ride', () async {
-      await rideRepository.create(testRide);
+   to be mor   await rideRepository.create(testRide); //does not have passengers yet
       final updatedRide = Ride(
         driver: testDriver,
-        passengers: [testPassenger],
+        passengers: [testPassenger], //update to have passengers
         route: testRide.route,
         departureTime: testRide.departureTime,
         estimatedArrivalTime: testRide.estimatedArrivalTime,
@@ -141,14 +142,17 @@ void main() {
       );
       await rideRepository.update(updatedRide);
       final rides = await rideRepository.fetchAllRides();
-      expect(rides.any((r) => r.passengers.isNotEmpty), isTrue);
+     expect(
+          rides[initialRides + 1].passengers.any((p) => p.id == testPassenger.id),
+  isTrue,
+);
     });
 
     test('cancel removes a ride', () async {
       await rideRepository.create(testRide);
       await rideRepository.cancel(testRide);
       final rides = await rideRepository.fetchAllRides();
-      expect(rides.any((r) => r.driver.id == testDriver.id), isFalse);
+      expect(rides.any((r) => r.driver.id == testDriver.id), isFalse); //use ride id when ride repo is updated
     });
   });
 }
