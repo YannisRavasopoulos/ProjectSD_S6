@@ -1,52 +1,11 @@
 @startuml
+
 actor User
-participant "UserDetailsScreen" as UDS
-participant "ReportUserScreen" as RUS
-participant "ReportUserViewModel" as RUVM
-participant "FormService_Frontend" as FSF
-participant "FormService_Backend" as FSB
-database "ReportsDB" as DB
+participant ReportView
+participant ReportViewModel
+participant Report
+participant ReportRepository
 
-== Basic Flow ==
-loop [User attempts to report a user]
-    User -> UDS: reportButton()
-    activate UDS
-    UDS -> RUS: showReportForm()
-    deactivate UDS
-    activate RUS
-    User -> RUS: reasonSelection()
-    RUS -> RUVM: validateForm()
-    activate RUVM
-    RUVM -> FSF: createForm()
-    activate FSF
-    FSF -> FSB: POST /reports
-    activate FSB
-    FSB -> DB: processForm()
-    activate DB
-    DB --> FSB: formProcessed()
-    deactivate DB
-    FSB --> FSF: assignPunishment()
-    deactivate FSB
-    FSF --> RUVM: reportCreated()
-    deactivate FSF
-    RUVM --> RUS: showSuccessMessage()
-    deactivate RUVM
-    deactivate RUS
-end
+==Report User==
 
-== Alternative Flow: Report Rejection ==
-alt [Report rejected]
-    RUVM -> RUS: showError("Report rejected")
-    activate RUS
-    RUS -> User: return()
-    deactivate RUS
-end
-
-== Alternative Flow: Cancel Process ==
-alt [Cancel clicked]
-    User -> RUS: cancelButton()
-    activate RUS
-    RUS -> UDS: returnToUserDetails()
-    deactivate RUS
-end
-@enduml
+User -> ReportView: requestReport()
