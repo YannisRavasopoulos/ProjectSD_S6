@@ -11,12 +11,10 @@ enum OfferRideMode { createdRides, activities }
 
 class OfferRideView extends StatelessWidget {
   final OfferRideViewModel viewModel;
-  final ActivitiesViewModel activitiesViewModel;
 
   const OfferRideView({
     super.key,
     required this.viewModel,
-    required this.activitiesViewModel,
   });
 
   @override
@@ -52,7 +50,6 @@ class OfferRideView extends StatelessWidget {
                   );
                 } else {
                   return ActivitiesList(
-                    isLoading: viewModel.areActivitiesLoading,
                     activities: viewModel.activities,
                     potentialPassengers: viewModel.potentialPassengers,
                     onSelectActivity: viewModel.selectActivity,
