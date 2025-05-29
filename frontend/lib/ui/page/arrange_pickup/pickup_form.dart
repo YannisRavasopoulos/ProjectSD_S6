@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/ui/page/arrange_pickup/pickup_map_view.dart';
 
-class PickupForm extends StatefulWidget {
+class PickupForm extends StatelessWidget {
   final DateTime? selectedTime;
   final Location location;
   final Function(DateTime) onTimeSelected;
@@ -19,11 +19,6 @@ class PickupForm extends StatefulWidget {
   });
 
   @override
-  State<PickupForm> createState() => _PickupFormState();
-}
-
-class _PickupFormState extends State<PickupForm> {
-  @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
@@ -33,7 +28,7 @@ class _PickupFormState extends State<PickupForm> {
           children: [
             ListTile(
               leading: const Icon(Icons.access_time),
-              title: Text(widget.selectedTime?.toString() ?? 'Select Time'),
+              title: Text(selectedTime?.toString() ?? 'Select Time'),
               onTap: () async {
                 final time = await showTimePicker(
                   context: context,
@@ -48,21 +43,21 @@ class _PickupFormState extends State<PickupForm> {
                     time.hour,
                     time.minute,
                   );
-                  widget.onTimeSelected(selectedDateTime);
+                  onTimeSelected(selectedDateTime);
                 }
               },
             ),
             const SizedBox(height: 16),
             PickupMapView(
-              location: widget.location,
-              onLocationChanged: widget.onLocationChanged,
+              location: location,
+              onLocationChanged: onLocationChanged,
             ),
-            if (widget.location.coordinates.latitude != 0.0 ||
-                widget.location.coordinates.longitude != 0.0)
+            if (location.coordinates.latitude != 0.0 ||
+                location.coordinates.longitude != 0.0)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  'Selected location: ${widget.location.coordinates.latitude}, ${widget.location.coordinates.longitude}',
+                  'Selected location: ${location.coordinates.latitude}, ${location.coordinates.longitude}',
                 ),
               ),
             const SizedBox(height: 16),

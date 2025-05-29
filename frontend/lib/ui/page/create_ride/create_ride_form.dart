@@ -49,6 +49,8 @@ class CreateRideForm extends StatelessWidget {
           child: Column(
             children: [
               RideLocationSelectors(
+                fromLocationController: TextEditingController(text: from ?? ''),
+                toLocationController: TextEditingController(text: to ?? ''),
                 onFromLocationChanged: onFromChanged,
                 onToLocationChanged: onToChanged,
               ),
@@ -96,10 +98,7 @@ class CreateRideForm extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               if (errorMessage != null)
-                Text(
-                  errorMessage!,
-                  style: const TextStyle(color: Colors.red),
-                ),
+                Text(errorMessage!, style: const TextStyle(color: Colors.red)),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,

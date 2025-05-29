@@ -1,50 +1,20 @@
 import 'package:flutter/material.dart';
 
-class RideLocationSelectors extends StatefulWidget {
-  final ValueChanged<String> onFromLocationChanged;
-  final ValueChanged<String> onToLocationChanged;
+class RideLocationSelectors extends StatelessWidget {
+  final TextEditingController fromLocationController;
+  final TextEditingController toLocationController;
+  final ValueChanged<String>? onFromLocationChanged;
+  final ValueChanged<String>? onToLocationChanged;
 
   const RideLocationSelectors({
     super.key,
-    required this.onFromLocationChanged,
-    required this.onToLocationChanged,
+    required this.fromLocationController,
+    required this.toLocationController,
+
+    // TODO: these are hear because of shit code in create ride...
+    this.onFromLocationChanged,
+    this.onToLocationChanged,
   });
-
-  @override
-  _RideLocationSelectorsState createState() => _RideLocationSelectorsState();
-}
-
-class _RideLocationSelectorsState extends State<RideLocationSelectors> {
-  late TextEditingController fromLocationController;
-  late TextEditingController toLocationController;
-
-  @override
-  void initState() {
-    super.initState();
-    fromLocationController = TextEditingController();
-    toLocationController = TextEditingController();
-
-    fromLocationController.addListener(() {
-      final text = fromLocationController.text;
-      if (text.isNotEmpty) {
-        widget.onFromLocationChanged(text);
-      }
-    });
-
-    toLocationController.addListener(() {
-      final text = toLocationController.text;
-      if (text.isNotEmpty) {
-        widget.onToLocationChanged(text);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    fromLocationController.dispose();
-    toLocationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +27,7 @@ class _RideLocationSelectorsState extends State<RideLocationSelectors> {
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.location_pin),
           ),
+          onChanged: onFromLocationChanged,
         ),
         Stack(
           alignment: Alignment.center,
@@ -70,8 +41,7 @@ class _RideLocationSelectorsState extends State<RideLocationSelectors> {
                 child: IconButton(
                   icon: const Icon(Icons.swap_vert),
                   onPressed: () {
-                    // Swap the two fields
-                    final temp = fromLocationController.text;
+                    var temp = fromLocationController.text;
                     fromLocationController.text = toLocationController.text;
                     toLocationController.text = temp;
                   },
@@ -87,6 +57,7 @@ class _RideLocationSelectorsState extends State<RideLocationSelectors> {
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.location_searching),
           ),
+          onChanged: onToLocationChanged,
         ),
       ],
     );

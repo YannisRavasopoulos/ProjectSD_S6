@@ -1,4 +1,5 @@
 import 'package:frontend/data/impl/impl_location_repository.dart';
+import 'package:frontend/data/impl/impl_ride_repository.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,12 @@ import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
+import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
 class ArrangePickupViewModel extends ChangeNotifier {
-  final PickupRepository _repository;
+  final PickupRepository _pickupRepository;
+  final RideRepository _rideRepository;
   final PickupRequest _pickupRequest;
   bool _isLoading = false;
   String? _errorMessage;
@@ -21,10 +24,12 @@ class ArrangePickupViewModel extends ChangeNotifier {
   );
 
   ArrangePickupViewModel({
-    required PickupRepository repository,
+    required PickupRepository pickupRepository,
+    required RideRepository rideRepository,
     required PickupRequest pickupRequest,
-  }) : _repository = repository,
-       _pickupRequest = pickupRequest;
+  })  : _pickupRepository = pickupRepository,
+        _rideRepository = rideRepository,
+        _pickupRequest = pickupRequest;
 
   // Getters
   bool get isLoading => _isLoading;
@@ -74,35 +79,55 @@ class ArrangePickupViewModel extends ChangeNotifier {
 
   // business logic
   Future<bool> arrangePickup() async {
-    try {
-      _isLoading = true;
-      _errorMessage = null;
-      notifyListeners();
-
-      // Update the pickup request with current form data
-      final pickupProposal = ImplPickup(
-        id: _pickupRequest.id,
-        ride: _pickupRequest.ride,
-        passenger: _pickupRequest.passenger,
-        location: _location,
-        time: _selectedTime!,
-      );
-
-      // Use the standard repository interface method
-      final pickup = await _repository.acceptPickupRequest(
-        _pickupRequest,
-        pickupProposal,
-      );
-
-      _isLoading = false;
-      notifyListeners();
-
-      return true; // Success if pickup is created
-    } catch (e) {
-      _isLoading = false;
-      _errorMessage = 'Failed to arrange pickup: ${e.toString()}';
-      notifyListeners();
-      return false;
-    }
+  if (ride.availableSeats <= 0) {
+    _errorMessage = 'No seats available for this ride';
+    notifyListeners();
+    return false;
   }
+  try {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final updatedPassengers = List.of(ride.passengers)
+      ..add(_pickupRequest.passenger);
+
+    final updatedRide = ImplRide(
+      id: ride.id,
+      driver: ride.driver,
+      passengers: updatedPassengers,
+      route: ride.route,
+      totalSeats: ride.totalSeats,
+      departureTime: ride.departureTime,
+      estimatedDuration: ride.estimatedDuration,
+      estimatedArrivalTime: ride.estimatedArrivalTime,
+    );
+
+    // Update the ride in the repository
+    await _rideRepository.update(updatedRide);
+
+    final pickupProposal = ImplPickup(
+      id: _pickupRequest.id,
+      ride: updatedRide,
+      passenger: _pickupRequest.passenger,
+      location: _location,
+      time: _selectedTime!,
+    );
+
+    await _pickupRepository.acceptPickupRequest(
+      _pickupRequest,
+      pickupProposal,
+    );
+
+    _isLoading = false;
+    notifyListeners();
+
+    return true;
+  } catch (e) {
+    _isLoading = false;
+    _errorMessage = 'Failed to arrange pickup: ${e.toString()}';
+    notifyListeners();
+    return false;
+  }
+}
 }
