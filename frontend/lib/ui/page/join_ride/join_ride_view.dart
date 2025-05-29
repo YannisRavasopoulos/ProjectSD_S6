@@ -11,6 +11,8 @@ class JoinRideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    viewModel.joinRide();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Joining Ride'), elevation: 0),
       body: AnimatedBuilder(
