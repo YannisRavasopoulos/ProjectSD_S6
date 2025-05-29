@@ -1,5 +1,9 @@
 @startuml
+
 actor User
+
+participant RateView
+
 
 ' Layers in horizontal order:
 participant RateUserPage
@@ -19,23 +23,23 @@ deactivate RateUserViewModel
 deactivate RateUserPage
 
 
-    
+
     alt Submit clicked
         User -> RateUserPage    : onSubmitClick()
         activate RateUserPage
         RateUserPage -> RateUserViewModel : submitRating()
-        
+
 
         activate RateUserViewModel
-     
-       
+
+
         alt validation succeeds
             RateUserViewModel -> RatingService_Frontend : createRating()
-           
+
 
             activate RatingService_Frontend
             RatingService_Frontend -> RatingService_Backend : callRatingRouter()
-            
+
 
             activate RatingService_Backend
             RatingService_Backend -> DB : queryInsertRating()
@@ -45,21 +49,21 @@ deactivate RateUserPage
             RatingService_Backend --> RatingService_Frontend : return success flag
             deactivate RatingService_Backend
 
-            
+
             RatingService_Frontend --> RateUserViewModel : return success
             deactivate RatingService_Frontend
 
-            
+
             RateUserViewModel --> RateUserPage : return success notification display
-            
+
 
             else validation fails
             RateUserViewModel -> RatingService_Frontend : createRating()
-           
+
 
             activate RatingService_Frontend
             RatingService_Frontend -> RatingService_Backend : callRatingRouter()
-           
+
 
             activate RatingService_Backend
             RatingService_Backend -> DB : queryInsertRating()
@@ -69,10 +73,10 @@ deactivate RateUserPage
             RatingService_Backend --> RatingService_Frontend : return fail flag
             deactivate RatingService_Backend
 
-            
+
             RatingService_Frontend --> RateUserViewModel : return fail
             deactivate RatingService_Frontend
- 
+
 
             RateUserViewModel --> RateUserPage : return error display message
             deactivate RateUserViewModel
@@ -88,4 +92,3 @@ deactivate RateUserPage
         deactivate RateUserPage
     end
 @enduml
-

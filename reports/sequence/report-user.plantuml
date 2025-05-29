@@ -5,7 +5,49 @@ participant ReportView
 participant ReportViewModel
 participant Report
 participant ReportRepository
+participant Navigator
+participant LoopApp
+
+activate Navigator
+activate LoopApp
+activate ReportRepository
 
 ==Report User==
 
-User -> ReportView: requestReport()
+Navigator --> LoopApp: "/report", {reportee}
+LoopApp -> ReportViewModel: ReportViewModel(reportRepository, reportee)
+activate ReportViewModel
+ReportViewModel --> LoopApp: return reportViewModel
+LoopApp -> ReportView: ReportView(signInViewModel)
+activate ReportView
+ReportView --> LoopApp: return reportView
+LoopApp --> Navigator: return reportView
+Navigator -> ReportView: build(context)
+User -> ReportView: Selects report reason
+ReportView -> ReportView: onReportReasonSelected(reason)
+opt
+    User -> ReportView: Enter description
+    ReportView -> ReportView: onDescriptionChanged(description)
+end
+User -> ReportView: Presses "Submit"
+ReportView -> ReportView: onSubmitPressed()
+ReportView -> ReportConfirmationDialog: ReportConfirmationDialog(report, onConfirm, onCancel)
+activate ReportConfirmationDialog
+alt Confirm
+    ReportConfirmationDialog -> ReportView: onConfirm()
+    ReportView -> ReportViewModel: submitReport()
+    ReportViewModel -> Report: Report(reportee, reason, description)
+    activate Report
+    Report --> ReportViewModel: return report
+    ReportViewModel -> ReportRepository: createReport(report)
+    ReportRepository --> ReportViewModel
+    ReportViewModel --> ReportView
+    ReportView -> ReportView: onReportSubmitted()
+    ReportView -> ReportView: showSuccessMessage()
+    deactivate Report
+else Cancel
+    ReportConfirmationDialog -> ReportView: onCancel()
+    deactivate ReportConfirmationDialog
+    ReportView -> Navigator: pop()
+end
+@enduml
