@@ -40,7 +40,7 @@ class SignUpView extends ViewBase<SignUpViewModel> {
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 48),
+              SizedBox(height: 32),
               EmailField(controller: viewModel.emailController),
               Text(
                 viewModel.isEmailValid
