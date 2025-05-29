@@ -7,7 +7,7 @@
 ### Βασική Ροή
 
 1. Ο Passenger επιλέγει "Find Ride" στην κεντρική οθόνη.
-2. Το σύστημα εμαφνίζει φόρμα αναζήτησης για το insta-ride και την επιλογή Ride από Activities
+2. Το σύστημα εμαφνίζει φόρμα αναζήτησης για το insta-ride, την επιλογή Ride από Activities και την επιλογή Manage Activities
 4. O Passenger επιλέγει την ώρα και τοποθεσία αναχώρησης και επιστροφής στην φόρμα αναζήτησης του Insta-Ride.
 5. Το σύστημα διαμορφώνει τα στοιχεία ενός Ride Request με βάση τα στοιχεία της φόρμας αναζήτησης.
 6. Το σύστημα καταχωρεί τον Passenger ως πιθανό αποδέκτη Ride.
@@ -26,5 +26,5 @@
 
 ### Εναλλακτική Ροή: Επιλογή Manage Activities
 
-4. Ο Carpooler επιλέγει "Manage Activities".
-5. Καλείται η περίπτωση χρήσης "Manage Activities".
+3. Ο Carpooler επιλέγει "Manage Activities".
+4. Καλείται η περίπτωση χρήσης "Manage Activities".
