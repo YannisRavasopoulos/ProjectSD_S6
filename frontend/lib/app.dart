@@ -83,7 +83,9 @@ class App extends StatelessWidget {
     userRepository: _userRepository as ImplUserRepository,
   );
   final PickupRepository _pickupRepository = ImplPickupRepository();
+
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
+    activityRepository: _activityRepository,
     rideRepository: _rideRepository,
   );
 
@@ -179,7 +181,8 @@ class App extends StatelessWidget {
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/report': (context) => ReportView(viewModel: reportViewModel),
-        '/create_ride': (context) => CreateRideView(
+        '/create_ride':
+            (context) => CreateRideView(
               viewModel: createRideViewModel,
               ridesViewModel: ridesViewModel,
             ),
@@ -188,7 +191,9 @@ class App extends StatelessWidget {
         if (settings.name == '/arrange_pickup') {
           final args = settings.arguments as Map<String, dynamic>?;
 
-          if (args == null || !args.containsKey('carpooler') || !args.containsKey('ride')) {
+          if (args == null ||
+              !args.containsKey('carpooler') ||
+              !args.containsKey('ride')) {
             return null;
           }
 
@@ -205,13 +210,14 @@ class App extends StatelessWidget {
           );
 
           return MaterialPageRoute(
-            builder: (context) => ArrangePickupView(
-              viewModel: ArrangePickupViewModel(
-                pickupRepository: _pickupRepository,
-                rideRepository: _rideRepository, 
-                pickupRequest: pickupRequest,
-              ),
-            ),
+            builder:
+                (context) => ArrangePickupView(
+                  viewModel: ArrangePickupViewModel(
+                    pickupRepository: _pickupRepository,
+                    rideRepository: _rideRepository,
+                    pickupRequest: pickupRequest,
+                  ),
+                ),
           );
         }
 
@@ -266,10 +272,13 @@ class App extends StatelessWidget {
           }
 
           return MaterialPageRoute(
-            builder: (context) => OfferRideView(
-              viewModel: OfferRideViewModel(rideRepository: _rideRepository),
-              activitiesViewModel: activitiesViewModel,
-            ),
+            builder:
+                (context) => OfferRideView(
+                  viewModel: OfferRideViewModel(
+                    rideRepository: _rideRepository,
+                  ),
+                  activitiesViewModel: activitiesViewModel,
+                ),
           );
         }
 
