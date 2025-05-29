@@ -118,6 +118,22 @@ void main() {
       );
     });
 
+    test('does not allow duplicate activity IDs', () async {
+    await activityRepository.create(activity1);
+    final duplicateActivity = Activity(
+      id: activity1.id,
+      name: 'Duplicate Activity',
+      description: 'Should not be allowed',
+      startTime: TimeOfDay(hour: 12, minute: 0),
+      address: address2,
+    );
+    expect(
+      () async => await activityRepository.create(duplicateActivity),
+      throwsA(anything),
+    );
+
+  });
+
     test('watch emits activity updates', () async {
       final stream = activityRepository.watch();
 
@@ -155,5 +171,7 @@ void main() {
       await activityRepository.delete(activity1);
       await future;
     });
+    
+
   });
 }
