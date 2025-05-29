@@ -3,9 +3,9 @@ import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/page/find_ride/activity_selection_panel.dart';
 import 'package:frontend/ui/page/find_ride/ride_card.dart';
-import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
 import 'package:frontend/ui/page/find_ride/ride_time_selectors.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
+import 'package:frontend/ui/shared/map/text_address_selector.dart';
 
 class FindRideView extends StatelessWidget {
   FindRideView({super.key, required this.viewModel});
@@ -17,9 +17,23 @@ class FindRideView extends StatelessWidget {
     Navigator.pop(context, activity);
   }
 
-  void onDepartureTimeSelected(String value, BuildContext context) async {
-    if (value != "Select") {
-      return;
+  void _onDepartureTimeSelected(String value, BuildContext context) async {
+    switch (value) {
+      case "Now":
+        await viewModel.selectArrivalTime(DateTime.now());
+        return;
+      case "in 15 minutes":
+        await viewModel.selectArrivalTime(
+          DateTime.now().add(const Duration(minutes: 30)),
+        );
+        return;
+      case "in 30 minutes":
+        await viewModel.selectArrivalTime(
+          DateTime.now().add(const Duration(minutes: 30)),
+        );
+        return;
+      default:
+        break;
     }
 
     TimeOfDay? pickedTime = await showTimePicker(
@@ -32,11 +46,35 @@ class FindRideView extends StatelessWidget {
     } else {
       viewModel.departureTimeController.text = "Now";
     }
+
+    await viewModel.selectDepartureTime(
+      DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+        pickedTime!.hour,
+        pickedTime.minute,
+      ),
+    );
   }
 
-  void onArrivalTimeSelected(String value, BuildContext context) async {
-    if (value != "Select") {
-      return;
+  void _onArrivalTimeSelected(String value, BuildContext context) async {
+    switch (value) {
+      case "Soonest":
+        await viewModel.selectArrivalTime(DateTime.now());
+        return;
+      case "in 15 minutes":
+        await viewModel.selectArrivalTime(
+          DateTime.now().add(const Duration(minutes: 30)),
+        );
+        return;
+      case "in 30 minutes":
+        await viewModel.selectArrivalTime(
+          DateTime.now().add(const Duration(minutes: 30)),
+        );
+        return;
+      default:
+        break;
     }
 
     final TimeOfDay? pickedTime = await showTimePicker(
@@ -49,9 +87,19 @@ class FindRideView extends StatelessWidget {
     } else {
       viewModel.arrivalTimeController.text = "Soonest";
     }
+
+    await viewModel.selectDepartureTime(
+      DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+        pickedTime!.hour,
+        pickedTime.minute,
+      ),
+    );
   }
 
-  void onJoinRidePressed(Ride ride, BuildContext context) {
+  void _onJoinRidePressed(Ride ride, BuildContext context) {
     Navigator.pushReplacementNamed(context, '/join_ride', arguments: ride);
   }
 
@@ -134,10 +182,18 @@ class FindRideView extends StatelessWidget {
                 child: Form(
                   child: Column(
                     children: [
-                      RideLocationSelectors(
-                        fromLocationController:
-                            viewModel.fromLocationController,
-                        toLocationController: viewModel.toLocationController,
+                      TextAddressSelector(
+                        key: viewModel.fromAddressSelectorKey,
+                        onAddressSelected: viewModel.selectFromAddress,
+                        addressRepository: viewModel.addressRepository,
+                        labelText: "From",
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextAddressSelector(
+                        key: viewModel.toAddressSelectorKey,
+                        onAddressSelected: viewModel.selectToAddress,
+                        addressRepository: viewModel.addressRepository,
+                        labelText: "To",
                       ),
                       const SizedBox(height: 16.0),
                       RideTimeSelectors(
@@ -147,9 +203,9 @@ class FindRideView extends StatelessWidget {
                         departureTimes: _departureTimes,
                         arrivalTimes: _arrivalTimes,
                         onDepartureTimeSelected:
-                            (value) => onDepartureTimeSelected(value, context),
+                            (value) => _onDepartureTimeSelected(value, context),
                         onArrivalTimeSelected:
-                            (value) => onArrivalTimeSelected(value, context),
+                            (value) => _onArrivalTimeSelected(value, context),
                       ),
                     ],
                   ),
@@ -176,7 +232,7 @@ class FindRideView extends StatelessWidget {
                       return RideCard(
                         ride: ride,
                         onJoinRidePressed:
-                            () => onJoinRidePressed(ride, context),
+                            () => _onJoinRidePressed(ride, context),
                       );
                     },
                   ),
