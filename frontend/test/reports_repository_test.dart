@@ -1,4 +1,6 @@
 import 'package:frontend/data/impl/impl_user_repository.dart';
+import 'package:frontend/data/repository/report_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 import 'package:test/test.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
 import 'package:frontend/data/model/report.dart';
@@ -7,12 +9,13 @@ import 'package:frontend/data/model/report_reason.dart';
 //run with dart test -r expanded test/reports_repository_testing.dart
 //using setup recreates the repository before each test
 void main() {
-  group('ImplReportRepository', () {
-    late ImplReportRepository reportRepository;
+  group('ReportRepository', () {
+    late ReportRepository reportRepository;
+    late UserRepository userRepository;
 
     setUp(() {
-      reportRepository = ImplReportRepository(
-        userRepository: ImplUserRepository(),
+      userRepository = ImplUserRepository();
+      reportRepository = ImplReportRepository(userRepository: userRepository as ImplUserRepository
       );
     });
 
