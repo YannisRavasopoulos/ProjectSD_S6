@@ -173,6 +173,7 @@ class App extends StatelessWidget {
         '/activities/create':
             (context) => CreateActivityView(
               viewModel: CreateActivityViewModel(
+                addressRepository: _addressRepository,
                 activityRepository: _activityRepository,
               ),
             ),
@@ -186,6 +187,7 @@ class App extends StatelessWidget {
               builder:
                   (context) => CreateActivityView(
                     viewModel: CreateActivityViewModel(
+                      addressRepository: _addressRepository,
                       activityRepository: _activityRepository,
                       activity: activity,
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
+import 'package:frontend/data/repository/address_repository.dart';
 
 class CreateActivityViewModel extends ChangeNotifier {
   TimeOfDay? _timeOfDay;
@@ -19,12 +20,14 @@ class CreateActivityViewModel extends ChangeNotifier {
   Activity? get activity => _activity;
 
   final ActivityRepository _activityRepository;
+  final AddressRepository addressRepository;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
   CreateActivityViewModel({
     required ActivityRepository activityRepository,
+    required this.addressRepository,
     Activity? activity,
   }) : _activityRepository = activityRepository,
        _activity = activity {
@@ -33,10 +36,12 @@ class CreateActivityViewModel extends ChangeNotifier {
       descriptionController.text = activity.description;
       _timeOfDay = activity.startTime;
       _address = activity.address;
-    } else {
-      // TODO
-      _address = Address.fake();
     }
+  }
+
+  void selectAddress(Address address) {
+    _address = address;
+    notifyListeners();
   }
 
   void selectTimeOfDay(TimeOfDay time) {

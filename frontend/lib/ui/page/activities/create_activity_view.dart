@@ -80,7 +80,10 @@ class CreateActivityView extends StatelessWidget {
             maxLines: 3,
           ),
           const SizedBox(height: 16.0),
-          AddressSelector(),
+          AddressSelector(
+            addressRepository: viewModel.addressRepository,
+            onAddressSelected: viewModel.selectAddress,
+          ),
           const SizedBox(height: 16.0),
           ListTile(
             title: const Text('Select Time'),

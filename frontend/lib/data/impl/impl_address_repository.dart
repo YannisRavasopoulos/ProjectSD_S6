@@ -45,15 +45,25 @@ class ImplAddressRepository implements AddressRepository {
 
   @override
   Future<List<Address>> fetchForCoordinates(LatLng coordinates) async {
-    // Simple search by coordinate proximity
-    return _places
-        .where(
-          (place) =>
-              _distance(place.address.coordinates, coordinates) <
-              10000, // within 10 km
-        )
-        .map((place) => place.address)
-        .toList();
+    var closePlaces =
+        _places
+            .where(
+              (place) =>
+                  _distance(place.address.coordinates, coordinates) <
+                  1000, // within 1km
+            )
+            .map((place) => place.address)
+            .toList();
+
+    // Sort places by distance to the given coordinates
+    closePlaces.sort(
+      (a, b) => _distance(
+        a.coordinates,
+        coordinates,
+      ).compareTo(_distance(b.coordinates, coordinates)),
+    );
+
+    return closePlaces;
   }
 
   final List<Place> _places = [
