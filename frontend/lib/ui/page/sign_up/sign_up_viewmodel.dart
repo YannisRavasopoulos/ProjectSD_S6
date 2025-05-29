@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/ui/viewmodel.dart';
 
 class SignUpViewModel extends ViewModel {
-  SignUpViewModel({required UserRepository userRepository})
-    : _userRepository = userRepository {
+  SignUpViewModel() {
     emailController.addListener(notifyListeners);
     nameController.addListener(notifyListeners);
     passwordController.addListener(notifyListeners);
@@ -63,7 +61,6 @@ class SignUpViewModel extends ViewModel {
   bool _isLoading = false;
   String _errorMessage = '';
 
-  final UserRepository _userRepository;
   final RegExp _passwordRegex = RegExp(r'^.{8,}$');
   final RegExp _emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
