@@ -1,7 +1,5 @@
 // External libraries
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_address_repository.dart';
-import 'package:frontend/data/model/activity.dart';
 
 // Repositories
 import 'package:frontend/data/repository/address_repository.dart';
@@ -9,14 +7,9 @@ import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
-import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
-import 'package:frontend/ui/page/activities/activities_view.dart';
-import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
-import 'package:frontend/ui/page/activities/create_activity_view.dart';
-import 'package:frontend/ui/page/activities/create_activity_viewmodel.dart';
 
 // Pages
 // import 'package:frontend/ui/page/activities/activities_view.dart';
@@ -28,6 +21,10 @@ import 'package:frontend/ui/page/activities/create_activity_viewmodel.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 // import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
+import 'package:frontend/ui/page/activities/activities_view.dart';
+import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
+import 'package:frontend/ui/page/activities/create_activity_view.dart';
+import 'package:frontend/ui/page/activities/create_activity_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_view.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
@@ -58,9 +55,9 @@ import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
+import 'package:frontend/data/impl/impl_address_repository.dart';
 
-import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/model/pickup_request.dart';
+import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
 
@@ -70,8 +67,6 @@ class App extends StatelessWidget {
   final ActivityRepository _activityRepository = ImplActivityRepository();
   final RideRepository _rideRepository = ImplRideRepository();
   final RatingRepository _ratingRepository = ImplRatingRepository();
-  final AuthenticationRepository _authenticationRepository =
-      MockAuthenticationRepository();
   final AddressRepository _addressRepository = ImplAddressRepository();
   late final RewardRepository _rewardRepository = RewardsRepositoryImpl(
     userRepository: _userRepository as ImplUserRepository,
@@ -107,10 +102,7 @@ class App extends StatelessWidget {
     userRepository: _userRepository,
   );
 
-  late final SignInViewModel signInViewModel = SignInViewModel(
-    _authenticationRepository,
-    _userRepository,
-  );
+  late final SignInViewModel signInViewModel = SignInViewModel();
 
   late final SignUpViewModel signUpViewModel = SignUpViewModel();
 
