@@ -1,44 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-
 import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
-import 'package:frontend/data/model/location.dart';
-
-class ImplActivity extends Activity {
-  @override
-  final int id;
-  @override
-  final String name;
-  @override
-  final String description;
-  @override
-  final TimeOfDay startTime;
-  @override
-  final TimeOfDay endTime = TimeOfDay(hour: 0, minute: 0); // Default value
-  @override
-  final Location startLocation;
-  @override
-  final Location endLocation;
-
-  ImplActivity({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.startTime,
-    required this.startLocation,
-    required this.endLocation,
-  });
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Activity && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-}
 
 class ImplActivityRepository implements ActivityRepository {
   static final ImplActivityRepository _instance =
@@ -50,7 +15,22 @@ class ImplActivityRepository implements ActivityRepository {
 
   ImplActivityRepository._internal();
 
-  final List<Activity> _activities = [];
+  final List<Activity> _activities = [
+    Activity(
+      id: 1,
+      name: 'Activity 1',
+      description: 'Activity 1 description',
+      startTime: TimeOfDay(hour: 10, minute: 30),
+      address: Address.fake(),
+    ),
+    Activity(
+      id: 2,
+      name: 'Activity 2',
+      description: 'Activity 2 description',
+      startTime: TimeOfDay(hour: 14, minute: 0),
+      address: Address.fake(),
+    ),
+  ];
   final StreamController<List<Activity>> _activitiesController =
       StreamController<List<Activity>>.broadcast();
 

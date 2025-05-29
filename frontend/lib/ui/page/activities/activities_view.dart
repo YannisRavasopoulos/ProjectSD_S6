@@ -3,30 +3,48 @@ import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/activities/activity_card.dart';
 import 'package:frontend/ui/page/activities/activity_deletion_dialog.dart';
-import 'package:frontend/ui/page/activities/create_activity_view.dart';
 import 'package:frontend/ui/shared/nav/app_navigation_bar.dart';
 
 class ActivitiesView extends StatelessWidget {
-  const ActivitiesView({super.key, required this.viewModel});
-
   final ActivitiesViewModel viewModel;
 
-  void _onRemoveActivityPressed(BuildContext context, Activity activity) {
+  const ActivitiesView({super.key, required this.viewModel});
+
+  void _onDeleteActivityConfirmPressed(
+    BuildContext context,
+    Activity activity,
+  ) async {
+    Navigator.of(context).pop();
+    bool success = await viewModel.deleteActivity(activity);
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Activity "${activity.name}" deleted')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete activity: ${viewModel.errorMessage}'),
+        ),
+      );
+    }
+  }
+
+  void _onCreateActivityPressed(BuildContext context) {
+    Navigator.pushNamed(context, '/activities/create');
+  }
+
+  void _onEditActivityPressed(BuildContext context, Activity activity) {
+    Navigator.pushNamed(context, '/activities/edit', arguments: activity);
+  }
+
+  void _onDeleteActivityPressed(BuildContext context, Activity activity) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return ActivityDeletionDialog(
           activityName: activity.name,
-          onDelete: () {
-            viewModel.deleteActivity(activity);
-            Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Activity "${activity.name}" deleted')),
-            );
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-          },
+          onConfirm: () => _onDeleteActivityConfirmPressed(context, activity),
+          onCancel: () => Navigator.pop(context),
         );
       },
     );
@@ -41,8 +59,7 @@ class ActivitiesView extends StatelessWidget {
         builder: (context, _) {
           if (viewModel.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (viewModel.activities == null ||
-              viewModel.activities!.isEmpty) {
+          } else if (viewModel.activities.isEmpty) {
             return const Center(child: Text('No activities found'));
           } else {
             return _buildActivityList(context);
@@ -50,16 +67,7 @@ class ActivitiesView extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateActivityView(
-                viewModel: viewModel,
-              ),
-            ),
-          );
-        },
+        onPressed: () => _onCreateActivityPressed(context),
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: AppNavigationBar(routeName: "/activities"),
@@ -68,23 +76,13 @@ class ActivitiesView extends StatelessWidget {
 
   Widget _buildActivityList(BuildContext context) {
     return ListView.builder(
-      itemCount: viewModel.activities?.length ?? 0,
+      itemCount: viewModel.activities.length,
       itemBuilder: (context, index) {
-        final activity = viewModel.activities![index];
+        final activity = viewModel.activities[index];
         return ActivityCard(
           activity: activity,
-          onEdit: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CreateActivityView(
-                  viewModel: viewModel,
-                  activityToEdit: activity,
-                ),
-              ),
-            );
-          },
-          onRemove: () => _onRemoveActivityPressed(context, activity),
+          onEdit: () => _onEditActivityPressed(context, activity),
+          onRemove: () => _onDeleteActivityPressed(context, activity),
         );
       },
     );

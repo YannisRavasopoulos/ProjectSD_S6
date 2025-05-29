@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/page/offer_ride/carpooler_selection_sheet.dart';
 
 class CreatedRidesList extends StatelessWidget {
-  final bool isLoading;
+  final Address currentAddress;
   final List<Ride> createdRides;
   final List<Passenger> potentialPassengers;
   final Future<void> Function(Ride) onSelectRide;
 
   const CreatedRidesList({
     super.key,
-    required this.isLoading,
+    required this.currentAddress,
     required this.createdRides,
     required this.potentialPassengers,
     required this.onSelectRide,
@@ -19,9 +20,6 @@ class CreatedRidesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
     if (createdRides.isEmpty) {
       return const Center(
         child: Text(
@@ -51,25 +49,20 @@ class CreatedRidesList extends StatelessWidget {
               child: const Icon(Icons.directions_car, color: Colors.white),
             ),
             title: Text(
-              '${ride.route.start.name} → ${ride.route.end.name}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+              '${ride.route.start.toString()} → ${ride.route.end.toString()}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            subtitle: Text('Ride ID: ${ride.id}'),
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.teal,
-            ),
+            trailing: const Icon(Icons.arrow_forward_ios, color: Colors.teal),
             onTap: () async {
               await onSelectRide(ride);
               showModalBottomSheet(
                 context: context,
-                builder: (_) => CarpoolerSelectionSheet(
-                  carpoolers: potentialPassengers,
-                  ride: ride,
-                ),
+                builder:
+                    (_) => CarpoolerSelectionSheet(
+                      currentAddress: currentAddress,
+                      carpoolers: potentialPassengers,
+                      ride: ride,
+                    ),
               );
             },
           ),
@@ -78,4 +71,3 @@ class CreatedRidesList extends StatelessWidget {
     );
   }
 }
-

@@ -1,7 +1,8 @@
-import 'package:frontend/data/model.dart';
-import 'package:frontend/data/model/location.dart';
+import 'package:frontend/data/model/address.dart';
 
-abstract class Route implements Model {
-  Location get start;
-  Location get end;
+class Route {
+  final Address start;
+  final Address end;
+
+  Route({required this.start, required this.end});
 }

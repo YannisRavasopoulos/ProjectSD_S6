@@ -1,14 +1,10 @@
-import 'package:frontend/data/impl/impl_location_repository.dart';
-import 'package:frontend/data/impl/impl_ride_repository.dart';
+import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
-import 'package:frontend/data/repository/ride_repository.dart';
-import 'package:latlong2/latlong.dart';
 
 class ArrangePickupViewModel extends ChangeNotifier {
   final PickupRepository _pickupRepository;
@@ -17,11 +13,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   DateTime? _selectedTime;
-  Location _location = ImplLocation(
-    id: 0,
-    name: '',
-    coordinates: LatLng(0.0, 0.0), // Default coordinates
-  );
+  Address? _address;
 
   ArrangePickupViewModel({
     required PickupRepository pickupRepository,
@@ -35,7 +27,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   DateTime? get selectedTime => _selectedTime;
-  Location get location => _location;
+  Address? get address => _address;
 
   // Expose data from pickup request
   Ride get ride => _pickupRequest.ride;
@@ -48,8 +40,8 @@ class ArrangePickupViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLocation(Location newLocation) {
-    _location = newLocation;
+  void setLocation(Address newAddress) {
+    _address = newAddress;
     notifyListeners();
   }
 
@@ -61,7 +53,7 @@ class ArrangePickupViewModel extends ChangeNotifier {
       return false;
     }
 
-    if (_location.id == 0 || _location.name.isEmpty) {
+    if (_address == null) {
       _errorMessage = 'Please select a pickup location';
       notifyListeners();
       return false;
@@ -89,8 +81,17 @@ class ArrangePickupViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-    final updatedPassengers = List.of(ride.passengers)
-      ..add(_pickupRequest.passenger);
+    final pickupProposal = Pickup(
+      ride: _pickupRequest.ride,
+      passenger: _pickupRequest.passenger,
+      address: _address!,
+      time: _selectedTime!,
+    );
+
+    await _repository.acceptPickupRequest(_pickupRequest, pickupProposal);
+
+    _isLoading = false;
+    notifyListeners();
 
     final updatedRide = ImplRide(
       id: ride.id,

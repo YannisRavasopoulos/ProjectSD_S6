@@ -44,7 +44,7 @@ class ConfirmPickupView extends StatelessWidget {
                     const SizedBox(height: 16),
                     ListTile(
                       leading: const Icon(Icons.location_on),
-                      title: Text('Location: ${pickup.location.name}'),
+                      title: Text('Location: ${pickup.address.toString()}'),
                     ),
                     ListTile(
                       leading: const Icon(Icons.access_time),

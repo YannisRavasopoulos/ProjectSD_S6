@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model.dart';
-import 'package:frontend/data/model/location.dart';
+import 'package:frontend/data/model/address.dart';
 
-abstract class Activity implements Model {
-  /// The name of the activity.
-  String get name;
+class Activity {
+  final int id;
+  final String name;
+  final TimeOfDay startTime;
+  final String description;
+  final Address address;
 
-  /// The location where the activity takes place.
-  // Location get location;
-
-  /// The time of day when the activity occurs.
-  TimeOfDay get startTime;
-  TimeOfDay get endTime;
-
-  /// A description of the activity.
-  String get description;
-
-  /// The unique identifier for the activity.
-  Location get startLocation;
-  Location get endLocation;
+  Activity({
+    required this.id,
+    required this.name,
+    required this.startTime,
+    required this.description,
+    required this.address,
+  });
 }

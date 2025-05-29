@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_form.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_success.dart';
 import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
-import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 
 class CreateRideView extends StatelessWidget {
   final CreateRideViewModel viewModel;
-  final RidesViewModel ridesViewModel;
 
-  const CreateRideView({
-    super.key,
-    required this.viewModel,
-    required this.ridesViewModel,
-  });
+  const CreateRideView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +30,9 @@ class CreateRideView extends StatelessWidget {
                 viewModel.clearMessages();
                 final ride = viewModel.createdRide;
                 if (ride != null) {
-                  Navigator.of(context).pushNamed('/offer_ride', arguments: ride);
+                  Navigator.of(
+                    context,
+                  ).pushNamed('/offer_ride', arguments: ride);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Ride not found!')),
@@ -47,14 +43,16 @@ class CreateRideView extends StatelessWidget {
           }
           // Pass only primitive values and callbacks, not the viewmodel itself
           return CreateRideForm(
-            from: viewModel.from,
-            to: viewModel.to,
+            from: viewModel.startLocation,
+            to: viewModel.endLocation,
             departureTime: viewModel.departureTime,
             seats: viewModel.seats,
             errorMessage: viewModel.errorMessage,
             onCreateRide: () async => await viewModel.saveRide(),
             onFromChanged: viewModel.setFrom,
             onToChanged: viewModel.setTo,
+            onFromLocation: viewModel.fromLocationController,
+            onToLocation: viewModel.toLocationController,
             onDepartureTimeChanged: viewModel.setDepartureTime,
             onSeatsChanged: viewModel.setSeats,
           );

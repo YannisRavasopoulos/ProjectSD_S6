@@ -1,20 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_activity_repository.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_pickup_repository.dart';
-import 'package:frontend/data/impl/impl_ride_repository.dart';
-import 'package:frontend/data/impl/impl_route.dart';
 import 'package:frontend/data/impl/impl_vehicle.dart';
+import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/passenger.dart';
+import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/route.dart';
+import 'package:frontend/data/repository/address_repository.dart';
 
 class CarpoolerSelectionSheet extends StatelessWidget {
+  final Address currentAddress;
   final List<Passenger> carpoolers;
   final Ride? ride;
-  final ImplActivity? activity;
+  final Activity? activity;
 
   const CarpoolerSelectionSheet({
     super.key,
+    required this.currentAddress,
     required this.carpoolers,
     this.ride,
     this.activity,
@@ -53,11 +56,10 @@ class CarpoolerSelectionSheet extends StatelessWidget {
                           onPressed: () {
                             if (ride != null) {
                               // Normal ride flow
-                              final pickupRequest = ImplPickupRequest(
-                                id: DateTime.now().millisecondsSinceEpoch,
+                              final pickupRequest = PickupRequest(
                                 ride: ride!,
                                 passenger: carpooler,
-                                location: ride!.route.start,
+                                address: ride!.route.start,
                                 time: DateTime.now().add(
                                   const Duration(minutes: 10),
                                 ),
@@ -70,14 +72,13 @@ class CarpoolerSelectionSheet extends StatelessWidget {
                                 arguments: {
                                   'pickupRequest': pickupRequest,
                                   'driver': ride!.driver,
-                                  'rideId': ride!.id,
                                 },
                               );
                             } else if (activity != null) {
                               // Activity flow: create a pickup request using activity info
                               // Use the first hardcoded ride as a template
-                              final testRide = ImplRide(
-                                id: 9999, // Unique id for this pseudo-ride
+                              final testRide = Ride(
+                                // Unique id for this pseudo-ride
                                 driver: ImplDriver(
                                   id: 1,
                                   firstName: 'Activity',
@@ -86,10 +87,9 @@ class CarpoolerSelectionSheet extends StatelessWidget {
                                   points: 0,
                                 ),
                                 passengers: [],
-                                route: ImplRoute(
-                                  id: 9999,
-                                  start: activity!.startLocation,
-                                  end: activity!.endLocation,
+                                route: Route(
+                                  start: currentAddress,
+                                  end: activity!.address,
                                 ),
                                 // TODO: FIX
                                 departureTime: DateTime.now(),
@@ -100,11 +100,10 @@ class CarpoolerSelectionSheet extends StatelessWidget {
                                 totalSeats: 5,
                               );
 
-                              final pickupRequest = ImplPickupRequest(
-                                id: DateTime.now().millisecondsSinceEpoch,
+                              final pickupRequest = PickupRequest(
                                 ride: testRide,
                                 passenger: carpooler,
-                                location: activity!.startLocation,
+                                address: activity!.address,
                                 time: DateTime.now(),
                               );
 
@@ -116,7 +115,6 @@ class CarpoolerSelectionSheet extends StatelessWidget {
                                 arguments: {
                                   'pickupRequest': pickupRequest,
                                   'driver': testRide.driver,
-                                  'rideId': testRide.id,
                                 },
                               );
                             }

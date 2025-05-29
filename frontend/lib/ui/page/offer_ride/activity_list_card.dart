@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_activity_repository.dart';
+import 'package:frontend/data/model/activity.dart';
 
 class ActivityListCard extends StatelessWidget {
-  final ImplActivity activity;
+  final Activity activity;
   final VoidCallback onCarpoolTap;
 
   const ActivityListCard({
@@ -16,17 +16,23 @@ class ActivityListCard extends StatelessWidget {
     return Card(
       elevation: 4, // Add shadow
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16), // Rounded corners like created rides
+        borderRadius: BorderRadius.circular(
+          16,
+        ), // Rounded corners like created rides
       ),
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: Colors.orange,
           radius: 22,
-          child: const Icon(Icons.directions_car, color: Colors.white, size: 26),
+          child: const Icon(
+            Icons.directions_car,
+            color: Colors.white,
+            size: 26,
+          ),
         ),
         title: Text(
-          '${activity.startLocation.name} → ${activity.endLocation.name}',
+          activity.address.toString(),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(activity.name),

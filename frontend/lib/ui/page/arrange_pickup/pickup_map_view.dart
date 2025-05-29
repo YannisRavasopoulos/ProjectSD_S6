@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:frontend/data/model/location.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:frontend/config.dart';
 
-class PickupMapView extends StatelessWidget {
-  final Location location;
-  final Function(Location) onLocationChanged;
+class PickupMapView extends StatefulWidget {
+  final LatLng location;
+  final ValueChanged<LatLng> onLocationChanged;
 
   const PickupMapView({
     super.key,
@@ -17,13 +15,37 @@ class PickupMapView extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final selectedLocation = location.coordinates.latitude != 0.0 ||
-            location.coordinates.longitude != 0.0
-        ? location.coordinates
-        : null;
+  State<PickupMapView> createState() => _PickupMapViewState();
+}
 
-    final mapController = MapController();
+class _PickupMapViewState extends State<PickupMapView>
+    with TickerProviderStateMixin {
+  late final AnimatedMapController _customMapController;
+  LatLng? selectedLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    _customMapController = AnimatedMapController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+      cancelPreviousAnimations: false,
+    );
+    if (widget.location.latitude != 0.0 || widget.location.longitude != 0.0) {
+      selectedLocation = widget.location;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant PickupMapView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.location != oldWidget.location) {
+      setState(() {
+        selectedLocation = widget.location;
+      });
+    }
+  }
 
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.5,
@@ -31,13 +53,10 @@ class PickupMapView extends StatelessWidget {
         mapController: mapController,
         options: MapOptions(
           onTap: (tapPosition, point) {
-            onLocationChanged(
-              ImplLocation(
-                id: DateTime.now().millisecondsSinceEpoch,
-                name: 'Custom Location',
-                coordinates: point,
-              ),
-            );
+            setState(() {
+              selectedLocation = point;
+            });
+            widget.onLocationChanged(point);
           },
           initialCenter: selectedLocation ?? const LatLng(0, 0),
           initialZoom: 8,

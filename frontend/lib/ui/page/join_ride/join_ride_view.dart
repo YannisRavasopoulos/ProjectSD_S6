@@ -11,7 +11,7 @@ class JoinRideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pickupRequest = viewModel.joinRide();
+    viewModel.joinRide();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Joining Ride'), elevation: 0),
@@ -87,13 +87,13 @@ class JoinRideView extends StatelessWidget {
                           DetailRow(
                             icon: Icons.location_on,
                             label: 'From',
-                            value: viewModel.ride.route.start.name,
+                            value: viewModel.ride.route.start.toString(),
                           ),
                           const SizedBox(height: 16),
                           DetailRow(
                             icon: Icons.location_on,
                             label: 'To',
-                            value: viewModel.ride.route.end.name,
+                            value: viewModel.ride.route.end.toString(),
                           ),
                           const SizedBox(height: 16),
                           DetailRow(

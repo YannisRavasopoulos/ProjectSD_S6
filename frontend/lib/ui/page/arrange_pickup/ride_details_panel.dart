@@ -66,7 +66,7 @@ class RideDetailsPanel extends StatelessWidget {
                   child: _buildDetailRow(
                     icon: Icons.location_on,
                     label: 'Starting Point',
-                    value: ride.route.start.name,
+                    value: ride.route.start.toString(),
                     // value: ride.description,
                   ),
                 ),

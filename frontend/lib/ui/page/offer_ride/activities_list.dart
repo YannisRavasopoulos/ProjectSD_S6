@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_activity_repository.dart';
+import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/ui/page/offer_ride/activity_list_card.dart';
 import 'package:frontend/ui/page/offer_ride/carpooler_selection_sheet.dart';
 
 class ActivitiesList extends StatelessWidget {
   final bool isLoading;
-  final List<ImplActivity> activities;
+  final List<Activity> activities;
   final List<Passenger> potentialPassengers;
-  final Future<void> Function(ImplActivity) onSelectActivity;
+  final Future<void> Function(Activity) onSelectActivity;
 
   const ActivitiesList({
     super.key,
@@ -36,10 +36,11 @@ class ActivitiesList extends StatelessWidget {
             await onSelectActivity(activity);
             showModalBottomSheet(
               context: context,
-              builder: (_) => CarpoolerSelectionSheet(
-                carpoolers: potentialPassengers,
-                activity: activity,
-              ),
+              builder:
+                  (_) => CarpoolerSelectionSheet(
+                    carpoolers: potentialPassengers,
+                    activity: activity,
+                  ),
             );
           },
         );

@@ -17,7 +17,9 @@ class RideListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text('${ride.route.start.name} → ${ride.route.end.name}'),
+        title: Text(
+          '${ride.route.start.toString()} → ${ride.route.end.toString()}',
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

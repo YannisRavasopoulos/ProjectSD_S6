@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_activity_repository.dart';
-import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/page/offer_ride/activities_list.dart';
 import 'package:frontend/ui/page/offer_ride/created_ride_list.dart';
 import 'package:frontend/ui/page/offer_ride/offer_ride_mode_selector.dart';
 import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
-import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 
 enum OfferRideMode { createdRides, activities }
 
 class OfferRideView extends StatelessWidget {
   final OfferRideViewModel viewModel;
-  final ActivitiesViewModel activitiesViewModel;
 
-  const OfferRideView({
-    super.key,
-    required this.viewModel,
-    required this.activitiesViewModel,
-  });
+  const OfferRideView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -41,22 +33,20 @@ class OfferRideView extends StatelessWidget {
                 if (mode == OfferRideMode.createdRides) {
                   return AnimatedBuilder(
                     animation: viewModel,
-                    builder: (context, _) => CreatedRidesList(
-                      isLoading: viewModel.isLoading,
-                      createdRides: viewModel.createdRides,
-                      potentialPassengers: viewModel.potentialPassengers,
-                      onSelectRide: viewModel.selectRide,
-                    ),
+                    builder:
+                        (context, _) => CreatedRidesList(
+                          currentAddress: viewModel.currentAddress,
+                          createdRides: viewModel.createdRides,
+                          potentialPassengers: viewModel.potentialPassengers,
+                          onSelectRide: viewModel.selectRide,
+                        ),
                   );
                 } else {
-                  return AnimatedBuilder(
-                    animation: activitiesViewModel,
-                    builder: (context, _) => ActivitiesList(
-                      isLoading: activitiesViewModel.isLoading,
-                      activities: (activitiesViewModel.activities ?? []).cast<ImplActivity>(),
-                      potentialPassengers: viewModel.potentialPassengers,
-                      onSelectActivity: viewModel.selectActivity,
-                    ),
+                  return ActivitiesList(
+                    isLoading: viewModel.isLoading,
+                    activities: viewModel.activities,
+                    potentialPassengers: viewModel.potentialPassengers,
+                    onSelectActivity: viewModel.selectActivity,
                   );
                 }
               },
