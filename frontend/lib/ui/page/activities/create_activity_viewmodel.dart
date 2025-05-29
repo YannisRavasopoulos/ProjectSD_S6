@@ -23,9 +23,11 @@ class CreateActivityViewModel extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  CreateActivityViewModel({required activityRepository, activity})
-    : _activityRepository = activityRepository,
-      _activity = activity {
+  CreateActivityViewModel({
+    required ActivityRepository activityRepository,
+    Activity? activity,
+  }) : _activityRepository = activityRepository,
+       _activity = activity {
     if (activity != null) {
       nameController.text = activity.name;
       descriptionController.text = activity.description;

@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/page/activities/create_activity_viewmodel.dart';
+import 'package:frontend/ui/shared/map/address_selector.dart';
 
 class CreateActivityView extends StatelessWidget {
   final CreateActivityViewModel viewModel;
@@ -74,13 +74,13 @@ class CreateActivityView extends StatelessWidget {
           TextField(
             controller: viewModel.descriptionController,
             decoration: const InputDecoration(
-              labelText: 'Description',
+              labelText: 'Description (optional)',
               border: OutlineInputBorder(),
             ),
             maxLines: 3,
           ),
           const SizedBox(height: 16.0),
-          // TODO: Add address picker
+          AddressSelector(),
           const SizedBox(height: 16.0),
           ListTile(
             title: const Text('Select Time'),
