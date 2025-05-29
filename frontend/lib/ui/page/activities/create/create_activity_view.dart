@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/page/activities/create_activity_viewmodel.dart';
+import 'package:frontend/ui/page/activities/create/create_activity_viewmodel.dart';
 import 'package:frontend/ui/shared/map/address_selector.dart';
 
 class CreateActivityView extends StatelessWidget {
