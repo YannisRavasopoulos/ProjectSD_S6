@@ -6,7 +6,6 @@ import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/address_repository.dart';
-import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -84,40 +83,9 @@ class FindRideViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  // Future<void> selectSourceLocation() async {
-  // print("SELECT SOURCE");
-  // final match = originLocations.firstWhere(
-  //   (loc) => loc.name.toLowerCase().trim() == sourceName.toLowerCase().trim(),
-  //   orElse: () => originLocations[0],
-  // );
-  // _source = match;
-  // if (notify) {
-  //   fetchRides();
-  // }
-  // notifyListeners();
-  // }
-
-  // Future<void> selectDestinationLocation() async {
-  // print("SELECT DESTINATION");
-  // final match = destinationLocations.firstWhere(
-  //   (loc) => loc.name.toLowerCase() == destinationName.toLowerCase(),
-  //   orElse: () => destinationLocations[1], // fallback
-  // );
-  // _destination = match;
-  // if (notify) {
-  //   fetchRides();
-  //   notifyListeners();
-  // }
-  // notifyListeners();
-  // }
-
   String _timeOfDayToString(TimeOfDay t) {
     final now = DateTime.now();
     return DateTime(now.year, now.month, now.day, t.hour, t.minute).toString();
-  }
-
-  Future<void> joinRide(Ride ride) async {
-    _rideRepository.join(ride);
   }
 
   Future<void> selectActivity(Activity activity) async {

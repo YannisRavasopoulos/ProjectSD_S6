@@ -70,7 +70,7 @@ class PickupRequestNotification extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  'Pickup request for ride: ${pickupRequest.ride.id}',
+                  'Pickup request for ride: ${pickupRequest.ride.route.toString()}',
                   style: const TextStyle(fontSize: 11),
                 ),
               ],
@@ -108,7 +108,6 @@ class PickupRequestNotification extends StatelessWidget {
                     arguments: {
                       'pickupRequest': pickupRequest,
                       'driver': pickupRequest.ride.driver,
-                      'rideId': pickupRequest.ride.id,
                     },
                   );
                 },

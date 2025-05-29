@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:frontend/data/impl/impl_vehicle.dart';
 import 'package:frontend/data/model/address.dart';
-import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/model/route.dart';
@@ -12,44 +10,10 @@ import 'package:frontend/data/impl/impl_driver.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
 import 'package:latlong2/latlong.dart';
 
-class ImplRide extends Ride {
-  @override
-  final int id;
-  @override
-  final Driver driver;
-  @override
-  final List<Passenger> passengers;
-  @override
-  final Route route;
-  @override
-  final DateTime departureTime;
-  @override
-  final DateTime estimatedArrivalTime;
-  @override
-  final Duration estimatedDuration;
-  @override
-  final int totalSeats;
-
-  ImplRide({
-    required this.id,
-    required this.driver,
-    required this.passengers,
-    required this.route,
-    required this.departureTime,
-    required this.estimatedArrivalTime,
-    required this.estimatedDuration,
-    required this.totalSeats,
-  });
-
-  @override
-  int get availableSeats => totalSeats - passengers.length - 1;
-}
-
 class ImplRideRepository implements RideRepository {
   // --- Hardcoded rides ---
   final List<Ride> _rides = [
-    ImplRide(
-      id: 1,
+    Ride(
       driver: ImplDriver(
         id: 1,
         firstName: 'Alice',
@@ -66,8 +30,7 @@ class ImplRideRepository implements RideRepository {
       estimatedDuration: const Duration(hours: 1),
       totalSeats: 4,
     ),
-    ImplRide(
-      id: 2,
+    Ride(
       driver: ImplDriver(
         id: 2,
         firstName: 'John',
@@ -89,8 +52,7 @@ class ImplRideRepository implements RideRepository {
 
   // --- Hardcoded ride history ---
   final List<Ride> _rideHistory = [
-    ImplRide(
-      id: 1,
+    Ride(
       driver: ImplDriver(
         id: 1,
         firstName: 'Crocodillo',
@@ -233,12 +195,12 @@ class ImplRideRepository implements RideRepository {
 
   @override
   Future<void> update(Ride ride) async {
-    final index = _rides.indexWhere((r) => r.id == ride.id);
+    final index = _rides.indexWhere((r) => r == ride);
     if (index != -1) {
       _rides[index] = ride;
       _ridesController.add(List.unmodifiable(_rides));
     }
-    final histIndex = _rideHistory.indexWhere((r) => r.id == ride.id);
+    final histIndex = _rideHistory.indexWhere((r) => r == ride);
     if (histIndex != -1) {
       _rideHistory[histIndex] = ride;
       _historyController.add(List.unmodifiable(_rideHistory));
@@ -247,9 +209,9 @@ class ImplRideRepository implements RideRepository {
 
   @override
   Future<void> cancel(Ride ride) async {
-    _rides.removeWhere((r) => r.id == ride.id);
+    _rides.removeWhere((r) => r == ride);
     _ridesController.add(List.unmodifiable(_rides));
-    _rideHistory.removeWhere((r) => r.id == ride.id);
+    _rideHistory.removeWhere((r) => r == ride);
     _historyController.add(List.unmodifiable(_rideHistory));
   }
 
@@ -261,7 +223,7 @@ class ImplRideRepository implements RideRepository {
 
   @override
   Future<void> leave(Ride ride) async {
-    if (_currentRide?.id == ride.id) {
+    if (_currentRide == ride) {
       _currentRide = null;
       // Optionally notify listeners
     }

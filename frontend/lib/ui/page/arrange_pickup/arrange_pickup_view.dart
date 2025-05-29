@@ -43,7 +43,7 @@ class ArrangePickupView extends StatelessWidget {
                           else
                             PickupForm(
                               selectedTime: viewModel.selectedTime,
-                              location: viewModel.location,
+                              location: viewModel.address,
                               onTimeSelected: viewModel.setPickupTime,
                               onLocationChanged: viewModel.setLocation,
                               onSubmit: () => _handleSubmit(context),

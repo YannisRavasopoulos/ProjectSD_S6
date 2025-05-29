@@ -22,10 +22,20 @@ class ImplAddressRepository implements AddressRepository {
 
   @override
   Future<List<Address>> fetchForQuery(String query) async {
-    print('Searching for: $query');
+    // Simple search by name match
+    var results =
+        _places
+            .where(
+              (place) => place.name.toLowerCase().contains(query.toLowerCase()),
+            )
+            .map((place) => place.address)
+            .toList();
 
-    _places.shuffle();
-    return _places.take(3).map((place) => place.address).toList();
+    print("===");
+    print(query);
+    print(results);
+    print("===");
+    return results;
   }
 
   int _distance(LatLng p1, LatLng p2) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/page/find_ride/activity_selection_panel.dart';
 import 'package:frontend/ui/page/find_ride/ride_card.dart';
 import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
@@ -48,6 +49,10 @@ class FindRideView extends StatelessWidget {
     } else {
       viewModel.arrivalTimeController.text = "Soonest";
     }
+  }
+
+  void onJoinRidePressed(Ride ride, BuildContext context) {
+    Navigator.pushReplacementNamed(context, '/join_ride', arguments: ride);
   }
 
   static const List<String> _departureTimes = [
@@ -170,7 +175,8 @@ class FindRideView extends StatelessWidget {
                       final ride = viewModel.rides[index];
                       return RideCard(
                         ride: ride,
-                        onJoinRide: () => viewModel.joinRide(ride),
+                        onJoinRidePressed:
+                            () => onJoinRidePressed(ride, context),
                       );
                     },
                   ),

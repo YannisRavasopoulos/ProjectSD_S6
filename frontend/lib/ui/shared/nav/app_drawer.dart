@@ -6,6 +6,7 @@ import 'package:frontend/data/impl/impl_ride_repository.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/pickup_request.dart';
+import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/route.dart';
 import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
@@ -89,8 +90,7 @@ class AppDrawer extends StatelessWidget {
                 passenger: ImplPassenger.test(),
                 address: Address.fake(),
                 time: DateTime.now(),
-                ride: ImplRide(
-                  id: 1,
+                ride: Ride(
                   driver: ImplDriver.test(),
                   passengers: [],
                   route: Route(start: Address.fake(), end: Address.fake()),
@@ -121,8 +121,7 @@ class AppDrawer extends StatelessWidget {
                 passenger: ImplPassenger.test(),
                 address: Address.fake(),
                 time: DateTime.now(),
-                ride: ImplRide(
-                  id: 1,
+                ride: Ride(
                   driver: ImplDriver.test(),
                   passengers: [],
                   route: Route(end: Address.fake(), start: Address.fake()),
@@ -157,8 +156,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Join Ride Screen (Test)'),
             onTap: () async {
               // Example test data for Join Ride
-              final ride = ImplRide(
-                id: 42,
+              final ride = Ride(
                 driver: ImplDriver.test(),
                 passengers: [],
                 route: Route(end: Address.fake(), start: Address.fake()),

@@ -13,8 +13,6 @@ import 'package:frontend/data/repository/authentication_repository.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
-import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
-import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 
 // Pages
 // import 'package:frontend/ui/page/activities/activities_view.dart';
@@ -25,6 +23,7 @@ import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 // import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
+// import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_view.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
 import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
@@ -38,7 +37,6 @@ import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
 import 'package:frontend/ui/page/report/report_view.dart';
 import 'package:frontend/ui/page/report/report_viewmodel.dart';
-import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
@@ -125,9 +123,9 @@ class App extends StatelessWidget {
   //   activityRepository: _activityRepository,
   // );
 
-  late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
-    rideRepository: _rideRepository,
-  );
+  // late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
+  //   rideRepository: _rideRepository,
+  // );
 
   // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
   //   rideRepository: _rideRepository,
@@ -169,99 +167,95 @@ class App extends StatelessWidget {
         // '/activities':
         // (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/report': (context) => ReportView(viewModel: reportViewModel),
-        '/create_ride':
-            (context) => CreateRideView(viewModel: createRideViewModel),
+        // '/create_ride':
+        // (context) => CreateRideView(viewModel: createRideViewModel),
       },
-      //   onGenerateRoute: (settings) {
-      //     if (settings.name == '/arrange_pickup') {
-      //       final args = settings.arguments as Map<String, dynamic>?;
+      onGenerateRoute: (settings) {
+        //     if (settings.name == '/arrange_pickup') {
+        //       final args = settings.arguments as Map<String, dynamic>?;
 
-      //       if (args == null ||
-      //           !args.containsKey('pickupRequest') ||
-      //           !args.containsKey('driver') ||
-      //           !args.containsKey('rideId')) {
-      //         return null;
-      //       }
+        //       if (args == null ||
+        //           !args.containsKey('pickupRequest') ||
+        //           !args.containsKey('driver') ||
+        //           !args.containsKey('rideId')) {
+        //         return null;
+        //       }
 
-      //       final pickupRequest = args['pickupRequest'] as PickupRequest;
-      //       final driver = args['driver'] as Driver;
-      //       final rideId = args['rideId'] as int;
+        //       final pickupRequest = args['pickupRequest'] as PickupRequest;
+        //       final driver = args['driver'] as Driver;
+        //       final rideId = args['rideId'] as int;
 
-      //       return MaterialPageRoute(
-      //         builder:
-      //             (context) => ArrangePickupView(
-      //               viewModel: ArrangePickupViewModel(
-      //                 repository: _pickupRepository,
-      //                 pickupRequest: pickupRequest,
-      //               ),
-      //             ),
-      //       );
-      //     }
+        //       return MaterialPageRoute(
+        //         builder:
+        //             (context) => ArrangePickupView(
+        //               viewModel: ArrangePickupViewModel(
+        //                 repository: _pickupRepository,
+        //                 pickupRequest: pickupRequest,
+        //               ),
+        //             ),
+        //       );
+        //     }
 
-      //     if (settings.name == '/confirm_pickup') {
-      //       final args = settings.arguments as Map<String, dynamic>?;
+        if (settings.name == '/confirm_pickup') {
+          final args = settings.arguments as Map<String, dynamic>?;
 
-      //       if (args == null || !args.containsKey('pickup')) {
-      //         return null;
-      //       }
+          if (args == null || !args.containsKey('pickup')) {
+            return null;
+          }
 
-      //       final pickup = args['pickup'] as Pickup;
+          final pickup = args['pickup'] as Pickup;
 
-      //       return MaterialPageRoute(
-      //         builder:
-      //             (context) => ConfirmPickupView(
-      //               pickup: pickup,
-      //               viewModel: ConfirmPickupViewModel(
-      //                 pickupRepository: _pickupRepository,
-      //                 pickup: pickup,
-      //               ),
-      //             ),
-      //       );
-      //     }
+          return MaterialPageRoute(
+            builder:
+                (context) => ConfirmPickupView(
+                  pickup: pickup,
+                  viewModel: ConfirmPickupViewModel(
+                    pickupRepository: _pickupRepository,
+                    pickup: pickup,
+                  ),
+                ),
+          );
+        }
 
-      //     if (settings.name == '/join_ride') {
-      //       final args = settings.arguments as Map<String, dynamic>?;
-      //       if (args == null || !args.containsKey('ride')) {
-      //         return null;
-      //       }
-      //       final ride = args['ride'] as Ride;
+        if (settings.name == '/join_ride') {
+          final ride = settings.arguments as Ride;
+          return MaterialPageRoute(
+            builder:
+                (context) => JoinRideView(
+                  viewModel: JoinRideViewModel(
+                    ride: ride,
+                    pickupRepository: _pickupRepository,
+                    rideRepository: _rideRepository,
+                  ),
+                ),
+          );
+        }
 
-      //       return MaterialPageRoute(
-      //         builder:
-      //             (context) => JoinRideView(
-      //               viewModel: JoinRideViewModel(
-      //                 ride: ride,
-      //                 pickupRepository: _pickupRepository,
-      //               ),
-      //             ),
-      //       );
-      //     }
+        //     if (settings.name == '/offer_ride') {
+        //       final args = settings.arguments;
+        //       Ride? ride;
+        //       if (args is Map<String, dynamic> && args.containsKey('ride')) {
+        //         ride = args['ride'] as Ride?;
+        //       } else if (args is Ride) {
+        //         ride = args;
+        //       } else {
+        //         ride = null;
+        //       }
 
-      //     if (settings.name == '/offer_ride') {
-      //       final args = settings.arguments;
-      //       Ride? ride;
-      //       if (args is Map<String, dynamic> && args.containsKey('ride')) {
-      //         ride = args['ride'] as Ride?;
-      //       } else if (args is Ride) {
-      //         ride = args;
-      //       } else {
-      //         ride = null;
-      //       }
+        //       return MaterialPageRoute(
+        //         builder:
+        //             (context) => OfferRideView(
+        //               viewModel: OfferRideViewModel(
+        //                 rideRepository: _rideRepository,
+        //               ),
+        //               activitiesViewModel: activitiesViewModel,
+        //               // Optionally pass ride to the viewmodel if needed
+        //             ),
+        //       );
+        //     }
 
-      //       return MaterialPageRoute(
-      //         builder:
-      //             (context) => OfferRideView(
-      //               viewModel: OfferRideViewModel(
-      //                 rideRepository: _rideRepository,
-      //               ),
-      //               activitiesViewModel: activitiesViewModel,
-      //               // Optionally pass ride to the viewmodel if needed
-      //             ),
-      //       );
-      //     }
-
-      //     return null;
-      //   },
+        return null;
+      },
     );
   }
 }
