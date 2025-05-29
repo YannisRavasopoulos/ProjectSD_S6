@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/place.dart';
 import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/location_repository.dart';

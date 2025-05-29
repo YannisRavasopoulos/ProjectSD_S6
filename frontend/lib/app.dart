@@ -87,6 +87,7 @@ class App extends StatelessWidget {
   late final FindRideViewModel findRideViewModel = FindRideViewModel(
     activityRepository: _activityRepository,
     rideRepository: _rideRepository,
+    locationRepository: _locationRepository,
   );
 
   late final HomeViewModel homeViewModel = HomeViewModel(

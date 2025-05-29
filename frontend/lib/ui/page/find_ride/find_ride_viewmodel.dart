@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/impl/impl_ride_request.dart';
 import 'package:frontend/data/model/activity.dart';
-import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
+import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -14,8 +13,10 @@ class FindRideViewModel extends ChangeNotifier {
   FindRideViewModel({
     required ActivityRepository activityRepository,
     required RideRepository rideRepository,
+    required LocationRepository locationRepository,
   }) : _activityRepository = activityRepository,
-       _rideRepository = rideRepository {
+       _rideRepository = rideRepository,
+       _locationRepository = locationRepository {
     // Listen for changes and update the model
     fromLocationController.addListener(fetchRides);
     toLocationController.addListener(fetchRides);
@@ -54,6 +55,7 @@ class FindRideViewModel extends ChangeNotifier {
 
   final RideRepository _rideRepository;
   final ActivityRepository _activityRepository;
+  final LocationRepository _locationRepository;
 
   void _onActivitiesUpdated(List<Activity> activities) {
     _activities = activities;
@@ -141,11 +143,15 @@ class FindRideViewModel extends ChangeNotifier {
 
     try {
       // TODO
+      var source = await _locationRepository.fetchForQuery(fromLocation);
+      var destination = await _locationRepository.fetchForQuery(toLocation);
       _rides = await _rideRepository.fetchMatchingRides(
         ImplRideRequest(
           id: 0,
-          origin: ImplLocation.test('start'),
-          destination: ImplLocation.test('end'),
+          origin: source,
+          destination: destination,
+          // origin: ImplLocation.test('start'),
+          // destination: ImplLocation.test('end'),
           departureTime: DateTime.now(),
           arrivalTime: DateTime.now().add(const Duration(hours: 1)),
           originRadius: Distance.withRadius(1000),
