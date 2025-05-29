@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class LoadingButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool isLoading;
   final Widget child;
   final ButtonStyle? style;
 
   const LoadingButton({
     super.key,
-    required this.onPressed,
+    this.onPressed,
     required this.isLoading,
     required this.child,
     this.style,

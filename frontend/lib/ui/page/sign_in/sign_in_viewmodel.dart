@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/repository/authentication_repository.dart';
-import 'package:frontend/data/repository/user_repository.dart';
 
 class SignInViewModel extends ChangeNotifier {
-  final AuthenticationRepository authenticationRepository;
-  final UserRepository userRepository;
-
-  SignInViewModel(this.authenticationRepository, this.userRepository);
+  SignInViewModel();
 
   String errorMessage = '';
   bool isLoading = false;
@@ -40,7 +35,8 @@ class SignInViewModel extends ChangeNotifier {
         return false;
       }
 
-      await authenticationRepository.authenticate(email, password);
+      // TODO
+      // await authenticationRepository.authenticate(email, password);
 
       return true;
     } catch (e) {
