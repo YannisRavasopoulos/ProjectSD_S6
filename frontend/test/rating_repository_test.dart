@@ -99,7 +99,29 @@ void main() {
       final afterDelete = await ratingRepository.fetch(john);
       expect(afterDelete.any((r) => r.id == rating.id), isFalse);
     });
+    test('does not allow duplicate rating IDs', () async {
+      final rating = ImplRating(
+        id: 3000,
+        fromUser: emma,
+        toUser: john,
+        stars: 5,
+        comment: "First rating",
+      );
+      await ratingRepository.create(rating);
 
+      final duplicateRating = ImplRating(
+        id: 3000, // same ID as above
+        fromUser: john,
+        toUser: emma,
+        stars: 2,
+        comment: "Duplicate rating",
+      );
+
+    expect(
+      () async => await ratingRepository.create(duplicateRating),
+      throwsA(isA<Exception>()),
+    );
+  });
     test('watch emits ratings updates', () async {
       final newUser = ImplUser(
         id: 201,
