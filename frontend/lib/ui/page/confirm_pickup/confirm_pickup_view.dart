@@ -26,7 +26,9 @@ class ConfirmPickupView extends StatelessWidget {
             padding: const EdgeInsets.all(24.0),
             child: Card(
               elevation: 4,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
@@ -34,12 +36,15 @@ class ConfirmPickupView extends StatelessWidget {
                   children: [
                     const Text(
                       'Pickup Details',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     ListTile(
                       leading: const Icon(Icons.location_on),
-                      title: Text('Location: ${pickup.location.name}'),
+                      title: Text('Location: ${pickup.address.toString()}'),
                     ),
                     ListTile(
                       leading: const Icon(Icons.access_time),
@@ -47,7 +52,7 @@ class ConfirmPickupView extends StatelessWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.person),
-                      title: Text('Driver: ${pickup.passenger.name}'),
+                      title: Text('Driver: ${pickup.ride.driver.name}'),
                     ),
                     if (viewModel.errorMessage != null)
                       Padding(
@@ -64,30 +69,48 @@ class ConfirmPickupView extends StatelessWidget {
                         ElevatedButton.icon(
                           icon: const Icon(Icons.check),
                           label: const Text('Accept'),
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                          ),
                           onPressed: () async {
                             final result = await viewModel.acceptPickup();
                             if (result && context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Pickup confirmed!')),
+                                const SnackBar(
+                                  content: Text('Pickup confirmed!'),
+                                ),
                               );
-                              await Future.delayed(const Duration(milliseconds: 500));
-                              Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+                              await Future.delayed(
+                                const Duration(milliseconds: 500),
+                              );
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/home',
+                                (route) => false,
+                              );
                             }
                           },
                         ),
                         ElevatedButton.icon(
                           icon: const Icon(Icons.close),
                           label: const Text('Reject'),
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
                           onPressed: () async {
                             final result = await viewModel.rejectPickup();
                             if (!result && context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Pickup rejected!')),
+                                const SnackBar(
+                                  content: Text('Pickup rejected!'),
+                                ),
                               );
-                              await Future.delayed(const Duration(milliseconds: 500));
-                              Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+                              await Future.delayed(
+                                const Duration(milliseconds: 500),
+                              );
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/home',
+                                (route) => false,
+                              );
                             }
                           },
                         ),

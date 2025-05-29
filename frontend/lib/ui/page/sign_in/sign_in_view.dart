@@ -45,9 +45,8 @@ class SignInView extends StatelessWidget {
                 children: [
                   SizedBox(height: 32),
                   Text(
-                    'Welcome!',
-                    style: TextStyle(fontSize: 24),
-                    textAlign: TextAlign.center,
+                    'Welcome Back',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 32),
                   EmailField(controller: viewModel.emailController),

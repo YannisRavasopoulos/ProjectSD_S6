@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
 
 class CreateRideForm extends StatelessWidget {
-  final String? from;
-  final String? to;
+  final Address? from;
+  final Address? to;
   final TimeOfDay? departureTime;
   final int seats;
   final String? errorMessage;
   final VoidCallback onCreateRide;
-  final ValueChanged<String> onFromChanged;
-  final ValueChanged<String> onToChanged;
+  final ValueChanged<Address> onFromChanged;
+  final ValueChanged<Address> onToChanged;
+  final TextEditingController onFromLocation;
+  final TextEditingController onToLocation;
   final ValueChanged<TimeOfDay> onDepartureTimeChanged;
   final ValueChanged<int> onSeatsChanged;
 
@@ -23,6 +26,8 @@ class CreateRideForm extends StatelessWidget {
     required this.onCreateRide,
     required this.onFromChanged,
     required this.onToChanged,
+    required this.onFromLocation,
+    required this.onToLocation,
     required this.onDepartureTimeChanged,
     required this.onSeatsChanged,
   });
@@ -49,8 +54,8 @@ class CreateRideForm extends StatelessWidget {
           child: Column(
             children: [
               RideLocationSelectors(
-                onFromLocationChanged: onFromChanged,
-                onToLocationChanged: onToChanged,
+                fromLocationController: onFromLocation,
+                toLocationController: onToLocation,
               ),
               const SizedBox(height: 16),
               Row(
@@ -96,10 +101,7 @@ class CreateRideForm extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               if (errorMessage != null)
-                Text(
-                  errorMessage!,
-                  style: const TextStyle(color: Colors.red),
-                ),
+                Text(errorMessage!, style: const TextStyle(color: Colors.red)),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,

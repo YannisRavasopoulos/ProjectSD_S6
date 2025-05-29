@@ -21,6 +21,10 @@ class ImplUser extends User {
     required this.points,
   });
 
+  factory ImplUser.random() {
+    return ImplUser(id: 0, firstName: 'John', lastName: 'Doe', points: 300);
+  }
+
   ImplUser copyWith({
     int? id,
     String? firstName,
@@ -43,16 +47,15 @@ class ImplUserRepository implements UserRepository {
     lastName: 'Doe',
     points: 300,
   );
-  
+
   ImplUser? _currentUser;
   final _userController = StreamController<User>.broadcast();
 
-  @override
   Future<void> updateCurrentUser(User user) async {
     try {
       if (user is ImplUser) {
-        _currentUser = user;  // Store the updated user
-        _userController.add(user);  // Notify listeners
+        _currentUser = user; // Store the updated user
+        _userController.add(user); // Notify listeners
         return Future.value(); // Explicitly return success
       } else {
         throw Exception('Invalid user type');

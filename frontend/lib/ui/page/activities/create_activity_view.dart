@@ -1,109 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
-import 'package:frontend/data/impl/impl_activity_repository.dart';
-import 'package:frontend/data/model/activity.dart';
-import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:frontend/ui/page/activities/create_activity_viewmodel.dart';
+import 'package:frontend/ui/shared/map/address_selector.dart';
 
-class CreateActivityView extends StatefulWidget {
-  final ActivitiesViewModel viewModel;
-  final Activity? activityToEdit; // Add this for editing
+class CreateActivityView extends StatelessWidget {
+  final CreateActivityViewModel viewModel;
 
-  const CreateActivityView({
-    super.key,
-    required this.viewModel,
-    this.activityToEdit,
-  });
+  const CreateActivityView({super.key, required this.viewModel});
 
-  @override
-  State<CreateActivityView> createState() => _CreateActivityViewState();
-}
+  void _onCreateOrUpdateActivityPressed(BuildContext context) async {
+    bool success = false;
 
-class _CreateActivityViewState extends State<CreateActivityView> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _startLocationController =
-      TextEditingController();
-  final TextEditingController _endLocationController = TextEditingController();
-
-  DateTime _startTime = DateTime.now();
-  DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
-
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.activityToEdit != null) {
-      final activity = widget.activityToEdit!;
-      _nameController.text = activity.name;
-
-      if (activity is ImplActivity) {
-        _descriptionController.text = activity.description;
-        _startLocationController.text = activity.startLocation.name;
-        _endLocationController.text = activity.endLocation.name;
-        _startTime = activity.startTime;
-        _endTime = activity.endTime;
-      }
+    if (viewModel.activity == null) {
+      success = await viewModel.createActivity();
+    } else {
+      success = await viewModel.editActivity();
     }
-  }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _descriptionController.dispose();
-    _startLocationController.dispose();
-    _endLocationController.dispose();
-    super.dispose();
-  }
-
-  void _createOrUpdateActivity() async {
-    if (_formKey.currentState!.validate()) {
-      final startLocation = ImplLocation(
-        id: DateTime.now().millisecondsSinceEpoch,
-        name: _startLocationController.text,
-        coordinates: const LatLng(0, 0),
+    if (success) {
+      Navigator.pop(context, true);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            viewModel.activity == null
+                ? 'Activity created successfully!'
+                : 'Activity updated successfully!',
+          ),
+        ),
       );
-
-      final endLocation = ImplLocation(
-        id: DateTime.now().millisecondsSinceEpoch + 1,
-        name: _endLocationController.text,
-        coordinates: const LatLng(0, 0),
+    } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(viewModel.errorMessage ?? 'An error occurred')),
       );
-
-      try {
-        if (widget.activityToEdit != null) {
-          final updatedActivity = ImplActivity(
-            id: widget.activityToEdit!.id,
-            name: _nameController.text,
-            description: _descriptionController.text,
-            startTime: _startTime,
-            endTime: _endTime,
-            startLocation: startLocation,
-            endLocation: endLocation,
-          );
-          await widget.viewModel.updateActivity(updatedActivity);
-        } else {
-          final newActivity = ImplActivity(
-            id: DateTime.now().millisecondsSinceEpoch + 2,
-            name: _nameController.text,
-            description: _descriptionController.text,
-            startTime: _startTime,
-            endTime: _endTime,
-            startLocation: startLocation,
-            endLocation: endLocation,
-          );
-          await widget.viewModel.createActivity(newActivity);
-        }
-        if (mounted) Navigator.pop(context);
-      } catch (e) {
-        // Show error to user
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${e.toString()}')),
-          );
-        }
-      }
     }
   }
 
@@ -111,91 +39,91 @@ class _CreateActivityViewState extends State<CreateActivityView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Create Activity'), centerTitle: true),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Fill in the details below to create a new activity:',
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 20.0),
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Activity Name',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an activity name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a description';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _startLocationController,
-                decoration: const InputDecoration(
-                  labelText: 'Start Location',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a start location';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _endLocationController,
-                decoration: const InputDecoration(
-                  labelText: 'End Location',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an end location';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 32.0),
-              Center(
-                child: ElevatedButton.icon(
-                  onPressed: _createOrUpdateActivity,
-                  icon: const Icon(Icons.add),
-                  label: Text(widget.activityToEdit == null ? 'Create Activity' : 'Update Activity'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 12.0,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+      body: ListenableBuilder(
+        listenable: viewModel,
+        builder: (context, _) {
+          if (viewModel.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return _buildForm(context);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildForm(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Fill in the details below to create a new activity:',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
           ),
-        ),
+          const SizedBox(height: 20.0),
+          TextField(
+            controller: viewModel.nameController,
+            decoration: const InputDecoration(
+              labelText: 'Activity Name',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          TextField(
+            controller: viewModel.descriptionController,
+            decoration: const InputDecoration(
+              labelText: 'Description (optional)',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          const SizedBox(height: 16.0),
+          AddressSelector(
+            addressRepository: viewModel.addressRepository,
+            onAddressSelected: viewModel.selectAddress,
+          ),
+          const SizedBox(height: 16.0),
+          ListTile(
+            title: const Text('Select Time'),
+            subtitle: Text(
+              viewModel.timeOfDay == null
+                  ? 'No time selected'
+                  : viewModel.timeOfDay!.format(context),
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.access_time),
+              onPressed: () async {
+                final time = await showTimePicker(
+                  context: context,
+                  initialTime: viewModel.timeOfDay ?? TimeOfDay.now(),
+                );
+                if (time != null) {
+                  viewModel.selectTimeOfDay(time);
+                }
+              },
+            ),
+          ),
+          const SizedBox(height: 32.0),
+          Center(
+            child: ElevatedButton.icon(
+              onPressed: () => _onCreateOrUpdateActivityPressed(context),
+              icon: const Icon(Icons.add),
+              label: Text(
+                viewModel.activity == null
+                    ? 'Create Activity'
+                    : 'Update Activity',
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 12.0,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

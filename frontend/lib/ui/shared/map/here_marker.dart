@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class HereMarker extends Marker {
-  HereMarker(point)
+  HereMarker(LatLng point)
     : super(
         point: point,
         child: Builder(

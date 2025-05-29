@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/ui/page/find_ride/activity_selection_panel.dart';
 import 'package:frontend/ui/page/find_ride/ride_card.dart';
 import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
 import 'package:frontend/ui/page/find_ride/ride_time_selectors.dart';
@@ -9,64 +12,144 @@ class FindRideView extends StatelessWidget {
 
   final FindRideViewModel viewModel;
 
-  Future<void> _showDepartureTimePicker(BuildContext context) async {
+  void _onActivitySelected(Activity activity, BuildContext context) {
+    viewModel.selectActivity(activity);
+    Navigator.pop(context, activity);
+  }
+
+  void onDepartureTimeSelected(String value, BuildContext context) async {
+    if (value != "Select") {
+      return;
+    }
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      viewModel.departureTimeController.text = pickedTime.format(context);
+    } else {
+      viewModel.departureTimeController.text = "Now";
+    }
+  }
+
+  void onArrivalTimeSelected(String value, BuildContext context) async {
+    if (value != "Select") {
+      return;
+    }
+
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
     );
 
-    viewModel.selectDepartureTime(pickedTime?.format(context));
+    if (pickedTime != null) {
+      viewModel.arrivalTimeController.text = pickedTime.format(context);
+    } else {
+      viewModel.arrivalTimeController.text = "Soonest";
+    }
   }
 
-  Future<void> _showArrivalTimePicker(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    viewModel.selectArrivalTime(pickedTime?.format(context));
+  void onJoinRidePressed(Ride ride, BuildContext context) {
+    Navigator.pushReplacementNamed(context, '/join_ride', arguments: ride);
   }
+
+  static const List<String> _departureTimes = [
+    'Now',
+    'in 15 minutes',
+    'in 30 minutes',
+    'Select',
+  ];
+  static const List<String> _arrivalTimes = [
+    'Soonest',
+    'in 15 minutes',
+    'in 30 minutes',
+    'Select',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Find a Ride')),
+      appBar: AppBar(
+        title: const Text('Find a Ride'),
+        backgroundColor: const Color.fromARGB(255, 23, 143, 117),
+      ),
       body: ListenableBuilder(
         listenable: viewModel,
         builder: (context, _) {
-          // Show the time picker if the user is selecting a departure time
-          if (viewModel.selectingDepartureTime) {
-            WidgetsBinding.instance.addPostFrameCallback(
-              (_) => _showDepartureTimePicker(context),
-            );
-          }
-
-          if (viewModel.selectingArrivalTime) {
-            WidgetsBinding.instance.addPostFrameCallback(
-              (_) => _showArrivalTimePicker(context),
-            );
-          }
-
           return Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.calendar_month),
+                    label: const Text('Select from activities'),
+                    onPressed: () async {
+                      await showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(24),
+                          ),
+                        ),
+                        builder:
+                            (context) => ActivitySelectionPanel(
+                              onActivitySelected:
+                                  (activity) =>
+                                      _onActivitySelected(activity, context),
+                              activities: viewModel.activities,
+                            ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              // --- Separator with text and icon ---
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    const Expanded(child: Divider(thickness: 1)),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.flash_on, color: Colors.amber),
+                    const SizedBox(width: 4),
+                    const Text(
+                      'Insta-Ride',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Expanded(child: Divider(thickness: 1)),
+                  ],
+                ),
+              ),
+              // --- End separator ---
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Form(
                   child: Column(
                     children: [
                       RideLocationSelectors(
-                        onFromLocationChanged: viewModel.setSource,
-                        onToLocationChanged: viewModel.setDestination,
+                        fromLocationController:
+                            viewModel.fromLocationController,
+                        toLocationController: viewModel.toLocationController,
                       ),
                       const SizedBox(height: 16.0),
                       RideTimeSelectors(
-                        key: ValueKey(viewModel.departureTime),
-                        departureTime: viewModel.departureTime,
-                        arrivalTime: viewModel.arrivalTime,
-                        departureTimes: viewModel.departureTimes,
-                        arrivalTimes: viewModel.arrivalTimes,
-                        onArrivalTimeChanged: viewModel.setArrivalTime,
-                        onDepartureTimeChanged: viewModel.setDepartureTime,
+                        departureTimeController:
+                            viewModel.departureTimeController,
+                        arrivalTimeController: viewModel.arrivalTimeController,
+                        departureTimes: _departureTimes,
+                        arrivalTimes: _arrivalTimes,
+                        onDepartureTimeSelected:
+                            (value) => onDepartureTimeSelected(value, context),
+                        onArrivalTimeSelected:
+                            (value) => onArrivalTimeSelected(value, context),
                       ),
                     ],
                   ),
@@ -89,7 +172,12 @@ class FindRideView extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     itemCount: viewModel.rides.length,
                     itemBuilder: (context, index) {
-                      return RideCard(ride: viewModel.rides[index]);
+                      final ride = viewModel.rides[index];
+                      return RideCard(
+                        ride: ride,
+                        onJoinRidePressed:
+                            () => onJoinRidePressed(ride, context),
+                      );
                     },
                   ),
                 ),
@@ -97,9 +185,29 @@ class FindRideView extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: viewModel.fetchRides,
-        child: const Icon(Icons.refresh),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              heroTag: 'activitiesBtn',
+              backgroundColor: const Color.fromARGB(255, 117, 202, 160),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/activities');
+              },
+              tooltip: 'Manage Activities',
+              child: const Icon(Icons.calendar_month),
+            ),
+            const SizedBox(height: 16),
+            FloatingActionButton(
+              heroTag: 'refreshBtn',
+              onPressed: viewModel.fetchRides,
+              child: const Icon(Icons.refresh),
+            ),
+          ],
+        ),
       ),
     );
   }

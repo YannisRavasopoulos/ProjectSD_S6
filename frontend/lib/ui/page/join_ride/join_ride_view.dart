@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/ui/notification/notification_overlay.dart';
+import 'package:frontend/ui/page/confirm_pickup/pickup_acknowledgement_notification.dart';
 import 'package:frontend/ui/page/join_ride/join_ride_viewmodel.dart';
 import 'package:frontend/ui/page/join_ride/detail_row.dart';
 
@@ -9,13 +11,22 @@ class JoinRideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pickupRequest = viewModel.joinRide();
+    viewModel.joinRide();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Joining Ride'), elevation: 0),
       body: AnimatedBuilder(
         animation: viewModel,
         builder: (context, _) {
+          if (viewModel.pickup != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              NotificationOverlay.show(
+                context,
+                PickupAcknowledgementNotification(pickup: viewModel.pickup!),
+              );
+            });
+          }
+
           if (viewModel.isLoading) {
             return Center(
               child: Column(
@@ -76,13 +87,13 @@ class JoinRideView extends StatelessWidget {
                           DetailRow(
                             icon: Icons.location_on,
                             label: 'From',
-                            value: viewModel.ride.route.start.name,
+                            value: viewModel.ride.route.start.toString(),
                           ),
                           const SizedBox(height: 16),
                           DetailRow(
                             icon: Icons.location_on,
                             label: 'To',
-                            value: viewModel.ride.route.end.name,
+                            value: viewModel.ride.route.end.toString(),
                           ),
                           const SizedBox(height: 16),
                           DetailRow(

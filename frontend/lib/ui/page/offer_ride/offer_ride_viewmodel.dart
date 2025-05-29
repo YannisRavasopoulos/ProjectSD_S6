@@ -2,22 +2,30 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
 import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/user.dart';
+import 'package:frontend/data/repository/activity_repository.dart';
+import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 
 class OfferRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
+  final AddressRepository addressRepository;
+  final ActivityRepository activityRepository;
 
   List<Ride> _createdRides = [];
   List<Ride> get createdRides => _createdRides;
+
+  List<Activity> activities;
 
   List<Passenger> _potentialPassengers = [];
   List<Passenger> get potentialPassengers => _potentialPassengers;
 
   StreamSubscription<List<Ride>>? _ridesSubscription;
   StreamSubscription<List<User>>? _potentialPassengersSubscription;
+  StreamSubscription<List<Activity>>? _activitiesSubscription;
 
   Ride? _selectedRide;
   Ride? get selectedRide => _selectedRide;
@@ -25,39 +33,54 @@ class OfferRideViewModel extends ChangeNotifier {
   Activity? _selectedActivity;
   Activity? get selectedActivity => _selectedActivity;
 
+  Address currentAddress;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  OfferRideViewModel({required this.rideRepository}) {
+  OfferRideViewModel({
+    required this.currentAddress,
+    required this.addressRepository,
+    required this.rideRepository,
+  }) {
     _init();
   }
 
-  void _init() {
+  void _onRidesUpdated(List<Ride> rides) {
+    int? driverId;
+    try {
+      final currentRide = rideRepository.fetchCurrent();
+      driverId = currentRide.driver.id;
+    } catch (_) {
+      driverId = null;
+    }
+    if (driverId != null) {
+      _createdRides = rides.where((r) => r.driver.id == driverId).toList();
+    } else {
+      _createdRides = [];
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void _onActivitiesUpdated(List<Activity> activities) {
+    this.activities = activities;
+  }
+
+  Future<void> _init() async {
+    currentAddress = await addressRepository.fetchCurrent();
+    activities = await activityRepository.fetch();
+
     _isLoading = true;
     notifyListeners();
-    _ridesSubscription = rideRepository.watchHistory().listen(
-      (rides) async {
-        int? driverId;
-        try {
-          final currentRide = await rideRepository.fetchCurrent();
-          driverId = currentRide.driver.id;
-        } catch (_) {
-          driverId = null;
-        }
-        if (driverId != null) {
-          _createdRides = rides.where((r) => r.driver.id == driverId).toList();
-        } else {
-          _createdRides = [];
-        }
-        _isLoading = false;
-        notifyListeners();
-      },
-      onError: (error) {
-        _createdRides = [];
-        _isLoading = false;
-        notifyListeners();
-      },
+
+    _ridesSubscription = rideRepository.watchHistory().listen(_onRidesUpdated);
+    _activitiesSubscription = activityRepository.watch().listen(
+      _onActivitiesUpdated,
     );
+
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> addRide(Ride ride) async {
@@ -99,11 +122,11 @@ class OfferRideViewModel extends ChangeNotifier {
     _potentialPassengersSubscription = rideRepository
         .watchPotentialPassengers(ride)
         .listen((users) {
-      _potentialPassengers = users.cast<Passenger>();
-      // For testing, always add a test passenger
-      _potentialPassengers.add(ImplPassenger.test());
-      notifyListeners();
-    });
+          _potentialPassengers = users.cast<Passenger>();
+          // For testing, always add a test passenger
+          _potentialPassengers.add(ImplPassenger.test());
+          notifyListeners();
+        });
   }
 
   Future<void> selectActivity(Activity activity) async {

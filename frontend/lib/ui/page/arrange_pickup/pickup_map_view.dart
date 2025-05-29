@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:frontend/data/model/location.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:frontend/config.dart';
 
 class PickupMapView extends StatefulWidget {
-  final Location location;
-  final Function(Location) onLocationChanged;
+  final LatLng location;
+  final ValueChanged<LatLng> onLocationChanged;
 
   const PickupMapView({
     super.key,
@@ -34,36 +32,31 @@ class _PickupMapViewState extends State<PickupMapView>
       curve: Curves.easeInOut,
       cancelPreviousAnimations: false,
     );
-    if (widget.location.coordinates.latitude != 0.0 ||
-        widget.location.coordinates.longitude != 0.0) {
-      selectedLocation = widget.location.coordinates;
+    if (widget.location.latitude != 0.0 || widget.location.longitude != 0.0) {
+      selectedLocation = widget.location;
     }
   }
 
   @override
   void didUpdateWidget(covariant PickupMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.location.coordinates != oldWidget.location.coordinates) {
+    if (widget.location != oldWidget.location) {
       setState(() {
-        selectedLocation = widget.location.coordinates;
+        selectedLocation = widget.location;
       });
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.5,
       child: FlutterMap(
-        mapController: _customMapController.mapController,
+        mapController: mapController,
         options: MapOptions(
           onTap: (tapPosition, point) {
             setState(() {
               selectedLocation = point;
             });
-            widget.onLocationChanged(
-              ImplLocation(id: 0, name: '', coordinates: point),
-            );
+            widget.onLocationChanged(point);
           },
           initialCenter: selectedLocation ?? const LatLng(0, 0),
           initialZoom: 8,
@@ -77,7 +70,7 @@ class _PickupMapViewState extends State<PickupMapView>
             markers: [
               if (selectedLocation != null)
                 Marker(
-                  point: selectedLocation!,
+                  point: selectedLocation,
                   child: const Icon(
                     Icons.location_on,
                     color: Colors.red,
@@ -89,11 +82,5 @@ class _PickupMapViewState extends State<PickupMapView>
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _customMapController.dispose();
-    super.dispose();
   }
 }

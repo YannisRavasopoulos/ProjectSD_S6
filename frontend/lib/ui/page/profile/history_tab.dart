@@ -1,4 +1,3 @@
-// lib/ui/profile/history_tab.dart
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 
@@ -47,15 +46,9 @@ class HistoryTab extends StatelessWidget {
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 4),
                           child: ListTile(
-                            leading: Icon(
-                              // Show driver icon if user was the driver, else passenger icon
-                              ride.driver.id == /* yourUserId */ 1
-                                  ? Icons.drive_eta
-                                  : Icons.person,
-                              color: Colors.blue,
-                            ),
+                            leading: Icon(Icons.person, color: Colors.blue),
                             title: Text(
-                              '${ride.route.start.name} → ${ride.route.end.name}',
+                              '${ride.route.start.toString()} → ${ride.route.end.toString()}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -74,7 +67,7 @@ class HistoryTab extends StatelessWidget {
                                 ),
                                 Text(
                                   // Example: distance and passengers
-                                  '${ride.route is Route && ride.route.start != null && ride.route.end != null ? '' : ''}• ${ride.passengers.length} passengers',
+                                  '${ride.route is Route ? '' : ''}• ${ride.passengers.length} passengers',
                                   style: const TextStyle(color: Colors.grey),
                                 ),
                               ],
@@ -90,8 +83,5 @@ class HistoryTab extends StatelessWidget {
   }
 }
 
-
-
 //OTAN BEI TO RIDE REPO KAI IMPL MODEL GIA TA PAST RIDES ADIKATHISTOUME ME TON PARAKATW KWDIKA
 // ...existing code...
-

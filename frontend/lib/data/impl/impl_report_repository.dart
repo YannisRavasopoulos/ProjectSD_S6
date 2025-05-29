@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/report.dart';
 import 'package:frontend/data/model/report_reason.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/report_repository.dart';
-import 'package:frontend/data/mocks/mock_user_repository.dart';
 
 class ImplReport extends Report {
   @override
@@ -13,23 +13,13 @@ class ImplReport extends Report {
   @override
   final ReportStatus status = ReportStatus.pending;
   @override
-  final User receiver = MockUser.random();
-
-  final String reporterId;
-
-  final String reportedUserId;
-
-  final String rideId;
+  final User receiver = ImplUser.random();
 
   final String details;
-
   final DateTime createdAt;
 
   ImplReport({
     required this.id,
-    required this.reporterId,
-    required this.reportedUserId,
-    required this.rideId,
     required this.reason,
     required this.details,
     required this.createdAt,
@@ -37,6 +27,11 @@ class ImplReport extends Report {
 }
 
 class ImplReportRepository implements ReportRepository {
+  // This sucks and is ugly but must be done for now...
+  ImplReportRepository({required ImplUserRepository userRepository})
+    : _userRepository = userRepository;
+
+  final ImplUserRepository _userRepository;
   final List<Report> _reports = [];
   final StreamController<List<Report>> _reportStreamController =
       StreamController.broadcast();
@@ -45,10 +40,26 @@ class ImplReportRepository implements ReportRepository {
     _reportStreamController.add(List.unmodifiable(_reports));
   }
 
+  bool _shouldApplyPenalty(User user) {
+    // Must have at least 3 reports to apply a penalty
+    final reports = _reports.where((report) => report.receiver.id == user.id);
+    return reports.length >= 3;
+  }
+
+  void _applyPenalty(User user) {
+    // TODO
+    print('Penalty applied to user ${user.name}.');
+  }
+
   @override
   Future<void> create(Report report) async {
     try {
       _reports.add(report);
+
+      if (_shouldApplyPenalty(report.receiver)) {
+        _applyPenalty(report.receiver);
+      }
+
       _notifyListeners();
       return Future.value();
     } catch (e) {

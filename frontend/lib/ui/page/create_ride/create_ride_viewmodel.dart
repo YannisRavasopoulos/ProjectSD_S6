@@ -1,35 +1,33 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_location_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
-import 'package:frontend/data/impl/impl_route.dart';
-import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/impl/impl_vehicle.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/driver.dart';
-import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/route.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
-import 'package:latlong2/latlong.dart';
 
 class CreateRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
-  final Ride? initialRide;
+  // final Ride? initialRide;
   StreamSubscription<List<Ride>>? _ridesSubscription;
+
+  TextEditingController fromLocationController = TextEditingController();
+  TextEditingController toLocationController = TextEditingController();
 
   List<Ride> _rides = [];
   List<Ride> get rides => _rides;
 
-  String? from;
-  String? to;
   TimeOfDay? departureTime;
   int seats = 1;
   int capacity = 4;
   Ride? createdRide;
   Ride? updatedRide;
   int? id;
-  Location? startLocation;
-  Location? endLocation;
+  Address? startLocation;
+  Address? endLocation;
   String firstName = "John";
   String lastName = "Doe";
   int points = 300; // Default points for the driver
@@ -39,19 +37,19 @@ class CreateRideViewModel extends ChangeNotifier {
   String? errorMessage;
   String? successMessage;
 
-  CreateRideViewModel({this.initialRide, required this.rideRepository}) {
-    if (initialRide != null) {
-      id = initialRide!.id;
-      from = initialRide!.route.start.name;
-      to = initialRide!.route.end.name;
-      departureTime = TimeOfDay(
-        hour: initialRide!.departureTime.hour,
-        minute: initialRide!.departureTime.minute,
-      );
-      seats = initialRide!.totalSeats - initialRide!.availableSeats;
-      capacity = initialRide!.totalSeats;
-      driver = initialRide!.driver;
-    }
+  CreateRideViewModel({required this.rideRepository}) {
+    // if (initialRide != null) {
+    //   id = initialRide!.id;
+    //   from = initialRide!.route.start.name;
+    //   to = initialRide!.route.end.name;
+    //   departureTime = TimeOfDay(
+    //     hour: initialRide!.departureTime.hour,
+    //     minute: initialRide!.departureTime.minute,
+    //   );
+    //   seats = initialRide!.totalSeats - initialRide!.availableSeats;
+    //   capacity = initialRide!.totalSeats;
+    //   driver = initialRide!.driver;
+    // }
     _init();
   }
 
@@ -74,13 +72,13 @@ class CreateRideViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  void setFrom(String value) {
-    from = value;
+  void setFrom(Address start) {
+    startLocation = start;
     notifyListeners();
   }
 
-  void setTo(String value) {
-    to = value;
+  void setTo(Address end) {
+    endLocation = end;
     notifyListeners();
   }
 
@@ -99,8 +97,24 @@ class CreateRideViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void createInitialRide(Ride initialRide) {
+    startLocation = initialRide.route.start;
+    endLocation = initialRide.route.end;
+    departureTime = TimeOfDay(
+      hour: initialRide.departureTime.hour,
+      minute: initialRide.departureTime.minute,
+    );
+    seats = initialRide.totalSeats - initialRide.availableSeats;
+    capacity = initialRide.totalSeats;
+    driver = initialRide.driver;
+    notifyListeners();
+  }
+
   Future<Ride?> saveRide() async {
-    if (from == null || to == null || departureTime == null || seats < 1) {
+    if (startLocation == null ||
+        endLocation == null ||
+        departureTime == null ||
+        seats < 1) {
       errorMessage = "Please fill in all fields.";
       notifyListeners();
       return null;
@@ -120,16 +134,16 @@ class CreateRideViewModel extends ChangeNotifier {
         departureTime!.minute,
       );
 
-      final startLocation = ImplLocation(
-        id: DateTime.now().millisecondsSinceEpoch,
-        coordinates: LatLng(37.0, 23.0),
-        name: from!,
-      );
-      final endLocation = ImplLocation(
-        id: DateTime.now().millisecondsSinceEpoch + 1,
-        coordinates: LatLng(37.5, 23.5),
-        name: to!,
-      );
+      // final startLocation = ImplLocation(
+      //   id: DateTime.now().millisecondsSinceEpoch,
+      //   coordinates: LatLng(37.0, 23.0),
+      //   name: from!,
+      // );
+      // final endLocation = ImplLocation(
+      //   id: DateTime.now().millisecondsSinceEpoch + 1,
+      //   coordinates: LatLng(37.5, 23.5),
+      //   name: to!,
+      // );
 
       final repo = rideRepository as ImplRideRepository;
 
@@ -144,39 +158,31 @@ class CreateRideViewModel extends ChangeNotifier {
           id: 999,
           firstName: "Test",
           lastName: "Driver",
-          vehicle: ImplVehicle(id: 1, description: "Test Car", capacity: capacity),
+          vehicle: ImplVehicle(
+            id: 1,
+            description: "Test Car",
+            capacity: capacity,
+          ),
           points: 100,
         );
       }
 
-      final route = ImplRoute(
-        id: id ?? DateTime.now().millisecondsSinceEpoch,
-        start: startLocation,
-        end: endLocation,
-      );
+      final route = Route(start: startLocation!, end: endLocation!);
 
-      final rideId = id ?? initialRide?.id ?? DateTime.now().millisecondsSinceEpoch;
-
-      final ride = ImplRide(
-        id: rideId,
+      final ride = Ride(
         driver: driver,
         passengers: [],
         departureTime: dt,
         estimatedArrivalTime: dt.add(const Duration(hours: 1)),
         estimatedDuration: const Duration(hours: 1),
-        totalSeats: capacity,
+        totalSeats: seats, // <-- use the selected seats here!
         route: route,
       );
 
-      if (initialRide != null) {
-        await rideRepository.update(ride);
-        successMessage = "Ride updated successfully!";
-        updatedRide = ride;
-      } else {
-        await rideRepository.create(ride);
-        successMessage = "Ride created successfully!";
-        createdRide = ride;
-      }
+      await rideRepository.create(ride);
+      successMessage = "Ride created successfully!";
+      createdRide = ride;
+
       return ride;
     } catch (e) {
       errorMessage = "Failed to save ride: $e";

@@ -1,12 +1,14 @@
+import 'package:frontend/data/repository/reward_repository.dart';
+import 'package:frontend/data/repository/user_repository.dart';
 import 'package:test/test.dart';
 import 'package:frontend/data/impl/impl_rewards_repository.dart';
 import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/reward.dart';
 
 void main() {
-  group('RewardsRepositoryImpl', () {
-    late ImplUserRepository userRepository;
-    late RewardsRepositoryImpl rewardsRepository;
+  group('RewardsRepository', () {
+    late UserRepository userRepository;
+    late RewardRepository rewardsRepository;
 
     setUp(() {
       userRepository = ImplUserRepository();

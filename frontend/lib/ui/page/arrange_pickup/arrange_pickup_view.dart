@@ -43,7 +43,7 @@ class ArrangePickupView extends StatelessWidget {
                           else
                             PickupForm(
                               selectedTime: viewModel.selectedTime,
-                              location: viewModel.location,
+                              location: viewModel.address,
                               onTimeSelected: viewModel.setPickupTime,
                               onLocationChanged: viewModel.setLocation,
                               onSubmit: () => _handleSubmit(context),
@@ -54,9 +54,19 @@ class ArrangePickupView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => _handleSubmit(context),
+                    onPressed: viewModel.ride.availableSeats == 0
+                        ? null
+                        : () => _handleSubmit(context),
                     child: const Text('Send Pickup Proposal'),
                   ),
+                  if (viewModel.ride.availableSeats == 0)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'This ride is full. No more seats available.',
+                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                 ],
               ),
             ),
