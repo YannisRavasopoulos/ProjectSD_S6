@@ -1,12 +1,10 @@
 // External libraries
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_address_repository.dart';
-import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/model/passenger.dart';
 
 // Repositories
 import 'package:frontend/data/repository/address_repository.dart';
-import 'package:frontend/data/repository/location_repository.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
@@ -17,18 +15,19 @@ import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 
 // Pages
-import 'package:frontend/ui/page/activities/activities_view.dart';
-import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
-import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
-import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
-import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
-import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
+// import 'package:frontend/ui/page/activities/activities_view.dart';
+// import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
+// import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
+// import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
+// import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
+// import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
+// import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
+// import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
+// import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_view.dart';
-import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
-import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
+// import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
+// import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_view.dart';
@@ -49,7 +48,6 @@ import 'package:frontend/ui/page/join_ride/join_ride_view.dart';
 import 'package:frontend/ui/page/join_ride/join_ride_viewmodel.dart';
 
 // Repository Implementations
-import 'package:frontend/data/impl/address_repository_impl.dart';
 import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/impl/impl_rating_repository.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
@@ -72,27 +70,25 @@ class App extends StatelessWidget {
   final ActivityRepository _activityRepository = ImplActivityRepository();
   final RideRepository _rideRepository = ImplRideRepository();
   final RatingRepository _ratingRepository = ImplRatingRepository();
-  final LocationRepository _locationRepository = ImplLocationRepository();
+  final AuthenticationRepository _authenticationRepository =
+      MockAuthenticationRepository();
+  final AddressRepository _addressRepository = ImplAddressRepository();
   late final RewardRepository _rewardRepository = RewardsRepositoryImpl(
     userRepository: _userRepository as ImplUserRepository,
   );
-  final AuthenticationRepository _authenticationRepository =
-      MockAuthenticationRepository();
-  final AddressRepository _addressRepository = AddressRepositoryImpl();
   late final ReportRepository _reportRepository = ImplReportRepository(
     userRepository: _userRepository as ImplUserRepository,
   );
   final PickupRepository _pickupRepository = ImplPickupRepository();
 
-  late final FindRideViewModel findRideViewModel = FindRideViewModel(
-    activityRepository: _activityRepository,
-    rideRepository: _rideRepository,
-    locationRepository: _locationRepository,
-  );
+  // late final FindRideViewModel findRideViewModel = FindRideViewModel(
+  //   activityRepository: _activityRepository,
+  //   rideRepository: _rideRepository,
+  //   locationRepository: _locationRepository,
+  // );
 
   late final HomeViewModel homeViewModel = HomeViewModel(
     userRepository: _userRepository,
-    locationRepository: _locationRepository,
     addressRepository: _addressRepository,
   );
 
@@ -112,10 +108,6 @@ class App extends StatelessWidget {
     userRepository: _userRepository,
   );
 
-  late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
-    rideRepository: _rideRepository,
-  );
-
   late final SignInViewModel signInViewModel = SignInViewModel(
     _authenticationRepository,
     _userRepository,
@@ -125,29 +117,24 @@ class App extends StatelessWidget {
     userRepository: _userRepository,
   );
 
-  late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
-    activityRepository: _activityRepository,
-  );
+  // late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
+  //   rideRepository: _rideRepository,
+  // );
 
-  late final ReportViewModel reportViewModel = ReportViewModel(
-    reportRepository: _reportRepository,
-  );
+  // late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
+  //   activityRepository: _activityRepository,
+  // );
 
-  late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
-    rideRepository: _rideRepository,
-  );
+  // late final ReportViewModel reportViewModel = ReportViewModel(
+  //   reportRepository: _reportRepository,
+  // );
 
-  late final RidesViewModel ridesViewModel = RidesViewModel(
-    rideRepository: _rideRepository,
-  );
+  // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
+  //   rideRepository: _rideRepository,
+  // );
 
-  // final AuthenticationRepository _authenticationRepository =
-  //     AuthenticationRepository();
-  // final ActivityRepository _activityRepository = ActivityRepository();
-  // final ReportRepository _reportRepository = ReportRepository();
-
-  // late final RidesListViewModel ridesViewModel = RidesListViewModel(
-  //   rideRepository: _rides,
+  // late final RidesViewModel ridesViewModel = RidesViewModel(
+  //   rideRepository: _rideRepository,
   // );
 
   final bool isLoggedIn = true;
@@ -166,7 +153,6 @@ class App extends StatelessWidget {
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
         '/forgot_password': (context) => ForgotPasswordView(),
         '/home': (context) => HomeView(viewModel: homeViewModel),
-        '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
         '/rate':
             (context) => RateView(
               toUser: ImplUser(
@@ -179,105 +165,106 @@ class App extends StatelessWidget {
             ),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
-        '/activities':
-            (context) => ActivitiesView(viewModel: activitiesViewModel),
-        '/report': (context) => ReportView(viewModel: reportViewModel),
-        '/create_ride':
-            (context) => CreateRideView(
-              viewModel: createRideViewModel,
-              ridesViewModel: ridesViewModel,
-            ),
+        // '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
+        // '/activities':
+        //     (context) => ActivitiesView(viewModel: activitiesViewModel),
+        // '/report': (context) => ReportView(viewModel: reportViewModel),
+        // '/create_ride':
+        //     (context) => CreateRideView(
+        //       viewModel: createRideViewModel,
+        //       ridesViewModel: ridesViewModel,
+        //     ),
       },
-      onGenerateRoute: (settings) {
-        if (settings.name == '/arrange_pickup') {
-          final args = settings.arguments as Map<String, dynamic>?;
+      //   onGenerateRoute: (settings) {
+      //     if (settings.name == '/arrange_pickup') {
+      //       final args = settings.arguments as Map<String, dynamic>?;
 
-          if (args == null ||
-              !args.containsKey('pickupRequest') ||
-              !args.containsKey('driver') ||
-              !args.containsKey('rideId')) {
-            return null;
-          }
+      //       if (args == null ||
+      //           !args.containsKey('pickupRequest') ||
+      //           !args.containsKey('driver') ||
+      //           !args.containsKey('rideId')) {
+      //         return null;
+      //       }
 
-          final pickupRequest = args['pickupRequest'] as PickupRequest;
-          final driver = args['driver'] as Driver;
-          final rideId = args['rideId'] as int;
+      //       final pickupRequest = args['pickupRequest'] as PickupRequest;
+      //       final driver = args['driver'] as Driver;
+      //       final rideId = args['rideId'] as int;
 
-          return MaterialPageRoute(
-            builder:
-                (context) => ArrangePickupView(
-                  viewModel: ArrangePickupViewModel(
-                    repository: _pickupRepository,
-                    pickupRequest: pickupRequest,
-                  ),
-                ),
-          );
-        }
+      //       return MaterialPageRoute(
+      //         builder:
+      //             (context) => ArrangePickupView(
+      //               viewModel: ArrangePickupViewModel(
+      //                 repository: _pickupRepository,
+      //                 pickupRequest: pickupRequest,
+      //               ),
+      //             ),
+      //       );
+      //     }
 
-        if (settings.name == '/confirm_pickup') {
-          final args = settings.arguments as Map<String, dynamic>?;
+      //     if (settings.name == '/confirm_pickup') {
+      //       final args = settings.arguments as Map<String, dynamic>?;
 
-          if (args == null || !args.containsKey('pickup')) {
-            return null;
-          }
+      //       if (args == null || !args.containsKey('pickup')) {
+      //         return null;
+      //       }
 
-          final pickup = args['pickup'] as Pickup;
+      //       final pickup = args['pickup'] as Pickup;
 
-          return MaterialPageRoute(
-            builder:
-                (context) => ConfirmPickupView(
-                  pickup: pickup,
-                  viewModel: ConfirmPickupViewModel(
-                    pickupRepository: _pickupRepository,
-                    pickup: pickup,
-                  ),
-                ),
-          );
-        }
+      //       return MaterialPageRoute(
+      //         builder:
+      //             (context) => ConfirmPickupView(
+      //               pickup: pickup,
+      //               viewModel: ConfirmPickupViewModel(
+      //                 pickupRepository: _pickupRepository,
+      //                 pickup: pickup,
+      //               ),
+      //             ),
+      //       );
+      //     }
 
-        if (settings.name == '/join_ride') {
-          final args = settings.arguments as Map<String, dynamic>?;
-          if (args == null || !args.containsKey('ride')) {
-            return null;
-          }
-          final ride = args['ride'] as Ride;
+      //     if (settings.name == '/join_ride') {
+      //       final args = settings.arguments as Map<String, dynamic>?;
+      //       if (args == null || !args.containsKey('ride')) {
+      //         return null;
+      //       }
+      //       final ride = args['ride'] as Ride;
 
-          return MaterialPageRoute(
-            builder:
-                (context) => JoinRideView(
-                  viewModel: JoinRideViewModel(
-                    ride: ride,
-                    pickupRepository: _pickupRepository,
-                  ),
-                ),
-          );
-        }
+      //       return MaterialPageRoute(
+      //         builder:
+      //             (context) => JoinRideView(
+      //               viewModel: JoinRideViewModel(
+      //                 ride: ride,
+      //                 pickupRepository: _pickupRepository,
+      //               ),
+      //             ),
+      //       );
+      //     }
 
-        if (settings.name == '/offer_ride') {
-          final args = settings.arguments;
-          Ride? ride;
-          if (args is Map<String, dynamic> && args.containsKey('ride')) {
-            ride = args['ride'] as Ride?;
-          } else if (args is Ride) {
-            ride = args;
-          } else {
-            ride = null;
-          }
+      //     if (settings.name == '/offer_ride') {
+      //       final args = settings.arguments;
+      //       Ride? ride;
+      //       if (args is Map<String, dynamic> && args.containsKey('ride')) {
+      //         ride = args['ride'] as Ride?;
+      //       } else if (args is Ride) {
+      //         ride = args;
+      //       } else {
+      //         ride = null;
+      //       }
 
-          return MaterialPageRoute(
-            builder:
-                (context) => OfferRideView(
-                  viewModel: OfferRideViewModel(
-                    rideRepository: _rideRepository,
-                  ),
-                  activitiesViewModel: activitiesViewModel,
-                  // Optionally pass ride to the viewmodel if needed
-                ),
-          );
-        }
+      //       return MaterialPageRoute(
+      //         builder:
+      //             (context) => OfferRideView(
+      //               viewModel: OfferRideViewModel(
+      //                 rideRepository: _rideRepository,
+      //               ),
+      //               activitiesViewModel: activitiesViewModel,
+      //               // Optionally pass ride to the viewmodel if needed
+      //             ),
+      //       );
+      //     }
 
-        return null;
-      },
+      //     return null;
+      //   },
     );
   }
 }

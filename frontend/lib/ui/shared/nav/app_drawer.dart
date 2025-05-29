@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
-import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
-import 'package:frontend/data/impl/impl_route.dart';
-import 'package:frontend/data/mocks/mock_location_repository.dart';
+
+import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/pickup.dart';
+import 'package:frontend/data/model/pickup_request.dart';
+import 'package:frontend/data/model/route.dart';
 import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
 import 'package:frontend/ui/page/confirm_pickup/pickup_acknowledgement_notification.dart';
@@ -83,16 +84,16 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.bug_report),
             title: const Text('Arrange Pickup Notification (Test)'),
             onTap: () {
-              final pickupRequest = ImplPickupRequest(
+              final pickupRequest = PickupRequest(
                 id: 12345,
                 passenger: ImplPassenger.test(),
-                location: MockLocation.random(),
+                address: Address.fake(),
                 time: DateTime.now(),
                 ride: ImplRide(
                   id: 1,
                   driver: ImplDriver.test(),
                   passengers: [],
-                  route: ImplRoute.test(),
+                  route: Route(start: Address.fake(), end: Address.fake()),
                   departureTime: DateTime.now(),
                   estimatedArrivalTime: DateTime.now().add(
                     Duration(minutes: 30),
@@ -116,16 +117,15 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.bug_report),
             title: const Text('Confirm Pickup Notification (Test)'),
             onTap: () {
-              final pickup = ImplPickup(
-                id: 12345,
+              final pickup = Pickup(
                 passenger: ImplPassenger.test(),
-                location: ImplLocation.test('start'),
+                address: Address.fake(),
                 time: DateTime.now(),
                 ride: ImplRide(
                   id: 1,
                   driver: ImplDriver.test(),
                   passengers: [],
-                  route: ImplRoute.test(),
+                  route: Route(end: Address.fake(), start: Address.fake()),
                   departureTime: DateTime.now(),
                   estimatedArrivalTime: DateTime.now().add(
                     Duration(minutes: 90),
@@ -161,7 +161,7 @@ class AppDrawer extends StatelessWidget {
                 id: 42,
                 driver: ImplDriver.test(),
                 passengers: [],
-                route: ImplRoute.test(),
+                route: Route(end: Address.fake(), start: Address.fake()),
                 departureTime: DateTime.now().add(const Duration(hours: 1)),
                 estimatedArrivalTime: DateTime.now().add(
                   const Duration(hours: 2),
@@ -170,7 +170,7 @@ class AppDrawer extends StatelessWidget {
                 estimatedDuration: const Duration(hours: 1),
               );
               final passenger = ImplPassenger.test();
-              final location = ImplLocation.test('start');
+              final location = Address.fake();
 
               // Navigate to join ride screen
               Navigator.pop(context);

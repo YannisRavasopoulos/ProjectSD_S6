@@ -1,61 +1,7 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/pickup_request.dart';
-import 'package:frontend/data/model/passenger.dart';
-import 'package:frontend/data/model/location.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
-import 'package:frontend/data/model/ride.dart';
-
-// Implementation of PickupRequest
-class ImplPickupRequest extends PickupRequest {
-  @override
-  final int id;
-  @override
-  final Ride ride;
-  @override
-  final Passenger passenger;
-  @override
-  final Location location;
-  @override
-  final DateTime time;
-  @override
-  final DateTime createdAt;
-
-  ImplPickupRequest({
-    required this.id,
-    required this.ride,
-    required this.passenger,
-    required this.location,
-    required this.time,
-    DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
-}
-
-// Existing ImplPickup implementation
-class ImplPickup extends Pickup {
-  @override
-  final int id;
-  @override
-  final Ride ride;
-  @override
-  final Passenger passenger;
-  @override
-  final Location location;
-  @override
-  final DateTime time;
-  @override
-  final DateTime createdAt;
-
-  ImplPickup({
-    required this.id,
-    required this.ride,
-    required this.passenger,
-    required this.location,
-    required this.time,
-    DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
-}
 
 class ImplPickupRepository implements PickupRepository {
   final List<PickupRequest> _pickupRequests =
@@ -82,11 +28,10 @@ class ImplPickupRepository implements PickupRepository {
     _requestsController.add(List.from(_pickupRequests));
 
     // dummy returning pickup instance - testing purposes
-    final pickup = ImplPickup(
-      id: Random().nextInt(10000),
+    final pickup = Pickup(
       ride: request.ride,
       passenger: request.passenger,
-      location: request.location,
+      address: request.address,
       time: request.time,
     );
 
@@ -99,7 +44,7 @@ class ImplPickupRepository implements PickupRepository {
 
     // Passenger accepts the pickup - this confirms they want to proceed
     // The pickup should already be in pending state (driver has accepted the request)
-    if (!_pendingPickups.any((p) => p.id == pickup.id)) {
+    if (!_pendingPickups.any((p) => p == pickup)) {
       _pendingPickups.add(pickup);
       _pendingController.add(List.from(_pendingPickups));
     }
@@ -109,8 +54,8 @@ class ImplPickupRepository implements PickupRepository {
   Future<void> rejectPickup(Pickup pickup) async {
     await Future.delayed(const Duration(milliseconds: 500));
 
-    // Passenger rejects the pickup
-    _pendingPickups.removeWhere((p) => p.id == pickup.id);
+    // Passenger rejects the pickup: TODO
+    _pendingPickups.removeWhere((p) => p == pickup);
     _pendingController.add(List.from(_pendingPickups));
   }
 
@@ -176,8 +121,8 @@ class ImplPickupRepository implements PickupRepository {
   Future<void> cancelPickup(Pickup pickup) async {
     await Future.delayed(const Duration(milliseconds: 800));
 
-    // Afairw to pickup (at any stage)
-    _pendingPickups.removeWhere((p) => p.id == pickup.id);
+    // TODO: Afairw to pickup (at any stage)
+    _pendingPickups.removeWhere((p) => p == pickup);
     _pendingController.add(List.from(_pendingPickups));
   }
 
@@ -186,7 +131,7 @@ class ImplPickupRepository implements PickupRepository {
     await Future.delayed(const Duration(milliseconds: 800));
 
     // Move pickup apo pending se completed
-    _pendingPickups.removeWhere((p) => p.id == pickup.id);
+    _pendingPickups.removeWhere((p) => p == pickup);
     _completedPickups.add(pickup);
 
     _pendingController.add(List.from(_pendingPickups));

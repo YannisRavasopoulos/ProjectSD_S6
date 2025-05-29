@@ -35,7 +35,7 @@ class RideCard extends StatelessWidget {
                         'Available seats: ${ride.availableSeats}/${ride.totalSeats}',
                       ),
                       Text(
-                        'Route: ${ride.route.start.name} to ${ride.route.end.name}',
+                        'Route: ${ride.route.start.toString()} to ${ride.route.end.toString()}',
                       ),
                     ],
                   ),

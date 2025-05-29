@@ -87,13 +87,13 @@ class JoinRideView extends StatelessWidget {
                           DetailRow(
                             icon: Icons.location_on,
                             label: 'From',
-                            value: viewModel.ride.route.start.name,
+                            value: viewModel.ride.route.start.toString(),
                           ),
                           const SizedBox(height: 16),
                           DetailRow(
                             icon: Icons.location_on,
                             label: 'To',
-                            value: viewModel.ride.route.end.name,
+                            value: viewModel.ride.route.end.toString(),
                           ),
                           const SizedBox(height: 16),
                           DetailRow(

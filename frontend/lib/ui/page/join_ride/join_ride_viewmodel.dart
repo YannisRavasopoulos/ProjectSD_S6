@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
-import 'package:frontend/data/impl/impl_pickup_repository.dart';
 
 class JoinRideViewModel extends ChangeNotifier {
   final Ride ride;
@@ -23,11 +23,11 @@ class JoinRideViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final pickupRequest = ImplPickupRequest(
+      final pickupRequest = PickupRequest(
         id: DateTime.now().millisecondsSinceEpoch,
         ride: ride,
         passenger: ImplPassenger.test(),
-        location: ImplLocation.test('start'),
+        address: Address.fake(),
         time: DateTime.now(),
       );
       pickup = await pickupRepository.requestPickup(pickupRequest);

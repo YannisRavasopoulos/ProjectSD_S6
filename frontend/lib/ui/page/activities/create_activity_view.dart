@@ -69,13 +69,13 @@ class _CreateActivityViewState extends State<CreateActivityView> {
 
       try {
         if (widget.activityToEdit != null) {
-          final updatedActivity = ImplActivity(
+          final updatedActivity = Activity(
             id: widget.activityToEdit!.id,
             name: _nameController.text,
             description: _descriptionController.text,
             startTime: _startTime,
-            startLocation: startLocation,
-            endLocation: endLocation,
+            endTime: widget.activityToEdit!.endTime,
+            address: widget.activityToEdit!.address,
           );
           await widget.viewModel.updateActivity(updatedActivity);
         } else {

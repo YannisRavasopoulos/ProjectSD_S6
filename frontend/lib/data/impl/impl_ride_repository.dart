@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/impl/impl_vehicle.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
@@ -10,7 +10,7 @@ import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 import 'package:frontend/data/impl/impl_driver.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
-import 'package:frontend/data/impl/impl_route.dart';
+import 'package:latlong2/latlong.dart';
 
 class ImplRide extends Ride {
   @override
@@ -60,11 +60,7 @@ class ImplRideRepository implements RideRepository {
       passengers: [
         ImplPassenger(id: 94, firstName: 'Bob', lastName: 'Brown', points: 60),
       ],
-      route: ImplRoute(
-        id: 1,
-        start: originLocations[2],
-        end: destinationLocations[1],
-      ),
+      route: Route(start: Address.fake(), end: Address.fake()), // TODO: FIX
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
       estimatedDuration: const Duration(hours: 1),
@@ -83,11 +79,7 @@ class ImplRideRepository implements RideRepository {
         ImplPassenger(id: 10, firstName: 'Tim', lastName: 'Cheese', points: 60),
         ImplPassenger(id: 11, firstName: 'Yo', lastName: 'Gurt', points: 90),
       ],
-      route: ImplRoute(
-        id: 2,
-        start: ImplLocation.test('start'),
-        end: ImplLocation.test('end'),
-      ),
+      route: Route(start: Address.fake(), end: Address.fake()), // TODO: FIX
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 3)),
       estimatedDuration: const Duration(hours: 4),
@@ -113,11 +105,7 @@ class ImplRideRepository implements RideRepository {
       passengers: [
         ImplPassenger(id: 33, firstName: 'Tung', lastName: 'Tung', points: 70),
       ],
-      route: ImplRoute(
-        id: 1,
-        start: ImplLocation.test('start'),
-        end: ImplLocation.test('end'),
-      ),
+      route: Route(start: Address.fake(), end: Address.fake()), // TODO: Test
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
       estimatedDuration: const Duration(hours: 1),
@@ -136,16 +124,26 @@ class ImplRideRepository implements RideRepository {
 
   final Map<int, List<Ride>> _createdRidesByDriver = {};
 
+  int _distance(LatLng a, LatLng b) {
+    var d = Distance();
+    return d
+        .as(
+          LengthUnit.Meter,
+          LatLng(a.latitude, a.longitude),
+          LatLng(b.latitude, b.longitude),
+        )
+        .round();
+  }
+
   @override
   Future<List<Ride>> fetchMatchingRides(RideRequest request) async {
     await Future.delayed(const Duration(milliseconds: 300));
     return _rides.where((ride) {
-      // Match by origin name only (case-insensitive, trimmed)
-      final bool originMatch =
-          (ride.route.start.name.trim().toLowerCase() ==
-                  request.origin.name.trim().toLowerCase() ||
-              ride.route.end.name.trim().toLowerCase() ==
-                  request.destination.name.trim().toLowerCase());
+      // Match by proximity to origin
+      final originMatch =
+          _distance(ride.route.start.coordinates, request.origin.coordinates) <=
+          10000; // within 10 km TODO hardcoded
+
       return originMatch;
     }).toList();
   }
