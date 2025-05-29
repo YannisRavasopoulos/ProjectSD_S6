@@ -175,7 +175,7 @@ class CreateRideViewModel extends ChangeNotifier {
         departureTime: dt,
         estimatedArrivalTime: dt.add(const Duration(hours: 1)),
         estimatedDuration: const Duration(hours: 1),
-        totalSeats: capacity,
+        totalSeats: seats, // <-- use the selected seats here!
         route: route,
       );
 

@@ -59,9 +59,6 @@ import 'package:frontend/data/impl/impl_rewards_repository.dart';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
 
-// Mocks
-import 'package:frontend/data/mocks/mock_authentication_repository.dart';
-
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/pickup.dart';
@@ -115,9 +112,7 @@ class App extends StatelessWidget {
     _userRepository,
   );
 
-  late final SignUpViewModel signUpViewModel = SignUpViewModel(
-    userRepository: _userRepository,
-  );
+  late final SignUpViewModel signUpViewModel = SignUpViewModel();
 
   late final ReportViewModel reportViewModel = ReportViewModel(
     reportRepository: _reportRepository,
@@ -139,7 +134,7 @@ class App extends StatelessWidget {
   //   rideRepository: _rideRepository,
   // );
 
-  final bool isLoggedIn = true;
+  final bool isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {

@@ -47,12 +47,10 @@ class _PickupMapViewState extends State<PickupMapView>
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.5,
       child: FlutterMap(
-        mapController: _customMapController.mapController,
+        mapController: mapController,
         options: MapOptions(
           onTap: (tapPosition, point) {
             setState(() {
@@ -72,7 +70,7 @@ class _PickupMapViewState extends State<PickupMapView>
             markers: [
               if (selectedLocation != null)
                 Marker(
-                  point: selectedLocation!,
+                  point: selectedLocation,
                   child: const Icon(
                     Icons.location_on,
                     color: Colors.red,
@@ -84,11 +82,5 @@ class _PickupMapViewState extends State<PickupMapView>
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _customMapController.dispose();
-    super.dispose();
   }
 }
