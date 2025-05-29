@@ -23,6 +23,25 @@ class AddressSelector extends StatefulWidget {
 
 class _AddressSelector extends State<AddressSelector>
     with TickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+    _getUserLocation();
+  }
+
+  bool _isLoading = true;
+  LatLng _center = LatLng(0, 0);
+  Address? _address;
+
+  void _getUserLocation() async {
+    // Fetch the user's current location and update the map center
+    var address = await widget.addressRepository.fetchCurrent();
+    setState(() {
+      _center = address.coordinates;
+      _isLoading = false;
+    });
+  }
+
   late final AnimatedMapController _animatedMapController =
       AnimatedMapController(
         vsync: this,
@@ -31,60 +50,64 @@ class _AddressSelector extends State<AddressSelector>
         cancelPreviousAnimations: false,
       );
 
-  LatLng _center = LatLng(0, 0); // Example: Athens, Greece
-  Address? _address;
-
-  @override
-  void dispose() {
-    _animatedMapController.dispose();
-    super.dispose();
-  }
-
   void _onMapTapped(TapPosition tapPosition, LatLng point) async {
     setState(() {
       _center = point;
     });
 
-    var address = await widget.addressRepository.fetchForCoordinates(point);
-    _address = address[0];
-    widget.onAddressSelected(_address!);
+    var addresses = await widget.addressRepository.fetchForCoordinates(point);
+
+    if (addresses.isEmpty) {
+      _address = null;
+      return;
+    }
+
+    _address = addresses[0];
+    widget.onAddressSelected(addresses[0]);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: Stack(
-        children: [
-          FlutterMap(
-            mapController: _animatedMapController.mapController,
-            options: MapOptions(
-              initialCenter: _center,
-              initialZoom: 13.0,
-              onTap: _onMapTapped,
-            ),
-            children: [
-              OpenStreetMapsTileLayer(),
-              MarkerLayer(markers: [HereMarker(_center)]),
-            ],
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return Stack(
+      children: [
+        FlutterMap(
+          mapController: _animatedMapController.mapController,
+          options: MapOptions(
+            initialCenter: _center,
+            initialZoom: 13.0,
+            onTap: _onMapTapped,
           ),
-          Positioned(
-            top: 4,
-            left: 4,
-            right: 4,
-            child: Container(
-              decoration: BoxDecoration(color: Colors.white),
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: Column(
-                children: [
-                  Text("${_center}"),
-                  if (_address != null) Text(_address.toString()),
-                ],
-              ),
+          children: [
+            OpenStreetMapsTileLayer(),
+            MarkerLayer(markers: [HereMarker(_center)]),
+          ],
+        ),
+        Positioned(
+          top: 4,
+          left: 4,
+          right: 4,
+          child: Container(
+            decoration: BoxDecoration(color: Colors.white),
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: Column(
+              children: [
+                Text("${_center}"),
+                if (_address != null) Text(_address.toString()),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  @override
+  void dispose() {
+    _animatedMapController.dispose();
+    super.dispose();
   }
 }

@@ -62,7 +62,6 @@ import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
 
 class App extends StatelessWidget {
-  // Replace mocks with implementations
   final UserRepository _userRepository = ImplUserRepository();
   final ActivityRepository _activityRepository = ImplActivityRepository();
   final RideRepository _rideRepository = ImplRideRepository();
@@ -126,7 +125,7 @@ class App extends StatelessWidget {
   //   rideRepository: _rideRepository,
   // );
 
-  final bool isLoggedIn = false;
+  final bool isLoggedIn = true;
 
   @override
   Widget build(BuildContext context) {

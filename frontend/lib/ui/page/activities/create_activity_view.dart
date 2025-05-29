@@ -80,9 +80,12 @@ class CreateActivityView extends StatelessWidget {
             maxLines: 3,
           ),
           const SizedBox(height: 16.0),
-          AddressSelector(
-            addressRepository: viewModel.addressRepository,
-            onAddressSelected: viewModel.selectAddress,
+          SizedBox(
+            height: 200.0,
+            child: AddressSelector(
+              addressRepository: viewModel.addressRepository,
+              onAddressSelected: viewModel.selectAddress,
+            ),
           ),
           const SizedBox(height: 16.0),
           ListTile(
