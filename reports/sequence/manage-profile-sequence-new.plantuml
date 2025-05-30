@@ -5,12 +5,13 @@ actor User
 alt Main Flow
     User -> MainScreen : Selects "Profile"
     activate MainScreen
+    activate UserRepository
+    activate RideRepository
+    activate RatingRepository
     MainScreen -> ProfileViewModel : Fetch user profile data
     activate ProfileViewModel
     ProfileViewModel -> UserRepository : fetchCurrent()
-    activate UserRepository
     UserRepository --> ProfileViewModel : User data
-    deactivate UserRepository
     ProfileViewModel --> MainScreen : Show Profile Screen
     deactivate ProfileViewModel
     deactivate MainScreen
@@ -22,9 +23,7 @@ alt Main Flow
     EditProfileScreen -> ProfileViewModel : Validate and save changes
     activate ProfileViewModel
     ProfileViewModel -> UserRepository : updateUser()
-    activate UserRepository
     UserRepository --> ProfileViewModel : Update confirmation
-    deactivate UserRepository
     ProfileViewModel --> EditProfileScreen : Success
     deactivate ProfileViewModel
     EditProfileScreen --> ProfileScreen : Show success message
@@ -45,9 +44,7 @@ alt View Past Rides
     ProfileScreen -> ProfileViewModel : Fetch past rides
     activate ProfileViewModel
     ProfileViewModel -> RideRepository : fetchHistory()
-    activate RideRepository
     RideRepository --> ProfileViewModel : Past rides
-    deactivate RideRepository
     ProfileViewModel --> ProfileScreen : Show Past Rides
     deactivate ProfileViewModel
     deactivate ProfileScreen
@@ -56,9 +53,7 @@ alt View Past Rides
     ProfileScreen -> ProfileViewModel : Fetch past rides
     activate ProfileViewModel
     ProfileViewModel -> RideRepository : fetchHistory()
-    activate RideRepository
     RideRepository --> ProfileViewModel : Past rides
-    deactivate RideRepository
     ProfileViewModel --> ProfileScreen : Show Past Rides
     deactivate ProfileViewModel
     deactivate ProfileScreen
@@ -70,9 +65,7 @@ alt Delete Past Rides
     ProfileScreen -> ProfileViewModel : Fetch past rides
     activate ProfileViewModel
     ProfileViewModel -> RideRepository : fetchHistory()
-    activate RideRepository
     RideRepository --> ProfileViewModel : Past rides
-    deactivate RideRepository
     ProfileViewModel --> ProfileScreen : Show Past Rides
     deactivate ProfileViewModel
     deactivate ProfileScreen
@@ -81,9 +74,7 @@ alt Delete Past Rides
     PastRidesScreen -> ProfileViewModel : clearHistory()
     activate ProfileViewModel
     ProfileViewModel -> RideRepository : clearHistory()
-    activate RideRepository
     RideRepository --> ProfileViewModel : Deletion confirmation
-    deactivate RideRepository
     ProfileViewModel --> PastRidesScreen : Show deletion message
     deactivate ProfileViewModel
     deactivate PastRidesScreen
@@ -95,11 +86,12 @@ alt View Rating
     ProfileScreen -> ProfileViewModel : Fetch ratings
     activate ProfileViewModel
     ProfileViewModel -> RatingRepository : fetch(user)
-    activate RatingRepository
     RatingRepository --> ProfileViewModel : Ratings
-    deactivate RatingRepository
     ProfileViewModel --> ProfileScreen : Show Rating
     deactivate ProfileViewModel
     deactivate ProfileScreen
+    deactivate UserRepository
+    deactivate RatingRepository
+    deactivate RideRepository
 end
 @enduml
