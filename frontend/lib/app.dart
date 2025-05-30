@@ -1,5 +1,9 @@
 // External libraries
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
+import 'package:frontend/data/impl/impl_driver.dart';
+import 'package:frontend/data/impl/impl_vehicle.dart';
+import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/route.dart';
 
 // Repositories
 import 'package:frontend/data/repository/address_repository.dart';
@@ -40,6 +44,7 @@ import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
 import 'package:frontend/ui/page/report/report_view.dart';
 import 'package:frontend/ui/page/report/report_viewmodel.dart';
+import 'package:frontend/ui/ride_ended/ride_ended_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
@@ -62,6 +67,7 @@ import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/ui/ride_ended/ride_ended_viewmodel.dart';
 
 class App extends StatelessWidget {
   final UserRepository _userRepository = ImplUserRepository();
@@ -121,6 +127,33 @@ class App extends StatelessWidget {
     addressRepository: _addressRepository,
   );
 
+  late final RideEndedViewModel rideEndedViewModel = RideEndedViewModel(
+    rideRepository: _rideRepository,
+    ratingRepository: _ratingRepository,
+    reportRepository: _reportRepository,
+    ride: Ride(
+      id: 0,
+      driver: ImplDriver(
+        firstName: 'John',
+        lastName: 'Doe',
+        points: 0,
+        id: 0,
+        vehicle: ImplVehicle(id: 0, description: 'Test Vehicle', capacity: 4),
+      ),
+      route: Route(
+        start:
+            Address.fake(), // Placeholder, should be replaced with actual address
+        end:
+            Address.fake(), // Placeholder, should be replaced with actual route
+      ),
+      passengers: [],
+      departureTime: DateTime.now().subtract(Duration(hours: 1)),
+      estimatedArrivalTime: DateTime.now(),
+      estimatedDuration: Duration(hours: 1),
+      totalSeats: 4,
+    ),
+  );
+
   // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
   //   rideRepository: _rideRepository,
   // );
@@ -170,6 +203,8 @@ class App extends StatelessWidget {
               ),
             ),
         '/report': (context) => ReportView(viewModel: reportViewModel),
+        '/ride_ended':
+            (context) => RideEndedView(viewModel: rideEndedViewModel),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {

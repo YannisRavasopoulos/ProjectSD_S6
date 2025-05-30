@@ -4,61 +4,65 @@ import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
 
-class ImplRating extends Rating {
-  @override
-  final int id;
-  @override
-  final User fromUser;
-  @override
-  final User toUser;
-  @override
-  final int stars;
-  @override
-  final String? comment;
-
-  ImplRating({
-    required this.id,
-    required this.fromUser,
-    required this.toUser,
-    required this.stars,
-    this.comment,
-  });
-}
-
 class ImplRatingRepository implements RatingRepository {
   // Change to non-final and initialize with dummy data
   final List<Rating> _ratings = [
-    ImplRating(
+    Rating(
       id: 1,
-      fromUser: ImplUser(id: 101, firstName: "Emma", lastName: "Watson", points: 120),
+      fromUser: ImplUser(
+        id: 101,
+        firstName: "Emma",
+        lastName: "Watson",
+        points: 120,
+      ),
       toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 5,
       comment: "Very punctual and friendly driver!",
     ),
-    ImplRating(
+    Rating(
       id: 2,
-      fromUser: ImplUser(id: 102, firstName: "Michael", lastName: "Chen", points: 85),
+      fromUser: ImplUser(
+        id: 102,
+        firstName: "Michael",
+        lastName: "Chen",
+        points: 85,
+      ),
       toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 4,
       comment: "Good conversation, made the journey enjoyable",
     ),
-    ImplRating(
+    Rating(
       id: 3,
-      fromUser: ImplUser(id: 103, firstName: "Sophie", lastName: "Martinez", points: 95),
+      fromUser: ImplUser(
+        id: 103,
+        firstName: "Sophie",
+        lastName: "Martinez",
+        points: 95,
+      ),
       toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 5,
       comment: "Great music selection and comfortable ride",
     ),
-    ImplRating(
+    Rating(
       id: 4,
-      fromUser: ImplUser(id: 104, firstName: "David", lastName: "Kim", points: 75),
+      fromUser: ImplUser(
+        id: 104,
+        firstName: "David",
+        lastName: "Kim",
+        points: 75,
+      ),
       toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 4,
       comment: "Safe driver, would ride again",
     ),
-    ImplRating(
+    Rating(
       id: 5,
-      fromUser: ImplUser(id: 105, firstName: "Aisha", lastName: "Patel", points: 110),
+      fromUser: ImplUser(
+        id: 105,
+        firstName: "Aisha",
+        lastName: "Patel",
+        points: 110,
+      ),
       toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 5,
       comment: "Very professional and friendly",
@@ -66,8 +70,6 @@ class ImplRatingRepository implements RatingRepository {
   ];
 
   final _ratingController = StreamController<List<Rating>>.broadcast();
-
-
 
   @override
   Future<void> create(Rating rating) async {
@@ -77,9 +79,10 @@ class ImplRatingRepository implements RatingRepository {
       }
 
       // Check if rating already exists
-      final existingRating = _ratings.any((r) => 
-        r.fromUser.id == rating.fromUser.id && 
-        r.toUser.id == rating.toUser.id
+      final existingRating = _ratings.any(
+        (r) =>
+            r.fromUser.id == rating.fromUser.id &&
+            r.toUser.id == rating.toUser.id,
       );
 
       if (existingRating) {
@@ -109,9 +112,7 @@ class ImplRatingRepository implements RatingRepository {
   @override
   Future<List<Rating>> fetch(User user) async {
     try {
-      return _ratings
-          .where((rating) => rating.toUser.id == user.id)
-          .toList();
+      return _ratings.where((rating) => rating.toUser.id == user.id).toList();
     } catch (e) {
       return Future.error('Failed to fetch ratings: $e');
     }
@@ -124,9 +125,11 @@ class ImplRatingRepository implements RatingRepository {
         return Future.error('Rating stars must be between 1 and 5');
       }
 
-      final index = _ratings.indexWhere((r) =>
-          r.fromUser.id == rating.fromUser.id && 
-          r.toUser.id == rating.toUser.id);
+      final index = _ratings.indexWhere(
+        (r) =>
+            r.fromUser.id == rating.fromUser.id &&
+            r.toUser.id == rating.toUser.id,
+      );
 
       if (index == -1) {
         return Future.error('Rating not found');
@@ -139,12 +142,15 @@ class ImplRatingRepository implements RatingRepository {
     }
   }
 
-  @override 
+  @override
   Stream<List<Rating>> watch(User user) async* {
     try {
-      yield List.unmodifiable(_ratings.where((r) => r.toUser.id == user.id).toList());
-      yield* _ratingController.stream
-          .map((ratings) => ratings.where((r) => r.toUser.id == user.id).toList());
+      yield List.unmodifiable(
+        _ratings.where((r) => r.toUser.id == user.id).toList(),
+      );
+      yield* _ratingController.stream.map(
+        (ratings) => ratings.where((r) => r.toUser.id == user.id).toList(),
+      );
     } catch (e) {
       yield* Stream.error('Failed to watch ratings: $e');
     }

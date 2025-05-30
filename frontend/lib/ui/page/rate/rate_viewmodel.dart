@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_rating_repository.dart';
 import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
@@ -68,7 +67,7 @@ class RateViewModel extends ChangeNotifier {
       // Start watching the target user BEFORE creating the rating
       _watchRatings(toUser); // Watch the user being rated
 
-      final rating = ImplRating(
+      final rating = Rating(
         id: DateTime.now().millisecondsSinceEpoch,
         fromUser: _currentUser!,
         toUser: toUser,
@@ -77,7 +76,7 @@ class RateViewModel extends ChangeNotifier {
       );
 
       await _ratingRepository.create(rating);
-      
+
       // Set loading to false after creation
       _isLoading = false;
       notifyListeners();
@@ -90,25 +89,28 @@ class RateViewModel extends ChangeNotifier {
 
   void _watchRatings(User toUser) {
     _ratingsSubscription?.cancel();
-    _ratingsSubscription = _ratingRepository.watch(toUser).listen(
-      (ratings) {
-        // Check if our new rating exists
-        final hasNewRating = ratings.any((r) => 
-          r.fromUser.id == _currentUser?.id && 
-          r.toUser.id == toUser.id &&
-          r.stars == _rating
+    _ratingsSubscription = _ratingRepository
+        .watch(toUser)
+        .listen(
+          (ratings) {
+            // Check if our new rating exists
+            final hasNewRating = ratings.any(
+              (r) =>
+                  r.fromUser.id == _currentUser?.id &&
+                  r.toUser.id == toUser.id &&
+                  r.stars == _rating,
+            );
+
+            if (hasNewRating) {
+              _isSuccess = true;
+              notifyListeners();
+            }
+          },
+          onError: (error) {
+            _errorMessage = error.toString();
+            notifyListeners();
+          },
         );
-        
-        if (hasNewRating) {
-          _isSuccess = true;
-          notifyListeners();
-        }
-      },
-      onError: (error) {
-        _errorMessage = error.toString();
-        notifyListeners();
-      }
-    );
   }
 
   void setRating(double value) {

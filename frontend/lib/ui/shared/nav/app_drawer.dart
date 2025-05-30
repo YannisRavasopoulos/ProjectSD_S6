@@ -181,6 +181,13 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.flag),
+            title: const Text('Ride Ended (Test)'),
+            onTap: () {
+              Navigator.pushNamed(context, '/ride_ended');
+            },
+          ),
         ],
       ),
     );
