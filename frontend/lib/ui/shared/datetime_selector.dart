@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/convert.dart';
 
 class DateTimeSelector extends StatefulWidget {
   final String labelText;
@@ -19,7 +20,7 @@ class DateTimeSelector extends StatefulWidget {
 }
 
 class DateTimeSelectorState extends State<DateTimeSelector> {
-  TextEditingController _textController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
@@ -40,16 +41,9 @@ class DateTimeSelectorState extends State<DateTimeSelector> {
     );
 
     if (pickedTime != null) {
-      _textController.text = pickedTime.format(context);
-      widget.onDateTimeSelected(
-        DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-          pickedTime.hour,
-          pickedTime.minute,
-        ),
-      );
+      var time = Convert.timeOfDayToDateTime(pickedTime);
+      _textController.text = time.toString();
+      widget.onDateTimeSelected(time);
     } else {
       // Set to unselected if no time is picked
       _textController.text = "";

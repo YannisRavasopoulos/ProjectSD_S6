@@ -124,6 +124,11 @@ class CreateRideViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> createRide() async {
+    // TODO
+    return false;
+  }
+
   // final RideRepository rideRepository;
   // final Ride? initialRide;
   // StreamSubscription<List<Ride>>? _ridesSubscription;

@@ -58,6 +58,11 @@ class CreateRideView extends StatelessWidget {
     'Select',
   ];
 
+  void _onCreateRidePressed() async {
+    // TODO
+    viewModel.createRide();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,13 +110,13 @@ class CreateRideView extends StatelessWidget {
                   children: [
                     const Expanded(child: Divider(thickness: 1)),
                     const SizedBox(width: 8),
-                    const Icon(Icons.flash_on, color: Colors.amber),
+                    const Icon(Icons.directions_car, color: Colors.lightGreen),
                     const SizedBox(width: 4),
                     const Text(
-                      'Insta-Ride',
+                      'Custom-Ride',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber,
+                        color: Colors.lightGreen,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -165,6 +170,14 @@ class CreateRideView extends StatelessWidget {
                         ],
                       ),
                     ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: FilledButton(
+                    onPressed: _onCreateRidePressed,
+                    child: Text("Create Ride"),
                   ),
                 ),
               ),
