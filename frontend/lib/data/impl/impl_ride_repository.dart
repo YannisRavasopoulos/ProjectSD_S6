@@ -24,7 +24,7 @@ class ImplRideRepository implements RideRepository {
       passengers: [
         ImplPassenger(id: 94, firstName: 'Bob', lastName: 'Brown', points: 60),
       ],
-      route: Route.routes[0], // Apollon Theatre -> Georgiou I Square
+      route: Route(start: Address.fake(), end: Address.fake()), // TODO: FIX
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
       estimatedDuration: const Duration(hours: 1),
@@ -42,11 +42,11 @@ class ImplRideRepository implements RideRepository {
         ImplPassenger(id: 10, firstName: 'Tim', lastName: 'Cheese', points: 60),
         ImplPassenger(id: 11, firstName: 'Yo', lastName: 'Gurt', points: 90),
       ],
-      route: Route.routes[1], // Patras Castle -> Patras Lighthouse
+      route: Route(start: Address.fake(), end: Address.fake()), // TODO: FIX
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 3)),
       estimatedDuration: const Duration(hours: 4),
-      totalSeats: 10,
+      totalSeats: 10, // ??? TODO - liability
     ),
   ];
 
@@ -67,8 +67,7 @@ class ImplRideRepository implements RideRepository {
       passengers: [
         ImplPassenger(id: 33, firstName: 'Tung', lastName: 'Tung', points: 70),
       ],
-      route:
-          Route.routes[2], // Archaeological Museum -> Pampeloponnisiako Stadium
+      route: Route(start: Address.fake(), end: Address.fake()), // TODO: Test
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
       estimatedDuration: const Duration(hours: 1),
@@ -98,9 +97,6 @@ class ImplRideRepository implements RideRepository {
         .round();
   }
 
-  int idCounter = 0;
-  int get nextId => idCounter++;
-
   @override
   Future<List<Ride>> fetchMatchingRides(RideRequest request) async {
     await Future.delayed(const Duration(milliseconds: 300));
@@ -108,7 +104,7 @@ class ImplRideRepository implements RideRepository {
       // Match by proximity to origin
       final originMatch =
           _distance(ride.route.start.coordinates, request.origin.coordinates) <=
-          request.originRadius.radius;
+          10000; // within 10 km TODO hardcoded
 
       return originMatch;
     }).toList();
@@ -180,27 +176,17 @@ class ImplRideRepository implements RideRepository {
 
   @override
   Future<void> create(Ride ride) async {
-    Ride newRide = Ride(
-      id: nextId, // Simple ID generation
-      driver: ride.driver,
-      passengers: ride.passengers,
-      route: ride.route,
-      departureTime: ride.departureTime,
-      estimatedArrivalTime: ride.estimatedArrivalTime,
-      estimatedDuration: ride.estimatedDuration,
-      totalSeats: ride.totalSeats,
-    );
-    _rides.add(newRide);
+    _rides.add(ride);
     _ridesController.add(List.unmodifiable(_rides));
-    _rideHistory.add(newRide);
+    _rideHistory.add(ride);
     _historyController.add(List.unmodifiable(_rideHistory));
-    final driverId = newRide.driver.id;
+    final driverId = ride.driver.id;
     _createdRidesByDriver.putIfAbsent(driverId, () => []);
-    _createdRidesByDriver[driverId]!.add(newRide);
+    _createdRidesByDriver[driverId]!.add(ride);
 
-    // Set the current newRide to the newly created newRide
-    _currentRide = newRide;
-    _currentRideController.add(newRide);
+    // Set the current ride to the newly created ride
+    _currentRide = ride;
+    _currentRideController.add(ride);
   }
 
   List<Ride> getCreatedRidesForDriver(int driverId) {
@@ -208,13 +194,13 @@ class ImplRideRepository implements RideRepository {
   }
 
   @override
-  Future<void> update(Ride ride) async {
-    final index = _rides.indexWhere((r) => r == ride);
+  Future<void> update(Ride ride, int id) async {
+    final index = _rides.indexWhere((r) => r.id == ride.id);
     if (index != -1) {
       _rides[index] = ride;
       _ridesController.add(List.unmodifiable(_rides));
     }
-    final histIndex = _rideHistory.indexWhere((r) => r == ride);
+    final histIndex = _rideHistory.indexWhere((r) => r.id == ride.id);
     if (histIndex != -1) {
       _rideHistory[histIndex] = ride;
       _historyController.add(List.unmodifiable(_rideHistory));
