@@ -1,52 +1,53 @@
 @startuml
+
 actor User
-participant "UserDetailsScreen" as UDS
-participant "ReportUserScreen" as RUS
-participant "ReportUserViewModel" as RUVM
-participant "FormService_Frontend" as FSF
-participant "FormService_Backend" as FSB
-database "ReportsDB" as DB
+participant ReportView
+participant ReportViewModel
+participant Report
+participant ReportRepository
+participant Navigator
+participant LoopApp
 
-== Basic Flow ==
-loop [User attempts to report a user]
-    User -> UDS: reportButton()
-    activate UDS
-    UDS -> RUS: showReportForm()
-    deactivate UDS
-    activate RUS
-    User -> RUS: reasonSelection()
-    RUS -> RUVM: validateForm()
-    activate RUVM
-    RUVM -> FSF: createForm()
-    activate FSF
-    FSF -> FSB: POST /reports
-    activate FSB
-    FSB -> DB: processForm()
-    activate DB
-    DB --> FSB: formProcessed()
-    deactivate DB
-    FSB --> FSF: assignPunishment()
-    deactivate FSB
-    FSF --> RUVM: reportCreated()
-    deactivate FSF
-    RUVM --> RUS: showSuccessMessage()
-    deactivate RUVM
-    deactivate RUS
+activate Navigator
+activate LoopApp
+activate ReportRepository
+
+==Report User==
+
+Navigator --> LoopApp: "/report", {reportee}
+LoopApp -> ReportViewModel: ReportViewModel(reportRepository, reportee)
+activate ReportViewModel
+ReportViewModel --> LoopApp: return reportViewModel
+LoopApp -> ReportView: ReportView(reportViewModel)
+activate ReportView
+ReportView --> LoopApp: return reportView
+LoopApp --> Navigator: return reportView
+Navigator -> ReportView: build(context)
+User -> ReportView: Selects report reason
+ReportView -> ReportView: onReportReasonSelected(reason)
+opt
+    User -> ReportView: Enter description
+    ReportView -> ReportView: onDescriptionChanged(description)
 end
-
-== Alternative Flow: Report Rejection ==
-alt [Report rejected]
-    RUVM -> RUS: showError("Report rejected")
-    activate RUS
-    RUS -> User: return()
-    deactivate RUS
-end
-
-== Alternative Flow: Cancel Process ==
-alt [Cancel clicked]
-    User -> RUS: cancelButton()
-    activate RUS
-    RUS -> UDS: returnToUserDetails()
-    deactivate RUS
+User -> ReportView: Presses "Submit"
+ReportView -> ReportView: onSubmitPressed()
+ReportView -> ReportConfirmationDialog: ReportConfirmationDialog(report, onConfirm, onCancel)
+activate ReportConfirmationDialog
+alt Confirm
+    ReportConfirmationDialog -> ReportView: onConfirm()
+    ReportView -> ReportViewModel: submitReport()
+    ReportViewModel -> Report: Report(reportee, reason, description)
+    activate Report
+    Report --> ReportViewModel: return report
+    ReportViewModel -> ReportRepository: createReport(report)
+    ReportRepository --> ReportViewModel
+    ReportViewModel --> ReportView
+    ReportView -> ReportView: onReportSubmitted()
+    ReportView -> ReportView: showSuccessMessage()
+    deactivate Report
+else Cancel
+    ReportConfirmationDialog -> ReportView: onCancel()
+    deactivate ReportConfirmationDialog
+    ReportView -> Navigator: pop()
 end
 @enduml

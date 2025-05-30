@@ -1,91 +1,59 @@
 @startuml
 actor User
 
-' Layers in horizontal order:
-participant RateUserPage
-participant RateUserViewModel
-participant RatingService_Frontend
-participant RatingService_Backend
-database DB
+actor User
+participant RateView
+participant RateViewModel
+participant Rating
+participant RatingRepository
+participant Navigator
+participant LoopApp
+
+activate Navigator
+activate LoopApp
+activate RatingRepository
+
+==Rate User==
+
+Navigator --> LoopApp: "/rate", {rated}
+LoopApp -> RateViewModel: RateViewModel(rateRepository, rated)
+activate RateViewModel
+RateViewModel --> LoopApp: return rateViewModel
+LoopApp -> RateView: RateView(rateViewModel)
+activate RateView
+RateView --> LoopApp: return rateView
+LoopApp --> Navigator: return rateView
+Navigator -> RateView: build(context)
+User -> RateView: Selects rating
+RateView -> RateView: onRatingSelected(rating)
 
 
+' User -> RateView: Selects report reason
+' ReportView -> RateView: ReasonSelected(reason)
+' opt
+'     User -> ReportView: Enter description
+'     ReportView -> ReportView: onDescriptionChanged(description)
+' end
+' User -> ReportView: Presses "Submit"
+' ReportView -> ReportView: onSubmitPressed()
+' ReportView -> ReportConfirmationDialog: ReportConfirmationDialog(report, onConfirm, onCancel)
+' activate ReportConfirmationDialog
+' alt Confirm
+'     ReportConfirmationDialog -> ReportView: onConfirm()
+'     ReportView -> ReportViewModel: submitReport()
+'     ReportViewModel -> Report: Report(reportee, reason, description)
+'     activate Report
+'     Report --> ReportViewModel: return report
+'     ReportViewModel -> ReportRepository: createReport(report)
+'     ReportRepository --> ReportViewModel
+'     ReportViewModel --> ReportView
+'     ReportView -> ReportView: onReportSubmitted()
+'     ReportView -> ReportView: showSuccessMessage()
+'     deactivate Report
+' else Cancel
+'     ReportConfirmationDialog -> ReportView: onCancel()
+'     deactivate ReportConfirmationDialog
+'     ReportView -> Navigator: pop()
+' end
 
-User -> RateUserPage            : onRateUserClick()
-activate RateUserPage
-RateUserPage -> RateUserViewModel    : renderRatingForm()
-activate RateUserViewModel
-RateUserViewModel --> RateUserPage           : return form displayed
-deactivate RateUserViewModel
-deactivate RateUserPage
-
-
-    
-    alt Submit clicked
-        User -> RateUserPage    : onSubmitClick()
-        activate RateUserPage
-        RateUserPage -> RateUserViewModel : submitRating()
-        
-
-        activate RateUserViewModel
-     
-       
-        alt validation succeeds
-            RateUserViewModel -> RatingService_Frontend : createRating()
-           
-
-            activate RatingService_Frontend
-            RatingService_Frontend -> RatingService_Backend : callRatingRouter()
-            
-
-            activate RatingService_Backend
-            RatingService_Backend -> DB : queryInsertRating()
-            activate DB
-            DB --> RatingService_Backend : return success flag
-            deactivate DB
-            RatingService_Backend --> RatingService_Frontend : return success flag
-            deactivate RatingService_Backend
-
-            
-            RatingService_Frontend --> RateUserViewModel : return success
-            deactivate RatingService_Frontend
-
-            
-            RateUserViewModel --> RateUserPage : return success notification display
-            
-
-            else validation fails
-            RateUserViewModel -> RatingService_Frontend : createRating()
-           
-
-            activate RatingService_Frontend
-            RatingService_Frontend -> RatingService_Backend : callRatingRouter()
-           
-
-            activate RatingService_Backend
-            RatingService_Backend -> DB : queryInsertRating()
-            activate DB
-            DB --> RatingService_Backend : return fail flag
-            deactivate DB
-            RatingService_Backend --> RatingService_Frontend : return fail flag
-            deactivate RatingService_Backend
-
-            
-            RatingService_Frontend --> RateUserViewModel : return fail
-            deactivate RatingService_Frontend
- 
-
-            RateUserViewModel --> RateUserPage : return error display message
-            deactivate RateUserViewModel
-            deactivate RateUserPage
-        end
-      else Cancel clicked
-        User -> RateUserPage    : onCancelClick()
-        activate RateUserPage
-        RateUserPage -> RateUserViewModel  : RateCancelled()
-        activate RateUserViewModel
-        RateUserViewModel --> RateUserPage   : return to previous page
-        deactivate RateUserViewModel
-        deactivate RateUserPage
-    end
 @enduml
-

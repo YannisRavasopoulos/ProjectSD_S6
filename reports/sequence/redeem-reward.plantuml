@@ -1,122 +1,80 @@
 @startuml
+
 actor User
 
+participant RewardsView
+participant RewardsViewModel
+participant RewardCard
+participant Navigator
+participant RewardRepository
+participant RedeemConfirmationDialog
+participant LoopApp
 participant HomeView
-participant RedeemRewardPage
-participant RedeemRewardViewModel
-participant RewardService_Frontend
-participant RewardService_Backend
-database DB
+participant Reward
+participant RedeemedReward
 
-
-User -> HomeView : onRedeemRewardClick()
+activate Navigator
+activate RewardsViewModel
+activate RewardRepository
 activate HomeView
-HomeView -> RedeemRewardPage : directTo()
-deactivate HomeView
-activate RedeemRewardPage
+activate LoopApp
 
-
-
-RedeemRewardPage -> RedeemRewardViewModel : loadRewards()
-activate RedeemRewardViewModel
-
-RedeemRewardViewModel -> RewardService_Frontend : getUserPoints()
-
-activate RewardService_Frontend
-RewardService_Frontend -> RewardService_Backend : getUserPointsAPIRequest()
-
-activate RewardService_Backend
-RewardService_Backend -> DB : queryUserPoints()
-activate DB
-DB --> RewardService_Backend : return points
-deactivate DB
-RewardService_Backend --> RewardService_Frontend : return points
-deactivate RewardService_Backend
-
-RewardService_Frontend --> RedeemRewardViewModel : return points
-deactivate RewardService_Frontend
-
-
-RedeemRewardViewModel -> RewardService_Frontend : getAvailableRewards()
-
-activate RewardService_Frontend
-RewardService_Frontend -> RewardService_Backend : getAvailableRewardsAPIRequest()
-
-activate RewardService_Backend
-RewardService_Backend -> DB : queryRewards()
-activate DB
-DB --> RewardService_Backend : return rewardList
-deactivate DB
-RewardService_Backend --> RewardService_Frontend : return rewardList
-deactivate RewardService_Backend
-
-RewardService_Frontend --> RedeemRewardViewModel : return rewardList
-deactivate RewardService_Frontend
-
-
-
-alt rewards available
-    RedeemRewardViewModel --> RedeemRewardPage : return points and rewardList
-   
-else no rewards available
-    RedeemRewardViewModel --> RedeemRewardPage : return "No rewards available"
-     deactivate RedeemRewardViewModel
-  
-
-    
+== Redeem Reward ==
+User -> HomeView: Presses "Rewards"
+HomeView -> HomeView: onRewardsPressed()
+HomeView -> Navigator: pushNamed("/rewards")
+Navigator -> LoopApp: "/rewards"
+LoopApp -> RewardsView: RewardsView(rewardsViewModel)
+activate RewardsView
+RewardsView --> LoopApp: return rewardsView
+LoopApp --> Navigator: return rewardsView
+Navigator -> RewardsView: build(context)
+' TODO: fetch rewards
+RewardsView -> RewardCard: RewardCard(reward, onRedeemPressed)
+activate RewardCard
+RewardCard --> RewardsView: return rewardCard
+User -> RewardCard: Selects a reward and presses "Redeem Reward"
+RewardCard -> RewardCard: onRedeemPressed()
+RewardCard -> RedeemConfirmationDialog: RedeemConfirmationDialog(reward, onConfirmPressed, onCancelPressed)
+activate RedeemConfirmationDialog
+RedeemConfirmationDialog --> RewardCard: return dialog
+RewardCard -> RewardCard: showDialog(dialog)
+alt Confirm
+User -> RedeemConfirmationDialog: Presses "Confirm"
+RedeemConfirmationDialog -> RewardCard: onConfirmPressed()
+RewardCard -> RewardsView: onRedeemReward(reward)
+RewardsView -> RewardsViewModel: redeemReward(reward)
+RewardsViewModel -> RewardRepository: redeem(reward)
+alt Success
+deactivate RedeemConfirmationDialog
+    RewardRepository --> RewardsViewModel: return redemptionCode
+    RewardsViewModel -> RewardsViewModel: updateRewards()
+    RewardsViewModel -> RewardRepository: fetchAvailableRewards()
+    RewardRepository -> Reward: Reward(...)
+    activate Reward
+    Reward --> RewardRepository: return reward
+    RewardRepository --> RewardsViewModel: return availableRewards
+    RewardsViewModel -> RewardRepository: fetchRedeemedRewards()
+    RewardRepository -> RedeemedReward: RedeemedReward(...)
+    activate RedeemedReward
+    Reward --> RewardRepository: return redeemedReward
+    RewardRepository --> RewardsViewModel: return redeemedRewards
+    RewardsViewModel --> RewardsView: return ok
+    RewardsView -> RewardsView: showRedemptionCode(redemptionCode)
+    deactivate RedeemedReward
+    deactivate Reward
+else Insufficient points
+    RewardRepository --> RewardsViewModel: return error "Not enough points"
+    RewardsViewModel -> RewardsView: showError("Not enough points")
+else Reward not found
+    RewardRepository --> RewardsViewModel: return error "Reward not found"
+    RewardsViewModel -> RewardsView: showError("Reward not found")
+activate RedeemConfirmationDialog
 end
-deactivate RedeemRewardPage
-
-
-alt User selects reward
-    User -> RedeemRewardPage : onSelectReward()
-    activate RedeemRewardPage
-    RedeemRewardPage -> RedeemRewardViewModel : redeemReward()
-    
-
-    activate RedeemRewardViewModel
-    RedeemRewardViewModel -> RewardService_Frontend : redeemReward()
-    
-
-    activate RewardService_Frontend
-    RewardService_Frontend -> RewardService_Backend : redeemReward()
-    deactivate RewardService_Frontend
-
-    activate RewardService_Backend
-    RewardService_Backend -> DB : updateRedemption()
-    activate DB
-    DB --> RewardService_Backend : return redemptionCode or error
-    deactivate DB
-    RewardService_Backend --> RewardService_Frontend : return redemptionResult
-    deactivate RewardService_Backend
-
-    activate RewardService_Frontend
-    RewardService_Frontend --> RedeemRewardViewModel : return redemptionResult
-    deactivate RewardService_Frontend
-
-    
-
-    
-    alt success
-        RedeemRewardViewModel --> RedeemRewardPage : return redemptionCode
-    
-    else insufficient points
-        RedeemRewardViewModel --> RedeemRewardPage : return "Not enough points"
-            deactivate RedeemRewardViewModel
-            deactivate RedeemRewardPage
-    end
-
-else User cancels
-    User -> RedeemRewardPage : onBackClick()
-    activate RedeemRewardPage
-    
-    RedeemRewardPage --> HomeView : return to home
-deactivate RedeemRewardPage   
-activate HomeView
-    
-    deactivate HomeView
-
-
- 
+else Cancel
+User -> RedeemConfirmationDialog: Presses "Cancel"
+RedeemConfirmationDialog --> RewardCard: onCancelPressed()
+deactivate RedeemConfirmationDialog
 end
+
 @enduml

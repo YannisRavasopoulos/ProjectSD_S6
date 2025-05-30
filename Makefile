@@ -41,9 +41,9 @@ build/domain-model.png: reports/domain-model.plantuml
 	plantuml -progress -tpng -o ../$(dir $@) $<
 
 # Rule to generate class diagram
-build/class-diagram.png: reports/class-diagram.plantuml
+build/class-diagram.svg: reports/class-diagram.plantuml
 	mkdir -p $(dir $@)
-	plantuml -progress -tpng -o ../$(dir $@) $<
+	plantuml -progress -tsvg -o ../$(dir $@) $<
 
 # Rule to generate use case diagram
 build/use-case-diagram.png: reports/use-case-diagram.plantuml

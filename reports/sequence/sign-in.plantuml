@@ -1,23 +1,141 @@
 @startuml
+
 actor User
-boundary SignInView
-control SignInViewModel
-control AuthenticationService
-control AuthenticationRouter
-control BackendAuthenticationService
-control BackendUserService
-control Navigator
-database Database
 
-User -> SignInView : onSignInClick()
-SignInView -> SignInViewModel : signIn()
-SignInViewModel -> AuthenticationService : login()
-AuthenticationService -> AuthenticationRouter : "/auth/login"
-AuthenticationRouter -> BackendAuthenticationService : login()
-BackendAuthenticationService -> BackendUserService : getUser(email)
-BackendUserService -> Database : query
-Database --> BackendUserService : return user
-BackendUserService --> BackendAuthenticationService : return user
-BackendAuthenticationService --> AuthenticationService : return token
+participant SignInView
+participant SignInViewModel
+participant AuthenticationRepository
+participant Navigator
+participant ForgotPasswordView
+participant ForgotPasswordViewModel
+participant SignUpView
+participant SignUpViewModel
+participant LoopApp
 
+activate Navigator
+activate LoopApp
+activate SignInViewModel
+activate SignUpViewModel
+activate ForgotPasswordViewModel
+activate AuthenticationRepository
+activate UserRepository
+
+Navigator --> LoopApp: "/sign-in"
+
+LoopApp -> SignInView: SignInView(signInViewModel)
+activate SignInView
+SignInView --> LoopApp: signInView
+LoopApp --> Navigator: signInView
+Navigator -> SignInView: build(context)
+
+== Sign In ==
+User -> SignInView: Enters email
+User -> SignInView: Enters password
+User -> SignInView: Presses "Sign In"
+SignInView -> SignInView: onSignInPressed()
+SignInView -> SignInViewModel: signIn()
+SignInViewModel -> AuthenticationRepository: login(email, password)
+
+alt Success
+AuthenticationRepository --> SignInViewModel: return authentication
+SignInViewModel --> SignInView: return ok
+SignInView -> Navigator: pushNamed("/home")
+else User not found
+    AuthenticationRepository --> SignInViewModel: return error "User not found"
+    SignInViewModel -> SignInViewModel: setErrorMessage("User not found")
+    SignInViewModel --> SignInView: return error
+    SignInView -> SignInView: showErrorMessage()
+else Wrong password
+    AuthenticationRepository --> SignInViewModel: return error "Wrong password"
+    SignInViewModel -> SignInViewModel: setErrorMessage("Wrong password")
+    SignInViewModel --> SignInView: return error
+    SignInView -> SignInView: showErrorMessage()
+end
+
+== Forgot Password ==
+User -> SignInView: Presses "Forgot Password?"
+SignInView -> SignInView: onForgotPasswordPressed()
+SignInView -> Navigator: pushNamed("/forgot-password")
+Navigator -> LoopApp: "/forgot-password"
+LoopApp -> ForgotPasswordView: ForgotPasswordView(forgotPasswordViewModel)
+activate ForgotPasswordView
+ForgotPasswordView --> LoopApp: return forgotPasswordView
+LoopApp --> Navigator: return forgotPasswordView
+Navigator -> ForgotPasswordView: build(context)
+User -> ForgotPasswordView: Enters email
+User -> ForgotPasswordView: Press "Send Reset Code"
+ForgotPasswordView -> ForgotPasswordView: onSendResetCodePressed()
+ForgotPasswordView -> ForgotPasswordViewModel: sendResetCode()
+ForgotPasswordViewModel -> AuthenticationRepository: sendResetCode(email)
+alt Success
+    AuthenticationRepository --> ForgotPasswordViewModel: return ok
+    ForgotPasswordViewModel --> ForgotPasswordView: return ok
+    User -> ForgotPasswordView: Enters reset code
+    ForgotPasswordView -> ForgotPasswordView: onResetCodeEntered()
+    ForgotPasswordView -> ForgotPasswordViewModel: checkResetCode()
+    ForgotPasswordViewModel -> AuthenticationRepository: checkResetCode(email, resetCode)
+    alt Success
+        AuthenticationRepository --> ForgotPasswordViewModel: return ok
+        ForgotPasswordViewModel --> ForgotPasswordView: return ok
+        alt Success
+            User -> ForgotPasswordView: Enters new password
+            User -> ForgotPasswordView: Enters new password confirmation
+            User -> ForgotPasswordView: Presses "Reset Password"
+            ForgotPasswordView -> ForgotPasswordView: onResetPasswordPressed()
+            ForgotPasswordView -> ForgotPasswordViewModel: resetPassword()
+            ForgotPasswordViewModel -> AuthenticationRepository: resetPassword(email, resetCode, newPassword)
+            AuthenticationRepository --> ForgotPasswordViewModel: return ok
+            ForgotPasswordViewModel --> ForgotPasswordView: return ok
+            ForgotPasswordView -> Navigator: popUntil("/sign-in")
+        else Error resetting password
+            AuthenticationRepository --> ForgotPasswordViewModel: return error "Error resetting password"
+            ForgotPasswordViewModel -> ForgotPasswordViewModel: setErrorMessage("Error resetting password")
+            ForgotPasswordViewModel --> ForgotPasswordView: return error
+            ForgotPasswordView -> ForgotPasswordView: showErrorMessage()
+        end
+    else Invalid reset code
+        AuthenticationRepository --> ForgotPasswordViewModel: return error "Invalid reset code"
+        ForgotPasswordViewModel -> ForgotPasswordViewModel: setErrorMessage("Invalid reset code")
+        ForgotPasswordViewModel --> ForgotPasswordView: return error
+        ForgotPasswordView -> ForgotPasswordView: showErrorMessage()
+    end
+else User not found
+    AuthenticationRepository --> ForgotPasswordViewModel: User not found
+    ForgotPasswordViewModel -> ForgotPasswordViewModel: setErrorMessage("User not found")
+    ForgotPasswordViewModel --> ForgotPasswordView: return error
+    ForgotPasswordView -> ForgotPasswordView: showErrorMessage()
+end
+
+== Sign Up ==
+User -> SignInView: Presses "Sign Up"
+SignInView -> SignInView: onSignUpPressed()
+SignInView -> Navigator: pushNamed("/sign-up")
+Navigator -> LoopApp: "/sign-up"
+LoopApp -> SignUpView: SignUpView(signUpViewModel)
+activate SignUpView
+SignUpView --> LoopApp: return signUpView
+LoopApp --> Navigator: return signUpView
+Navigator -> SignUpView: build(context)
+User -> SignUpView: Enters email
+User -> SignUpView: Enters password
+User -> SignUpView: Enters password confirmation
+User -> SignUpView: Presses "Sign Up"
+SignUpView -> SignUpView: onSignUpPressed()
+SignUpView -> SignUpViewModel: signUp()
+SignUpViewModel -> UserRepository: create(email, password)
+alt Success
+    UserRepository --> SignUpViewModel: return ok
+    SignUpViewModel --> SignUpView: return ok
+    SignUpView -> Navigator: popUntil("/sign-in")
+else User already exists
+    UserRepository --> SignUpViewModel: return error "User already exists"
+    SignUpViewModel -> SignUpViewModel: setErrorMessage("User already exists")
+    SignUpViewModel --> SignUpView: return error
+    SignUpView -> SignUpView: showErrorMessage()
+else Weak password
+    UserRepository --> SignUpViewModel: return error "Weak password"
+    SignUpViewModel -> SignUpViewModel: setErrorMessage("Weak password")
+    SignUpViewModel --> SignUpView: return error
+    SignUpView -> SignUpView: showErrorMessage()
+end
 @enduml
