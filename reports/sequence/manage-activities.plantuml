@@ -6,117 +6,128 @@ participant ActivitiesViewModel
 participant ActivityRepository
 participant CreateActivityView
 participant CreateActivityViewModel
+participant ActivityDeletionDialog
+participant Activity
+
+' ViewModels are active for the whole session
+activate ActivitiesViewModel
+activate ActivityRepository
 
 alt Main Flow: View and Create Activity
     User -> HomeView: Selects "Activities"
-
     activate HomeView
     HomeView -> ActivitiesView: pushNamed('/activities')
-    deactivate HomeView
     activate ActivitiesView
     ActivitiesView -> ActivitiesViewModel: loadActivities()
-    activate ActivitiesViewModel
     ActivitiesViewModel -> ActivityRepository: fetch()
-    activate ActivityRepository
+
+    ActivityRepository --> Activity: instantiate
+    activate Activity
+    Activity -> Activity: Activity()
+    deactivate Activity
+
     ActivityRepository --> ActivitiesViewModel: List<Activity>
-    deactivate ActivityRepository
     ActivitiesViewModel --> ActivitiesView: notifyListeners()
     ActivitiesView -> ActivitiesView: Shows list of Activities
 
     User -> ActivitiesView: Presses "Create"
     ActivitiesView -> CreateActivityView: pushNamed('/activities/create')
-    deactivate ActivitiesView
     activate CreateActivityView
     CreateActivityView -> CreateActivityViewModel: (init)
-    activate CreateActivityViewModel
+    activate CreateActivityViewModel 
 
     User -> CreateActivityView: Fills details and presses "Create Activity"
     CreateActivityView -> CreateActivityViewModel: createActivity()
-    CreateActivityViewModel -> ActivityRepository: create(Activity)
+    CreateActivityViewModel -> ActivityRepository: create(activity)
 
-    activate ActivityRepository
+    ActivityRepository --> Activity: instantiate
+    activate Activity
+    Activity -> Activity: Activity()
+    deactivate Activity
+
     ActivityRepository --> CreateActivityViewModel: success
-    deactivate ActivityRepository
     CreateActivityViewModel --> CreateActivityView: notifyListeners()
     CreateActivityView -> ActivitiesView: Navigator.pop(context, true)
-    deactivate CreateActivityViewModel
     deactivate CreateActivityView
 
-    activate ActivitiesView
     ActivitiesView -> ActivitiesViewModel: loadActivities()
     ActivitiesViewModel -> ActivityRepository: fetch()
-    activate ActivityRepository
+
+    ActivityRepository --> Activity: instantiate
+    activate Activity
+    Activity -> Activity: Activity()
+    deactivate Activity
+
     ActivityRepository --> ActivitiesViewModel: List<Activity>
-    deactivate ActivityRepository
     ActivitiesViewModel --> ActivitiesView: notifyListeners()
     ActivitiesView -> ActivitiesView: Updated list of Activities
-    deactivate ActivitiesViewModel
-    deactivate ActivitiesView
+    deactivate HomeView
 end alt
 
 alt Alternative Flow: Invalid Data
-    activate CreateActivityView
-    activate CreateActivityViewModel
     User -> CreateActivityView: Presses "Create Activity" with invalid data
+    activate CreateActivityView
     CreateActivityView -> CreateActivityViewModel: createActivity()
     CreateActivityViewModel --> CreateActivityView: notifyListeners()
+
     User -> CreateActivityView: Corrects data and presses "Create Activity" again
     CreateActivityView -> CreateActivityViewModel: createActivity()
-    CreateActivityViewModel -> ActivityRepository: create(Activity)
-    activate ActivityRepository
+    CreateActivityViewModel -> ActivityRepository: create(activity)
+
+    ActivityRepository --> Activity: instantiate
+    activate Activity
+    Activity -> Activity: Activity()
+    deactivate Activity
+
     ActivityRepository --> CreateActivityViewModel: success
-    deactivate ActivityRepository
     CreateActivityViewModel --> CreateActivityView: notifyListeners()
     CreateActivityView -> ActivitiesView: Navigator.pop(context, true)
-    deactivate CreateActivityViewModel
     deactivate CreateActivityView
 
-    activate ActivitiesView
     ActivitiesView -> ActivitiesViewModel: loadActivities()
-    activate ActivitiesViewModel
     ActivitiesViewModel -> ActivityRepository: fetch()
-    activate ActivityRepository
+
+    ActivityRepository --> Activity: instantiate
+    activate Activity
+    Activity -> Activity: Activity()
+    deactivate Activity
+
     ActivityRepository --> ActivitiesViewModel: List<Activity>
-    deactivate ActivityRepository
     ActivitiesViewModel --> ActivitiesView: notifyListeners()
     ActivitiesView -> ActivitiesView: Updated list of Activities
-    deactivate ActivitiesViewModel
-    deactivate ActivitiesView
 end alt
 
 alt Alternative Flow: Edit Activity
-    activate ActivitiesView
     User -> ActivitiesView: Presses "Edit" on Activity
     ActivitiesView -> CreateActivityView: pushNamed('/activities/edit', arguments: activity)
-    deactivate ActivitiesView
-
     activate CreateActivityView
     CreateActivityView -> CreateActivityViewModel: (init with activity)
-    activate CreateActivityViewModel
 
     User -> CreateActivityView: Changes details and presses "Update Activity"
     CreateActivityView -> CreateActivityViewModel: editActivity()
-    CreateActivityViewModel -> ActivityRepository: update(Activity)
+    CreateActivityViewModel -> ActivityRepository: update(activity)
 
-    activate ActivityRepository
+    ActivityRepository --> Activity: instantiate
+    activate Activity
+    Activity -> Activity: Activity()
+    deactivate Activity
+
     ActivityRepository --> CreateActivityViewModel: success
-    deactivate ActivityRepository
     CreateActivityViewModel --> CreateActivityView: notifyListeners()
     CreateActivityView -> ActivitiesView: Navigator.pop(context, true)
-    deactivate CreateActivityViewModel
     deactivate CreateActivityView
 
-    activate ActivitiesView
     ActivitiesView -> ActivitiesViewModel: loadActivities()
-    activate ActivitiesViewModel
     ActivitiesViewModel -> ActivityRepository: fetch()
-    activate ActivityRepository
+
+    ActivityRepository --> Activity: instantiate
+    activate Activity
+    Activity -> Activity: Activity()
+    deactivate Activity
+
     ActivityRepository --> ActivitiesViewModel: List<Activity>
-    deactivate ActivityRepository
     ActivitiesViewModel --> ActivitiesView: notifyListeners()
     ActivitiesView -> ActivitiesView: Updated list of Activities
-    deactivate ActivitiesViewModel
-    deactivate ActivitiesView
 end alt
 
 alt Alternative Flow: Delete Activity
@@ -128,15 +139,18 @@ alt Alternative Flow: Delete Activity
     ActivityDeletionDialog -> ActivitiesView: onConfirm()
     deactivate ActivityDeletionDialog
     ActivitiesView -> ActivitiesViewModel: deleteActivity(activity)
-    activate ActivitiesViewModel
     ActivitiesViewModel -> ActivityRepository: delete(activity)
-    activate ActivityRepository
+
+    ActivityRepository --> Activity: instantiate
+    activate Activity
+    Activity -> Activity: Activity()
+    deactivate Activity
+
     ActivityRepository --> ActivitiesViewModel: success
-    deactivate ActivityRepository
     ActivitiesViewModel --> ActivitiesView: notifyListeners()
     ActivitiesView -> ActivitiesView: Updated list of Activities
-    deactivate ActivitiesViewModel
-    deactivate ActivitiesView
-
 end alt
+
+deactivate ActivitiesViewModel
+deactivate CreateActivityViewModel
 @enduml
