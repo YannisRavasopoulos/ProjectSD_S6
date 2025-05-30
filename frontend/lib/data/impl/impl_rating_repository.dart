@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/rating_repository.dart';
@@ -9,61 +8,56 @@ class ImplRatingRepository implements RatingRepository {
   final List<Rating> _ratings = [
     Rating(
       id: 1,
-      fromUser: ImplUser(
+      fromUser: User(
         id: 101,
         firstName: "Emma",
         lastName: "Watson",
         points: 120,
       ),
-      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      toUser: User(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 5,
       comment: "Very punctual and friendly driver!",
     ),
     Rating(
       id: 2,
-      fromUser: ImplUser(
+      fromUser: User(
         id: 102,
         firstName: "Michael",
         lastName: "Chen",
         points: 85,
       ),
-      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      toUser: User(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 4,
       comment: "Good conversation, made the journey enjoyable",
     ),
     Rating(
       id: 3,
-      fromUser: ImplUser(
+      fromUser: User(
         id: 103,
         firstName: "Sophie",
         lastName: "Martinez",
         points: 95,
       ),
-      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      toUser: User(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 5,
       comment: "Great music selection and comfortable ride",
     ),
     Rating(
       id: 4,
-      fromUser: ImplUser(
-        id: 104,
-        firstName: "David",
-        lastName: "Kim",
-        points: 75,
-      ),
-      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      fromUser: User(id: 104, firstName: "David", lastName: "Kim", points: 75),
+      toUser: User(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 4,
       comment: "Safe driver, would ride again",
     ),
     Rating(
       id: 5,
-      fromUser: ImplUser(
+      fromUser: User(
         id: 105,
         firstName: "Aisha",
         lastName: "Patel",
         points: 110,
       ),
-      toUser: ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150),
+      toUser: User(id: 0, firstName: "John", lastName: "Doe", points: 150),
       stars: 5,
       comment: "Very professional and friendly",
     ),

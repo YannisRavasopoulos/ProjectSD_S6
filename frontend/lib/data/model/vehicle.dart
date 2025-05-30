@@ -1,4 +1,4 @@
-abstract class Vehicle {
+class Vehicle {
   final int id;
   final String description;
   final int capacity;
@@ -8,4 +8,8 @@ abstract class Vehicle {
     required this.description,
     required this.capacity,
   });
+
+  factory Vehicle.test() {
+    return const Vehicle(id: 1, description: 'Test Vehicle', capacity: 4);
+  }
 }

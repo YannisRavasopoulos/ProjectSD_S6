@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart' hide Route;
-import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_passenger.dart';
-
 import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
@@ -70,11 +69,11 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Pickup Request Notification'),
             onTap: () {
               final pickupRequest = PickupRequest(
-                passenger: ImplPassenger.test(),
+                passenger: Passenger.test(),
                 address: Address.fake(),
                 time: DateTime.now(),
                 ride: Ride(
-                  driver: ImplDriver.test(),
+                  driver: Driver.test(),
                   passengers: [],
                   route: Route(start: Address.fake(), end: Address.fake()),
                   departureTime: DateTime.now(),

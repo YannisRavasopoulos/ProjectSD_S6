@@ -1,28 +1,27 @@
 import 'dart:async';
-import 'package:frontend/data/impl/impl_vehicle.dart';
-import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/model/route.dart';
 import 'package:frontend/data/model/user.dart';
+import 'package:frontend/data/model/vehicle.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
-import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_passenger.dart';
 import 'package:latlong2/latlong.dart';
 
 class ImplRideRepository implements RideRepository {
   // --- Hardcoded rides ---
   final List<Ride> _rides = [
     Ride(
-      driver: ImplDriver(
+      driver: Driver(
         id: 1,
         firstName: 'Alice',
         lastName: 'Smith',
-        vehicle: ImplVehicle(id: 1, description: 'Red Sedan', capacity: 4),
+        vehicle: Vehicle(id: 1, description: 'Red Sedan', capacity: 4),
         points: 100,
       ),
       passengers: [
-        ImplPassenger(id: 94, firstName: 'Bob', lastName: 'Brown', points: 60),
+        Passenger(firstName: 'Bob', lastName: 'Brown', points: 60, id: 0),
       ],
       route: Route.routes[0],
       departureTime: DateTime.now().add(const Duration(hours: 1)),
@@ -31,16 +30,16 @@ class ImplRideRepository implements RideRepository {
       totalSeats: 4,
     ),
     Ride(
-      driver: ImplDriver(
+      driver: Driver(
         id: 2,
         firstName: 'John',
         lastName: 'Pork',
-        vehicle: ImplVehicle(id: 1, description: 'Dababy car', capacity: 10),
+        vehicle: Vehicle(id: 1, description: 'Dababy car', capacity: 10),
         points: 40,
       ),
       passengers: [
-        ImplPassenger(id: 10, firstName: 'Tim', lastName: 'Cheese', points: 60),
-        ImplPassenger(id: 11, firstName: 'Yo', lastName: 'Gurt', points: 90),
+        Passenger(firstName: 'Tim', lastName: 'Cheese', points: 60, id: 0),
+        Passenger(firstName: 'Yo', lastName: 'Gurt', points: 90, id: 0),
       ],
       route: Route.routes[1],
       departureTime: DateTime.now().add(const Duration(hours: 1)),
@@ -53,19 +52,15 @@ class ImplRideRepository implements RideRepository {
   // --- Hardcoded ride history ---
   final List<Ride> _rideHistory = [
     Ride(
-      driver: ImplDriver(
-        id: 1,
+      driver: Driver(
+        id: 3,
         firstName: 'Crocodillo',
         lastName: 'Bombardiro',
-        vehicle: ImplVehicle(
-          id: 1,
-          description: 'Flying Aligator',
-          capacity: 100,
-        ),
+        vehicle: Vehicle(id: 1, description: 'Flying Aligator', capacity: 100),
         points: 30,
       ),
       passengers: [
-        ImplPassenger(id: 33, firstName: 'Tung', lastName: 'Tung', points: 70),
+        Passenger(firstName: 'Tung', lastName: 'Tung', points: 70, id: 0),
       ],
       route: Route.routes[2],
       departureTime: DateTime.now().add(const Duration(hours: 1)),

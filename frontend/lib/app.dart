@@ -1,9 +1,7 @@
 // External libraries
 import 'package:flutter/material.dart' hide Route;
-import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_vehicle.dart';
 import 'package:frontend/data/model/address.dart';
-import 'package:frontend/data/model/report.dart';
+import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/route.dart';
 import 'package:frontend/data/model/user.dart';
 
@@ -122,13 +120,8 @@ class App extends StatelessWidget {
     reportRepository: _reportRepository,
     ride: Ride(
       id: 0,
-      driver: ImplDriver(
-        firstName: 'Ben',
-        lastName: 'Dover',
-        points: 0,
-        id: 0,
-        vehicle: ImplVehicle(id: 0, description: 'Goofy Car', capacity: 4),
-      ),
+      driver:
+          Driver.test(), // Placeholder, should be replaced with actual driver
       route: Route(
         start:
             Address.fake(), // Placeholder, should be replaced with actual address

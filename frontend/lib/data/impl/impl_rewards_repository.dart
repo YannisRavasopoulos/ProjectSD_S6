@@ -126,9 +126,7 @@ class RewardsRepositoryImpl implements RewardRepository {
       if (user.points < reward.points) {
         throw Exception('Not enough points');
       }
-      final updatedUser = (user as ImplUser).copyWith(
-        points: user.points - reward.points,
-      );
+      final updatedUser = user.copyWith(points: user.points - reward.points);
       await userRepository.updateCurrentUser(updatedUser);
 
       return (reward as RewardImpl).redemptionCode;

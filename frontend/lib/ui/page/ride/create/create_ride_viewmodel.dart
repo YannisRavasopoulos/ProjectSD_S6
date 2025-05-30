@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart' hide Route;
 import 'package:frontend/convert.dart';
-import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_ride_repository.dart';
-import 'package:frontend/data/impl/impl_vehicle.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/route.dart';
+import 'package:frontend/data/model/vehicle.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
@@ -148,11 +146,11 @@ class CreateRideViewModel extends ChangeNotifier {
 
     try {
       final ride = Ride(
-        driver: ImplDriver(
+        driver: Driver(
           id: 0,
           firstName: "Test",
           lastName: "Driver",
-          vehicle: ImplVehicle(id: 1, description: "Test Car", capacity: 4),
+          vehicle: Vehicle(id: 1, description: "Test Car", capacity: 4),
           points: 100,
         ),
         passengers: [],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_passenger.dart';
 import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/pickup_request.dart';
@@ -39,7 +39,7 @@ class JoinRideViewModel extends ChangeNotifier {
 
       final pickupRequest = PickupRequest(
         ride: ride,
-        passenger: ImplPassenger.test(),
+        passenger: Passenger.test(),
         address: Address.fake(),
         time: DateTime.now(),
       );
