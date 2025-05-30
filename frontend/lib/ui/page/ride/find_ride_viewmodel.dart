@@ -8,7 +8,8 @@ import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
-import 'package:frontend/ui/shared/map/text_address_selector.dart';
+import 'package:frontend/ui/shared/datetime_selector.dart';
+import 'package:frontend/ui/shared/text_address_selector.dart';
 import 'package:latlong2/latlong.dart';
 
 class FindRideViewModel extends ChangeNotifier {
@@ -26,12 +27,8 @@ class FindRideViewModel extends ChangeNotifier {
   }
 
   // TODO: default values
-  final TextEditingController departureTimeController = TextEditingController(
-    text: "Now",
-  );
-  final TextEditingController arrivalTimeController = TextEditingController(
-    text: "Soonest",
-  );
+  final TextEditingController departureTimeController = TextEditingController();
+  final TextEditingController arrivalTimeController = TextEditingController();
 
   Address? get fromAddress => _fromAddress;
   Address? get toAddress => _toAddress;
@@ -58,6 +55,12 @@ class FindRideViewModel extends ChangeNotifier {
 
   final GlobalKey<TextAddressSelectorState> toAddressSelectorKey =
       GlobalKey<TextAddressSelectorState>();
+
+  final GlobalKey<DateTimeSelectorState> departureTimeSelectorKey =
+      GlobalKey<DateTimeSelectorState>();
+
+  final GlobalKey<DateTimeSelectorState> arrivalTimeSelectorKey =
+      GlobalKey<DateTimeSelectorState>();
 
   final RideRepository _rideRepository;
   final ActivityRepository _activityRepository;
@@ -87,48 +90,57 @@ class FindRideViewModel extends ChangeNotifier {
     super.dispose();
   }
 
+  DateTime _timeOfDayToDateTime(TimeOfDay time) {
+    return DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      time.hour,
+      time.minute,
+    );
+  }
+
   Future<void> selectActivity(Activity activity) async {
     var currentAddress = await addressRepository.fetchCurrent();
 
     fromAddressSelectorKey.currentState?.setAddress(currentAddress);
     toAddressSelectorKey.currentState?.setAddress(activity.address);
 
+    departureTimeSelectorKey.currentState?.setDateTime(DateTime.now());
+    arrivalTimeSelectorKey.currentState?.setDateTime(
+      _timeOfDayToDateTime(activity.startTime),
+    );
+
     selectFromAddress(currentAddress);
     selectToAddress(activity.address);
 
     selectDepartureTime(DateTime.now());
-    selectArrivalTime(
-      DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
-        activity.startTime.hour,
-        activity.startTime.minute,
-      ),
-    );
+    selectArrivalTime(_timeOfDayToDateTime(activity.startTime));
 
     await fetchRides();
   }
 
   Future<void> selectFromAddress(Address address) async {
+    print("Selected source address: $address");
     _fromAddress = address;
     await fetchRides();
   }
 
   Future<void> selectToAddress(Address address) async {
+    print("Selected destination address: $address");
     _toAddress = address;
     await fetchRides();
   }
 
-  Future<void> selectDepartureTime(DateTime time) async {
+  Future<void> selectDepartureTime(DateTime? time) async {
+    print("Selected departure time: $time");
     _departureTime = time;
-    departureTimeController.text = "Now";
     await fetchRides();
   }
 
-  Future<void> selectArrivalTime(DateTime time) async {
+  Future<void> selectArrivalTime(DateTime? time) async {
+    print("Selected arrival time: $time");
     _arrivalTime = time;
-    arrivalTimeController.text = time.toString();
     await fetchRides();
   }
 

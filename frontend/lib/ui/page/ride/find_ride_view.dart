@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/ui/page/find_ride/activity_selection_panel.dart';
-import 'package:frontend/ui/page/find_ride/ride_card.dart';
-import 'package:frontend/ui/page/find_ride/ride_time_selectors.dart';
-import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
-import 'package:frontend/ui/shared/map/text_address_selector.dart';
+import 'package:frontend/ui/page/ride/activity_selection_panel.dart';
+import 'package:frontend/ui/page/ride/ride_card.dart';
+import 'package:frontend/ui/page/ride/find_ride_viewmodel.dart';
+import 'package:frontend/ui/shared/datetime_selector.dart';
+import 'package:frontend/ui/shared/text_address_selector.dart';
 
 class FindRideView extends StatelessWidget {
   FindRideView({super.key, required this.viewModel});
@@ -17,86 +17,32 @@ class FindRideView extends StatelessWidget {
     Navigator.pop(context, activity);
   }
 
-  void _onDepartureTimeSelected(String value, BuildContext context) async {
+  DateTime _departureTimeOptionsToDateTime(String value) {
     switch (value) {
       case "Now":
-        await viewModel.selectArrivalTime(DateTime.now());
-        return;
+        return DateTime.now();
       case "in 15 minutes":
-        await viewModel.selectArrivalTime(
-          DateTime.now().add(const Duration(minutes: 30)),
-        );
-        return;
+        return DateTime.now().add(const Duration(minutes: 15));
       case "in 30 minutes":
-        await viewModel.selectArrivalTime(
-          DateTime.now().add(const Duration(minutes: 30)),
-        );
-        return;
+        return DateTime.now().add(const Duration(minutes: 30));
       default:
-        break;
+        // Fallback to current time if no match
+        return DateTime.now();
     }
-
-    TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (pickedTime != null) {
-      viewModel.departureTimeController.text = pickedTime.format(context);
-    } else {
-      viewModel.departureTimeController.text = "Now";
-    }
-
-    await viewModel.selectDepartureTime(
-      DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
-        pickedTime!.hour,
-        pickedTime.minute,
-      ),
-    );
   }
 
-  void _onArrivalTimeSelected(String value, BuildContext context) async {
+  DateTime _arrivalTimeOptionsToDateTime(String value) {
     switch (value) {
       case "Soonest":
-        await viewModel.selectArrivalTime(DateTime.now());
-        return;
+        return DateTime.now();
       case "in 15 minutes":
-        await viewModel.selectArrivalTime(
-          DateTime.now().add(const Duration(minutes: 30)),
-        );
-        return;
+        return DateTime.now().add(const Duration(minutes: 15));
       case "in 30 minutes":
-        await viewModel.selectArrivalTime(
-          DateTime.now().add(const Duration(minutes: 30)),
-        );
-        return;
+        return DateTime.now().add(const Duration(minutes: 30));
       default:
-        break;
+        // Fallback to current time if no match
+        return DateTime.now();
     }
-
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (pickedTime != null) {
-      viewModel.arrivalTimeController.text = pickedTime.format(context);
-    } else {
-      viewModel.arrivalTimeController.text = "Soonest";
-    }
-
-    await viewModel.selectDepartureTime(
-      DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
-        pickedTime!.hour,
-        pickedTime.minute,
-      ),
-    );
   }
 
   void _onJoinRidePressed(Ride ride, BuildContext context) {
@@ -196,16 +142,32 @@ class FindRideView extends StatelessWidget {
                         labelText: "To",
                       ),
                       const SizedBox(height: 16.0),
-                      RideTimeSelectors(
-                        departureTimeController:
-                            viewModel.departureTimeController,
-                        arrivalTimeController: viewModel.arrivalTimeController,
-                        departureTimes: _departureTimes,
-                        arrivalTimes: _arrivalTimes,
-                        onDepartureTimeSelected:
-                            (value) => _onDepartureTimeSelected(value, context),
-                        onArrivalTimeSelected:
-                            (value) => _onArrivalTimeSelected(value, context),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: DateTimeSelector(
+                              key: viewModel.departureTimeSelectorKey,
+                              labelText: 'Departure Time',
+                              controller: viewModel.departureTimeController,
+                              options: _departureTimes,
+                              onDateTimeSelected: viewModel.selectDepartureTime,
+                              optionsToDateTime:
+                                  _departureTimeOptionsToDateTime,
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: DateTimeSelector(
+                              key: viewModel.arrivalTimeSelectorKey,
+                              labelText: 'Arrival Time',
+                              controller: viewModel.arrivalTimeController,
+                              options: _arrivalTimes,
+                              onDateTimeSelected: viewModel.selectArrivalTime,
+                              optionsToDateTime: _arrivalTimeOptionsToDateTime,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

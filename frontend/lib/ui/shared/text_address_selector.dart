@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/repository/address_repository.dart';
-import 'package:frontend/ui/shared/map/address_selector.dart';
+import 'package:frontend/ui/shared/address_selector.dart';
 
 class TextAddressSelector extends StatefulWidget {
   final ValueChanged<Address> onAddressSelected;
