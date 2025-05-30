@@ -12,7 +12,7 @@ class JoinRideView extends StatelessWidget {
   void _onProceedPressed(BuildContext context) async {
     Navigator.of(
       context,
-    ).pushNamed('/pickup/confirm', arguments: viewModel.pickup);
+    ).pushNamed('/pickups/confirm', arguments: viewModel.pickup);
   }
 
   void _onJoinRidePressed() async {

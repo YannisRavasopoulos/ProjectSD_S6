@@ -61,7 +61,7 @@ class PickupArrangedNotification extends StatelessWidget {
               NotificationOverlay.dismiss();
               Navigator.of(
                 context,
-              ).pushNamed('/pickup/confirm', arguments: pickup);
+              ).pushNamed('/pickups/confirm', arguments: pickup);
             },
             child: const Text('Proceed'),
           ),
