@@ -3,7 +3,7 @@ import 'package:frontend/data/impl/impl_activity_repository.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 
 void main() {
   group('ActivityRepository', () {
@@ -15,10 +15,9 @@ void main() {
     late int initialActivitiesNum;
 
     setUp(() {
-
-       
       activityRepository = ImplActivityRepository();
-      initialActivitiesNum = 2; //assuming there are 2 initial activities in the repository
+      initialActivitiesNum =
+          2; //assuming there are 2 initial activities in the repository
       address1 = Address(
         id: 1,
         coordinates: LatLng(0.0, 0.0),
@@ -43,17 +42,15 @@ void main() {
         address: address1,
       );
       activity2 = Activity(
-        id: initialActivitiesNum+2,
+        id: initialActivitiesNum + 2,
         name: 'Test Activity 2',
         description: 'Test Description 2',
         startTime: TimeOfDay(hour: 11, minute: 0),
         address: address2,
       );
-      
     });
 
     test('create adds an activity', () async {
-
       await activityRepository.create(activity1);
       final activities = await activityRepository.fetch();
       expect(activities.length, initialActivitiesNum + 1);
@@ -66,7 +63,7 @@ void main() {
       final activities = await activityRepository.fetch();
       expect(activities.length, initialActivitiesNum + 2);
       expect(activities[initialActivitiesNum].name, 'Test Activity 1');
-      expect(activities[initialActivitiesNum+1].name, 'Test Activity 2');
+      expect(activities[initialActivitiesNum + 1].name, 'Test Activity 2');
     });
 
     test('update modifies an existing activity', () async {
@@ -102,7 +99,7 @@ void main() {
       );
       expect(
         () async => await activityRepository.delete(nonExistentActivity),
-        throwsA('Activity not found'),
+        throwsException,
       );
     });
 
@@ -116,25 +113,24 @@ void main() {
       );
       expect(
         () async => await activityRepository.update(nonExistentActivity),
-        throwsA('Activity not found'),
+        throwsException,
       );
     });
 
     test('does not allow duplicate activity IDs', () async {
-    await activityRepository.create(activity1);
-    final duplicateActivity = Activity(
-      id: activity1.id,
-      name: 'Duplicate Activity',
-      description: 'Should not be allowed',
-      startTime: TimeOfDay(hour: 12, minute: 0),
-      address: address2,
-    );
-    expect(
-      () async => await activityRepository.create(duplicateActivity),
-      throwsA(anything),
-    );
-
-  });
+      await activityRepository.create(activity1);
+      final duplicateActivity = Activity(
+        id: activity1.id,
+        name: 'Duplicate Activity',
+        description: 'Should not be allowed',
+        startTime: TimeOfDay(hour: 12, minute: 0),
+        address: address2,
+      );
+      expect(
+        () async => await activityRepository.create(duplicateActivity),
+        throwsException,
+      );
+    });
 
     test('watch emits activity updates', () async {
       final stream = activityRepository.watch();
@@ -143,7 +139,8 @@ void main() {
         stream,
         emits(
           predicate<List>(
-            (activities) => activities.isNotEmpty && activities.last.id == activity1.id,
+            (activities) =>
+                activities.isNotEmpty && activities.last.id == activity1.id,
           ),
         ),
       );
@@ -153,18 +150,19 @@ void main() {
     });
 
     test('stream emits on create and delete', () async {
-      final stream = activityRepository.watch();
-
       final future = expectLater(
         stream,
         emitsInOrder([
+          // Should emit activity 1 as the last element
           predicate<List>(
             (activities) =>
-                activities.length == initialActivitiesNum+1 && activities.last.id == activity1.id,
+                activities.length == initialActivitiesNum + 1 &&
+                activities.last.id == activity1.id,
           ),
+          // Should not contain activity 1
           predicate<List>(
             (activities) =>
-                activities.length == initialActivitiesNum  &&
+                activities.length == initialActivitiesNum &&
                 activities.every((a) => a.id != activity1.id),
           ),
         ]),
@@ -173,7 +171,5 @@ void main() {
       await activityRepository.delete(activity1);
       await future;
     });
-    
-
   });
 }

@@ -10,14 +10,14 @@ class ImplActivityRepository implements ActivityRepository {
 
   final List<Activity> _activities = [
     Activity(
-      id: 1,
+      id: 0,
       name: 'Activity 1',
       description: 'Activity 1 description',
       startTime: TimeOfDay(hour: 10, minute: 30),
       address: Address.fake(),
     ),
     Activity(
-      id: 2,
+      id: 1,
       name: 'Activity 2',
       description: 'Activity 2 description',
       startTime: TimeOfDay(hour: 14, minute: 0),
@@ -34,24 +34,27 @@ class ImplActivityRepository implements ActivityRepository {
   @override
   Future<void> create(Activity activity) async {
     try {
+      if (_activities.any((a) => a.id == activity.id)) {
+        throw Exception('Activity with id ${activity.id} already exists');
+      }
+
       _activities.add(activity);
       _notifyListeners();
     } catch (e) {
-      return Future.error('Failed to create activity: $e');
+      throw Exception('Failed to create activity: $e');
     }
   }
 
   @override
   Future<void> delete(Activity activity) async {
-    try {
-      final removed = _activities.remove(activity);
-      if (!removed) {
-        return Future.error('Activity not found');
-      }
-      _notifyListeners();
-    } catch (e) {
-      return Future.error('Failed to delete activity: $e');
+    final index = _activities.indexWhere((a) => a.id == activity.id);
+
+    if (index == -1) {
+      throw Exception('Activity not found');
     }
+
+    _activities.removeAt(index);
+    _notifyListeners();
   }
 
   @override
@@ -59,7 +62,7 @@ class ImplActivityRepository implements ActivityRepository {
     try {
       return List.unmodifiable(_activities);
     } catch (e) {
-      return Future.error('Failed to fetch activities: $e');
+      throw Exception('Failed to fetch activities: $e');
     }
   }
 
@@ -67,13 +70,15 @@ class ImplActivityRepository implements ActivityRepository {
   Future<void> update(Activity activity) async {
     try {
       final index = _activities.indexWhere((a) => a.id == activity.id);
+
       if (index == -1) {
-        return Future.error('Activity not found');
+        throw Exception('Activity not found');
       }
+
       _activities[index] = activity;
       _notifyListeners();
     } catch (e) {
-      return Future.error('Failed to update activity: $e');
+      throw Exception('Failed to update activity: $e');
     }
   }
 
