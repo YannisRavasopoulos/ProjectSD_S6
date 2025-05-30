@@ -1,0 +1,101 @@
+@startuml Manage-Profile-Sequence
+
+actor User
+participant MainScreen
+participant ProfileView
+participant EditProfileView
+participant ProfileViewModel
+participant UserRepository
+participant RideRepository
+participant RatingRepository
+participant PastRidesView
+
+' ViewModel and repositories are active for the session
+activate ProfileViewModel
+activate UserRepository
+activate RideRepository
+activate RatingRepository
+
+alt Main Flow
+    User -> MainScreen : Selects "Profile"
+    activate MainScreen
+    MainScreen -> ProfileViewModel : fetchProfile()
+    ProfileViewModel -> UserRepository : fetchCurrent()
+    UserRepository --> ProfileViewModel : User data
+    ProfileViewModel --> MainScreen : Show ProfileView
+    deactivate MainScreen
+
+    activate ProfileView
+    User -> ProfileView : Selects "Edit"
+    ProfileView -> EditProfileView : navigateTo()
+    deactivate ProfileView
+
+    activate EditProfileView
+    User -> EditProfileView : Makes changes and presses "Save Changes"
+    EditProfileView -> ProfileViewModel : validateAndSaveChanges()
+    ProfileViewModel -> UserRepository : updateUser()
+    UserRepository --> ProfileViewModel : Update confirmation
+    ProfileViewModel --> EditProfileView : Success
+    EditProfileView -> ProfileView : Show success message
+    deactivate EditProfileView
+
+    activate ProfileView
+    deactivate ProfileView
+end alt
+
+alt Alternative Flow: Cancel
+    activate EditProfileView
+    User -> EditProfileView : Presses "Cancel"
+    EditProfileView -> ProfileView : navigateBack()
+    deactivate EditProfileView
+    activate ProfileView
+    deactivate ProfileView
+end alt
+
+alt Alternative Flow: View Past Rides
+    activate ProfileView
+    User -> ProfileView : Selects "Past Rides"
+    ProfileView -> ProfileViewModel : fetchPastRides()
+    ProfileViewModel -> RideRepository : fetchHistory()
+    RideRepository --> ProfileViewModel : Past rides
+    ProfileViewModel --> ProfileView : Show PastRidesView
+    deactivate ProfileView
+
+    activate PastRidesView
+    deactivate PastRidesView
+end alt
+
+alt Alternative Flow: Delete Past Rides
+    activate ProfileView
+    User -> ProfileView : Selects "Past Rides"
+    ProfileView -> ProfileViewModel : fetchPastRides()
+    ProfileViewModel -> RideRepository : fetchHistory()
+    RideRepository --> ProfileViewModel : Past rides
+    ProfileViewModel --> ProfileView : Show PastRidesView
+    deactivate ProfileView
+
+    activate PastRidesView
+    User -> PastRidesView : Selects "Delete Past Rides"
+    PastRidesView -> ProfileViewModel : clearHistory()
+    ProfileViewModel -> RideRepository : clearHistory()
+    RideRepository --> ProfileViewModel : Deletion confirmation
+    ProfileViewModel --> PastRidesView : Show deletion message
+    deactivate PastRidesView
+end alt
+
+alt Alternative Flow: View Rating
+    activate ProfileView
+    User -> ProfileView : Selects "Rating"
+    ProfileView -> ProfileViewModel : fetchRating()
+    ProfileViewModel -> RatingRepository : fetch(user)
+    RatingRepository --> ProfileViewModel : Ratings
+    ProfileViewModel --> ProfileView : Show Rating
+    deactivate ProfileView
+end alt
+
+deactivate ProfileViewModel
+deactivate UserRepository
+deactivate RideRepository
+deactivate RatingRepository
+
+@enduml
