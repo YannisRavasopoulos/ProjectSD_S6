@@ -79,8 +79,19 @@ void main() {
         destination: farAddress,
         departureTime: DateTime.now().add(const Duration(hours: 5)),
         arrivalTime: DateTime.now().add(const Duration(hours: 6)),
-        originRadius: const Distance(),
-        destinationRadius: const Distance(),
+        originRadius: Distance.withRadius(10000),  
+        destinationRadius: Distance.withRadius(10000), 
+        departureWindow: const Duration(minutes: 15),
+        arrivalWindow: const Duration(minutes: 15),
+      );
+      // Set both radii to 10,000 meters (10km)
+      testRequest = RideRequest(
+        origin: testAddress,
+        destination: farAddress,
+        departureTime: DateTime.now().add(const Duration(hours: 5)),
+        arrivalTime: DateTime.now().add(const Duration(hours: 6)),
+        originRadius: Distance.withRadius(10000),        
+        destinationRadius: Distance.withRadius(10000),   
         departureWindow: const Duration(minutes: 15),
         arrivalWindow: const Duration(minutes: 15),
       );
@@ -93,11 +104,10 @@ void main() {
     });
 
     test('create adds a ride', () async {
-      
       await rideRepository.create(testRide);
       final rides = await rideRepository.fetchAllRides();
       expect(rides.length, initialRides + 1);
-      expect(rides[initialRides].driver.id ==testDriver.id, isTrue); //use ride id when ride repo is updated
+      expect(rides.any((r) => r.id == testRide.id), isTrue);
     });
 
   test('clearHistory clears the ride history', () async {
@@ -116,13 +126,14 @@ void main() {
 
       final distance = Distance();
       final origin = testRequest.origin.coordinates;
+      final radius = testRequest.originRadius.radius;
 
       expectLater(
         stream,
         emits(
           predicate<List<Ride>>(
             (rides) => rides.any(
-              (ride) => distance(origin, ride.route.start.coordinates) < 10000,
+              (ride) => distance(origin, ride.route.start.coordinates) < radius,
             ),
           ),
         ),
@@ -173,7 +184,7 @@ void main() {
       final history = await rideRepository.fetchHistory();
       expect(history, isA<List<Ride>>());
       expect(history.isNotEmpty, isTrue);
-      expect(history.first.driver.id, testDriver.id); //use ride id when ride repo is updated
+      expect(history.any((r) => r.id == testRide.id && r.driver.id == testDriver.id), isTrue);
     });
 
     test('watchHistory emits ride history', () async {
@@ -211,18 +222,21 @@ void main() {
         estimatedArrivalTime: testRide.estimatedArrivalTime,
         estimatedDuration: testRide.estimatedDuration,
         totalSeats: testRide.totalSeats,
+        id: testRide.id, // Make sure id is set if required by your Ride model
       );
-      await rideRepository.update(updatedRide);
+      await rideRepository.update(updatedRide, testRide.id);
       final rides = await rideRepository.fetchAllRides();
-     expect(rides[initialRides].passengers.first.id, testPassenger.id); //use ride id when ride repo is updated
-      
+      final updated = rides.firstWhere((r) => r.id == testRide.id);
+      expect(updated.passengers.first.id, testPassenger.id);
     });
 
     test('cancel removes a ride', () async {
       await rideRepository.create(testRide);
       await rideRepository.cancel(testRide);
       final rides = await rideRepository.fetchAllRides();
-      expect(rides.any((r) => r.driver.id == testDriver.id), isFalse); //use ride id when ride repo is updated
+      expect(rides.any((r) => r.id == testRide.id), isFalse);
     });
+
+
   });
 }
