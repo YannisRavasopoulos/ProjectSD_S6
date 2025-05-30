@@ -37,8 +37,8 @@ User --- UC_manage_profile
 User --- UC_manage_activities
 User --- UC_rate_user
 
+UC_offer_ride ...> UC_arrange_pickup : "<include>"
 UC_create_ride <... UC_offer_ride : "<extend>"
 UC_arrange_pickup <... UC_join_ride : "<include>"
 UC_find_ride <... UC_join_ride : "<extend>"
-
 @enduml
