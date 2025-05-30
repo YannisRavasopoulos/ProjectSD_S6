@@ -1,11 +1,12 @@
+import 'package:frontend/data/repository/user_repository.dart';
 import 'package:test/test.dart';
 import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/user.dart';
 
 // run with dart test -r expanded test/user_repository_testing.dart
 void main() {
-  group('ImplUserRepository', () {
-    late ImplUserRepository userRepository;
+  group('UserRepository', () {
+    late UserRepository userRepository;
 
     setUp(() {
       userRepository = ImplUserRepository();

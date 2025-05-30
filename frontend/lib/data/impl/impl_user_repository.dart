@@ -50,7 +50,7 @@ class ImplUserRepository implements UserRepository {
 
   ImplUser? _currentUser;
   final _userController = StreamController<User>.broadcast();
-
+@override
   Future<void> updateCurrentUser(User user) async {
     try {
       if (user is ImplUser) {

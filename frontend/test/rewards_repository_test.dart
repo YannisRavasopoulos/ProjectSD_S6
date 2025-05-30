@@ -12,7 +12,7 @@ void main() {
 
     setUp(() {
       userRepository = ImplUserRepository();
-      rewardsRepository = RewardsRepositoryImpl(userRepository: userRepository);
+      rewardsRepository = RewardsRepositoryImpl(userRepository: userRepository as ImplUserRepository);
     });
 
     test('fetchAvailable returns all available rewards', () async {
