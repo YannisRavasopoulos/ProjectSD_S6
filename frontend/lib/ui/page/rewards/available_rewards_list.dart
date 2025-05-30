@@ -3,7 +3,7 @@ import 'package:frontend/data/model/reward.dart';
 import 'package:frontend/ui/page/rewards/reward_card.dart';
 
 class AvailableRewardsList extends StatelessWidget {
-  final List availableRewards;
+  final List<Reward> availableRewards;
   final int userPoints;
   final ValueChanged<Reward> onRedeem;
 

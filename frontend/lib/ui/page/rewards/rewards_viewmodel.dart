@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/redeemed_reward.dart';
 import 'package:frontend/data/model/reward.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
@@ -9,7 +10,7 @@ class RewardViewModel extends ChangeNotifier {
   final UserRepository userRepository;
 
   StreamSubscription<List<Reward>>? _availableSub;
-  StreamSubscription<List<Reward>>? _redeemedSub;
+  StreamSubscription<List<RedeemedReward>>? _redeemedSub;
 
   RewardViewModel({
     required this.rewardRepository,
@@ -20,12 +21,12 @@ class RewardViewModel extends ChangeNotifier {
   }
 
   List<Reward> _availableRewards = [];
-  List<Reward> _redeemedRewards = [];
+  List<RedeemedReward> _redeemedRewards = [];
   int _userPoints = 0;
   bool _isLoading = true;
 
   List<Reward> get availableRewards => _availableRewards;
-  List<Reward> get redeemedRewards => _redeemedRewards;
+  List<RedeemedReward> get redeemedRewards => _redeemedRewards;
   int get userPoints => _userPoints;
   bool get isLoading => _isLoading;
 

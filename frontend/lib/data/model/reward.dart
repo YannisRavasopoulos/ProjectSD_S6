@@ -1,7 +1,13 @@
-import 'package:frontend/data/model.dart';
+class Reward {
+  final int id;
+  final int points;
+  final String title;
+  final String description;
 
-abstract class Reward implements Model {
-  String get title;
-  String get description;
-  int get points;
+  Reward({
+    required this.description,
+    required this.id,
+    required this.points,
+    required this.title,
+  });
 }

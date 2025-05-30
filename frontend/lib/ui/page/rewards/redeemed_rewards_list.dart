@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/data/model/redeemed_reward.dart';
 
 class RedeemedRewardsList extends StatelessWidget {
-  final List redeemedRewards;
+  final List<RedeemedReward> redeemedRewards;
 
   const RedeemedRewardsList({super.key, required this.redeemedRewards});
 
@@ -25,7 +26,7 @@ class RedeemedRewardsList extends StatelessWidget {
                 Text(reward.description),
                 const SizedBox(height: 4),
                 Text(
-                  'Redemption code: ${(reward as dynamic).redemptionCode}',
+                  'Redemption code: ${reward.redemptionCode}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],

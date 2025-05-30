@@ -1,3 +1,4 @@
+import 'package:frontend/data/model/redeemed_reward.dart';
 import 'package:frontend/data/model/reward.dart';
 
 abstract interface class RewardRepository {
@@ -11,8 +12,8 @@ abstract interface class RewardRepository {
   Stream<List<Reward>> watchAvailable();
 
   /// Fetches the redeemed rewards.
-  Future<List<Reward>> fetchRedeemed();
+  Future<List<RedeemedReward>> fetchRedeemed();
 
   /// Watches for changes in the redeemed rewards.
-  Stream<List<Reward>> watchRedeemed();
+  Stream<List<RedeemedReward>> watchRedeemed();
 }
