@@ -11,7 +11,11 @@ participant RatingRepository
 
 
 activate LoopApp
-User -> Navigator: Navigates to "Rate" screen (pushNamed("/rate", arguments: rated))
+User -> RateView: Navigates to "Rate" screen
+activate RateView
+
+
+RateView -> Navigator: pushNamed("/rate", arguments: rated)
 activate Navigator
 Navigator -> LoopApp: Route "/rate" with rated user
 
@@ -26,7 +30,7 @@ activate RatingRepository
 RatingRepository --> RateViewModel: Stream<List<Rating>>
 deactivate RatingRepository
 LoopApp -> RateView: Create RateView(rateViewModel)
-activate RateView
+
 LoopApp --> Navigator: return RateView
 
 Navigator -> RateView: build(context)
