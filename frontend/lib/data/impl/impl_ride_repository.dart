@@ -97,6 +97,9 @@ class ImplRideRepository implements RideRepository {
         .round();
   }
 
+  int idCounter = 0;
+  int get nextId => idCounter++;
+
   @override
   Future<List<Ride>> fetchMatchingRides(RideRequest request) async {
     await Future.delayed(const Duration(milliseconds: 300));
@@ -176,17 +179,27 @@ class ImplRideRepository implements RideRepository {
 
   @override
   Future<void> create(Ride ride) async {
-    _rides.add(ride);
+    Ride newRide = Ride(
+      id: nextId, // Simple ID generation
+      driver: ride.driver,
+      passengers: ride.passengers,
+      route: ride.route,
+      departureTime: ride.departureTime,
+      estimatedArrivalTime: ride.estimatedArrivalTime,
+      estimatedDuration: ride.estimatedDuration,
+      totalSeats: ride.totalSeats,
+    );
+    _rides.add(newRide);
     _ridesController.add(List.unmodifiable(_rides));
-    _rideHistory.add(ride);
+    _rideHistory.add(newRide);
     _historyController.add(List.unmodifiable(_rideHistory));
-    final driverId = ride.driver.id;
+    final driverId = newRide.driver.id;
     _createdRidesByDriver.putIfAbsent(driverId, () => []);
-    _createdRidesByDriver[driverId]!.add(ride);
+    _createdRidesByDriver[driverId]!.add(newRide);
 
-    // Set the current ride to the newly created ride
-    _currentRide = ride;
-    _currentRideController.add(ride);
+    // Set the current newRide to the newly created newRide
+    _currentRide = newRide;
+    _currentRideController.add(newRide);
   }
 
   List<Ride> getCreatedRidesForDriver(int driverId) {
