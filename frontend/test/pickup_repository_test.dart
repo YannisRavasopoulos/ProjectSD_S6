@@ -1,46 +1,48 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/data/impl/impl_pickup_repository.dart';
-import 'package:frontend/data/impl/impl_passenger.dart';
-import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_vehicle.dart';
+import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/passenger.dart';
+
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/route.dart';
+import 'package:frontend/data/model/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
 void main() {
-  group('ImplPickupRepository', () {
+  group('PickupRepository', () {
     late ImplPickupRepository pickupRepository;
     late PickupRequest pickupRequest;
     late Pickup pickup;
     late Ride ride;
-    late ImplPassenger passenger;
-    late ImplDriver driver;
+    late Passenger passenger;
+    late Driver driver;
     late Address address;
 
     setUp(() {
       pickupRepository = ImplPickupRepository();
       address = Address(
+        id: 1,
         coordinates: LatLng(37.9838, 23.7275),
         city: 'Athens',
         street: 'Main St',
         number: 1,
         postalCode: '12345',
       );
-      driver = ImplDriver(
+      driver = Driver(
         id: 1,
         firstName: 'DriverFirst',
         lastName: 'DriverLast',
         points: 100,
-        vehicle: ImplVehicle(
+        vehicle: Vehicle(
           id: 1,
           description: 'Toyota Corolla Blue XYZ123',
           capacity: 4,
         ),
       );
-      passenger = ImplPassenger(
+      passenger = Passenger(
         id: 2,
         firstName: 'PassengerFirst',
         lastName: 'PassengerLast',
@@ -50,6 +52,7 @@ void main() {
         driver: driver,
         passengers: [],
         route: Route(
+          id: 1,
           start: address,
           end: address,
         ),
@@ -59,12 +62,14 @@ void main() {
         totalSeats: 4,
       );
       pickupRequest = PickupRequest(
+        id: 1,
         ride: ride,
         passenger: passenger,
         address: address,
         time: DateTime.now(),
       );
       pickup = Pickup(
+        id: 1,
         ride: ride,
         passenger: passenger,
         address: address,

@@ -1,14 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_passenger.dart';
-import 'package:frontend/data/impl/impl_vehicle.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
+import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/route.dart';
+import 'package:frontend/data/model/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
 void main() {
@@ -30,6 +29,7 @@ void main() {
       final farLatLng = LatLng(38.0, 23.8); 
 
       final testAddress = Address(
+        id: 1,
         coordinates: fixedLatLng,
         city: 'Athens',
         street: 'Main St',
@@ -38,6 +38,7 @@ void main() {
       );
 
       final farAddress = Address(
+        id: 1,
         coordinates: farLatLng,
         city: 'FarTown',
         street: 'Far St',
@@ -45,18 +46,18 @@ void main() {
         postalCode: '54321',
       );
 
-      testDriver = ImplDriver(
-        id: 1,
+      testDriver = Driver(
+        id: 1, //arbitrary ID unimportant
         firstName: 'DriverFirst',
         lastName: 'DriverLast',
         points: 100,
-        vehicle: ImplVehicle(
+        vehicle: Vehicle(
           id: 1,
           description: 'Toyota Corolla Blue XYZ123',
           capacity: 4,
         ),
       );
-      testPassenger = ImplPassenger(
+      testPassenger = Passenger(
         id: 2,
         firstName: 'PassengerFirst',
         lastName: 'PassengerLast',
@@ -66,6 +67,7 @@ void main() {
         driver: testDriver,
         passengers: [],
         route: Route(
+          id: 1,
           start: testAddress, 
           end: farAddress,
         ),
@@ -75,6 +77,7 @@ void main() {
         totalSeats: 4,
       );
       testRequest = RideRequest(
+        id: 1,
         origin: testAddress, 
         destination: farAddress,
         departureTime: DateTime.now().add(const Duration(hours: 5)),
@@ -86,6 +89,7 @@ void main() {
       );
       // Set both radii to 10,000 meters (10km)
       testRequest = RideRequest(
+        id: 1,
         origin: testAddress,
         destination: farAddress,
         departureTime: DateTime.now().add(const Duration(hours: 5)),
@@ -105,9 +109,16 @@ void main() {
 
     test('create adds a ride', () async {
       await rideRepository.create(testRide);
+      await rideRepository.create(testRide);
+      await rideRepository.create(testRide);
+      
       final rides = await rideRepository.fetchAllRides();
-      expect(rides.length, initialRides + 1);
-      expect(rides.any((r) => r.id == testRide.id), isTrue);
+      expect(rides.length, initialRides + 3);
+      expect(rides[initialRides].id, 0);
+      expect(rides[initialRides+1].id, 1);
+      expect(rides[initialRides+2].id, 2);
+      //expect(rides.any((r) => r.id == testRide.id), isTrue);
+  
     });
 
   test('clearHistory clears the ride history', () async {
@@ -146,6 +157,7 @@ void main() {
       // Create a ride at a far address
       final farLatLng = LatLng(0, 0); // >10km from Athens
       final farAddress = Address(
+        id: 1,
         coordinates: farLatLng,
         city: 'FarTown',
         street: 'Far St',
@@ -153,9 +165,11 @@ void main() {
         postalCode: '54321',
       );
       final farRide = Ride(
+        id: 1,
         driver: testDriver,
         passengers: [],
         route: Route(
+          id: 1,
           start: farAddress,
           end: farAddress,
         ),
@@ -231,12 +245,57 @@ void main() {
     });
 
     test('cancel removes a ride', () async {
+      await rideRepository.clearHistory(); // Ensure a clean state
+
       await rideRepository.create(testRide);
-      await rideRepository.cancel(testRide);
-      final rides = await rideRepository.fetchAllRides();
-      expect(rides.any((r) => r.id == testRide.id), isFalse);
+      final allRidesBeforeCancel = await rideRepository.fetchAllRides();
+      final createdRide = allRidesBeforeCancel.firstWhere(
+        (r) => r.driver.id == testDriver.id && r.route.id == testRide.route.id,
+      );
+
+      await rideRepository.cancel(createdRide);
+
+      final allRidesAfterCancel = await rideRepository.fetchAllRides();
+      expect(allRidesAfterCancel.any((r) => r.id == createdRide.id), isFalse);
+    });
+    test('offer adds a passenger to the ride and returns a PickupRequest', () async {
+      await rideRepository.create(testRide);
+      final createdRide = (await rideRepository.fetchAllRides()).last;
+
+      final result = await rideRepository.offer(createdRide, testPassenger);
+
+      expect(result, isA<PickupRequest>());
+      expect(createdRide.passengers.length, 1);
+      expect(createdRide.passengers.first.firstName, testPassenger.firstName);
+    });
+    test('fetchCreatedRides returns rides created by a driver', () async {
+      await rideRepository.create(testRide);
+      final createdRides = await rideRepository.fetchCreatedRides();
+
+      expect(createdRides, isA<List<Ride>>());
+      expect(createdRides.isNotEmpty, isTrue);
+      expect(createdRides.last.driver.id, testDriver.id);
+
+     
+    });
+    test('watchCreatedRides emits created rides periodically', () async {
+      await rideRepository.create(testRide);
+      final stream = rideRepository.watchCreatedRides();
+
+      expectLater(
+        stream,
+        emits(
+          predicate<List<Ride>>(
+            (rides) => rides.isNotEmpty && rides.last.driver.id == testDriver.id
+          ),
+        ),
+      );
     });
 
 
+
+
+
   });
+  
 }

@@ -1,4 +1,5 @@
 import 'package:frontend/data/impl/impl_user_repository.dart';
+import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:test/test.dart';
@@ -11,55 +12,43 @@ void main() {
   group('ReportRepository', () {
     late ReportRepository reportRepository;
     late UserRepository userRepository;
-    late ImplReport report1;
-    late ImplReport report2;
+    late User testUser;
 
     setUp(() {
       userRepository = ImplUserRepository();
       reportRepository = ImplReportRepository(userRepository: userRepository as ImplUserRepository);
-      report1 = ImplReport(
+      testUser = User(
         id: 1,
-        reason: ReportReason.spam,
-        details: 'Spam report',
-        createdAt: DateTime.now(),
+        firstName: 'Test',
+        lastName: 'User',
+        points: 100,
       );
-      report2 = ImplReport(
-        id: 2,
-        reason: ReportReason.harassment,
-        details: 'Harassment report',
-        createdAt: DateTime.now(),
-      );
+     
+     
     });
 
     test('create adds a report', () async {
-      await reportRepository.create(report1);
+      await reportRepository.create(receiver: testUser, reason: ReportReason.spam, details: 'Spam report');
       final reports = await reportRepository.fetch();
       expect(reports.length, 1);
-      expect(reports.first.id, report1.id);
-      expect(reports.first.reason, report1.reason);
+      expect(reports[0].reason, ReportReason.spam);
     });
+  test('does not allow duplicate report IDs', () async {
+      await reportRepository.create(receiver: testUser, reason: ReportReason.spam, details: 'Spam report');
+      await reportRepository.create(receiver: testUser, reason: ReportReason.harassment, details: 'Harassment report');
+      final reports= await reportRepository.fetch();
 
+      final reportIds = reports.map((report) => report.id).toList();
+      final uniqueReportIds = reportIds.toSet();
+      expect(uniqueReportIds.length, reports.length, reason: 'All report IDs should be unique');
+    });
     test('fetch returns all reports', () async {
-      await reportRepository.create(report1);
-      await reportRepository.create(report2);
+      await reportRepository.create(receiver: testUser, reason: ReportReason.spam, details: 'Spam report');
+      await reportRepository.create(receiver: testUser, reason: ReportReason.harassment, details: 'Harassment report');
       final reports = await reportRepository.fetch();
       expect(reports.length, 2);
+      expect(reports[0].reason, ReportReason.spam);
       expect(reports[1].reason, ReportReason.harassment);
-    });
-    test('does not allow duplicate report IDs', () async {
-      await reportRepository.create(report1);
-
-      final duplicateReport = ImplReport(
-        id: report1.id, // same ID as report1
-        reason: ReportReason.harassment,
-        details: 'Duplicate ID',
-        createdAt: DateTime.now(),
-      );
-
-      expect(
-        () async => await reportRepository.create(duplicateReport),
-        throwsA(anything), // or throwsA(isA<Exception>())
-      );
     });
     test('watch emits report updates', () async {
       final stream = reportRepository.watch();
@@ -68,12 +57,12 @@ void main() {
         stream,
         emits(
           predicate<List<Report>>(
-            (reports) => reports.isNotEmpty && reports.first.id == report1.id,
+            (reports) => reports.isNotEmpty && reports.last.details == 'this is a test report'
           ),
         ),
       );
 
-      await reportRepository.create(report1);
+      await reportRepository.create(receiver: testUser, reason: ReportReason.spam, details: 'this is a test report'); 
       await future;
     });
   });
