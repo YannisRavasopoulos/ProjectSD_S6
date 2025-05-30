@@ -1,7 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_passenger.dart';
-import 'package:frontend/data/impl/impl_vehicle.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
@@ -9,6 +6,7 @@ import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/route.dart';
+import 'package:frontend/data/model/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
 void main() {
@@ -30,6 +28,7 @@ void main() {
       final farLatLng = LatLng(38.0, 23.8); 
 
       final testAddress = Address(
+        id: 1,
         coordinates: fixedLatLng,
         city: 'Athens',
         street: 'Main St',
@@ -38,6 +37,7 @@ void main() {
       );
 
       final farAddress = Address(
+        id: 1,
         coordinates: farLatLng,
         city: 'FarTown',
         street: 'Far St',
@@ -45,27 +45,29 @@ void main() {
         postalCode: '54321',
       );
 
-      testDriver = ImplDriver(
+      testDriver = Driver(
         id: 1,
         firstName: 'DriverFirst',
         lastName: 'DriverLast',
         points: 100,
-        vehicle: ImplVehicle(
+        vehicle: Vehicle(
           id: 1,
           description: 'Toyota Corolla Blue XYZ123',
           capacity: 4,
         ),
       );
-      testPassenger = ImplPassenger(
+      testPassenger = Passenger(
         id: 2,
         firstName: 'PassengerFirst',
         lastName: 'PassengerLast',
         points: 50,
       );
       testRide = Ride(
+        id: 555,
         driver: testDriver,
         passengers: [],
         route: Route(
+          id: 1,
           start: testAddress, 
           end: farAddress,
         ),
@@ -75,6 +77,7 @@ void main() {
         totalSeats: 4,
       );
       testRequest = RideRequest(
+        id: 1,
         origin: testAddress, 
         destination: farAddress,
         departureTime: DateTime.now().add(const Duration(hours: 5)),
@@ -86,6 +89,7 @@ void main() {
       );
       // Set both radii to 10,000 meters (10km)
       testRequest = RideRequest(
+        id: 1,
         origin: testAddress,
         destination: farAddress,
         departureTime: DateTime.now().add(const Duration(hours: 5)),
@@ -105,9 +109,16 @@ void main() {
 
     test('create adds a ride', () async {
       await rideRepository.create(testRide);
+      await rideRepository.create(testRide);
+      await rideRepository.create(testRide);
+      
       final rides = await rideRepository.fetchAllRides();
-      expect(rides.length, initialRides + 1);
-      expect(rides.any((r) => r.id == testRide.id), isTrue);
+      expect(rides.length, initialRides + 3);
+      expect(rides[initialRides].id, 0);
+      expect(rides[initialRides+1].id, 1);
+      expect(rides[initialRides+2].id, 2);
+      //expect(rides.any((r) => r.id == testRide.id), isTrue);
+  
     });
 
   test('clearHistory clears the ride history', () async {
@@ -146,6 +157,7 @@ void main() {
       // Create a ride at a far address
       final farLatLng = LatLng(0, 0); // >10km from Athens
       final farAddress = Address(
+        id: 1,
         coordinates: farLatLng,
         city: 'FarTown',
         street: 'Far St',
@@ -153,9 +165,11 @@ void main() {
         postalCode: '54321',
       );
       final farRide = Ride(
+        id: 1,
         driver: testDriver,
         passengers: [],
         route: Route(
+          id: 1,
           start: farAddress,
           end: farAddress,
         ),

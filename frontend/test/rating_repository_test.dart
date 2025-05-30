@@ -12,8 +12,8 @@ void main() {
 
     setUp(() {
       ratingRepository = ImplRatingRepository();
-      john = ImplUser(id: 0, firstName: "John", lastName: "Doe", points: 150);
-      emma = ImplUser(
+      john = User(id: 0, firstName: "John", lastName: "Doe", points: 150);
+      emma = User(
         id: 101,
         firstName: "Emma",
         lastName: "Watson",
@@ -43,13 +43,13 @@ void main() {
     });
 
     test('create adds a new rating', () async {
-      final newUser = ImplUser(
+      final newUser = User(
         id: 200,
         firstName: "Test",
         lastName: "User",
         points: 50,
       );
-      final rating = ImplRating(
+      final rating = Rating(
         id: 999,
         fromUser: newUser,
         toUser: john,
@@ -62,7 +62,7 @@ void main() {
     });
 
     test('create fails for duplicate rating id', () async {
-      final rating = ImplRating(
+      final rating = Rating(
         id: 1000,
         fromUser: emma,
         toUser: john,
@@ -80,7 +80,7 @@ void main() {
     test('update modifies an existing rating', () async {
       final ratings = await ratingRepository.fetch(john);
       final rating = ratings.first;
-      final updated = ImplRating(
+      final updated = Rating(
         id: rating.id,
         fromUser: rating.fromUser,
         toUser: rating.toUser,
@@ -100,7 +100,7 @@ void main() {
       expect(afterDelete.any((r) => r.id == rating.id), isFalse);
     });
     test('does not allow duplicate rating IDs', () async {
-      final rating = ImplRating(
+      final rating = Rating(
         id: 3000,
         fromUser: emma,
         toUser: john,
@@ -109,7 +109,7 @@ void main() {
       );
       await ratingRepository.create(rating);
 
-      final duplicateRating = ImplRating(
+      final duplicateRating = Rating(
         id: 3000, // same ID as above
         fromUser: john,
         toUser: emma,
@@ -123,13 +123,13 @@ void main() {
     );
   });
     test('watch emits ratings updates', () async {
-      final newUser = ImplUser(
+      final newUser = User(
         id: 201,
         firstName: "Watcher",
         lastName: "User",
         points: 60,
       );
-      final rating = ImplRating(
+      final rating = Rating(
         id: 2000,
         fromUser: newUser,
         toUser: john,

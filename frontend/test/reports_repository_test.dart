@@ -11,8 +11,8 @@ void main() {
   group('ReportRepository', () {
     late ReportRepository reportRepository;
     late UserRepository userRepository;
-    late ImplReport report1;
-    late ImplReport report2;
+    late Report report1;
+    late Report report2;
 
     setUp(() {
       userRepository = ImplUserRepository();
