@@ -3,6 +3,7 @@ import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/route.dart';
 
 class Ride {
+  final int id;
   final Driver driver;
   final List<Passenger> passengers;
   final Route route;
@@ -14,6 +15,7 @@ class Ride {
   int get availableSeats => totalSeats - passengers.length - 1;
 
   const Ride({
+    this.id = 0,
     required this.driver,
     required this.passengers,
     required this.route,
