@@ -12,7 +12,8 @@ participant RideRepository
 
 activate Driver
 
-' Main flow: Driver starts creating a ride
+== Create Ride ==
+
 activate LoopApp
 activate RideRepository
 activate HomeView
