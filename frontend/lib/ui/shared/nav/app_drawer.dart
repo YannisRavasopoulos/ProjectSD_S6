@@ -68,7 +68,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               final pickupRequest = PickupRequest(
                 id: 0,
-                passenger: Passenger.test(),
+                passenger: Passenger.fake(),
                 address: Address.fake(),
                 time: DateTime.now(),
                 ride: Ride(

@@ -10,7 +10,7 @@ class Passenger extends User {
     required super.points,
   });
 
-  factory Passenger.test() {
+  factory Passenger.fake() {
     final random = Random();
     final names = ['Alex', 'Sam', 'Jamie', 'Taylor', 'Jordan', 'Casey'];
     final surnames = ['Smith', 'Lee', 'Patel', 'Kim', 'Garcia', 'Brown'];

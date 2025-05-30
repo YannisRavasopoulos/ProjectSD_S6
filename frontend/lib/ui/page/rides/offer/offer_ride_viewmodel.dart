@@ -1,38 +1,56 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/passenger.dart';
+import 'package:frontend/data/model/pickup_request.dart';
+import 'package:frontend/data/model/ride.dart';
+import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
 
 class OfferRideViewModel extends ChangeNotifier {
-  final RideRepository rideRepository;
+  final RideRepository _rideRepository;
+  final Ride _ride;
 
-  List<Ride> rides = [];
-  Map<int, List<Passenger>> matchingPassengers = {};
+  List<User> potentialPassengers = [];
 
-  OfferRideViewModel({required this.rideRepository});
+  bool isLoading = true;
 
-  Future<void> loadRides() async {
-    // You may want to pass a RideRequest or filter here
-    rides = await rideRepository.fetchHistory();
+  StreamSubscription<List<User>>? _potentialPassengersSubscription;
+
+  OfferRideViewModel({
+    required RideRepository rideRepository,
+    required Ride ride,
+  }) : _rideRepository = rideRepository,
+       _ride = ride {
+    _init();
+    _potentialPassengersSubscription = rideRepository
+        .watchPotentialPassengers(ride)
+        .listen(_onPotentialPassengersUpdated);
+  }
+
+  void _init() async {
+    await fetchPotentialPassengers();
+    isLoading = false;
     notifyListeners();
   }
 
-  Future<void> loadMatchingPassengers(Ride ride) async {
-    final passengers = await rideRepository.fetchPotentialPassengers(ride);
-    matchingPassengers[ride.id] = passengers;
+  void _onPotentialPassengersUpdated(List<User> passengers) {
+    potentialPassengers = passengers;
     notifyListeners();
   }
 
-  List<Passenger> getPassengersForRide(Ride ride) {
-    return matchingPassengers[ride.id] ?? [];
+  Future<void> fetchPotentialPassengers() async {
+    potentialPassengers = await _rideRepository.fetchPotentialPassengers(_ride);
+    notifyListeners();
   }
 
-  Future<void> offerRide(Ride ride, List<Passenger> selectedPassengers) async {
-    // Implement your offer logic here (e.g., send to backend)
-    // For now, just print or update state
-    debugPrint(
-      'Offering ride ${ride.id} to passengers: ${selectedPassengers.map((p) => p.name).join(", ")}',
-    );
-    // Optionally notifyListeners();
+  @override
+  void dispose() {
+    _potentialPassengersSubscription?.cancel();
+    super.dispose();
+  }
+
+  Future<PickupRequest> offerRide(User potentialPassenger) async {
+    return _rideRepository.offer(_ride, potentialPassenger);
   }
 }
