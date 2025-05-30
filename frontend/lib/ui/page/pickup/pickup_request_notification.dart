@@ -103,13 +103,9 @@ class PickupRequestNotification extends StatelessWidget {
                 tooltip: 'Accept',
                 onPressed: () {
                   NotificationOverlay.dismiss();
-                  Navigator.of(context).pushNamed(
-                    '/arrange_pickup',
-                    arguments: {
-                      'pickupRequest': pickupRequest,
-                      'driver': pickupRequest.ride.driver,
-                    },
-                  );
+                  Navigator.of(
+                    context,
+                  ).pushNamed('/pickup/arrange', arguments: pickupRequest);
                 },
               ),
             ],

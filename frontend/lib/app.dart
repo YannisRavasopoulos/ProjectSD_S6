@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart' hide Route;
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/driver.dart';
+import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/route.dart';
 import 'package:frontend/data/model/user.dart';
 
@@ -16,8 +17,6 @@ import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 
 // Pages
-// import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
-// import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 // import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
@@ -40,15 +39,17 @@ import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
 import 'package:frontend/ui/page/report/report_view.dart';
 import 'package:frontend/ui/page/report/report_viewmodel.dart';
-import 'package:frontend/ui/ride_ended/ride_ended_view.dart';
+import 'package:frontend/ui/page/ride/end/ride_ended_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
-import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_view.dart';
-import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/pickup/confirm/confirm_pickup_view.dart';
+import 'package:frontend/ui/page/pickup/confirm/confirm_pickup_viewmodel.dart';
 import 'package:frontend/ui/page/ride/join/join_ride_view.dart';
 import 'package:frontend/ui/page/ride/join/join_ride_viewmodel.dart';
+import 'package:frontend/ui/page/pickup/arrange/arrange_pickup_view.dart';
+import 'package:frontend/ui/page/pickup/arrange/arrange_pickup_viewmodel.dart';
 
 // Repository Implementations
 import 'package:frontend/data/impl/impl_activity_repository.dart';
@@ -63,7 +64,7 @@ import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/ui/ride_ended/ride_ended_viewmodel.dart';
+import 'package:frontend/ui/page/ride/end/ride_ended_viewmodel.dart';
 
 class App extends StatelessWidget {
   final UserRepository _userRepository = ImplUserRepository();
@@ -160,6 +161,7 @@ class App extends StatelessWidget {
         '/ride/find': (context) => FindRideView(viewModel: findRideViewModel),
         '/ride/create':
             (context) => CreateRideView(viewModel: createRideViewModel),
+        '/ride/end': (context) => RideEndedView(viewModel: rideEndedViewModel),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/activities/create':
@@ -169,8 +171,6 @@ class App extends StatelessWidget {
                 activityRepository: _activityRepository,
               ),
             ),
-        '/ride_ended':
-            (context) => RideEndedView(viewModel: rideEndedViewModel),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -221,42 +221,29 @@ class App extends StatelessWidget {
                     ),
                   ),
             );
-        }
-        // if (settings.name == '/arrange_pickup') {
-        //   final args = settings.arguments as Map<String, dynamic>?;
-
-        //   if (args == null ||
-        //       !args.containsKey('pickupRequest') ||
-        //       !args.containsKey('driver')) {
-        //     return null;
-        //   }
-
-        //   final pickupRequest = args['pickupRequest'] as PickupRequest;
-        //   final driver = args['driver'] as Driver;
-
-        //   return MaterialPageRoute(
-        //     builder:
-        //         (context) => ArrangePickupView(
-        //           viewModel: ArrangePickupViewModel(
-        //             repository: _pickupRepository,
-        //             pickupRequest: pickupRequest,
-        //           ),
-        //         ),
-        //   );
-        // }
-
-        if (settings.name == '/confirm_pickup') {
-          final pickup = settings.arguments as Pickup;
-
-          return MaterialPageRoute(
-            builder:
-                (context) => ConfirmPickupView(
-                  viewModel: ConfirmPickupViewModel(
-                    pickupRepository: _pickupRepository,
-                    pickup: pickup,
+          case "/pickup/arrange":
+            final pickupRequest = settings.arguments as PickupRequest;
+            return MaterialPageRoute(
+              builder:
+                  (context) => ArrangePickupView(
+                    viewModel: ArrangePickupViewModel(
+                      pickupRepository: _pickupRepository,
+                      addressRepository: _addressRepository,
+                      pickupRequest: pickupRequest,
+                    ),
                   ),
-                ),
-          );
+            );
+          case "/confirm_pickup":
+            final pickup = settings.arguments as Pickup;
+            return MaterialPageRoute(
+              builder:
+                  (context) => ConfirmPickupView(
+                    viewModel: ConfirmPickupViewModel(
+                      pickupRepository: _pickupRepository,
+                      pickup: pickup,
+                    ),
+                  ),
+            );
         }
 
         //     if (settings.name == '/offer_ride') {

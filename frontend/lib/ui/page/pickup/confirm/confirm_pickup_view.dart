@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_viewmodel.dart';
-import 'package:frontend/ui/shared/route_view.dart';
+import 'package:frontend/ui/page/pickup/confirm/confirm_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/pickup/pickup_details_view.dart';
 
 class ConfirmPickupView extends StatelessWidget {
   final ConfirmPickupViewModel viewModel;
@@ -30,54 +30,7 @@ class ConfirmPickupView extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        'Pickup Details',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      ListTile(
-                        leading: const Icon(Icons.location_on),
-                        title: Text(
-                          'Location: ${viewModel.pickup.address.toString()}',
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.access_time),
-                        title: Text('Time: ${viewModel.pickup.time}'),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.person),
-                        title: Text(
-                          'Driver: ${viewModel.pickup.ride.driver.name}',
-                        ),
-                      ),
-                      // Route view
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Route:',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            SizedBox(
-                              height: 300,
-                              child: RouteView(
-                                route: viewModel.pickup.ride.route,
-                                pickups: [viewModel.pickup],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      PickupDetailsWidget(pickup: viewModel.pickup),
                       if (viewModel.errorMessage != null)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
