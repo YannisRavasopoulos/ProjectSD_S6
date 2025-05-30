@@ -1,89 +1,69 @@
 @startuml
+
 actor Driver
+
 participant HomeView
+participant Navigator
+participant LoopApp
 participant CreateRideView
 participant CreateRideViewModel
-participant RideService_Frontend as RideService_FE
-participant RideService_Backend as RideService_BE
-participant Ride
-database DB
+participant ActivitySelectionPanel
+participant RideRepository
 
-loop Driver attempts to create a ride
 
-    Driver -> HomeView: onCreateRideClick()
-    activate HomeView
 
-    HomeView -> CreateRideView: createView()
-    deactivate HomeView
-    activate CreateRideView
+' Main flow: Driver starts creating a ride
+activate LoopApp
+activate HomeView
+Driver -> HomeView: Presses "Create Ride"
+HomeView -> HomeView: onCreateRideClick()
+HomeView -> Navigator: pushNamed("/create-ride")
+activate Navigator
+Navigator -> LoopApp: "/create-ride"
+LoopApp -> CreateRideViewModel: new CreateRideViewModel(...)
+activate CreateRideViewModel
+LoopApp -> CreateRideView: new CreateRideView(createRideViewModel)
+activate CreateRideView
+CreateRideView --> LoopApp: return createRideView
+LoopApp --> Navigator: return createRideView
+Navigator -> CreateRideView: build(context)
 
-    Driver -> CreateRideView: fillRideForm()
-    Driver -> CreateRideView: onConfirmClick()
 
+alt Make Insta-Ride
+    Driver -> CreateRideView: Fills ride form fields
+
+    ' Driver confirms creation
+    Driver -> CreateRideView: Presses "Create Ride"
     CreateRideView -> CreateRideViewModel: createRide()
-    deactivate CreateRideView
-    activate CreateRideViewModel
+    CreateRideViewModel -> RideRepository: create(ride)
+    activate RideRepository
+    RideRepository --> CreateRideViewModel: return
+    deactivate RideRepository
+' Activity selection (alternative flow)
+else Select from activities
+    Driver -> CreateRideView: Presses "Select from activities"
+    CreateRideView -> ActivitySelectionPanel: showModalBottomSheet(activities)
+    activate ActivitySelectionPanel
+    Driver -> ActivitySelectionPanel: Selects activity
+    ActivitySelectionPanel -> CreateRideView: onActivitySelected(activity)
+      deactivate ActivitySelectionPanel
+    CreateRideView -> CreateRideViewModel: selectActivity(activity)
+    CreateRideViewModel -> CreateRideViewModel: update form fields (from, to, times)
+  
+end
 
-    CreateRideViewModel -> RideService_FE: createRide()
-    activate RideService_FE
-
-    RideService_FE -> RideService_FE: validateRideData()
-
-    RideService_FE -> RideService_BE: /ride/create
-    activate RideService_BE
-
-    RideService_BE -> Ride: createRide()
-    activate Ride
-
-    Ride --> RideService_BE: return: Ride
-    deactivate Ride
-
-    RideService_BE -> DB: insertRide()
-    activate DB
-    DB --> RideService_BE: return: success
-    deactivate DB
-
-    RideService_BE --> RideService_FE: return: success
-    deactivate RideService_BE
-
-    RideService_FE --> CreateRideViewModel: return: success
-    deactivate RideService_FE
-
-    CreateRideViewModel --> CreateRideView: showSuccessMessage()
-    deactivate CreateRideViewModel
-    activate CreateRideView
-
-    CreateRideView --> Driver: displaySuccess()
-    deactivate CreateRideView
+' Driver fills in the form (from, to, times)
 
 
-    alt Invalid data
-        RideService_FE --> CreateRideViewModel: validationFailed()
-        deactivate RideService_FE
+alt Success
+    CreateRideViewModel -> CreateRideView: notifyListeners() (showSuccess)
+    CreateRideView -> Driver: Show "Ride created successfully!"
+else Error
+    CreateRideViewModel -> CreateRideView: notifyListeners() (errorMessage)
+    CreateRideView -> Driver: Show error message
+end
 
-        CreateRideViewModel --> CreateRideView: showErrorMessage("Data is invalid")
-        deactivate CreateRideViewModel
-        activate CreateRideView
+deactivate CreateRideViewModel
+deactivate CreateRideView
 
-        CreateRideView --> Driver: displayError("Data is invalid")
-        deactivate CreateRideView
-        Driver -> CreateRideView: onOKClick()
-        activate CreateRideView
-        CreateRideView --> CreateRideViewModel: errorAcknowledged()
-        activate CreateRideViewModel
-        CreateRideViewModel --> CreateRideView: returnToForm()
-        deactivate CreateRideViewModel
-        deactivate CreateRideView
-    end alt
-    alt Cancel clicked
-        Driver -> CreateRideView: onCancelClick()
-        activate CreateRideView
-        CreateRideView -> CreateRideViewModel: cancelRequest()
-        activate CreateRideViewModel
-        CreateRideViewModel --> CreateRideView: returnToForm()
-        deactivate CreateRideViewModel
-        deactivate CreateRideView
-    end alt
-
-end loop
 @enduml
