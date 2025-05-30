@@ -15,7 +15,7 @@
 8. Το σύστημα εμφανίζει τα Rides που ταιριάζουν.
 9. Ο Passenger επιλέγει κάποιο Ride.
 10. Το σύστημα εμφανίζει το μενού Ride Details.
-11. Ο Passenger επιλέγει "Join".
+11. Ο Passenger επιλέγει "Join" στο μενού Ride Details.
 12. Καλείται η περίπτωση χρήσης Join Ride.
 
 ### Εναλλακτική Ροή: Επιλογή Activity
