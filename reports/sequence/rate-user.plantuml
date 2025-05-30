@@ -9,6 +9,7 @@ participant RateViewModel
 participant UserRepository
 participant RatingRepository
 
+== Rate User ==
 
 activate LoopApp
 activate UserRepository
@@ -45,11 +46,11 @@ RateView -> RateViewModel: setRating(value)
 RateViewModel --> RateView: notifyListeners()
 
 
-User -> RateView: Enters comment (optional)
+opt Enter comment
+User -> RateView: Enters comment
 RateView -> RateViewModel: setComment(value)
-
 RateViewModel --> RateView: notifyListeners()
-
+end
 
 User -> RateView: Presses "Submit Rating"
 RateView -> RateViewModel: submitRating(rated)
@@ -58,7 +59,6 @@ RateViewModel -> RatingRepository: create(Rating(fromUser, toUser, stars, commen
 RatingRepository -> Rating: new Rating(...)
 activate Rating
 Rating --> RatingRepository: return rating
-deactivate Rating
 RatingRepository --> RateViewModel: return
 
 
@@ -73,6 +73,7 @@ else Error
     RateViewModel --> RateView: notifyListeners() (errorMessage)
     RateView -> RateView: show error message
 end
+deactivate Rating
 deactivate RateViewModel
 deactivate RateView
 
