@@ -48,11 +48,6 @@ abstract class "frontend::data::model::model.dart::Model" {
   +DateTime createdAt
 }
 
-class "frontend::data::model::passenger.dart::Passenger" {
-}
-
-"frontend::data::model::user.dart::User" <|-- "frontend::data::model::passenger.dart::Passenger"
-
 class "frontend::data::model::pickup.dart::Pickup" {
   +Ride ride
   +Passenger passenger
@@ -64,18 +59,6 @@ class "frontend::data::model::pickup.dart::Pickup" {
 "frontend::data::model::pickup.dart::Pickup" o-- "frontend::data::model::passenger.dart::Passenger"
 "frontend::data::model::pickup.dart::Pickup" o-- "frontend::data::model::address.dart::Address"
 "frontend::data::model::model.dart::Model" <|-- "frontend::data::model::pickup.dart::Pickup"
-
-class "frontend::data::model::pickup_request.dart::PickupRequest" {
-  +Ride ride
-  +Passenger passenger
-  +Address address
-  +DateTime time
-}
-
-"frontend::data::model::pickup_request.dart::PickupRequest" o-- "frontend::data::model::ride.dart::Ride"
-"frontend::data::model::pickup_request.dart::PickupRequest" o-- "frontend::data::model::passenger.dart::Passenger"
-"frontend::data::model::pickup_request.dart::PickupRequest" o-- "frontend::data::model::address.dart::Address"
-"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::pickup_request.dart::PickupRequest"
 
 class "frontend::data::model::place.dart::Place" {
   +String name
@@ -100,30 +83,6 @@ class "frontend::data::model::redeemed_reward.dart::RedeemedReward" {
 
 "frontend::data::model::reward.dart::Reward" <|-- "frontend::data::model::redeemed_reward.dart::RedeemedReward"
 
-class "frontend::data::model::report.dart::Report" {
-  +ReportReason reason
-  +User receiver
-  +ReportStatus status
-  +String? details
-}
-
-"frontend::data::model::report.dart::Report" o-- "frontend::data::model::report_reason.dart::ReportReason"
-"frontend::data::model::report.dart::Report" o-- "frontend::data::model::user.dart::User"
-"frontend::data::model::report.dart::Report" o-- "frontend::data::model::report.dart::ReportStatus"
-"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::report.dart::Report"
-
-class "frontend::data::model::report.dart::ReportStatus" {
-  +int index
-  {static} +List<ReportStatus> values
-  {static} +ReportStatus pending
-  {static} +ReportStatus inProgress
-  {static} +ReportStatus resolved
-  {static} +ReportStatus rejected
-}
-
-"frontend::data::model::report.dart::ReportStatus" o-- "frontend::data::model::report.dart::ReportStatus"
-"dart::core::Enum" <|-- "frontend::data::model::report.dart::ReportStatus"
-
 class "frontend::data::model::reward.dart::Reward" {
   +int points
   +String title
@@ -131,21 +90,6 @@ class "frontend::data::model::reward.dart::Reward" {
 }
 
 "frontend::data::model::model.dart::Model" <|-- "frontend::data::model::reward.dart::Reward"
-
-class "frontend::data::model::ride.dart::Ride" {
-  +Driver driver
-  +List<Passenger> passengers
-  +Route route
-  +DateTime departureTime
-  +DateTime estimatedArrivalTime
-  +Duration estimatedDuration
-  +int totalSeats
-  +int availableSeats
-}
-
-"frontend::data::model::ride.dart::Ride" o-- "frontend::data::model::driver.dart::Driver"
-"frontend::data::model::ride.dart::Ride" o-- "frontend::data::model::route.dart::Route"
-"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::ride.dart::Ride"
 
 class "frontend::data::model::ride_request.dart::RideRequest" {
   +Address origin
@@ -188,20 +132,61 @@ class "frontend::data::model::vehicle.dart::Vehicle" {
 
 "frontend::data::model::model.dart::Model" <|-- "frontend::data::model::vehicle.dart::Vehicle"
 
-abstract class "frontend::data::model::authentication.dart::Authentication" {
-  +int userId
-  +Map<String, String> makeHeaders()
+class "frontend::data::model::passenger.dart::Passenger" {
 }
 
-"frontend::data::model.dart::Model" <|-- "frontend::data::model::authentication.dart::Authentication"
+"frontend::data::model::user.dart::User" <|-- "frontend::data::model::passenger.dart::Passenger"
 
-class "frontend::data::repository::activity_repository.dart::ActivityRepository" {
-  +dynamic create()
-  +dynamic fetch()
-  +Stream<List<Activity>> watch()
-  +dynamic update()
-  +dynamic delete()
+class "frontend::data::model::pickup_request.dart::PickupRequest" {
+  +Ride ride
+  +Passenger passenger
+  +Address address
+  +DateTime time
 }
+
+"frontend::data::model::pickup_request.dart::PickupRequest" o-- "frontend::data::model::ride.dart::Ride"
+"frontend::data::model::pickup_request.dart::PickupRequest" o-- "frontend::data::model::passenger.dart::Passenger"
+"frontend::data::model::pickup_request.dart::PickupRequest" o-- "frontend::data::model::address.dart::Address"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::pickup_request.dart::PickupRequest"
+
+class "frontend::data::model::report.dart::Report" {
+  +ReportReason reason
+  +User receiver
+  +ReportStatus status
+  +String? details
+}
+
+"frontend::data::model::report.dart::Report" o-- "frontend::data::model::report_reason.dart::ReportReason"
+"frontend::data::model::report.dart::Report" o-- "frontend::data::model::user.dart::User"
+"frontend::data::model::report.dart::Report" o-- "frontend::data::model::report.dart::ReportStatus"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::report.dart::Report"
+
+class "frontend::data::model::report.dart::ReportStatus" {
+  +int index
+  {static} +List<ReportStatus> values
+  {static} +ReportStatus pending
+  {static} +ReportStatus inProgress
+  {static} +ReportStatus resolved
+  {static} +ReportStatus rejected
+}
+
+"frontend::data::model::report.dart::ReportStatus" o-- "frontend::data::model::report.dart::ReportStatus"
+"dart::core::Enum" <|-- "frontend::data::model::report.dart::ReportStatus"
+
+class "frontend::data::model::ride.dart::Ride" {
+  +Driver driver
+  +List<Passenger> passengers
+  +Route route
+  +DateTime departureTime
+  +DateTime estimatedArrivalTime
+  +Duration estimatedDuration
+  +int totalSeats
+  +int availableSeats
+}
+
+"frontend::data::model::ride.dart::Ride" o-- "frontend::data::model::driver.dart::Driver"
+"frontend::data::model::ride.dart::Ride" o-- "frontend::data::model::route.dart::Route"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::ride.dart::Ride"
 
 class "frontend::data::repository::rating_repository.dart::RatingRepository" {
   +dynamic fetch()
@@ -232,15 +217,6 @@ class "frontend::data::repository::pickup_repository.dart::PickupRepository" {
   +dynamic completePickup()
 }
 
-class "frontend::data::repository::address_repository.dart::AddressRepository" {
-  +dynamic fetchForCoordinates()
-  +dynamic fetchForQuery()
-  +dynamic fetchCurrent()
-  +Stream<Address> watchCurrent()
-  +dynamic fetchCurrentOf()
-  +Stream<Address> watchCurrentOf()
-}
-
 class "frontend::data::repository::report_repository.dart::ReportRepository" {
   +dynamic create()
   +dynamic fetch()
@@ -253,6 +229,12 @@ class "frontend::data::repository::reward_repository.dart::RewardRepository" {
   +Stream<List<Reward>> watchAvailable()
   +dynamic fetchRedeemed()
   +Stream<List<RedeemedReward>> watchRedeemed()
+}
+
+class "frontend::data::repository::user_repository.dart::UserRepository" {
+  +dynamic fetchCurrent()
+  +dynamic updateCurrentUser()
+  +Stream<User> watchCurrent()
 }
 
 class "frontend::data::repository::ride_repository.dart::RideRepository" {
@@ -270,31 +252,27 @@ class "frontend::data::repository::ride_repository.dart::RideRepository" {
   +dynamic cancel()
   +dynamic join()
   +dynamic leave()
-  +dynamic fetchAllRides()
+  +dynamic offer()
+  +dynamic fetchCreatedRides()
+  +Stream<List<Ride>> watchCreatedRides()
 }
 
-class "frontend::data::repository::user_repository.dart::UserRepository" {
-  +dynamic fetchCurrent()
-  +dynamic updateCurrentUser()
-  +Stream<User> watchCurrent()
-}
-
-abstract class "frontend::data::model.dart::Model" {
-  +int id
-}
-
-class "frontend::data::impl::impl_activity_repository.dart::ImplActivityRepository" {
-  -List<Activity> _activities
-  -void _notifyListeners()
+class "frontend::data::repository::activity_repository.dart::ActivityRepository" {
   +dynamic create()
-  +dynamic delete()
   +dynamic fetch()
-  +dynamic update()
   +Stream<List<Activity>> watch()
-  +void dispose()
+  +dynamic update()
+  +dynamic delete()
 }
 
-"frontend::data::repository::activity_repository.dart::ActivityRepository" <|-- "frontend::data::impl::impl_activity_repository.dart::ImplActivityRepository"
+class "frontend::data::repository::address_repository.dart::AddressRepository" {
+  +dynamic fetchForCoordinates()
+  +dynamic fetchForQuery()
+  +dynamic fetchCurrent()
+  +Stream<Address> watchCurrent()
+  +dynamic fetchCurrentOf()
+  +Stream<Address> watchCurrentOf()
+}
 
 class "frontend::data::impl::impl_address_repository.dart::ImplAddressRepository" {
   +dynamic fetchCurrentOf()
@@ -331,34 +309,6 @@ class "frontend::data::impl::impl_pickup_repository.dart::ImplPickupRepository" 
 
 "frontend::data::repository::pickup_repository.dart::PickupRepository" <|-- "frontend::data::impl::impl_pickup_repository.dart::ImplPickupRepository"
 
-class "frontend::data::impl::impl_rating_repository.dart::ImplRatingRepository" {
-  -List<Rating> _ratings
-  +dynamic create()
-  +dynamic delete()
-  +dynamic fetch()
-  +dynamic update()
-  +Stream<List<Rating>> watch()
-  -void _notifyListeners()
-  +void dispose()
-}
-
-"frontend::data::repository::rating_repository.dart::RatingRepository" <|-- "frontend::data::impl::impl_rating_repository.dart::ImplRatingRepository"
-
-class "frontend::data::impl::impl_report_repository.dart::ImplReportRepository" {
-  -ImplUserRepository _userRepository
-  -List<Report> _reports
-  -void _notifyListeners()
-  -bool _shouldApplyPenalty()
-  -void _applyPenalty()
-  +dynamic create()
-  +dynamic fetch()
-  +Stream<List<Report>> watch()
-  +void dispose()
-}
-
-"frontend::data::impl::impl_report_repository.dart::ImplReportRepository" o-- "frontend::data::impl::impl_user_repository.dart::ImplUserRepository"
-"frontend::data::repository::report_repository.dart::ReportRepository" <|-- "frontend::data::impl::impl_report_repository.dart::ImplReportRepository"
-
 class "frontend::data::impl::impl_rewards_repository.dart::RewardsRepositoryImpl" {
   +ImplUserRepository userRepository
   -List<Reward> _availableRewards
@@ -372,6 +322,18 @@ class "frontend::data::impl::impl_rewards_repository.dart::RewardsRepositoryImpl
 
 "frontend::data::impl::impl_rewards_repository.dart::RewardsRepositoryImpl" o-- "frontend::data::impl::impl_user_repository.dart::ImplUserRepository"
 "frontend::data::repository::reward_repository.dart::RewardRepository" <|-- "frontend::data::impl::impl_rewards_repository.dart::RewardsRepositoryImpl"
+
+class "frontend::data::impl::impl_user_repository.dart::ImplUserRepository" {
+  {static} -User _defaultUser
+  -User? _currentUser
+  +dynamic updateCurrentUser()
+  +dynamic fetchCurrent()
+  +Stream<User> watchCurrent()
+  +void dispose()
+}
+
+"frontend::data::impl::impl_user_repository.dart::ImplUserRepository" o-- "frontend::data::model::user.dart::User"
+"frontend::data::repository::user_repository.dart::UserRepository" <|-- "frontend::data::impl::impl_user_repository.dart::ImplUserRepository"
 
 class "frontend::data::impl::impl_ride_repository.dart::ImplRideRepository" {
   -List<Ride> _rides
@@ -397,22 +359,56 @@ class "frontend::data::impl::impl_ride_repository.dart::ImplRideRepository" {
   +dynamic cancel()
   +dynamic join()
   +dynamic leave()
+  +dynamic offer()
+  +dynamic fetchCreatedRides()
+  +Stream<List<Ride>> watchCreatedRides()
 }
 
 "frontend::data::impl::impl_ride_repository.dart::ImplRideRepository" o-- "frontend::data::model::ride.dart::Ride"
 "frontend::data::repository::ride_repository.dart::RideRepository" <|-- "frontend::data::impl::impl_ride_repository.dart::ImplRideRepository"
 
-class "frontend::data::impl::impl_user_repository.dart::ImplUserRepository" {
-  {static} -User _defaultUser
-  -User? _currentUser
-  +dynamic updateCurrentUser()
-  +dynamic fetchCurrent()
-  +Stream<User> watchCurrent()
+class "frontend::data::impl::impl_activity_repository.dart::ImplActivityRepository" {
+  -List<Activity> _activities
+  -void _notifyListeners()
+  +dynamic create()
+  +dynamic delete()
+  +dynamic fetch()
+  +dynamic update()
+  +Stream<List<Activity>> watch()
   +void dispose()
 }
 
-"frontend::data::impl::impl_user_repository.dart::ImplUserRepository" o-- "frontend::data::model::user.dart::User"
-"frontend::data::repository::user_repository.dart::UserRepository" <|-- "frontend::data::impl::impl_user_repository.dart::ImplUserRepository"
+"frontend::data::repository::activity_repository.dart::ActivityRepository" <|-- "frontend::data::impl::impl_activity_repository.dart::ImplActivityRepository"
+
+class "frontend::data::impl::impl_rating_repository.dart::ImplRatingRepository" {
+  -List<Rating> _ratings
+  +dynamic create()
+  +dynamic delete()
+  +dynamic fetch()
+  +dynamic update()
+  +Stream<List<Rating>> watch()
+  -void _notifyListeners()
+  +void dispose()
+}
+
+"frontend::data::repository::rating_repository.dart::RatingRepository" <|-- "frontend::data::impl::impl_rating_repository.dart::ImplRatingRepository"
+
+class "frontend::data::impl::impl_report_repository.dart::ImplReportRepository" {
+  -ImplUserRepository _userRepository
+  -List<Report> _reports
+  +int idCounter
+  +int nextId
+  -void _notifyListeners()
+  -bool _shouldApplyPenalty()
+  -void _applyPenalty()
+  +dynamic create()
+  +dynamic fetch()
+  +Stream<List<Report>> watch()
+  +void dispose()
+}
+
+"frontend::data::impl::impl_report_repository.dart::ImplReportRepository" o-- "frontend::data::impl::impl_user_repository.dart::ImplUserRepository"
+"frontend::data::repository::report_repository.dart::ReportRepository" <|-- "frontend::data::impl::impl_report_repository.dart::ImplReportRepository"
 
 class "frontend::ui::page::activities::activity_card.dart::ActivityCard" {
   +Activity activity
@@ -815,15 +811,6 @@ class "frontend::ui::page::rides::activity_selection_panel.dart::ActivitySelecti
   +Widget build()
 }
 
-class "frontend::ui::page::rides::create::create_ride_success.dart::CreateRideSuccess" {
-  +String message
-  +void Function() onOkPressed
-  +void Function()? onOfferPressed
-  +Widget build()
-}
-
-"frontend::ui::page::rides::create::create_ride_success.dart::CreateRideSuccess" o-- "dart::ui::void Function()"
-
 class "frontend::ui::page::rides::create::create_ride_view.dart::CreateRideView" {
   +CreateRideViewModel viewModel
   {static} -List<String> _departureTimes
@@ -832,6 +819,7 @@ class "frontend::ui::page::rides::create::create_ride_view.dart::CreateRideView"
   -DateTime _departureTimeOptionsToDateTime()
   -DateTime _arrivalTimeOptionsToDateTime()
   -void _onCreateRidePressed()
+  -void _onOfferPressed()
   +Widget build()
 }
 
@@ -843,8 +831,9 @@ class "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRide
   -DateTime? _departureTime
   -DateTime? _arrivalTime
   -bool _isCreatingRide
+  -bool _showSuccess
+  -Ride? _createdRide
   -List<Activity> _activities
-  -List<Ride> _rides
   -bool _isLoading
   -String? _errorMessage
   -RideRepository _rideRepository
@@ -852,10 +841,11 @@ class "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRide
   +AddressRepository addressRepository
   +List<Activity> activities
   +String? errorMessage
-  +List<Ride> rides
   +bool isLoading
   +bool isFormValid
   +bool isCreatingRide
+  +bool showSuccess
+  +Ride? createdRide
   -void _onActivitiesUpdated()
   -void _init()
   +void dispose()
@@ -869,22 +859,10 @@ class "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRide
 }
 
 "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" o-- "frontend::data::model::address.dart::Address"
+"frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" o-- "frontend::data::model::ride.dart::Ride"
 "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
 "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" o-- "frontend::data::repository::activity_repository.dart::ActivityRepository"
 "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
-
-class "frontend::ui::page::rides::find::find_ride_view.dart::FindRideView" {
-  +FindRideViewModel viewModel
-  {static} -List<String> _departureTimes
-  {static} -List<String> _arrivalTimes
-  -void _onActivitySelected()
-  -DateTime _departureTimeOptionsToDateTime()
-  -DateTime _arrivalTimeOptionsToDateTime()
-  -void _onJoinRidePressed()
-  +Widget build()
-}
-
-"frontend::ui::page::rides::find::find_ride_view.dart::FindRideView" o-- "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel"
 
 class "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel" {
   -Address? _fromAddress
@@ -919,14 +897,18 @@ class "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewMo
 "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel" o-- "frontend::data::repository::activity_repository.dart::ActivityRepository"
 "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
 
-class "frontend::ui::page::rides::find::ride_card.dart::RideCard" {
-  +Ride ride
-  +void Function() onJoinRidePressed
+class "frontend::ui::page::rides::find::find_ride_view.dart::FindRideView" {
+  +FindRideViewModel viewModel
+  {static} -List<String> _departureTimes
+  {static} -List<String> _arrivalTimes
+  -void _onActivitySelected()
+  -DateTime _departureTimeOptionsToDateTime()
+  -DateTime _arrivalTimeOptionsToDateTime()
+  -void _onJoinRidePressed()
   +Widget build()
 }
 
-"frontend::ui::page::rides::find::ride_card.dart::RideCard" o-- "frontend::data::model::ride.dart::Ride"
-"frontend::ui::page::rides::find::ride_card.dart::RideCard" o-- "dart::ui::void Function()"
+"frontend::ui::page::rides::find::find_ride_view.dart::FindRideView" o-- "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel"
 
 class "frontend::ui::page::rides::join::detail_row.dart::DetailRow" {
   +String label
@@ -981,78 +963,62 @@ class "frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewM
 "frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel" o-- "frontend::data::repository::report_repository.dart::ReportRepository"
 "frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel" o-- "frontend::data::model::ride.dart::Ride"
 
-class "frontend::ui::page::rides::offer::carpooler_selection_sheet.dart::CarpoolerSelectionSheet" {
-  +Address currentAddress
-  +List<Passenger> carpoolers
-  +Ride? ride
-  +Activity? activity
-  +Widget build()
-}
-
-"frontend::ui::page::rides::offer::carpooler_selection_sheet.dart::CarpoolerSelectionSheet" o-- "frontend::data::model::address.dart::Address"
-"frontend::ui::page::rides::offer::carpooler_selection_sheet.dart::CarpoolerSelectionSheet" o-- "frontend::data::model::ride.dart::Ride"
-"frontend::ui::page::rides::offer::carpooler_selection_sheet.dart::CarpoolerSelectionSheet" o-- "frontend::data::model::activity.dart::Activity"
-
-class "frontend::ui::page::rides::offer::created_ride_list.dart::CreatedRidesList" {
-  +Address currentAddress
-  +List<Ride> createdRides
-  +List<Passenger> potentialPassengers
-  +dynamic Function(Ride) onSelectRide
-  +Widget build()
-}
-
-"frontend::ui::page::rides::offer::created_ride_list.dart::CreatedRidesList" o-- "frontend::data::model::address.dart::Address"
-"frontend::ui::page::rides::offer::created_ride_list.dart::CreatedRidesList" o-- "null::dynamic Function(Ride)"
-
-class "frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" {
-  +RideRepository rideRepository
-  +AddressRepository addressRepository
-  +ActivityRepository activityRepository
-  -List<Ride> _createdRides
-  +List<Activity> activities
-  -List<Passenger> _potentialPassengers
-  -Ride? _selectedRide
-  -Activity? _selectedActivity
-  +Address currentAddress
-  -bool _isLoading
-  +List<Ride> createdRides
-  +List<Passenger> potentialPassengers
-  +Ride? selectedRide
-  +Activity? selectedActivity
-  +bool isLoading
-  -void _onRidesUpdated()
-  -void _onActivitiesUpdated()
-  -dynamic _init()
-  +dynamic addRide()
-  +dynamic removeRide()
-  +dynamic selectRide()
-  +dynamic selectActivity()
-  +void dispose()
-}
-
-"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
-"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
-"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::repository::activity_repository.dart::ActivityRepository"
-"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::model::ride.dart::Ride"
-"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::model::activity.dart::Activity"
-"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::model::address.dart::Address"
-
 class "frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideView" {
   +OfferRideViewModel viewModel
   +Widget build()
+  -Widget _buildPotentialPassengerList()
+  -void _onOfferRidePressed()
 }
 
 "frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideView" o-- "frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel"
 
-class "frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideMode" {
-  +int index
-  {static} +List<OfferRideMode> values
-  {static} +OfferRideMode createdRides
-  {static} +OfferRideMode activities
+class "frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" {
+  -RideRepository _rideRepository
+  -Ride _ride
+  +List<User> potentialPassengers
+  +bool isLoading
+  -void _init()
+  -void _onPotentialPassengersUpdated()
+  +dynamic fetchPotentialPassengers()
+  +void dispose()
+  +dynamic offerRide()
 }
 
-"frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideMode" o-- "frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideMode"
-"dart::core::Enum" <|-- "frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideMode"
+"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
+"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::model::ride.dart::Ride"
+
+class "frontend::ui::page::rides::offer::select_passenger_popup.dart::SelectPassengerPopup" {
+  +List<Passenger> passengers
+  +List<Passenger> initiallySelected
+  +Widget build()
+}
+
+class "frontend::ui::page::rides::ride_card.dart::RideCard" {
+  +Ride ride
+  +void Function() onRidePressed
+  +String label
+  +Widget build()
+}
+
+"frontend::ui::page::rides::ride_card.dart::RideCard" o-- "frontend::data::model::ride.dart::Ride"
+"frontend::ui::page::rides::ride_card.dart::RideCard" o-- "dart::ui::void Function()"
+
+class "frontend::ui::page::rides::rides_view.dart::RidesViewModel" {
+  +RideRepository rideRepository
+  +List<Ride> rides
+  +dynamic fetchRides()
+}
+
+"frontend::ui::page::rides::rides_view.dart::RidesViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
+
+class "frontend::ui::page::rides::rides_view.dart::RidesView" {
+  +RidesViewModel viewModel
+  -void _onOfferRidePressed()
+  +Widget build()
+  -Widget _buildRideList()
+}
+
+"frontend::ui::page::rides::rides_view.dart::RidesView" o-- "frontend::ui::page::rides::rides_view.dart::RidesViewModel"
 
 class "frontend::ui::page::pickups::arrange::arrange_pickup_view.dart::ArrangePickupView" {
   +ArrangePickupViewModel viewModel
@@ -1135,14 +1101,14 @@ class "frontend::ui::shared::map::here_marker.dart::HereMarker" {
 class "frontend::ui::shared::map::pickup_marker.dart::PickupMarker" {
 }
 
-class "frontend::ui::shared::nav::app_drawer.dart::AppDrawer" {
-  +Widget build()
-}
-
 class "frontend::ui::shared::nav::app_navigation_bar.dart::AppNavigationBar" {
   +String routeName
   -List<String> _routes
   -void _onItemTapped()
+  +Widget build()
+}
+
+class "frontend::ui::shared::nav::app_drawer.dart::AppDrawer" {
   +Widget build()
 }
 
@@ -1273,6 +1239,10 @@ class "frontend::config.dart::Config" {
   {static} +String packageName
 }
 
+abstract class "frontend::convert.dart::Convert" {
+  {static} +DateTime timeOfDayToDateTime()
+}
+
 class "frontend::app.dart::App" {
   -UserRepository _userRepository
   -ActivityRepository _activityRepository
@@ -1282,14 +1252,12 @@ class "frontend::app.dart::App" {
   -RewardRepository _rewardRepository
   -ReportRepository _reportRepository
   -PickupRepository _pickupRepository
-  +FindRideViewModel findRideViewModel
   +HomeViewModel homeViewModel
   +ProfileViewModel profileViewModel
   +RewardViewModel rewardViewModel
   +SignInViewModel signInViewModel
   +SignUpViewModel signUpViewModel
   +ActivitiesViewModel activitiesViewModel
-  +CreateRideViewModel createRideViewModel
   +RideEndedViewModel rideEndedViewModel
   +bool isLoggedIn
   +Widget build()
@@ -1303,19 +1271,13 @@ class "frontend::app.dart::App" {
 "frontend::app.dart::App" o-- "frontend::data::repository::reward_repository.dart::RewardRepository"
 "frontend::app.dart::App" o-- "frontend::data::repository::report_repository.dart::ReportRepository"
 "frontend::app.dart::App" o-- "frontend::data::repository::pickup_repository.dart::PickupRepository"
-"frontend::app.dart::App" o-- "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel"
 "frontend::app.dart::App" o-- "frontend::ui::page::home::home_viewmodel.dart::HomeViewModel"
 "frontend::app.dart::App" o-- "frontend::ui::page::profile::profile_viewmodel.dart::ProfileViewModel"
 "frontend::app.dart::App" o-- "frontend::ui::page::rewards::rewards_viewmodel.dart::RewardViewModel"
 "frontend::app.dart::App" o-- "frontend::ui::page::sign_in::sign_in_viewmodel.dart::SignInViewModel"
 "frontend::app.dart::App" o-- "frontend::ui::page::sign_up::sign_up_viewmodel.dart::SignUpViewModel"
 "frontend::app.dart::App" o-- "frontend::ui::page::activities::activities_viewmodel.dart::ActivitiesViewModel"
-"frontend::app.dart::App" o-- "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel"
 "frontend::app.dart::App" o-- "frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel"
-
-abstract class "frontend::convert.dart::Convert" {
-  {static} +DateTime timeOfDayToDateTime()
-}
 
 
 @enduml

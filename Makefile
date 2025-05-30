@@ -70,4 +70,3 @@ clean:
 
 class_diagram.svg: class_diagram.plantuml
 	plantuml ./class_diagram.plantuml -tsvg
-	# inkscape class_diagram.svg --export-type=png --export-background=white --export-filename=class_diagram.png
