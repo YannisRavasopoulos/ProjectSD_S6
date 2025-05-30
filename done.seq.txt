@@ -1,8 +1,0 @@
-sign-in
-redeem
-report
-manage-activities
-##In progress
-rate
-find-ride
-
