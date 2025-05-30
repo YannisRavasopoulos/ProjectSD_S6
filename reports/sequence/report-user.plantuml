@@ -18,7 +18,7 @@ Navigator --> LoopApp: "/report", {reportee}
 LoopApp -> ReportViewModel: ReportViewModel(reportRepository, reportee)
 activate ReportViewModel
 ReportViewModel --> LoopApp: return reportViewModel
-LoopApp -> ReportView: ReportView(signInViewModel)
+LoopApp -> ReportView: ReportView(reportViewModel)
 activate ReportView
 ReportView --> LoopApp: return reportView
 LoopApp --> Navigator: return reportView
