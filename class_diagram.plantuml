@@ -1,0 +1,1321 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 100
+set namespaceSeparator ::
+
+class "frontend::data::model::report_reason.dart::ReportReason" {
+  +int index
+  {static} +List<ReportReason> values
+  {static} +ReportReason inappropriateBehavior
+  {static} +ReportReason harassment
+  {static} +ReportReason spam
+  {static} +ReportReason other
+}
+
+"frontend::data::model::report_reason.dart::ReportReason" o-- "frontend::data::model::report_reason.dart::ReportReason"
+"dart::core::Enum" <|-- "frontend::data::model::report_reason.dart::ReportReason"
+
+class "frontend::data::model::activity.dart::Activity" {
+  +String name
+  +String description
+  +Address address
+}
+
+"frontend::data::model::activity.dart::Activity" o-- "frontend::data::model::address.dart::Address"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::activity.dart::Activity"
+
+class "frontend::data::model::address.dart::Address" {
+  +LatLng coordinates
+  +String city
+  +String street
+  +int number
+  +String postalCode
+  +String toString()
+}
+
+"frontend::data::model::address.dart::Address" o-- "latlong2::latlong.dart::LatLng"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::address.dart::Address"
+
+class "frontend::data::model::driver.dart::Driver" {
+  +Vehicle vehicle
+}
+
+"frontend::data::model::driver.dart::Driver" o-- "frontend::data::model::vehicle.dart::Vehicle"
+"frontend::data::model::user.dart::User" <|-- "frontend::data::model::driver.dart::Driver"
+
+abstract class "frontend::data::model::model.dart::Model" {
+  +int id
+  +DateTime createdAt
+}
+
+class "frontend::data::model::passenger.dart::Passenger" {
+}
+
+"frontend::data::model::user.dart::User" <|-- "frontend::data::model::passenger.dart::Passenger"
+
+class "frontend::data::model::pickup.dart::Pickup" {
+  +Ride ride
+  +Passenger passenger
+  +Address address
+  +DateTime time
+}
+
+"frontend::data::model::pickup.dart::Pickup" o-- "frontend::data::model::ride.dart::Ride"
+"frontend::data::model::pickup.dart::Pickup" o-- "frontend::data::model::passenger.dart::Passenger"
+"frontend::data::model::pickup.dart::Pickup" o-- "frontend::data::model::address.dart::Address"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::pickup.dart::Pickup"
+
+class "frontend::data::model::pickup_request.dart::PickupRequest" {
+  +Ride ride
+  +Passenger passenger
+  +Address address
+  +DateTime time
+}
+
+"frontend::data::model::pickup_request.dart::PickupRequest" o-- "frontend::data::model::ride.dart::Ride"
+"frontend::data::model::pickup_request.dart::PickupRequest" o-- "frontend::data::model::passenger.dart::Passenger"
+"frontend::data::model::pickup_request.dart::PickupRequest" o-- "frontend::data::model::address.dart::Address"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::pickup_request.dart::PickupRequest"
+
+class "frontend::data::model::place.dart::Place" {
+  +String name
+  +Address address
+}
+
+"frontend::data::model::place.dart::Place" o-- "frontend::data::model::address.dart::Address"
+
+class "frontend::data::model::rating.dart::Rating" {
+  +User fromUser
+  +User toUser
+  +int stars
+  +String? comment
+}
+
+"frontend::data::model::rating.dart::Rating" o-- "frontend::data::model::user.dart::User"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::rating.dart::Rating"
+
+class "frontend::data::model::redeemed_reward.dart::RedeemedReward" {
+  +String redemptionCode
+}
+
+"frontend::data::model::reward.dart::Reward" <|-- "frontend::data::model::redeemed_reward.dart::RedeemedReward"
+
+class "frontend::data::model::report.dart::Report" {
+  +ReportReason reason
+  +User receiver
+  +ReportStatus status
+  +String? details
+}
+
+"frontend::data::model::report.dart::Report" o-- "frontend::data::model::report_reason.dart::ReportReason"
+"frontend::data::model::report.dart::Report" o-- "frontend::data::model::user.dart::User"
+"frontend::data::model::report.dart::Report" o-- "frontend::data::model::report.dart::ReportStatus"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::report.dart::Report"
+
+class "frontend::data::model::report.dart::ReportStatus" {
+  +int index
+  {static} +List<ReportStatus> values
+  {static} +ReportStatus pending
+  {static} +ReportStatus inProgress
+  {static} +ReportStatus resolved
+  {static} +ReportStatus rejected
+}
+
+"frontend::data::model::report.dart::ReportStatus" o-- "frontend::data::model::report.dart::ReportStatus"
+"dart::core::Enum" <|-- "frontend::data::model::report.dart::ReportStatus"
+
+class "frontend::data::model::reward.dart::Reward" {
+  +int points
+  +String title
+  +String description
+}
+
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::reward.dart::Reward"
+
+class "frontend::data::model::ride.dart::Ride" {
+  +Driver driver
+  +List<Passenger> passengers
+  +Route route
+  +DateTime departureTime
+  +DateTime estimatedArrivalTime
+  +Duration estimatedDuration
+  +int totalSeats
+  +int availableSeats
+}
+
+"frontend::data::model::ride.dart::Ride" o-- "frontend::data::model::driver.dart::Driver"
+"frontend::data::model::ride.dart::Ride" o-- "frontend::data::model::route.dart::Route"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::ride.dart::Ride"
+
+class "frontend::data::model::ride_request.dart::RideRequest" {
+  +Address origin
+  +Address destination
+  +DateTime departureTime
+  +DateTime arrivalTime
+  +Distance originRadius
+  +Distance destinationRadius
+  +Duration departureWindow
+  +Duration arrivalWindow
+}
+
+"frontend::data::model::ride_request.dart::RideRequest" o-- "frontend::data::model::address.dart::Address"
+"frontend::data::model::ride_request.dart::RideRequest" o-- "latlong2::latlong.dart::Distance"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::ride_request.dart::RideRequest"
+
+class "frontend::data::model::route.dart::Route" {
+  +Address start
+  +Address end
+  {static} +List<Route> routes
+}
+
+"frontend::data::model::route.dart::Route" o-- "frontend::data::model::address.dart::Address"
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::route.dart::Route"
+
+class "frontend::data::model::user.dart::User" {
+  +String firstName
+  +String lastName
+  +int points
+  +String name
+  +User copyWith()
+}
+
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::user.dart::User"
+
+class "frontend::data::model::vehicle.dart::Vehicle" {
+  +String description
+  +int capacity
+}
+
+"frontend::data::model::model.dart::Model" <|-- "frontend::data::model::vehicle.dart::Vehicle"
+
+abstract class "frontend::data::model::authentication.dart::Authentication" {
+  +int userId
+  +Map<String, String> makeHeaders()
+}
+
+"frontend::data::model.dart::Model" <|-- "frontend::data::model::authentication.dart::Authentication"
+
+class "frontend::data::repository::activity_repository.dart::ActivityRepository" {
+  +dynamic create()
+  +dynamic fetch()
+  +Stream<List<Activity>> watch()
+  +dynamic update()
+  +dynamic delete()
+}
+
+class "frontend::data::repository::rating_repository.dart::RatingRepository" {
+  +dynamic fetch()
+  +Stream<List<Rating>> watch()
+  +dynamic create()
+  +dynamic update()
+  +dynamic delete()
+}
+
+class "frontend::data::repository::authentication_repository.dart::AuthenticationRepository" {
+  +dynamic authenticate()
+  +dynamic clear()
+}
+
+class "frontend::data::repository::pickup_repository.dart::PickupRepository" {
+  +dynamic requestPickup()
+  +dynamic fetchPickupRequests()
+  +Stream<List<PickupRequest>> watchPickupRequests()
+  +dynamic acceptPickup()
+  +dynamic rejectPickup()
+  +dynamic acceptPickupRequest()
+  +dynamic rejectPickupRequest()
+  +dynamic fetchPending()
+  +Stream<List<Pickup>> watchPending()
+  +Stream<List<Pickup>> watchCompleted()
+  +dynamic fetchCompleted()
+  +dynamic cancelPickup()
+  +dynamic completePickup()
+}
+
+class "frontend::data::repository::address_repository.dart::AddressRepository" {
+  +dynamic fetchForCoordinates()
+  +dynamic fetchForQuery()
+  +dynamic fetchCurrent()
+  +Stream<Address> watchCurrent()
+  +dynamic fetchCurrentOf()
+  +Stream<Address> watchCurrentOf()
+}
+
+class "frontend::data::repository::report_repository.dart::ReportRepository" {
+  +dynamic create()
+  +dynamic fetch()
+  +Stream<List<Report>> watch()
+}
+
+class "frontend::data::repository::reward_repository.dart::RewardRepository" {
+  +dynamic redeem()
+  +dynamic fetchAvailable()
+  +Stream<List<Reward>> watchAvailable()
+  +dynamic fetchRedeemed()
+  +Stream<List<RedeemedReward>> watchRedeemed()
+}
+
+class "frontend::data::repository::ride_repository.dart::RideRepository" {
+  +dynamic fetchMatchingRides()
+  +Stream<List<Ride>> watchMatchingRides()
+  +dynamic fetchPotentialPassengers()
+  +Stream<List<User>> watchPotentialPassengers()
+  +dynamic fetchHistory()
+  +Stream<List<Ride>> watchHistory()
+  +dynamic clearHistory()
+  +dynamic fetchCurrent()
+  +Stream<Ride> watchCurrent()
+  +dynamic create()
+  +dynamic update()
+  +dynamic cancel()
+  +dynamic join()
+  +dynamic leave()
+  +dynamic fetchAllRides()
+}
+
+class "frontend::data::repository::user_repository.dart::UserRepository" {
+  +dynamic fetchCurrent()
+  +dynamic updateCurrentUser()
+  +Stream<User> watchCurrent()
+}
+
+abstract class "frontend::data::model.dart::Model" {
+  +int id
+}
+
+class "frontend::data::impl::impl_activity_repository.dart::ImplActivityRepository" {
+  -List<Activity> _activities
+  -void _notifyListeners()
+  +dynamic create()
+  +dynamic delete()
+  +dynamic fetch()
+  +dynamic update()
+  +Stream<List<Activity>> watch()
+  +void dispose()
+}
+
+"frontend::data::repository::activity_repository.dart::ActivityRepository" <|-- "frontend::data::impl::impl_activity_repository.dart::ImplActivityRepository"
+
+class "frontend::data::impl::impl_address_repository.dart::ImplAddressRepository" {
+  +dynamic fetchCurrentOf()
+  +Stream<Address> watchCurrentOf()
+  +dynamic fetchForQuery()
+  -int _distance()
+  +dynamic fetchForCoordinates()
+  +dynamic fetchCurrent()
+  +Stream<Address> watchCurrent()
+}
+
+"frontend::data::repository::address_repository.dart::AddressRepository" <|-- "frontend::data::impl::impl_address_repository.dart::ImplAddressRepository"
+
+class "frontend::data::impl::impl_pickup_repository.dart::ImplPickupRepository" {
+  -List<PickupRequest> _pickupRequests
+  -List<Pickup> _pendingPickups
+  -List<Pickup> _completedPickups
+  +dynamic requestPickup()
+  +dynamic acceptPickup()
+  +dynamic rejectPickup()
+  +dynamic acceptPickupRequest()
+  +dynamic rejectPickupRequest()
+  +dynamic fetchPending()
+  +Stream<List<Pickup>> watchPending()
+  +dynamic fetchPickupRequests()
+  +Stream<List<PickupRequest>> watchPickupRequests()
+  +dynamic fetchCompleted()
+  +Stream<List<Pickup>> watchCompleted()
+  +dynamic cancelPickup()
+  +dynamic completePickup()
+  +void dispose()
+  +void addPickupRequest()
+}
+
+"frontend::data::repository::pickup_repository.dart::PickupRepository" <|-- "frontend::data::impl::impl_pickup_repository.dart::ImplPickupRepository"
+
+class "frontend::data::impl::impl_rating_repository.dart::ImplRatingRepository" {
+  -List<Rating> _ratings
+  +dynamic create()
+  +dynamic delete()
+  +dynamic fetch()
+  +dynamic update()
+  +Stream<List<Rating>> watch()
+  -void _notifyListeners()
+  +void dispose()
+}
+
+"frontend::data::repository::rating_repository.dart::RatingRepository" <|-- "frontend::data::impl::impl_rating_repository.dart::ImplRatingRepository"
+
+class "frontend::data::impl::impl_report_repository.dart::ImplReportRepository" {
+  -ImplUserRepository _userRepository
+  -List<Report> _reports
+  -void _notifyListeners()
+  -bool _shouldApplyPenalty()
+  -void _applyPenalty()
+  +dynamic create()
+  +dynamic fetch()
+  +Stream<List<Report>> watch()
+  +void dispose()
+}
+
+"frontend::data::impl::impl_report_repository.dart::ImplReportRepository" o-- "frontend::data::impl::impl_user_repository.dart::ImplUserRepository"
+"frontend::data::repository::report_repository.dart::ReportRepository" <|-- "frontend::data::impl::impl_report_repository.dart::ImplReportRepository"
+
+class "frontend::data::impl::impl_rewards_repository.dart::RewardsRepositoryImpl" {
+  +ImplUserRepository userRepository
+  -List<Reward> _availableRewards
+  -List<RedeemedReward> _redeemedRewards
+  +dynamic fetchAvailable()
+  +dynamic fetchRedeemed()
+  +dynamic redeem()
+  +Stream<List<Reward>> watchAvailable()
+  +Stream<List<RedeemedReward>> watchRedeemed()
+}
+
+"frontend::data::impl::impl_rewards_repository.dart::RewardsRepositoryImpl" o-- "frontend::data::impl::impl_user_repository.dart::ImplUserRepository"
+"frontend::data::repository::reward_repository.dart::RewardRepository" <|-- "frontend::data::impl::impl_rewards_repository.dart::RewardsRepositoryImpl"
+
+class "frontend::data::impl::impl_ride_repository.dart::ImplRideRepository" {
+  -List<Ride> _rides
+  -List<Ride> _rideHistory
+  -Ride? _currentRide
+  -Map<int, List<Ride>> _createdRidesByDriver
+  +int idCounter
+  +int nextId
+  -int _distance()
+  +dynamic fetchMatchingRides()
+  +dynamic fetchAllRides()
+  +Stream<List<Ride>> watchMatchingRides()
+  +dynamic fetchPotentialPassengers()
+  +Stream<List<User>> watchPotentialPassengers()
+  +dynamic fetchHistory()
+  +Stream<List<Ride>> watchHistory()
+  +dynamic clearHistory()
+  +dynamic fetchCurrent()
+  +Stream<Ride> watchCurrent()
+  +dynamic create()
+  +List<Ride> getCreatedRidesForDriver()
+  +dynamic update()
+  +dynamic cancel()
+  +dynamic join()
+  +dynamic leave()
+}
+
+"frontend::data::impl::impl_ride_repository.dart::ImplRideRepository" o-- "frontend::data::model::ride.dart::Ride"
+"frontend::data::repository::ride_repository.dart::RideRepository" <|-- "frontend::data::impl::impl_ride_repository.dart::ImplRideRepository"
+
+class "frontend::data::impl::impl_user_repository.dart::ImplUserRepository" {
+  {static} -User _defaultUser
+  -User? _currentUser
+  +dynamic updateCurrentUser()
+  +dynamic fetchCurrent()
+  +Stream<User> watchCurrent()
+  +void dispose()
+}
+
+"frontend::data::impl::impl_user_repository.dart::ImplUserRepository" o-- "frontend::data::model::user.dart::User"
+"frontend::data::repository::user_repository.dart::UserRepository" <|-- "frontend::data::impl::impl_user_repository.dart::ImplUserRepository"
+
+class "frontend::ui::page::activities::activity_card.dart::ActivityCard" {
+  +Activity activity
+  +void Function() onEdit
+  +void Function() onRemove
+  +Widget build()
+}
+
+"frontend::ui::page::activities::activity_card.dart::ActivityCard" o-- "frontend::data::model::activity.dart::Activity"
+"frontend::ui::page::activities::activity_card.dart::ActivityCard" o-- "dart::ui::void Function()"
+
+class "frontend::ui::page::activities::activities_view.dart::ActivitiesView" {
+  +ActivitiesViewModel viewModel
+  -void _onDeleteActivityConfirmPressed()
+  -void _onCreateActivityPressed()
+  -void _onEditActivityPressed()
+  -void _onDeleteActivityPressed()
+  +Widget build()
+  -Widget _buildActivityList()
+}
+
+"frontend::ui::page::activities::activities_view.dart::ActivitiesView" o-- "frontend::ui::page::activities::activities_viewmodel.dart::ActivitiesViewModel"
+
+class "frontend::ui::page::activities::activities_viewmodel.dart::ActivitiesViewModel" {
+  -ActivityRepository _activityRepository
+  -bool _isLoading
+  -List<Activity> _activities
+  -String? _errorMessage
+  +bool isLoading
+  +List<Activity> activities
+  +String? errorMessage
+  -void _onActivitiesUpdated()
+  -void _init()
+  +void dispose()
+  +dynamic deleteActivity()
+}
+
+"frontend::ui::page::activities::activities_viewmodel.dart::ActivitiesViewModel" o-- "frontend::data::repository::activity_repository.dart::ActivityRepository"
+
+class "frontend::ui::page::activities::activity_deletion_dialog.dart::ActivityDeletionDialog" {
+  +void Function() onConfirm
+  +void Function() onCancel
+}
+
+"frontend::ui::page::activities::activity_deletion_dialog.dart::ActivityDeletionDialog" o-- "dart::ui::void Function()"
+
+class "frontend::ui::page::activities::create::create_activity_view.dart::CreateActivityView" {
+  +CreateActivityViewModel viewModel
+  -void _onCreateOrUpdateActivityPressed()
+  +Widget build()
+  -Widget _buildForm()
+}
+
+"frontend::ui::page::activities::create::create_activity_view.dart::CreateActivityView" o-- "frontend::ui::page::activities::create::create_activity_viewmodel.dart::CreateActivityViewModel"
+
+class "frontend::ui::page::activities::create::create_activity_viewmodel.dart::CreateActivityViewModel" {
+  -bool _isLoading
+  -String? _errorMessage
+  -Activity? _activity
+  -Address? _address
+  -ActivityRepository _activityRepository
+  +AddressRepository addressRepository
+  +String name
+  +String description
+  +Address? address
+  +bool isLoading
+  +String? errorMessage
+  +Activity? activity
+  +void selectAddress()
+  +void selectTimeOfDay()
+  +dynamic editActivity()
+  +dynamic createActivity()
+}
+
+"frontend::ui::page::activities::create::create_activity_viewmodel.dart::CreateActivityViewModel" o-- "frontend::data::model::activity.dart::Activity"
+"frontend::ui::page::activities::create::create_activity_viewmodel.dart::CreateActivityViewModel" o-- "frontend::data::model::address.dart::Address"
+"frontend::ui::page::activities::create::create_activity_viewmodel.dart::CreateActivityViewModel" o-- "frontend::data::repository::activity_repository.dart::ActivityRepository"
+"frontend::ui::page::activities::create::create_activity_viewmodel.dart::CreateActivityViewModel" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
+
+class "frontend::ui::page::forgot_password::forgot_password_view.dart::ForgotPasswordView" {
+  +Widget build()
+}
+
+class "frontend::ui::page::home::map_search_bar.dart::MapSearchBar" {
+  +Widget build()
+}
+
+class "frontend::ui::page::home::home_view.dart::HomeView" {
+  +HomeViewModel viewModel
+  +State<HomeView> createState()
+}
+
+"frontend::ui::page::home::home_view.dart::HomeView" o-- "frontend::ui::page::home::home_viewmodel.dart::HomeViewModel"
+
+class "frontend::ui::page::home::home_view.dart::_HomeView" {
+  +bool firstRender
+  -void _onLocationPressed()
+  -void _onMapTapped()
+  +Widget build()
+}
+
+"flutter::src::widgets::ticker_provider.dart::TickerProviderStateMixin" <|-- "frontend::ui::page::home::home_view.dart::_HomeView"
+
+class "frontend::ui::page::home::home_viewmodel.dart::HomeViewModel" {
+  +AddressRepository addressRepository
+  +bool shouldAnimateToLocation
+  +LatLng? destination
+  +LatLng currentLocation
+  +List<String> suggestions
+  -void _onAddressUpdate()
+  +void dispose()
+  +dynamic refreshLocation()
+  +void search()
+  +void selectSuggestion()
+  +Iterable<String> getSuggestions()
+  +dynamic selectPoint()
+}
+
+"frontend::ui::page::home::home_viewmodel.dart::HomeViewModel" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
+"frontend::ui::page::home::home_viewmodel.dart::HomeViewModel" o-- "latlong2::latlong.dart::LatLng"
+
+class "frontend::ui::page::sign_in::sign_in_view.dart::SignInView" {
+  +SignInViewModel viewModel
+  -void _onForgotPasswordPressed()
+  -void _onSignUpPressed()
+  -void _onSignInPressed()
+  +Widget build()
+}
+
+"frontend::ui::page::sign_in::sign_in_view.dart::SignInView" o-- "frontend::ui::page::sign_in::sign_in_viewmodel.dart::SignInViewModel"
+
+class "frontend::ui::page::sign_in::sign_in_viewmodel.dart::SignInViewModel" {
+  +String errorMessage
+  +bool isLoading
+  +bool isPasswordVisible
+  +String email
+  +String password
+  +void togglePasswordVisibility()
+  +dynamic login()
+}
+
+class "frontend::ui::page::sign_up::sign_up_view.dart::SignUpView" {
+  -void _onSignUpPressed()
+  +Widget buildView()
+}
+
+"frontend::ui::view.dart::ViewBase" <|-- "frontend::ui::page::sign_up::sign_up_view.dart::SignUpView"
+
+class "frontend::ui::page::sign_up::sign_up_viewmodel.dart::SignUpViewModel" {
+  -bool _isPasswordVisible
+  -bool _isConfirmPasswordVisible
+  -bool _isLoading
+  -String _errorMessage
+  -RegExp _passwordRegex
+  -RegExp _emailRegex
+  -RegExp _nameRegex
+  +bool isEmailValid
+  +bool isNameValid
+  +bool isPasswordValid
+  +bool doPasswordsMatch
+  +bool canSignUp
+  +String email
+  +String name
+  +String password
+  +String confirmPassword
+  +String errorMessage
+  +bool isPasswordVisible
+  +bool isConfirmPasswordVisible
+  +bool isLoading
+  +dynamic signUp()
+  +void togglePasswordVisibility()
+  +void toggleConfirmPasswordVisibility()
+}
+
+"frontend::ui::viewmodel.dart::ViewModel" <|-- "frontend::ui::page::sign_up::sign_up_viewmodel.dart::SignUpViewModel"
+
+class "frontend::ui::page::report::report_view.dart::ReportView" {
+  +ReportViewModel viewModel
+  -void _onSubmitPressed()
+  -void _onReportReasonSelected()
+  -String _reasonToString()
+  +Widget build()
+}
+
+"frontend::ui::page::report::report_view.dart::ReportView" o-- "frontend::ui::page::report::report_viewmodel.dart::ReportViewModel"
+
+class "frontend::ui::page::report::report_viewmodel.dart::ReportViewModel" {
+  -bool _isSubmitting
+  -String? _errorMessage
+  -ReportReason? _reason
+  -ReportRepository _reportRepository
+  +User reported
+  +bool isSubmitting
+  +String description
+  +ReportReason? reason
+  +String? errorMessage
+  +bool canSubmit
+  +void selectReason()
+  +dynamic submitReport()
+}
+
+"frontend::ui::page::report::report_viewmodel.dart::ReportViewModel" o-- "frontend::data::model::report_reason.dart::ReportReason"
+"frontend::ui::page::report::report_viewmodel.dart::ReportViewModel" o-- "frontend::data::repository::report_repository.dart::ReportRepository"
+"frontend::ui::page::report::report_viewmodel.dart::ReportViewModel" o-- "frontend::data::model::user.dart::User"
+
+class "frontend::ui::page::profile::profile_picture_picker.dart::ProfilePicturePicker" {
+  +Widget build()
+}
+
+class "frontend::ui::page::profile::profile_tab.dart::ProfileTab" {
+  +String firstName
+  +String lastName
+  +String email
+  +String password
+  +void Function() onSavePressed
+  +State<StatefulWidget> createState()
+}
+
+"frontend::ui::page::profile::profile_tab.dart::ProfileTab" o-- "dart::ui::void Function()"
+
+class "frontend::ui::page::profile::profile_tab.dart::_ProfileTabState" {
+  +bool isEditing
+  +void initState()
+  -void _onSaveChangesPressed()
+  -void _onToggleEditingPressed()
+  +Widget build()
+}
+
+class "frontend::ui::page::profile::points_widget.dart::PointsWidget" {
+  +int points
+  +Widget build()
+}
+
+class "frontend::ui::page::profile::profile_viewmodel.dart::ProfileViewModel" {
+  +RatingRepository ratingRepository
+  +UserRepository userRepository
+  +RideRepository rideRepository
+  +bool isLoading
+  +List<Ride> rides
+  +List<Rating> ratings
+  +double averageRating
+  +bool isEditing
+  +int points
+  +String firstName
+  +String lastName
+  +String email
+  +String password
+  -void _init()
+  -void _onHistoryUpdate()
+  -void _onUserUpdate()
+  -void _onRatingsUpdate()
+  +void clearHistory()
+  +void toggleEditing()
+  +void onFirstNameChanged()
+  +void onLastNameChanged()
+  +void onPasswordChanged()
+  +void saveChanges()
+  +void onEmailChanged()
+  +void dispose()
+}
+
+"frontend::ui::page::profile::profile_viewmodel.dart::ProfileViewModel" o-- "frontend::data::repository::rating_repository.dart::RatingRepository"
+"frontend::ui::page::profile::profile_viewmodel.dart::ProfileViewModel" o-- "frontend::data::repository::user_repository.dart::UserRepository"
+"frontend::ui::page::profile::profile_viewmodel.dart::ProfileViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
+
+class "frontend::ui::page::profile::rating_tab.dart::RatingTab" {
+  +List<Rating> ratings
+  +double averageRating
+  +Widget build()
+  -Widget _buildAverageRating()
+  -Widget _buildReviewsList()
+  -Widget _buildRatingItem()
+}
+
+class "frontend::ui::page::profile::history_tab.dart::HistoryTab" {
+  +void Function() onClearHistory
+  +List<Ride> rides
+  +Widget build()
+}
+
+"frontend::ui::page::profile::history_tab.dart::HistoryTab" o-- "dart::ui::void Function()"
+
+class "frontend::ui::page::profile::profile_view.dart::ProfileView" {
+  +ProfileViewModel viewModel
+  -void _onClearHistoryConfirmPresssed()
+  -void _onClearHistoryCancelPressed()
+  -void _onClearHistoryPressed()
+  +Widget build()
+  -Widget _buildContents()
+}
+
+"frontend::ui::page::profile::profile_view.dart::ProfileView" o-- "frontend::ui::page::profile::profile_viewmodel.dart::ProfileViewModel"
+
+class "frontend::ui::page::rewards::reward_confirmation_dialog.dart::RewardConfirmationDialog" {
+  +Reward reward
+  +void Function() onConfirm
+  +void Function() onCancel
+  +Widget build()
+}
+
+"frontend::ui::page::rewards::reward_confirmation_dialog.dart::RewardConfirmationDialog" o-- "frontend::data::model::reward.dart::Reward"
+"frontend::ui::page::rewards::reward_confirmation_dialog.dart::RewardConfirmationDialog" o-- "dart::ui::void Function()"
+
+class "frontend::ui::page::rewards::reward_card.dart::RewardCard" {
+  +Reward reward
+  +int userPoints
+  +Widget build()
+}
+
+"frontend::ui::page::rewards::reward_card.dart::RewardCard" o-- "frontend::data::model::reward.dart::Reward"
+
+class "frontend::ui::page::rewards::rewards_redemption_code_dialog.dart::RewardsRedemptionCodeDialog" {
+  +String code
+  +Widget build()
+}
+
+class "frontend::ui::page::rewards::rewards_view.dart::RewardView" {
+  +RewardViewModel viewModel
+  +Widget build()
+}
+
+"frontend::ui::page::rewards::rewards_view.dart::RewardView" o-- "frontend::ui::page::rewards::rewards_viewmodel.dart::RewardViewModel"
+
+class "frontend::ui::page::rewards::available_rewards_list.dart::AvailableRewardsList" {
+  +List<Reward> availableRewards
+  +int userPoints
+  +Widget build()
+}
+
+class "frontend::ui::page::rewards::redeemed_rewards_list.dart::RedeemedRewardsList" {
+  +List<RedeemedReward> redeemedRewards
+  +Widget build()
+}
+
+class "frontend::ui::page::rewards::rewards_viewmodel.dart::RewardViewModel" {
+  +RewardRepository rewardRepository
+  +UserRepository userRepository
+  -List<Reward> _availableRewards
+  -List<RedeemedReward> _redeemedRewards
+  -int _userPoints
+  -bool _isLoading
+  +List<Reward> availableRewards
+  +List<RedeemedReward> redeemedRewards
+  +int userPoints
+  +bool isLoading
+  -void _startWatchingRewards()
+  -dynamic _fetchUserPoints()
+  +dynamic redeem()
+  +void dispose()
+}
+
+"frontend::ui::page::rewards::rewards_viewmodel.dart::RewardViewModel" o-- "frontend::data::repository::reward_repository.dart::RewardRepository"
+"frontend::ui::page::rewards::rewards_viewmodel.dart::RewardViewModel" o-- "frontend::data::repository::user_repository.dart::UserRepository"
+
+class "frontend::ui::page::rate::rate_view.dart::RateView" {
+  +RateViewModel viewModel
+  +Widget build()
+  -AppBar _buildAppBar()
+  -Widget _buildRatingTitle()
+  -Widget _buildRatingBar()
+  -Widget _buildCommentTitle()
+  -Widget _buildCommentField()
+  -Widget _buildErrorMessage()
+  -Widget _buildSubmitButton()
+}
+
+"frontend::ui::page::rate::rate_view.dart::RateView" o-- "frontend::ui::page::rate::rate_viewmodel.dart::RateViewModel"
+
+class "frontend::ui::page::rate::rate_viewmodel.dart::RateViewModel" {
+  -RatingRepository _ratingRepository
+  -UserRepository _userRepository
+  +User rated
+  -int _rating
+  -String _comment
+  -bool _isLoading
+  -String _errorMessage
+  -User? _currentUser
+  -bool _isSuccess
+  +int rating
+  +String comment
+  +bool isLoading
+  +String errorMessage
+  +bool canSubmit
+  +bool isSuccess
+  +void dispose()
+  -dynamic _loadCurrentUser()
+  +dynamic submitRating()
+  -void _watchRatings()
+  +void setRating()
+  +void setComment()
+  +void resetSuccess()
+}
+
+"frontend::ui::page::rate::rate_viewmodel.dart::RateViewModel" o-- "frontend::data::repository::rating_repository.dart::RatingRepository"
+"frontend::ui::page::rate::rate_viewmodel.dart::RateViewModel" o-- "frontend::data::repository::user_repository.dart::UserRepository"
+"frontend::ui::page::rate::rate_viewmodel.dart::RateViewModel" o-- "frontend::data::model::user.dart::User"
+
+class "frontend::ui::page::rides::activity_selection_panel.dart::ActivitySelectionPanel" {
+  +List<Activity> activities
+  +Widget build()
+}
+
+class "frontend::ui::page::rides::create::create_ride_success.dart::CreateRideSuccess" {
+  +String message
+  +void Function() onOkPressed
+  +void Function()? onOfferPressed
+  +Widget build()
+}
+
+"frontend::ui::page::rides::create::create_ride_success.dart::CreateRideSuccess" o-- "dart::ui::void Function()"
+
+class "frontend::ui::page::rides::create::create_ride_view.dart::CreateRideView" {
+  +CreateRideViewModel viewModel
+  {static} -List<String> _departureTimes
+  {static} -List<String> _arrivalTimes
+  -void _onActivitySelected()
+  -DateTime _departureTimeOptionsToDateTime()
+  -DateTime _arrivalTimeOptionsToDateTime()
+  -void _onCreateRidePressed()
+  +Widget build()
+}
+
+"frontend::ui::page::rides::create::create_ride_view.dart::CreateRideView" o-- "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel"
+
+class "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" {
+  -Address? _fromAddress
+  -Address? _toAddress
+  -DateTime? _departureTime
+  -DateTime? _arrivalTime
+  -bool _isCreatingRide
+  -List<Activity> _activities
+  -List<Ride> _rides
+  -bool _isLoading
+  -String? _errorMessage
+  -RideRepository _rideRepository
+  -ActivityRepository _activityRepository
+  +AddressRepository addressRepository
+  +List<Activity> activities
+  +String? errorMessage
+  +List<Ride> rides
+  +bool isLoading
+  +bool isFormValid
+  +bool isCreatingRide
+  -void _onActivitiesUpdated()
+  -void _init()
+  +void dispose()
+  +dynamic selectActivity()
+  +dynamic selectFromAddress()
+  +dynamic selectToAddress()
+  +dynamic selectDepartureTime()
+  +dynamic selectArrivalTime()
+  +dynamic fetchActivities()
+  +dynamic createRide()
+}
+
+"frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" o-- "frontend::data::model::address.dart::Address"
+"frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
+"frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" o-- "frontend::data::repository::activity_repository.dart::ActivityRepository"
+"frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
+
+class "frontend::ui::page::rides::find::find_ride_view.dart::FindRideView" {
+  +FindRideViewModel viewModel
+  {static} -List<String> _departureTimes
+  {static} -List<String> _arrivalTimes
+  -void _onActivitySelected()
+  -DateTime _departureTimeOptionsToDateTime()
+  -DateTime _arrivalTimeOptionsToDateTime()
+  -void _onJoinRidePressed()
+  +Widget build()
+}
+
+"frontend::ui::page::rides::find::find_ride_view.dart::FindRideView" o-- "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel"
+
+class "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel" {
+  -Address? _fromAddress
+  -Address? _toAddress
+  -DateTime? _departureTime
+  -DateTime? _arrivalTime
+  -List<Activity> _activities
+  -List<Ride> _rides
+  -bool _isLoading
+  -String? _errorMessage
+  -RideRepository _rideRepository
+  -ActivityRepository _activityRepository
+  +AddressRepository addressRepository
+  +List<Activity> activities
+  +String? errorMessage
+  +List<Ride> rides
+  +bool isLoading
+  -void _onActivitiesUpdated()
+  -void _init()
+  +void dispose()
+  +dynamic selectActivity()
+  +dynamic selectFromAddress()
+  +dynamic selectToAddress()
+  +dynamic selectDepartureTime()
+  +dynamic selectArrivalTime()
+  +dynamic fetchActivities()
+  +dynamic fetchRides()
+}
+
+"frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel" o-- "frontend::data::model::address.dart::Address"
+"frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
+"frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel" o-- "frontend::data::repository::activity_repository.dart::ActivityRepository"
+"frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
+
+class "frontend::ui::page::rides::find::ride_card.dart::RideCard" {
+  +Ride ride
+  +void Function() onJoinRidePressed
+  +Widget build()
+}
+
+"frontend::ui::page::rides::find::ride_card.dart::RideCard" o-- "frontend::data::model::ride.dart::Ride"
+"frontend::ui::page::rides::find::ride_card.dart::RideCard" o-- "dart::ui::void Function()"
+
+class "frontend::ui::page::rides::join::detail_row.dart::DetailRow" {
+  +String label
+  +String value
+  +Widget build()
+}
+
+class "frontend::ui::page::rides::join::join_ride_view.dart::JoinRideView" {
+  +JoinRideViewModel viewModel
+  -void _onProceedPressed()
+  -void _onJoinRidePressed()
+  +Widget build()
+}
+
+"frontend::ui::page::rides::join::join_ride_view.dart::JoinRideView" o-- "frontend::ui::page::rides::join::join_ride_viewmodel.dart::JoinRideViewModel"
+
+class "frontend::ui::page::rides::join::join_ride_viewmodel.dart::JoinRideViewModel" {
+  +Ride ride
+  +RideRepository rideRepository
+  +PickupRepository pickupRepository
+  -bool _isArrangingPickup
+  -bool _hasJoinedRide
+  +bool isLoading
+  +String? errorMessage
+  +Pickup? pickup
+  +bool isArrangingPickup
+  +bool hasJoinedRide
+  +dynamic joinRide()
+}
+
+"frontend::ui::page::rides::join::join_ride_viewmodel.dart::JoinRideViewModel" o-- "frontend::data::model::ride.dart::Ride"
+"frontend::ui::page::rides::join::join_ride_viewmodel.dart::JoinRideViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
+"frontend::ui::page::rides::join::join_ride_viewmodel.dart::JoinRideViewModel" o-- "frontend::data::repository::pickup_repository.dart::PickupRepository"
+"frontend::ui::page::rides::join::join_ride_viewmodel.dart::JoinRideViewModel" o-- "frontend::data::model::pickup.dart::Pickup"
+
+class "frontend::ui::page::rides::end::ride_ended_view.dart::RideEndedView" {
+  +RideEndedViewModel viewModel
+  +Widget build()
+}
+
+"frontend::ui::page::rides::end::ride_ended_view.dart::RideEndedView" o-- "frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel"
+
+class "frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel" {
+  +RideRepository rideRepository
+  +RatingRepository ratingRepository
+  +ReportRepository reportRepository
+  +Ride ride
+}
+
+"frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
+"frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel" o-- "frontend::data::repository::rating_repository.dart::RatingRepository"
+"frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel" o-- "frontend::data::repository::report_repository.dart::ReportRepository"
+"frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel" o-- "frontend::data::model::ride.dart::Ride"
+
+class "frontend::ui::page::rides::offer::carpooler_selection_sheet.dart::CarpoolerSelectionSheet" {
+  +Address currentAddress
+  +List<Passenger> carpoolers
+  +Ride? ride
+  +Activity? activity
+  +Widget build()
+}
+
+"frontend::ui::page::rides::offer::carpooler_selection_sheet.dart::CarpoolerSelectionSheet" o-- "frontend::data::model::address.dart::Address"
+"frontend::ui::page::rides::offer::carpooler_selection_sheet.dart::CarpoolerSelectionSheet" o-- "frontend::data::model::ride.dart::Ride"
+"frontend::ui::page::rides::offer::carpooler_selection_sheet.dart::CarpoolerSelectionSheet" o-- "frontend::data::model::activity.dart::Activity"
+
+class "frontend::ui::page::rides::offer::created_ride_list.dart::CreatedRidesList" {
+  +Address currentAddress
+  +List<Ride> createdRides
+  +List<Passenger> potentialPassengers
+  +dynamic Function(Ride) onSelectRide
+  +Widget build()
+}
+
+"frontend::ui::page::rides::offer::created_ride_list.dart::CreatedRidesList" o-- "frontend::data::model::address.dart::Address"
+"frontend::ui::page::rides::offer::created_ride_list.dart::CreatedRidesList" o-- "null::dynamic Function(Ride)"
+
+class "frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" {
+  +RideRepository rideRepository
+  +AddressRepository addressRepository
+  +ActivityRepository activityRepository
+  -List<Ride> _createdRides
+  +List<Activity> activities
+  -List<Passenger> _potentialPassengers
+  -Ride? _selectedRide
+  -Activity? _selectedActivity
+  +Address currentAddress
+  -bool _isLoading
+  +List<Ride> createdRides
+  +List<Passenger> potentialPassengers
+  +Ride? selectedRide
+  +Activity? selectedActivity
+  +bool isLoading
+  -void _onRidesUpdated()
+  -void _onActivitiesUpdated()
+  -dynamic _init()
+  +dynamic addRide()
+  +dynamic removeRide()
+  +dynamic selectRide()
+  +dynamic selectActivity()
+  +void dispose()
+}
+
+"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
+"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
+"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::repository::activity_repository.dart::ActivityRepository"
+"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::model::ride.dart::Ride"
+"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::model::activity.dart::Activity"
+"frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel" o-- "frontend::data::model::address.dart::Address"
+
+class "frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideView" {
+  +OfferRideViewModel viewModel
+  +Widget build()
+}
+
+"frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideView" o-- "frontend::ui::page::rides::offer::offer_ride_viewmodel.dart::OfferRideViewModel"
+
+class "frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideMode" {
+  +int index
+  {static} +List<OfferRideMode> values
+  {static} +OfferRideMode createdRides
+  {static} +OfferRideMode activities
+}
+
+"frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideMode" o-- "frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideMode"
+"dart::core::Enum" <|-- "frontend::ui::page::rides::offer::offer_ride_view.dart::OfferRideMode"
+
+class "frontend::ui::page::pickups::arrange::arrange_pickup_view.dart::ArrangePickupView" {
+  +ArrangePickupViewModel viewModel
+  -void _onAddressSelected()
+  -void _onArrangePickupPressed()
+  -void _onPickupTimePressed()
+  +Widget build()
+}
+
+"frontend::ui::page::pickups::arrange::arrange_pickup_view.dart::ArrangePickupView" o-- "frontend::ui::page::pickups::arrange::arrange_pickup_viewmodel.dart::ArrangePickupViewModel"
+
+class "frontend::ui::page::pickups::arrange::arrange_pickup_viewmodel.dart::ArrangePickupViewModel" {
+  +PickupRequest pickupRequest
+  +AddressRepository addressRepository
+  +PickupRepository pickupRepository
+  +Address? selectedAddress
+  +DateTime? selectedTime
+  +bool canArrangePickup
+  +dynamic arrangePickup()
+  +void selectAddress()
+  +void selectTime()
+}
+
+"frontend::ui::page::pickups::arrange::arrange_pickup_viewmodel.dart::ArrangePickupViewModel" o-- "frontend::data::model::pickup_request.dart::PickupRequest"
+"frontend::ui::page::pickups::arrange::arrange_pickup_viewmodel.dart::ArrangePickupViewModel" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
+"frontend::ui::page::pickups::arrange::arrange_pickup_viewmodel.dart::ArrangePickupViewModel" o-- "frontend::data::repository::pickup_repository.dart::PickupRepository"
+"frontend::ui::page::pickups::arrange::arrange_pickup_viewmodel.dart::ArrangePickupViewModel" o-- "frontend::data::model::address.dart::Address"
+
+class "frontend::ui::page::pickups::confirm::confirm_pickup_viewmodel.dart::ConfirmPickupViewModel" {
+  +PickupRepository pickupRepository
+  +Pickup pickup
+  -bool _isLoading
+  -String? _errorMessage
+  +bool isLoading
+  +String? errorMessage
+  +dynamic acceptPickup()
+  +dynamic rejectPickup()
+}
+
+"frontend::ui::page::pickups::confirm::confirm_pickup_viewmodel.dart::ConfirmPickupViewModel" o-- "frontend::data::repository::pickup_repository.dart::PickupRepository"
+"frontend::ui::page::pickups::confirm::confirm_pickup_viewmodel.dart::ConfirmPickupViewModel" o-- "frontend::data::model::pickup.dart::Pickup"
+
+class "frontend::ui::page::pickups::confirm::confirm_pickup_view.dart::ConfirmPickupView" {
+  +ConfirmPickupViewModel viewModel
+  +Widget build()
+}
+
+"frontend::ui::page::pickups::confirm::confirm_pickup_view.dart::ConfirmPickupView" o-- "frontend::ui::page::pickups::confirm::confirm_pickup_viewmodel.dart::ConfirmPickupViewModel"
+
+class "frontend::ui::page::pickups::confirm::pickup_arranged_notification.dart::PickupArrangedNotification" {
+  +Pickup pickup
+  +Widget build()
+}
+
+"frontend::ui::page::pickups::confirm::pickup_arranged_notification.dart::PickupArrangedNotification" o-- "frontend::data::model::pickup.dart::Pickup"
+
+class "frontend::ui::page::pickups::pickup_details_view.dart::PickupDetailsWidget" {
+  +Pickup pickup
+  +Widget build()
+}
+
+"frontend::ui::page::pickups::pickup_details_view.dart::PickupDetailsWidget" o-- "frontend::data::model::pickup.dart::Pickup"
+
+class "frontend::ui::page::pickups::pickup_request_notification.dart::PickupRequestNotification" {
+  +PickupRequest pickupRequest
+  +Widget build()
+}
+
+"frontend::ui::page::pickups::pickup_request_notification.dart::PickupRequestNotification" o-- "frontend::data::model::pickup_request.dart::PickupRequest"
+
+class "frontend::ui::shared::map::open_street_maps_tile_layer.dart::OpenStreetMapsTileLayer" {
+}
+
+class "frontend::ui::shared::map::destination_marker.dart::DestinationMarker" {
+}
+
+class "frontend::ui::shared::map::here_marker.dart::HereMarker" {
+}
+
+class "frontend::ui::shared::map::pickup_marker.dart::PickupMarker" {
+}
+
+class "frontend::ui::shared::nav::app_drawer.dart::AppDrawer" {
+  +Widget build()
+}
+
+class "frontend::ui::shared::nav::app_navigation_bar.dart::AppNavigationBar" {
+  +String routeName
+  -List<String> _routes
+  -void _onItemTapped()
+  +Widget build()
+}
+
+class "frontend::ui::shared::points.dart::Points" {
+  +int points
+  +Color? themeColor
+  +Widget build()
+}
+
+"frontend::ui::shared::points.dart::Points" o-- "dart::ui::Color"
+
+class "frontend::ui::shared::form::email_field.dart::EmailField" {
+  +String labelText
+  +bool readOnly
+  +Widget build()
+}
+
+class "frontend::ui::shared::form::name_field.dart::NameField" {
+  +String labelText
+  +bool readOnly
+  +Widget build()
+}
+
+class "frontend::ui::shared::form::password_field.dart::PasswordField" {
+  +String labelText
+  +bool readOnly
+  +State<PasswordField> createState()
+}
+
+class "frontend::ui::shared::form::password_field.dart::_PasswordFieldState" {
+  -bool _isVisible
+  -void _toggleVisibility()
+  +Widget build()
+}
+
+class "frontend::ui::shared::address_selector.dart::AddressSelector" {
+  +AddressRepository addressRepository
+  +State<AddressSelector> createState()
+}
+
+"frontend::ui::shared::address_selector.dart::AddressSelector" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
+
+class "frontend::ui::shared::address_selector.dart::_AddressSelector" {
+  -bool _isLoading
+  -LatLng _center
+  -Address? _address
+  +void initState()
+  -void _getUserLocation()
+  -void _onMapTapped()
+  +Widget build()
+  +void dispose()
+}
+
+"frontend::ui::shared::address_selector.dart::_AddressSelector" o-- "latlong2::latlong.dart::LatLng"
+"frontend::ui::shared::address_selector.dart::_AddressSelector" o-- "frontend::data::model::address.dart::Address"
+"flutter::src::widgets::ticker_provider.dart::TickerProviderStateMixin" <|-- "frontend::ui::shared::address_selector.dart::_AddressSelector"
+
+class "frontend::ui::shared::datetime_selector.dart::DateTimeSelector" {
+  +String labelText
+  +List<String> options
+  +DateTime Function(String) optionsToDateTime
+  +State<DateTimeSelector> createState()
+}
+
+"frontend::ui::shared::datetime_selector.dart::DateTimeSelector" o-- "null::DateTime Function(String)"
+
+class "frontend::ui::shared::datetime_selector.dart::DateTimeSelectorState" {
+  +void initState()
+  -void _onDropdownSelected()
+  +void setDateTime()
+  +Widget build()
+  +void dispose()
+}
+
+class "frontend::ui::shared::loading_button.dart::LoadingButton" {
+  +void Function()? onPressed
+  +bool isLoading
+  +Widget build()
+}
+
+"frontend::ui::shared::loading_button.dart::LoadingButton" o-- "dart::ui::void Function()"
+
+class "frontend::ui::shared::route_view.dart::RouteView" {
+  +Route route
+  +List<Pickup> pickups
+  +LatLng midpoint()
+  +Widget build()
+}
+
+"frontend::ui::shared::route_view.dart::RouteView" o-- "frontend::data::model::route.dart::Route"
+
+class "frontend::ui::shared::text_address_selector.dart::TextAddressSelector" {
+  +AddressRepository addressRepository
+  +String labelText
+  +Address? initialAddress
+  +State<TextAddressSelector> createState()
+}
+
+"frontend::ui::shared::text_address_selector.dart::TextAddressSelector" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
+"frontend::ui::shared::text_address_selector.dart::TextAddressSelector" o-- "frontend::data::model::address.dart::Address"
+
+class "frontend::ui::shared::text_address_selector.dart::TextAddressSelectorState" {
+  +void initState()
+  +void dispose()
+  +void setAddress()
+  -dynamic _showAddressSelector()
+  -void _onMapButtonPressed()
+  -FutureOr<Iterable<Address>> _getSuggestions()
+  +Widget build()
+}
+
+class "frontend::ui::notification::notification_overlay.dart::NotificationOverlay" {
+  {static} +bool isShowing
+  {static} +void show()
+  {static} +dynamic dismiss()
+}
+
+abstract class "frontend::ui::view.dart::ViewBase" {
+  +T viewModel
+  +Widget buildView()
+  +Widget build()
+}
+
+abstract class "frontend::ui::viewmodel.dart::ViewModel" {
+}
+
+class "frontend::config.dart::Config" {
+  {static} +String packageName
+}
+
+class "frontend::app.dart::App" {
+  -UserRepository _userRepository
+  -ActivityRepository _activityRepository
+  -RideRepository _rideRepository
+  -RatingRepository _ratingRepository
+  -AddressRepository _addressRepository
+  -RewardRepository _rewardRepository
+  -ReportRepository _reportRepository
+  -PickupRepository _pickupRepository
+  +FindRideViewModel findRideViewModel
+  +HomeViewModel homeViewModel
+  +ProfileViewModel profileViewModel
+  +RewardViewModel rewardViewModel
+  +SignInViewModel signInViewModel
+  +SignUpViewModel signUpViewModel
+  +ActivitiesViewModel activitiesViewModel
+  +CreateRideViewModel createRideViewModel
+  +RideEndedViewModel rideEndedViewModel
+  +bool isLoggedIn
+  +Widget build()
+}
+
+"frontend::app.dart::App" o-- "frontend::data::repository::user_repository.dart::UserRepository"
+"frontend::app.dart::App" o-- "frontend::data::repository::activity_repository.dart::ActivityRepository"
+"frontend::app.dart::App" o-- "frontend::data::repository::ride_repository.dart::RideRepository"
+"frontend::app.dart::App" o-- "frontend::data::repository::rating_repository.dart::RatingRepository"
+"frontend::app.dart::App" o-- "frontend::data::repository::address_repository.dart::AddressRepository"
+"frontend::app.dart::App" o-- "frontend::data::repository::reward_repository.dart::RewardRepository"
+"frontend::app.dart::App" o-- "frontend::data::repository::report_repository.dart::ReportRepository"
+"frontend::app.dart::App" o-- "frontend::data::repository::pickup_repository.dart::PickupRepository"
+"frontend::app.dart::App" o-- "frontend::ui::page::rides::find::find_ride_viewmodel.dart::FindRideViewModel"
+"frontend::app.dart::App" o-- "frontend::ui::page::home::home_viewmodel.dart::HomeViewModel"
+"frontend::app.dart::App" o-- "frontend::ui::page::profile::profile_viewmodel.dart::ProfileViewModel"
+"frontend::app.dart::App" o-- "frontend::ui::page::rewards::rewards_viewmodel.dart::RewardViewModel"
+"frontend::app.dart::App" o-- "frontend::ui::page::sign_in::sign_in_viewmodel.dart::SignInViewModel"
+"frontend::app.dart::App" o-- "frontend::ui::page::sign_up::sign_up_viewmodel.dart::SignUpViewModel"
+"frontend::app.dart::App" o-- "frontend::ui::page::activities::activities_viewmodel.dart::ActivitiesViewModel"
+"frontend::app.dart::App" o-- "frontend::ui::page::rides::create::create_ride_viewmodel.dart::CreateRideViewModel"
+"frontend::app.dart::App" o-- "frontend::ui::page::rides::end::ride_ended_viewmodel.dart::RideEndedViewModel"
+
+abstract class "frontend::convert.dart::Convert" {
+  {static} +DateTime timeOfDayToDateTime()
+}
+
+
+@enduml

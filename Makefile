@@ -1,5 +1,5 @@
 .DELETE_ON_ERROR:
-.PHONY: all clean sequence robustness use-case
+.PHONY: all clean sequence robustness use-case gen_class_diagram
 
 ROBUSTNESS_DRAWIO_FILES := $(wildcard reports/robustness/*.drawio.png)
 SEQUENCE_UML_FILES := $(wildcard reports/sequence/*.plantuml)
@@ -56,6 +56,18 @@ generated.tex: sequence robustness use-case
 report.pdf:
 	latexmk --lualatex --shell-escape -quiet report.tex
 
+# clean:
+# 	rm -rf build
+# 	latexmk -C
+
+
+class_diagram.plantuml:
+	dcdg -b plantuml -p ./frontend -s ./lib  --exclude flutter --exclude Stream   > $@
+	./build_cd.sh
+
 clean:
-	rm -rf build
-	latexmk -C
+	rm -f class_diagram.plantuml
+
+class_diagram.svg: class_diagram.plantuml
+	plantuml ./class_diagram.plantuml -tsvg
+	# inkscape class_diagram.svg --export-type=png --export-background=white --export-filename=class_diagram.png
