@@ -1,0 +1,74 @@
+@startuml
+actor Driver
+actor Passenger
+participant "OfferRide" as Offer
+participant "PickupRequest" as Request
+participant "ArrangePickupView" as View
+participant "ArrangePickupViewModel" as VM
+participant "PickupRepository" as Repo
+participant "System"
+
+alt Main Flow: Arrange Pickup
+    Driver -> View : Selects "Arrange Pickup"
+    activate View
+    View -> VM : selectAddress(address), selectTime(time)
+    activate VM
+    Driver -> View : OnPressArrangePickup()
+    View -> VM : arrangePickup()
+    VM -> VM : Validate(address and time)
+    VM -> Repo : acceptPickupRequest(pickupRequest, pickup)
+    deactivate VM
+    activate Repo
+    Repo --> View : SendPickup()
+    deactivate Repo
+    View -> View : ShowNotification()
+    Passenger -> Request : OnPressAcceptPickup()
+    activate Request
+    Request -> System : ProcessPickupRequest()
+    deactivate Request
+    activate System
+    System --> View : Show success message
+    deactivate System
+     deactivate View
+end
+
+alt Invalid address/time
+    Driver -> View : Selects "Arrange Pickup"
+    activate View
+    View -> VM : selectAddress(address), selectTime(time)
+    activate VM
+    Driver -> View : OnPressArrangePickup()
+    View -> VM : arrangePickup()
+    VM -> VM : Validate(address and time)
+    VM ---> View : Return error
+    deactivate VM
+    View ---> View : Show error message
+    deactivate View
+end
+
+alt Alternative Flow: Pickup Rejection 
+    Driver -> View : Selects "Arrange Pickup"
+    activate View
+    View -> VM : selectAddress(address), selectTime(time)
+    activate VM
+    Driver -> View : OnPressArrangePickup()
+    View -> VM : arrangePickup()
+    VM -> VM : Validate(address and time)
+    VM -> Repo : acceptPickupRequest(pickupRequest, pickup)
+    deactivate VM
+    activate Repo
+    Repo --> View : SendPickup()
+    deactivate Repo
+    View -> View : ShowNotification()
+    Passenger -> System : OnPresssRejectPickup()
+    activate System
+    System --> View : Show failure message
+    deactivate System
+    View --> Offer : Return to Offer Ride
+    activate Offer
+    deactivate View
+    deactivate Offer
+
+end
+
+@enduml
