@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart' hide Route;
+import 'package:frontend/convert.dart';
 import 'package:frontend/data/impl/impl_driver.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
 import 'package:frontend/data/impl/impl_vehicle.dart';
@@ -72,20 +73,8 @@ class CreateRideViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    departureTimeController.dispose();
-    arrivalTimeController.dispose();
     _activitiesSubscription?.cancel();
     super.dispose();
-  }
-
-  DateTime _timeOfDayToDateTime(TimeOfDay time) {
-    return DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-      time.hour,
-      time.minute,
-    );
   }
 
   Future<void> selectActivity(Activity activity) async {
@@ -96,14 +85,14 @@ class CreateRideViewModel extends ChangeNotifier {
 
     departureTimeSelectorKey.currentState?.setDateTime(DateTime.now());
     arrivalTimeSelectorKey.currentState?.setDateTime(
-      _timeOfDayToDateTime(activity.startTime),
+      Convert.timeOfDayToDateTime(activity.startTime),
     );
 
     selectFromAddress(currentAddress);
     selectToAddress(activity.address);
 
     selectDepartureTime(DateTime.now());
-    selectArrivalTime(_timeOfDayToDateTime(activity.startTime));
+    selectArrivalTime(Convert.timeOfDayToDateTime(activity.startTime));
   }
 
   Future<void> selectFromAddress(Address address) async {

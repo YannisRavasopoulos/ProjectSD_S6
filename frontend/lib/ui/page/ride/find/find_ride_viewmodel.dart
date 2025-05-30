@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/convert.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/ride.dart';
@@ -78,16 +79,6 @@ class FindRideViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  DateTime _timeOfDayToDateTime(TimeOfDay time) {
-    return DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-      time.hour,
-      time.minute,
-    );
-  }
-
   Future<void> selectActivity(Activity activity) async {
     var currentAddress = await addressRepository.fetchCurrent();
 
@@ -96,14 +87,14 @@ class FindRideViewModel extends ChangeNotifier {
 
     departureTimeSelectorKey.currentState?.setDateTime(DateTime.now());
     arrivalTimeSelectorKey.currentState?.setDateTime(
-      _timeOfDayToDateTime(activity.startTime),
+      Convert.timeOfDayToDateTime(activity.startTime),
     );
 
     selectFromAddress(currentAddress);
     selectToAddress(activity.address);
 
     selectDepartureTime(DateTime.now());
-    selectArrivalTime(_timeOfDayToDateTime(activity.startTime));
+    selectArrivalTime(Convert.timeOfDayToDateTime(activity.startTime));
 
     await fetchRides();
   }
