@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/ride_ended/ride_ended_viewmodel.dart';
 
 class RideEndedView extends StatelessWidget {
@@ -42,34 +41,32 @@ class RideEndedView extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
-                  if (viewModel.ride != null) ...[
-                    ListTile(
-                      leading: const CircleAvatar(child: Icon(Icons.person)),
-                      title: Text(
-                        '${viewModel.ride!.driver.firstName} ${viewModel.ride!.driver.lastName}',
-                      ),
-                      subtitle: const Text('Your Driver'),
+                  ListTile(
+                    leading: const CircleAvatar(child: Icon(Icons.person)),
+                    title: Text(
+                      '${viewModel.ride!.driver.firstName} ${viewModel.ride!.driver.lastName}',
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.directions_car),
-                      title: Text(
-                        '${viewModel.ride!.route.start.street} → ${viewModel.ride!.route.end.street}',
-                      ),
-                      subtitle: Text(
-                        '${viewModel.ride!.route.start.city} to ${viewModel.ride!.route.end.city}',
-                      ),
+                    subtitle: const Text('Your Driver'),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.directions_car),
+                    title: Text(
+                      '${viewModel.ride!.route.start.street} → ${viewModel.ride!.route.end.street}',
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.access_time),
-                      title: Text(
-                        'Departure: ${TimeOfDay.fromDateTime(viewModel.ride!.departureTime).format(context)}',
-                      ),
-                      subtitle: Text(
-                        'Arrival: ${TimeOfDay.fromDateTime(viewModel.ride!.estimatedArrivalTime).format(context)}',
-                      ),
+                    subtitle: Text(
+                      '${viewModel.ride!.route.start.city} to ${viewModel.ride!.route.end.city}',
                     ),
-                    const Divider(height: 32),
-                  ],
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.access_time),
+                    title: Text(
+                      'Departure: ${TimeOfDay.fromDateTime(viewModel.ride!.departureTime).format(context)}',
+                    ),
+                    subtitle: Text(
+                      'Arrival: ${TimeOfDay.fromDateTime(viewModel.ride!.estimatedArrivalTime).format(context)}',
+                    ),
+                  ),
+                  const Divider(height: 32),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
