@@ -5,27 +5,6 @@ import 'package:frontend/data/model/report_reason.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 
-class ImplReport extends Report {
-  @override
-  final int id;
-  @override
-  final ReportReason reason;
-  @override
-  final ReportStatus status = ReportStatus.pending;
-  @override
-  final User receiver = ImplUser.random();
-
-  final String details;
-  final DateTime createdAt;
-
-  ImplReport({
-    required this.id,
-    required this.reason,
-    required this.details,
-    required this.createdAt,
-  });
-}
-
 class ImplReportRepository implements ReportRepository {
   // This sucks and is ugly but must be done for now...
   ImplReportRepository({required ImplUserRepository userRepository})
@@ -52,8 +31,19 @@ class ImplReportRepository implements ReportRepository {
   }
 
   @override
-  Future<void> create(Report report) async {
+  Future<void> create({
+    required User receiver,
+    required ReportReason reason,
+    String? details,
+  }) {
     try {
+      var report = Report(
+        receiver: receiver,
+        reason: reason,
+        details: details,
+        status: ReportStatus.pending,
+      );
+
       _reports.add(report);
 
       if (_shouldApplyPenalty(report.receiver)) {

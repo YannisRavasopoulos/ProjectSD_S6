@@ -1,51 +1,18 @@
-import 'package:frontend/data/model.dart';
 import 'package:frontend/data/model/report_reason.dart';
 import 'package:frontend/data/model/user.dart';
 
 enum ReportStatus { pending, inProgress, resolved, rejected }
 
-abstract class Report implements Model {
-  User get receiver;
-  ReportReason get reason;
-  ReportStatus get status;
+class Report {
+  final ReportReason reason;
+  final User receiver;
+  final ReportStatus status;
+  final String? details;
+
+  Report({
+    required this.receiver,
+    required this.reason,
+    required this.status,
+    this.details,
+  });
 }
-
-// class Report {
-//   final String id;
-//   final String reporterId;
-//   final String reportedUserId;
-//   final String rideId;
-//   final String reason;
-//   final String details;
-//   final DateTime createdAt;
-
-//   Report({
-//     required this.id,
-//     required this.reporterId,
-//     required this.reportedUserId,
-//     required this.rideId,
-//     required this.reason,
-//     required this.details,
-//     required this.createdAt,
-//   });
-
-//   Map<String, dynamic> toJson() => {
-//         'id': id,
-//         'reporterId': reporterId,
-//         'reportedUserId': reportedUserId,
-//         'rideId': rideId,
-//         'reason': reason,
-//         'details': details,
-//         'createdAt': createdAt.toIso8601String(),
-//       };
-
-//   factory Report.fromJson(Map<String, dynamic> json) => Report(
-//         id: json['id'],
-//         reporterId: json['reporterId'],
-//         reportedUserId: json['reportedUserId'],
-//         rideId: json['rideId'],
-//         reason: json['reason'],
-//         details: json['details'],
-//         createdAt: DateTime.parse(json['createdAt']),
-//       );
-// }
