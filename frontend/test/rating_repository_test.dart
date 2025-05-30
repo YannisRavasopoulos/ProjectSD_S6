@@ -1,6 +1,5 @@
 import 'package:test/test.dart';
 import 'package:frontend/data/impl/impl_rating_repository.dart';
-import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
 

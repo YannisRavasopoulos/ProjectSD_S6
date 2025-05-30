@@ -26,14 +26,12 @@ void main() {
         points: 100,
       );
       report1 = Report(
-        id: 1,
         receiver: testUser, // Assuming fetchCurrent returns a User
         reason: ReportReason.spam,
         status: ReportStatus.pending,
         details: 'Spam report',
       );
       report2 = Report(
-        id: 1,
         receiver: testUser, // Assuming fetchCurrent returns a User
         reason: ReportReason.harassment,
         status: ReportStatus.pending,
