@@ -16,6 +16,10 @@ class AvailableRewardsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (availableRewards.isEmpty) {
+      return const Center(child: Text('No rewards available at the moment.'));
+    }
+
     return ListView.builder(
       itemCount: availableRewards.length,
       padding: const EdgeInsets.all(8.0),

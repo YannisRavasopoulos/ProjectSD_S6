@@ -12,6 +12,39 @@ class ProfileView extends StatelessWidget {
 
   const ProfileView({super.key, required this.viewModel});
 
+  void _onClearHistoryConfirmPresssed(BuildContext context) {
+    viewModel.clearHistory();
+    Navigator.of(context).pop();
+  }
+
+  void _onClearHistoryCancelPressed(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  void _onClearHistoryPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Clear History'),
+          content: const Text(
+            'Are you sure you want to clear your ride history?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => _onClearHistoryConfirmPresssed(context),
+              child: const Text('Clear'),
+            ),
+            TextButton(
+              onPressed: () => _onClearHistoryCancelPressed(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +116,7 @@ class ProfileView extends StatelessWidget {
           onSavePressed: viewModel.saveChanges,
         ),
         HistoryTab(
-          onClearHistory: viewModel.clearHistory,
+          onClearHistory: () => _onClearHistoryPressed(context),
           rides: viewModel.rides,
         ),
         RatingTab(
