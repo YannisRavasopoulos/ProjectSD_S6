@@ -11,7 +11,7 @@ class Report extends Model {
   final String? details;
 
   Report({
-    required super.id,
+    super.id = 0,
     required this.receiver,
     required this.reason,
     required this.status,
