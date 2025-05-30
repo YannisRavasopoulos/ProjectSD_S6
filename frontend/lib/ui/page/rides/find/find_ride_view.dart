@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/ui/page/rides/activity_selection_panel.dart';
-import 'package:frontend/ui/page/rides/find/ride_card.dart';
+import 'package:frontend/ui/page/rides/ride_card.dart';
 import 'package:frontend/ui/page/rides/find/find_ride_viewmodel.dart';
 import 'package:frontend/ui/shared/datetime_selector.dart';
 import 'package:frontend/ui/shared/text_address_selector.dart';
@@ -191,8 +191,8 @@ class FindRideView extends StatelessWidget {
                       final ride = viewModel.rides[index];
                       return RideCard(
                         ride: ride,
-                        onJoinRidePressed:
-                            () => _onJoinRidePressed(ride, context),
+                        onRidePressed: () => _onJoinRidePressed(ride, context),
+                        label: "Join Ride",
                       );
                     },
                   ),

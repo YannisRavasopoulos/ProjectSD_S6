@@ -3,9 +3,15 @@ import 'package:frontend/data/model/ride.dart';
 
 class RideCard extends StatelessWidget {
   final Ride ride;
-  final VoidCallback onJoinRidePressed;
+  final VoidCallback onRidePressed;
+  final String label;
 
-  RideCard({super.key, required this.ride, required this.onJoinRidePressed});
+  RideCard({
+    super.key,
+    required this.ride,
+    required this.onRidePressed,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +47,10 @@ class RideCard extends StatelessWidget {
                   ),
                 ),
                 FilledButton(
-                  onPressed: ride.availableSeats > 0 ? onJoinRidePressed : null,
-                  child: const Padding(
+                  onPressed: ride.availableSeats > 0 ? onRidePressed : null,
+                  child: Padding(
                     padding: EdgeInsets.all(8),
-                    child: Text('Join'),
+                    child: Text(label),
                   ),
                 ),
               ],

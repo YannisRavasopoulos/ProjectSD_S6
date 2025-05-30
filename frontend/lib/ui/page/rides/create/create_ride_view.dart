@@ -65,7 +65,6 @@ class CreateRideView extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ride created successfully!')),
       );
-      Navigator.pop(context);
     } else {
       // Show error message
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -77,6 +76,14 @@ class CreateRideView extends StatelessWidget {
     }
   }
 
+  void _onOfferPressed(BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      '/rides/offer',
+      arguments: viewModel.createdRide!,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,6 +93,29 @@ class CreateRideView extends StatelessWidget {
         builder: (context, _) {
           if (viewModel.isLoading) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if (viewModel.showSuccess) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Ride created successfully!",
+                    style: TextStyle(fontSize: 24, color: Colors.green),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () => _onOfferPressed(context),
+                    icon: const Icon(Icons.local_offer),
+                    label: const Text("Offer this Ride"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
 
           return Column(

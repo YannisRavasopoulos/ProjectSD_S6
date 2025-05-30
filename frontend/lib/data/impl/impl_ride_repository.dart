@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/passenger.dart';
+import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/model/route.dart';
@@ -121,20 +122,21 @@ class ImplRideRepository implements RideRepository {
   }
 
   @override
-  Future<User> fetchPotentialPassengers(Ride ride) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    if (ride.passengers.isNotEmpty) {
-      return ride.passengers.first;
-    } else {
-      throw Exception('No passengers found for this ride');
-    }
+  Future<List<User>> fetchPotentialPassengers(Ride ride) async {
+    await Future.delayed(const Duration(seconds: 1));
+    // Return some random passengers (hardcoded for demo)
+    return [
+      Passenger(firstName: 'Charlie', lastName: 'Delta', points: 50, id: 2),
+      Passenger(firstName: 'Echo', lastName: 'Foxtrot', points: 80, id: 3),
+      Passenger(firstName: 'Grace', lastName: 'Hopper', points: 95, id: 4),
+    ];
   }
 
   @override
   Stream<List<User>> watchPotentialPassengers(Ride ride) async* {
     // Simulate a stream with a single user
     await Future.delayed(const Duration(milliseconds: 200));
-    yield ride.passengers;
+    yield await fetchPotentialPassengers(ride);
   }
 
   @override
@@ -237,6 +239,42 @@ class ImplRideRepository implements RideRepository {
     if (_currentRide == ride) {
       _currentRide = null;
       // Optionally notify listeners
+    }
+  }
+
+  @override
+  Future<PickupRequest> offer(Ride ride, User potentialPassenger) async {
+    // Simulate offering a ride to a potential passenger
+    final passenger = Passenger(
+      firstName: potentialPassenger.firstName,
+      lastName: potentialPassenger.lastName,
+      points: potentialPassenger.points,
+      id: nextId, // Generate a new ID for the passenger
+    );
+
+    // Add the passenger to the ride
+    ride.passengers.add(passenger);
+
+    // Notify listeners about the updated ride
+    _ridesController.add(List.unmodifiable(_rides));
+
+    // Create a pickup request
+    return PickupRequest.fake();
+  }
+
+  @override
+  Future<List<Ride>> fetchCreatedRides() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    // Return all rides created by the driver
+    return _createdRidesByDriver.values.expand((rides) => rides).toList();
+  }
+
+  @override
+  Stream<List<Ride>> watchCreatedRides() async* {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 1));
+      _ridesController.add(List.unmodifiable(_rides));
+      yield List.unmodifiable(_rides);
     }
   }
 }

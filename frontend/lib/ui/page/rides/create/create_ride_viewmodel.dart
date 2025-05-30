@@ -22,7 +22,6 @@ class CreateRideViewModel extends ChangeNotifier {
 
   List<Activity> get activities => _activities;
   String? get errorMessage => _errorMessage;
-  List<Ride> get rides => _rides;
   bool get isLoading => _isLoading;
   bool get isFormValid =>
       _fromAddress != null &&
@@ -30,16 +29,19 @@ class CreateRideViewModel extends ChangeNotifier {
       _departureTime != null &&
       _arrivalTime != null;
   bool get isCreatingRide => _isCreatingRide;
+  bool get showSuccess => _showSuccess;
+  Ride? get createdRide => _createdRide;
 
   Address? _fromAddress;
   Address? _toAddress;
   DateTime? _departureTime;
   DateTime? _arrivalTime;
   bool _isCreatingRide = false;
+  bool _showSuccess = false;
+  Ride? _createdRide;
 
   StreamSubscription<List<Activity>>? _activitiesSubscription;
   List<Activity> _activities = [];
-  List<Ride> _rides = [];
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -145,6 +147,8 @@ class CreateRideViewModel extends ChangeNotifier {
       final ride = Ride.fake();
       await _rideRepository.create(ride);
       await Future.delayed(const Duration(seconds: 1));
+      _showSuccess = true;
+      _createdRide = ride;
       return true;
     } catch (e) {
       _errorMessage = "Failed to create ride: $e";

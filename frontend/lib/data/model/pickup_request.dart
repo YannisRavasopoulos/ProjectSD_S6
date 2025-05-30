@@ -16,4 +16,14 @@ class PickupRequest extends Model {
     required this.address,
     required this.time,
   });
+
+  factory PickupRequest.fake() {
+    return PickupRequest(
+      id: 1,
+      ride: Ride.fake(),
+      passenger: Passenger.fake(),
+      address: Address.fake(),
+      time: DateTime.now(),
+    );
+  }
 }

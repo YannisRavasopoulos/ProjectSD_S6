@@ -1,3 +1,5 @@
+import 'package:frontend/data/model/passenger.dart';
+import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/model/user.dart';
@@ -10,7 +12,7 @@ abstract interface class RideRepository {
   Stream<List<Ride>> watchMatchingRides(RideRequest request);
 
   /// Returns potential passengers.
-  Future<User> fetchPotentialPassengers(Ride ride);
+  Future<List<User>> fetchPotentialPassengers(Ride ride);
 
   /// Watches potential passengers.
   Stream<List<User>> watchPotentialPassengers(Ride ride);
@@ -45,6 +47,10 @@ abstract interface class RideRepository {
   /// Leave a ride.
   Future<void> leave(Ride ride);
 
-  /// Fetches all rides.
-  Future<List<Ride>> fetchAllRides();
+  /// Offer ride
+  Future<PickupRequest> offer(Ride ride, User potentialPassenger);
+
+  Future<List<Ride>> fetchCreatedRides();
+
+  Stream<List<Ride>> watchCreatedRides();
 }
