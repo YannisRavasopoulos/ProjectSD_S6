@@ -1,3 +1,4 @@
+import 'package:frontend/data/model/redeemed_reward.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 import 'package:frontend/data/repository/user_repository.dart';
 import 'package:test/test.dart';
@@ -34,7 +35,7 @@ void main() {
         final userBefore = await userRepository.fetchCurrent();
         final code = await rewardsRepository.redeem(reward);
 
-        expect(code, (reward as RewardImpl).redemptionCode);
+        expect(code, (reward as RedeemedReward).redemptionCode);
 
         final availableAfter = await rewardsRepository.fetchAvailable();
         final redeemed = await rewardsRepository.fetchRedeemed();
@@ -60,7 +61,7 @@ void main() {
       // Set user points to 0
       final user = await userRepository.fetchCurrent();
       await userRepository.updateCurrentUser(
-        (user as ImplUser).copyWith(points: 0),
+        (user).copyWith(points: 0),
       );
       final reward = available.first;
 
