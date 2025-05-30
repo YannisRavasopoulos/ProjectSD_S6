@@ -1,0 +1,80 @@
+@startuml
+
+actor User
+
+participant ActivititesView
+participant ActivititesViewModel
+participant ActivitityCard
+participant Navigator
+participant ActivityRepository
+participant CreateActivityView
+participant LoopApp
+participant HomeView
+participant Reward
+participant RedeemedReward
+
+activate Navigator
+activate ActivititesViewModel
+activate ActivityRepository
+activate HomeView
+activate LoopApp
+
+== Manage Activities ==
+User -> HomeView: Presses "Activities"
+HomeView -> HomeView: onActivitiesPressed()
+HomeView -> Navigator: pushNamed("/activities")
+Navigator -> LoopApp: "/activities"
+LoopApp -> ActivititesView: ActivititesView(ActivititesViewModel)
+activate ActivititesView
+ActivititesView --> LoopApp: return ActivititesView
+LoopApp --> Navigator: return ActivititesView
+Navigator -> ActivititesView: build(context)
+' TODO: fetch rewards
+ActivititesView -> ActivitityCard: ActivitityCard(reward, onRedeemPressed)
+activate ActivitityCard
+ActivitityCard --> ActivititesView: return ActivitityCard
+User -> ActivitityCard: Selects a reward and presses "Redeem Reward"
+ActivitityCard -> ActivitityCard: onRedeemPressed()
+ActivitityCard -> RedeemConfirmationDialog: RedeemConfirmationDialog(reward, onConfirmPressed, onCancelPressed)
+activate RedeemConfirmationDialog
+RedeemConfirmationDialog --> ActivitityCard: return dialog
+ActivitityCard -> ActivitityCard: showDialog(dialog)
+alt Confirm
+User -> RedeemConfirmationDialog: Presses "Confirm"
+RedeemConfirmationDialog -> ActivitityCard: onConfirmPressed()
+ActivitityCard -> ActivititesView: onRedeemReward(reward)
+ActivititesView -> ActivititesViewModel: redeemReward(reward)
+ActivititesViewModel -> ActivityRepository: redeem(reward)
+alt Success
+deactivate RedeemConfirmationDialog
+    ActivityRepository --> ActivititesViewModel: return redemptionCode
+    ActivititesViewModel -> ActivititesViewModel: updateRewards()
+    ActivititesViewModel -> ActivityRepository: fetchAvailableRewards()
+    ActivityRepository -> Reward: Reward(...)
+    activate Reward
+    Reward --> ActivityRepository: return reward
+    ActivityRepository --> ActivititesViewModel: return availableRewards
+    ActivititesViewModel -> ActivityRepository: fetchRedeemedRewards()
+    ActivityRepository -> RedeemedReward: RedeemedReward(...)
+    activate RedeemedReward
+    Reward --> ActivityRepository: return redeemedReward
+    ActivityRepository --> ActivititesViewModel: return redeemedRewards
+    ActivititesViewModel --> ActivititesView: return ok
+    ActivititesView -> ActivititesView: showRedemptionCode(redemptionCode)
+    deactivate RedeemedReward
+    deactivate Reward
+else Insufficient points
+    ActivityRepository --> ActivititesViewModel: return error "Not enough points"
+    ActivititesViewModel -> ActivititesView: showError("Not enough points")
+else Reward not found
+    ActivityRepository --> ActivititesViewModel: return error "Reward not found"
+    ActivititesViewModel -> ActivititesView: showError("Reward not found")
+activate RedeemConfirmationDialog
+end
+else Cancel
+User -> RedeemConfirmationDialog: Presses "Cancel"
+RedeemConfirmationDialog --> ActivitityCard: onCancelPressed()
+deactivate RedeemConfirmationDialog
+end
+
+@enduml
