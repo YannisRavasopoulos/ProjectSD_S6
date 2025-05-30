@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
 import 'package:frontend/ui/page/confirm_pickup/pickup_acknowledgement_notification.dart';
-import 'package:frontend/ui/page/join_ride/join_ride_viewmodel.dart';
-import 'package:frontend/ui/page/join_ride/detail_row.dart';
+import 'package:frontend/ui/page/ride/join/join_ride_viewmodel.dart';
+import 'package:frontend/ui/page/ride/join/detail_row.dart';
 
 class JoinRideView extends StatelessWidget {
   final JoinRideViewModel viewModel;

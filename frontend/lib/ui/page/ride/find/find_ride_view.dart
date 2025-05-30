@@ -46,7 +46,7 @@ class FindRideView extends StatelessWidget {
   }
 
   void _onJoinRidePressed(Ride ride, BuildContext context) {
-    Navigator.pushReplacementNamed(context, '/join_ride', arguments: ride);
+    Navigator.pushReplacementNamed(context, '/ride/join', arguments: ride);
   }
 
   static const List<String> _departureTimes = [
