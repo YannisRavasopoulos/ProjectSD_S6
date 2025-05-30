@@ -10,6 +10,7 @@ class RateViewModel extends ChangeNotifier {
   final RatingRepository _ratingRepository;
   final UserRepository _userRepository;
   StreamSubscription<List<Rating>>? _ratingsSubscription;
+  final User rated;
 
   int _rating = 0;
   String _comment = '';
@@ -21,6 +22,7 @@ class RateViewModel extends ChangeNotifier {
   RateViewModel({
     required RatingRepository ratingRepository,
     required UserRepository userRepository,
+    required User this.rated,
   }) : _ratingRepository = ratingRepository,
        _userRepository = userRepository {
     _loadCurrentUser();

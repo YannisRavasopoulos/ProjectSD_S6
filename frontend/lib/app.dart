@@ -3,7 +3,9 @@ import 'package:flutter/material.dart' hide Route;
 import 'package:frontend/data/impl/impl_driver.dart';
 import 'package:frontend/data/impl/impl_vehicle.dart';
 import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/report.dart';
 import 'package:frontend/data/model/route.dart';
+import 'package:frontend/data/model/user.dart';
 
 // Repositories
 import 'package:frontend/data/repository/address_repository.dart';
@@ -104,18 +106,9 @@ class App extends StatelessWidget {
     userRepository: _userRepository,
   );
 
-  late final RateViewModel rateViewModel = RateViewModel(
-    ratingRepository: _ratingRepository,
-    userRepository: _userRepository,
-  );
-
   late final SignInViewModel signInViewModel = SignInViewModel();
 
   late final SignUpViewModel signUpViewModel = SignUpViewModel();
-
-  late final ReportViewModel reportViewModel = ReportViewModel(
-    reportRepository: _reportRepository,
-  );
 
   late final ActivitiesViewModel activitiesViewModel = ActivitiesViewModel(
     activityRepository: _activityRepository,
@@ -178,16 +171,6 @@ class App extends StatelessWidget {
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
         '/forgot_password': (context) => ForgotPasswordView(),
         '/home': (context) => HomeView(viewModel: homeViewModel),
-        '/rate':
-            (context) => RateView(
-              toUser: ImplUser(
-                firstName: 'John',
-                lastName: 'Doe',
-                points: 0,
-                id: 0,
-              ),
-              viewModel: rateViewModel,
-            ),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
         '/ride/find': (context) => FindRideView(viewModel: findRideViewModel),
@@ -202,7 +185,6 @@ class App extends StatelessWidget {
                 activityRepository: _activityRepository,
               ),
             ),
-        '/report': (context) => ReportView(viewModel: reportViewModel),
         '/ride_ended':
             (context) => RideEndedView(viewModel: rideEndedViewModel),
       },
@@ -217,6 +199,29 @@ class App extends StatelessWidget {
                       addressRepository: _addressRepository,
                       activityRepository: _activityRepository,
                       activity: activity,
+                    ),
+                  ),
+            );
+          case "/report":
+            final reported = settings.arguments as User;
+            return MaterialPageRoute(
+              builder:
+                  (context) => ReportView(
+                    viewModel: ReportViewModel(
+                      reportRepository: _reportRepository,
+                      reported: reported,
+                    ),
+                  ),
+            );
+          case "/rate":
+            final rated = settings.arguments as User;
+            return MaterialPageRoute(
+              builder:
+                  (context) => RateView(
+                    viewModel: RateViewModel(
+                      ratingRepository: _ratingRepository,
+                      userRepository: _userRepository,
+                      rated: rated,
                     ),
                   ),
             );
