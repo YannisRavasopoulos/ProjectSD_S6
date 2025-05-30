@@ -150,6 +150,8 @@ void main() {
     });
 
     test('stream emits on create and delete', () async {
+      final stream = activityRepository.watch();
+
       final future = expectLater(
         stream,
         emitsInOrder([
