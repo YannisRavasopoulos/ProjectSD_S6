@@ -11,6 +11,8 @@ participant RatingRepository
 
 
 activate LoopApp
+activate UserRepository
+activate RatingRepository
 User -> RateView: Navigates to "Rate" screen
 activate RateView
 
@@ -22,13 +24,13 @@ Navigator -> LoopApp: Route "/rate" with rated user
 LoopApp -> RateViewModel: Create RateViewModel(ratingRepository, userRepository, rated)
 activate RateViewModel
 RateViewModel -> UserRepository: fetchCurrent()
-activate UserRepository
+
 UserRepository --> RateViewModel: return currentUser
-deactivate UserRepository
+
 RateViewModel -> RatingRepository: watch(currentUser)
-activate RatingRepository
+
 RatingRepository --> RateViewModel: Stream<List<Rating>>
-deactivate RatingRepository
+
 LoopApp -> RateView: Create RateView(rateViewModel)
 
 LoopApp --> Navigator: return RateView
@@ -52,13 +54,13 @@ RateViewModel --> RateView: notifyListeners()
 User -> RateView: Presses "Submit Rating"
 RateView -> RateViewModel: submitRating(rated)
 RateViewModel -> RatingRepository: watch(rated)
-activate RatingRepository
+
 RatingRepository --> RateViewModel: Stream<List<Rating>>
-deactivate RatingRepository
+
 RateViewModel -> RatingRepository: create(Rating(fromUser, toUser, stars, comment))
-activate RatingRepository
+
 RatingRepository --> RateViewModel: return
-deactivate RatingRepository
+
 
 alt Rating successfully created
     RateViewModel --> RateView: notifyListeners() (isSuccess = true)
