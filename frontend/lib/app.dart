@@ -120,11 +120,6 @@ class App extends StatelessWidget {
     ),
   );
 
-  // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
-  //   rideRepository: _rideRepository,
-  //   // ride:
-  // );
-
   final bool isLoggedIn = true;
 
   @override

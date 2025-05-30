@@ -6,7 +6,7 @@ import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 
 class ImplActivityRepository implements ActivityRepository {
-  ImplActivityRepository(); // Default constructor
+  ImplActivityRepository();
 
   final List<Activity> _activities = [
     Activity(
