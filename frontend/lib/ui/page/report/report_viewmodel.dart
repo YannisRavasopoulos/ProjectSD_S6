@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/impl/impl_report_repository.dart';
 import 'package:frontend/data/model/report_reason.dart';
+import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/report_repository.dart';
 import 'dart:math';
 
 class ReportViewModel extends ChangeNotifier {
   final ReportRepository reportRepository;
+  final User reported;
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -15,7 +17,7 @@ class ReportViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get submitted => _submitted;
 
-  ReportViewModel({required this.reportRepository});
+  ReportViewModel({required this.reportRepository, required this.reported});
 
   Future<void> submitReport({
     required String reporterId,

@@ -1,9 +1,17 @@
-import 'package:frontend/data/model.dart';
 import 'package:frontend/data/model/user.dart';
 
-abstract class Rating implements Model {
-  User get fromUser;
-  User get toUser;
-  String? get comment;
-  int get stars;
+class Rating {
+  final int id;
+  final User fromUser;
+  final User toUser;
+  final int stars;
+  final String? comment;
+
+  Rating({
+    required this.id,
+    required this.fromUser,
+    required this.toUser,
+    required this.stars,
+    this.comment,
+  });
 }

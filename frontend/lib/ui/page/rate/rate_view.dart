@@ -4,15 +4,14 @@ import 'package:frontend/data/model/user.dart';
 import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
 
 class RateView extends StatelessWidget {
-  final User toUser;
   final RateViewModel viewModel;
 
-  const RateView({super.key, required this.toUser, required this.viewModel});
+  const RateView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context, toUser),
+      appBar: _buildAppBar(context, viewModel.rated),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -27,7 +26,7 @@ class RateView extends StatelessWidget {
             _buildCommentField(viewModel.setComment),
             const SizedBox(height: 24),
             _buildErrorMessage(viewModel.errorMessage, context),
-            _buildSubmitButton(context, toUser),
+            _buildSubmitButton(context, viewModel.rated),
           ],
         ),
       ),
