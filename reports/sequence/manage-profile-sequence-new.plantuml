@@ -1,0 +1,105 @@
+@startuml Manage-Profile-Sequence
+
+actor User
+
+alt Main Flow
+    User -> MainScreen : Selects "Profile"
+    activate MainScreen
+    MainScreen -> ProfileViewModel : Fetch user profile data
+    activate ProfileViewModel
+    ProfileViewModel -> UserRepository : fetchCurrent()
+    activate UserRepository
+    UserRepository --> ProfileViewModel : User data
+    deactivate UserRepository
+    ProfileViewModel --> MainScreen : Show Profile Screen
+    deactivate ProfileViewModel
+    deactivate MainScreen
+    User -> ProfileScreen : Selects "Edit"
+    activate ProfileScreen
+    ProfileScreen -> EditProfileScreen : Show edit form
+    activate EditProfileScreen
+    User -> EditProfileScreen : Makes changes and presses "Save Changes"
+    EditProfileScreen -> ProfileViewModel : Validate and save changes
+    activate ProfileViewModel
+    ProfileViewModel -> UserRepository : updateUser()
+    activate UserRepository
+    UserRepository --> ProfileViewModel : Update confirmation
+    deactivate UserRepository
+    ProfileViewModel --> EditProfileScreen : Success
+    deactivate ProfileViewModel
+    EditProfileScreen --> ProfileScreen : Show success message
+    deactivate EditProfileScreen
+    deactivate ProfileScreen
+end
+
+alt Alternative Flow: Cancel Editing
+    User -> EditProfileScreen : Presses "Cancel"
+    activate EditProfileScreen
+    EditProfileScreen --> ProfileScreen : Return to Profile Screen
+    deactivate EditProfileScreen
+end
+
+alt View Past Rides
+    User -> ProfileScreen : Selects "Past Rides"
+    activate ProfileScreen
+    ProfileScreen -> ProfileViewModel : Fetch past rides
+    activate ProfileViewModel
+    ProfileViewModel -> RideRepository : fetchHistory()
+    activate RideRepository
+    RideRepository --> ProfileViewModel : Past rides
+    deactivate RideRepository
+    ProfileViewModel --> ProfileScreen : Show Past Rides
+    deactivate ProfileViewModel
+    deactivate ProfileScreen
+    User -> ProfileScreen : Selects "Past Rides"
+    activate ProfileScreen
+    ProfileScreen -> ProfileViewModel : Fetch past rides
+    activate ProfileViewModel
+    ProfileViewModel -> RideRepository : fetchHistory()
+    activate RideRepository
+    RideRepository --> ProfileViewModel : Past rides
+    deactivate RideRepository
+    ProfileViewModel --> ProfileScreen : Show Past Rides
+    deactivate ProfileViewModel
+    deactivate ProfileScreen
+end
+
+alt Delete Past Rides 
+    User -> ProfileScreen : Selects "Past Rides"
+    activate ProfileScreen
+    ProfileScreen -> ProfileViewModel : Fetch past rides
+    activate ProfileViewModel
+    ProfileViewModel -> RideRepository : fetchHistory()
+    activate RideRepository
+    RideRepository --> ProfileViewModel : Past rides
+    deactivate RideRepository
+    ProfileViewModel --> ProfileScreen : Show Past Rides
+    deactivate ProfileViewModel
+    deactivate ProfileScreen
+    User -> PastRidesScreen : Selects "Delete Past Rides"
+    activate PastRidesScreen
+    PastRidesScreen -> ProfileViewModel : clearHistory()
+    activate ProfileViewModel
+    ProfileViewModel -> RideRepository : clearHistory()
+    activate RideRepository
+    RideRepository --> ProfileViewModel : Deletion confirmation
+    deactivate RideRepository
+    ProfileViewModel --> PastRidesScreen : Show deletion message
+    deactivate ProfileViewModel
+    deactivate PastRidesScreen
+end
+
+alt View Rating 
+    User -> ProfileScreen : Selects "Rating"
+    activate ProfileScreen
+    ProfileScreen -> ProfileViewModel : Fetch ratings
+    activate ProfileViewModel
+    ProfileViewModel -> RatingRepository : fetch(user)
+    activate RatingRepository
+    RatingRepository --> ProfileViewModel : Ratings
+    deactivate RatingRepository
+    ProfileViewModel --> ProfileScreen : Show Rating
+    deactivate ProfileViewModel
+    deactivate ProfileScreen
+end
+@enduml
