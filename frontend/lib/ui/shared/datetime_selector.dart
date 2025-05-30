@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class DateTimeSelector extends StatefulWidget {
-  final TextEditingController controller;
   final String labelText;
   final List<String> options;
   final ValueChanged<DateTime?> onDateTimeSelected;
@@ -9,7 +8,6 @@ class DateTimeSelector extends StatefulWidget {
 
   const DateTimeSelector({
     super.key,
-    required this.controller,
     required this.labelText,
     required this.options,
     required this.onDateTimeSelected,
@@ -21,6 +19,8 @@ class DateTimeSelector extends StatefulWidget {
 }
 
 class DateTimeSelectorState extends State<DateTimeSelector> {
+  TextEditingController _textController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -29,7 +29,7 @@ class DateTimeSelectorState extends State<DateTimeSelector> {
   void _onDropdownSelected(BuildContext context, String value) async {
     if (value != "Select") {
       var dateTime = widget.optionsToDateTime(value);
-      widget.controller.text = dateTime.toString();
+      _textController.text = dateTime.toString();
       widget.onDateTimeSelected(dateTime);
       return;
     }
@@ -40,7 +40,7 @@ class DateTimeSelectorState extends State<DateTimeSelector> {
     );
 
     if (pickedTime != null) {
-      widget.controller.text = pickedTime.format(context);
+      _textController.text = pickedTime.format(context);
       widget.onDateTimeSelected(
         DateTime(
           DateTime.now().year,
@@ -52,14 +52,14 @@ class DateTimeSelectorState extends State<DateTimeSelector> {
       );
     } else {
       // Set to unselected if no time is picked
-      widget.controller.text = "";
+      _textController.text = "";
       widget.onDateTimeSelected(null);
       return;
     }
   }
 
   void setDateTime(DateTime value) {
-    widget.controller.text = value.toString();
+    _textController.text = value.toString();
   }
 
   @override
@@ -67,7 +67,7 @@ class DateTimeSelectorState extends State<DateTimeSelector> {
     return DropdownMenu<String>(
       label: Text(widget.labelText),
       expandedInsets: EdgeInsets.all(0),
-      controller: widget.controller,
+      controller: _textController,
       dropdownMenuEntries:
           widget.options
               .map((option) => DropdownMenuEntry(value: option, label: option))
@@ -75,5 +75,11 @@ class DateTimeSelectorState extends State<DateTimeSelector> {
       requestFocusOnTap: false,
       onSelected: (value) => _onDropdownSelected(context, value!),
     );
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 }

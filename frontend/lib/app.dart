@@ -117,6 +117,8 @@ class App extends StatelessWidget {
 
   late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
     rideRepository: _rideRepository,
+    activityRepository: _activityRepository,
+    addressRepository: _addressRepository,
   );
 
   // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(

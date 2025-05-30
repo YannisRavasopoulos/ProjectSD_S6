@@ -149,7 +149,6 @@ class FindRideView extends StatelessWidget {
                             child: DateTimeSelector(
                               key: viewModel.departureTimeSelectorKey,
                               labelText: 'Departure Time',
-                              controller: viewModel.departureTimeController,
                               options: _departureTimes,
                               onDateTimeSelected: viewModel.selectDepartureTime,
                               optionsToDateTime:
@@ -161,7 +160,6 @@ class FindRideView extends StatelessWidget {
                             child: DateTimeSelector(
                               key: viewModel.arrivalTimeSelectorKey,
                               labelText: 'Arrival Time',
-                              controller: viewModel.arrivalTimeController,
                               options: _arrivalTimes,
                               onDateTimeSelected: viewModel.selectArrivalTime,
                               optionsToDateTime: _arrivalTimeOptionsToDateTime,

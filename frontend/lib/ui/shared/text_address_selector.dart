@@ -24,7 +24,7 @@ class TextAddressSelector extends StatefulWidget {
 }
 
 class TextAddressSelectorState extends State<TextAddressSelector> {
-  TextEditingController textController = TextEditingController();
+  TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
@@ -33,13 +33,13 @@ class TextAddressSelectorState extends State<TextAddressSelector> {
 
   @override
   void dispose() {
-    textController.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
   void setAddress(Address address) {
     setState(() {
-      textController.text = address.toString();
+      _textController.text = address.toString();
     });
   }
 
@@ -63,7 +63,7 @@ class TextAddressSelectorState extends State<TextAddressSelector> {
     if (address != null) {
       widget.onAddressSelected(address);
       setState(() {
-        textController.text = address.toString();
+        _textController.text = address.toString();
       });
     }
   }
@@ -89,7 +89,7 @@ class TextAddressSelectorState extends State<TextAddressSelector> {
       optionsBuilder: _getSuggestions,
       displayStringForOption: (Address option) => option.toString(),
       fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-        textController = controller;
+        _textController = controller;
         return TextField(
           controller: controller,
           focusNode: focusNode,
