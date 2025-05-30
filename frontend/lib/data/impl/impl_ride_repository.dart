@@ -24,7 +24,7 @@ class ImplRideRepository implements RideRepository {
       passengers: [
         ImplPassenger(id: 94, firstName: 'Bob', lastName: 'Brown', points: 60),
       ],
-      route: Route(start: Address.fake(), end: Address.fake()), // TODO: FIX
+      route: Route.routes[0], // Apollon Theatre -> Georgiou I Square
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
       estimatedDuration: const Duration(hours: 1),
@@ -42,11 +42,11 @@ class ImplRideRepository implements RideRepository {
         ImplPassenger(id: 10, firstName: 'Tim', lastName: 'Cheese', points: 60),
         ImplPassenger(id: 11, firstName: 'Yo', lastName: 'Gurt', points: 90),
       ],
-      route: Route(start: Address.fake(), end: Address.fake()), // TODO: FIX
+      route: Route.routes[1], // Patras Castle -> Patras Lighthouse
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 3)),
       estimatedDuration: const Duration(hours: 4),
-      totalSeats: 10, // ??? TODO - liability
+      totalSeats: 10,
     ),
   ];
 
@@ -67,7 +67,8 @@ class ImplRideRepository implements RideRepository {
       passengers: [
         ImplPassenger(id: 33, firstName: 'Tung', lastName: 'Tung', points: 70),
       ],
-      route: Route(start: Address.fake(), end: Address.fake()), // TODO: Test
+      route:
+          Route.routes[2], // Archaeological Museum -> Pampeloponnisiako Stadium
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
       estimatedDuration: const Duration(hours: 1),
@@ -104,7 +105,7 @@ class ImplRideRepository implements RideRepository {
       // Match by proximity to origin
       final originMatch =
           _distance(ride.route.start.coordinates, request.origin.coordinates) <=
-          10000; // within 10 km TODO hardcoded
+          request.originRadius.radius;
 
       return originMatch;
     }).toList();
