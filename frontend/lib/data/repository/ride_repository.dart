@@ -34,7 +34,7 @@ abstract interface class RideRepository {
   Future<void> create(Ride ride);
 
   /// Update a ride.
-  Future<void> update(Ride ride);
+  Future<void> update(Ride ride, int id);
 
   /// Cancel a ride.
   Future<void> cancel(Ride ride);
