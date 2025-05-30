@@ -37,9 +37,15 @@ alt Make Insta-Ride
     Driver -> CreateRideView: Presses "Create Ride"
     CreateRideView -> CreateRideViewModel: createRide()
     CreateRideViewModel -> RideRepository: create(ride)
-    
+  
+    RideRepository -> Ride: new Ride(...)
+    activate Ride
+    Ride --> RideRepository: return ride
+     deactivate Ride
     RideRepository --> CreateRideViewModel: return
    
+  
+
 ' Activity selection (alternative flow)
 else Select from activities
     Driver -> CreateRideView: Presses "Select from activities"
@@ -47,10 +53,9 @@ else Select from activities
     activate ActivitySelectionPanel
     Driver -> ActivitySelectionPanel: Selects activity
     ActivitySelectionPanel -> CreateRideView: onActivitySelected(activity)
-      deactivate ActivitySelectionPanel
+    deactivate ActivitySelectionPanel
     CreateRideView -> CreateRideViewModel: selectActivity(activity)
     CreateRideViewModel -> CreateRideViewModel: update form fields (from, to, times)
-  
 end
 
 ' Driver fills in the form (from, to, times)
