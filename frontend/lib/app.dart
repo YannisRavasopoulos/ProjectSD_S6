@@ -127,11 +127,11 @@ class App extends StatelessWidget {
     ride: Ride(
       id: 0,
       driver: ImplDriver(
-        firstName: 'John',
-        lastName: 'Doe',
+        firstName: 'Ben',
+        lastName: 'Dover',
         points: 0,
         id: 0,
-        vehicle: ImplVehicle(id: 0, description: 'Test Vehicle', capacity: 4),
+        vehicle: ImplVehicle(id: 0, description: 'Goofy Car', capacity: 4),
       ),
       route: Route(
         start:

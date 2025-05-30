@@ -34,7 +34,7 @@ class RideEndedView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Thank you for riding!',
+                    'Thank you for riding',
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -44,26 +44,26 @@ class RideEndedView extends StatelessWidget {
                   ListTile(
                     leading: const CircleAvatar(child: Icon(Icons.person)),
                     title: Text(
-                      '${viewModel.ride!.driver.firstName} ${viewModel.ride!.driver.lastName}',
+                      '${viewModel.ride.driver.firstName} ${viewModel.ride.driver.lastName}',
                     ),
                     subtitle: const Text('Your Driver'),
                   ),
                   ListTile(
                     leading: const Icon(Icons.directions_car),
                     title: Text(
-                      '${viewModel.ride!.route.start.street} → ${viewModel.ride!.route.end.street}',
+                      '${viewModel.ride.route.start.street} → ${viewModel.ride.route.end.street}',
                     ),
                     subtitle: Text(
-                      '${viewModel.ride!.route.start.city} to ${viewModel.ride!.route.end.city}',
+                      '${viewModel.ride.route.start.city} to ${viewModel.ride.route.end.city}',
                     ),
                   ),
                   ListTile(
                     leading: const Icon(Icons.access_time),
                     title: Text(
-                      'Departure: ${TimeOfDay.fromDateTime(viewModel.ride!.departureTime).format(context)}',
+                      'Departure: ${TimeOfDay.fromDateTime(viewModel.ride.departureTime).format(context)}',
                     ),
                     subtitle: Text(
-                      'Arrival: ${TimeOfDay.fromDateTime(viewModel.ride!.estimatedArrivalTime).format(context)}',
+                      'Arrival: ${TimeOfDay.fromDateTime(viewModel.ride.estimatedArrivalTime).format(context)}',
                     ),
                   ),
                   const Divider(height: 32),
@@ -75,7 +75,13 @@ class RideEndedView extends StatelessWidget {
                           icon: const Icon(Icons.star),
                           label: const Text('Rate Driver'),
                           onPressed: () {
-                            // TODO: Implement action for rating
+                            Navigator.of(context).pushNamed(
+                              '/rate',
+                              arguments:
+                                  viewModel
+                                      .ride
+                                      .driver, // Pass the driver as argument
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: theme.colorScheme.secondary,
@@ -89,7 +95,13 @@ class RideEndedView extends StatelessWidget {
                           icon: const Icon(Icons.report),
                           label: const Text('Report Driver'),
                           onPressed: () {
-                            Navigator.of(context).pushNamed('/report');
+                            Navigator.of(context).pushNamed(
+                              '/report',
+                              arguments:
+                                  viewModel
+                                      .ride
+                                      .driver, // Pass the driver as argument
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red.shade400,

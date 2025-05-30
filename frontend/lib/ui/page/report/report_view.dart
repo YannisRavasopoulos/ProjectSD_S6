@@ -3,7 +3,6 @@ import 'package:frontend/data/impl/impl_user_repository.dart';
 import 'package:frontend/data/model/report_reason.dart';
 import 'report_form.dart';
 import 'report_viewmodel.dart';
-import 'package:frontend/data/repository/user_repository.dart';
 import 'package:frontend/data/model/user.dart';
 
 class ReportView extends StatelessWidget {
