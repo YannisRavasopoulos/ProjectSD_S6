@@ -30,6 +30,9 @@ class ImplReportRepository implements ReportRepository {
     print('Penalty applied to user ${user.name}.');
   }
 
+  int idCounter = 0;
+  int get nextId => idCounter++;
+
   @override
   Future<void> create({
     required User receiver,
@@ -38,7 +41,7 @@ class ImplReportRepository implements ReportRepository {
   }) {
     try {
       var report = Report(
-        id: 0,
+        id: nextId,
         receiver: receiver,
         reason: reason,
         details: details,
