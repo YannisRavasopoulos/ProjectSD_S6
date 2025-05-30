@@ -109,6 +109,7 @@ else Activity Selection
     ActivitySelectionPanel -> FindRideView: onActivitySelected(activity)
    
     Passenger -> ActivitySelectionPanel: Selects activity
+    ActivitySelectionPanel --> FindRideView: return selectedActivity
      deactivate ActivitySelectionPanel
     FindRideView -> FindRideViewModel: selectActivity(activity)
 
