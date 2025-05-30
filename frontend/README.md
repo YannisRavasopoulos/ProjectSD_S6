@@ -1,16 +1,28 @@
-# frontend
+# Loop Frontend
 
-A new Flutter project.
+This is the frontend for the Loop project. It is built using modern web technologies and follows a modular code structure for scalability and maintainability.
 
-## Getting Started
+## Table of Contents
 
-This project is a starting point for a Flutter application.
+- [Project Structure](#project-structure)
+- [License](#license)
 
-A few resources to get you started if this is your first Flutter project:
+## Project Structure
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```plaintext
+frontend/
+├── lib/                  # Main application source
+│   ├── data/             # Data and business logic layer
+│   │   ├── impl/         # Repository implementations
+│   │   ├── repository/   # Data repositories
+│   │   └── model/        # Domain models
+│   └── ui/               # UI and presentation logic layer
+│       ├── page/         # Application pages (Views)
+│       └── shared/       # Shared UI components
+├── test/                 # Unit tests
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## License
+
+Copyright (C) 2025 Vasilis Mylonas, Yannis Ravasopoulos, Aggelos Aventisian, Konstantinos Loukanaris, Christos-Marios Nikolopoulos
+All Rights Reserved.
