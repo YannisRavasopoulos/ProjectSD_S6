@@ -12,12 +12,8 @@ import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 
 // Pages
-// import 'package:frontend/ui/page/activities/activities_view.dart';
-// import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 // import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
 // import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
-// import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
-// import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 // import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
@@ -46,8 +42,8 @@ import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
 import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_view.dart';
 import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_viewmodel.dart';
-import 'package:frontend/ui/page/join_ride/join_ride_view.dart';
-import 'package:frontend/ui/page/join_ride/join_ride_viewmodel.dart';
+import 'package:frontend/ui/page/ride/join/join_ride_view.dart';
+import 'package:frontend/ui/page/ride/join/join_ride_viewmodel.dart';
 
 // Repository Implementations
 import 'package:frontend/data/impl/impl_activity_repository.dart';
@@ -145,6 +141,7 @@ class App extends StatelessWidget {
         '/sign_up': (context) => SignUpView(viewModel: signUpViewModel),
         '/forgot_password': (context) => ForgotPasswordView(),
         '/home': (context) => HomeView(viewModel: homeViewModel),
+        // TODO
         '/rate':
             (context) => RateView(
               toUser: ImplUser(
@@ -185,9 +182,19 @@ class App extends StatelessWidget {
                     ),
                   ),
             );
+          case "/ride/join":
+            final ride = settings.arguments as Ride;
+            return MaterialPageRoute(
+              builder:
+                  (context) => JoinRideView(
+                    viewModel: JoinRideViewModel(
+                      ride: ride,
+                      pickupRepository: _pickupRepository,
+                      rideRepository: _rideRepository,
+                    ),
+                  ),
+            );
         }
-        // '/create_ride':
-        //     (context) => CreateRideView(viewModel: createRideViewModel),
         // if (settings.name == '/arrange_pickup') {
         //   final args = settings.arguments as Map<String, dynamic>?;
 
@@ -227,20 +234,6 @@ class App extends StatelessWidget {
                   viewModel: ConfirmPickupViewModel(
                     pickupRepository: _pickupRepository,
                     pickup: pickup,
-                  ),
-                ),
-          );
-        }
-
-        if (settings.name == '/join_ride') {
-          final ride = settings.arguments as Ride;
-          return MaterialPageRoute(
-            builder:
-                (context) => JoinRideView(
-                  viewModel: JoinRideViewModel(
-                    ride: ride,
-                    pickupRepository: _pickupRepository,
-                    rideRepository: _rideRepository,
                   ),
                 ),
           );
