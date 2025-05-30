@@ -1,0 +1,50 @@
+@startuml
+left to right direction
+skinparam linetype ortho
+
+skinparam nodesep 20
+
+actor Passenger
+actor Driver
+actor User
+
+Driver --|> User
+Passenger --|> User
+
+rectangle "System" {
+usecase "Offer Ride" as UC_offer_ride
+usecase "Find Ride" as UC_find_ride
+usecase "Arrange Pickup" as UC_arrange_pickup
+usecase "Rate User" as UC_rate_user
+usecase "Create Ride" as UC_create_ride
+usecase "Join Ride" as UC_join_ride
+usecase "Report User" as UC_report_user
+usecase "Redeem Rewards" as UC_redeem_rewards
+usecase "Manage Activities" as UC_manage_activities
+usecase "Manage Profile" as UC_manage_profile
+usecase "Sign In" as UC_sign_in
+usecase "Sign Up" as UC_sign_up
+}
+
+Driver --- UC_offer_ride
+Driver --- UC_arrange_pickup
+Driver --- UC_create_ride
+
+Passenger --- UC_find_ride
+Passenger --- UC_join_ride
+
+User --- UC_report_user
+User --- UC_redeem_rewards
+User --- UC_manage_profile
+User --- UC_manage_activities
+User --- UC_rate_user
+User --- UC_sign_in
+User --- UC_sign_up
+
+UC_sign_in ...> UC_sign_up : "<include>"
+
+UC_create_ride <... UC_offer_ride : "<extend>"
+UC_join_ride ...> UC_arrange_pickup : "<include>"
+UC_find_ride <... UC_join_ride : "<extend>"
+
+@enduml
