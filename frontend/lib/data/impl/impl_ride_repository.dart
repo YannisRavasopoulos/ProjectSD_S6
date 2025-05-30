@@ -24,7 +24,7 @@ class ImplRideRepository implements RideRepository {
       passengers: [
         ImplPassenger(id: 94, firstName: 'Bob', lastName: 'Brown', points: 60),
       ],
-      route: Route(start: Address.fake(), end: Address.fake()), // TODO: FIX
+      route: Route.routes[0],
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
       estimatedDuration: const Duration(hours: 1),
@@ -42,7 +42,7 @@ class ImplRideRepository implements RideRepository {
         ImplPassenger(id: 10, firstName: 'Tim', lastName: 'Cheese', points: 60),
         ImplPassenger(id: 11, firstName: 'Yo', lastName: 'Gurt', points: 90),
       ],
-      route: Route(start: Address.fake(), end: Address.fake()), // TODO: FIX
+      route: Route.routes[1],
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 3)),
       estimatedDuration: const Duration(hours: 4),
@@ -67,7 +67,7 @@ class ImplRideRepository implements RideRepository {
       passengers: [
         ImplPassenger(id: 33, firstName: 'Tung', lastName: 'Tung', points: 70),
       ],
-      route: Route(start: Address.fake(), end: Address.fake()), // TODO: Test
+      route: Route.routes[2],
       departureTime: DateTime.now().add(const Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now().add(const Duration(hours: 2)),
       estimatedDuration: const Duration(hours: 1),
@@ -174,19 +174,32 @@ class ImplRideRepository implements RideRepository {
     yield* _currentRideController.stream;
   }
 
+  int idCounter = 0;
+  int get nextId => idCounter++;
+
   @override
   Future<void> create(Ride ride) async {
-    _rides.add(ride);
+    Ride newRide = Ride(
+      id: nextId, // Simple ID generation
+      driver: ride.driver,
+      passengers: ride.passengers,
+      route: ride.route,
+      departureTime: ride.departureTime,
+      estimatedArrivalTime: ride.estimatedArrivalTime,
+      estimatedDuration: ride.estimatedDuration,
+      totalSeats: ride.totalSeats,
+    );
+    _rides.add(newRide);
     _ridesController.add(List.unmodifiable(_rides));
-    _rideHistory.add(ride);
+    _rideHistory.add(newRide);
     _historyController.add(List.unmodifiable(_rideHistory));
-    final driverId = ride.driver.id;
+    final driverId = newRide.driver.id;
     _createdRidesByDriver.putIfAbsent(driverId, () => []);
-    _createdRidesByDriver[driverId]!.add(ride);
+    _createdRidesByDriver[driverId]!.add(newRide);
 
-    // Set the current ride to the newly created ride
-    _currentRide = ride;
-    _currentRideController.add(ride);
+    // Set the current newRide to the newly created newRide
+    _currentRide = newRide;
+    _currentRideController.add(newRide);
   }
 
   List<Ride> getCreatedRidesForDriver(int driverId) {
