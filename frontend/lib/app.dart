@@ -27,8 +27,10 @@ import 'package:frontend/ui/page/activities/create/create_activity_view.dart';
 import 'package:frontend/ui/page/activities/create/create_activity_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_view.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
-import 'package:frontend/ui/page/ride/find_ride_view.dart';
-import 'package:frontend/ui/page/ride/find_ride_viewmodel.dart';
+import 'package:frontend/ui/page/ride/create/create_ride_view.dart';
+import 'package:frontend/ui/page/ride/create/create_ride_viewmodel.dart';
+import 'package:frontend/ui/page/ride/find/find_ride_view.dart';
+import 'package:frontend/ui/page/ride/find/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_view.dart';
@@ -113,9 +115,9 @@ class App extends StatelessWidget {
     activityRepository: _activityRepository,
   );
 
-  // late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
-  //   rideRepository: _rideRepository,
-  // );
+  late final CreateRideViewModel createRideViewModel = CreateRideViewModel(
+    rideRepository: _rideRepository,
+  );
 
   // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
   //   rideRepository: _rideRepository,
@@ -153,7 +155,9 @@ class App extends StatelessWidget {
             ),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
-        '/find_ride': (context) => FindRideView(viewModel: findRideViewModel),
+        '/ride/find': (context) => FindRideView(viewModel: findRideViewModel),
+        '/ride/create':
+            (context) => CreateRideView(viewModel: createRideViewModel),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/activities/create':

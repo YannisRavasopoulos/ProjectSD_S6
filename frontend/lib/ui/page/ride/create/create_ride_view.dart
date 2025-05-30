@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/page/create_ride/create_ride_form.dart';
-import 'package:frontend/ui/page/create_ride/create_ride_success.dart';
-import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
+import 'package:frontend/ui/page/ride/create/create_ride_form.dart';
+import 'package:frontend/ui/page/ride/create/create_ride_success.dart';
+import 'package:frontend/ui/page/ride/create/create_ride_viewmodel.dart';
 
 class CreateRideView extends StatelessWidget {
   final CreateRideViewModel viewModel;
