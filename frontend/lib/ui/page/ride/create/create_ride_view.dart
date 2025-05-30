@@ -67,7 +67,7 @@ class CreateRideView extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ride created successfully!')),
       );
-      // Navigator.pushReplacementNamed(context, '/ride/success');
+      Navigator.pushReplacementNamed(context, '/ride/success');
     } else {
       // Show error message
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
