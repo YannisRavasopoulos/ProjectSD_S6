@@ -12,7 +12,7 @@ import 'package:frontend/data/model/vehicle.dart';
 import 'package:latlong2/latlong.dart';
 
 void main() {
-  group('ImplPickupRepository', () {
+  group('PickupRepository', () {
     late ImplPickupRepository pickupRepository;
     late PickupRequest pickupRequest;
     late Pickup pickup;
