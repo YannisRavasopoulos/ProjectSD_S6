@@ -20,7 +20,7 @@ void main() {
       activityRepository = ImplActivityRepository();
       initialActivitiesNum = 2; //assuming there are 2 initial activities in the repository
       address1 = Address(
-        id: initialActivitiesNum + 1,
+        id: 1,
         coordinates: LatLng(0.0, 0.0),
         city: 'City1',
         street: 'Street1',
@@ -28,7 +28,7 @@ void main() {
         postalCode: '11111',
       );
       address2 = Address(
-        id: initialActivitiesNum + 2,
+        id: 2,
         coordinates: LatLng(1.0, 1.0),
         city: 'City2',
         street: 'Street2',
@@ -36,14 +36,14 @@ void main() {
         postalCode: '22222',
       );
       activity1 = Activity(
-        id: initialActivitiesNum+3,
+        id: initialActivitiesNum,
         name: 'Test Activity 1',
         description: 'Test Description 1',
         startTime: TimeOfDay(hour: 10, minute: 0),
         address: address1,
       );
       activity2 = Activity(
-        id: 4,
+        id: initialActivitiesNum+2,
         name: 'Test Activity 2',
         description: 'Test Description 2',
         startTime: TimeOfDay(hour: 11, minute: 0),
@@ -57,7 +57,7 @@ void main() {
       await activityRepository.create(activity1);
       final activities = await activityRepository.fetch();
       expect(activities.length, initialActivitiesNum + 1);
-      expect(activities[initialActivitiesNum].id, initialActivitiesNum+1);
+      expect(activities[initialActivitiesNum].id, initialActivitiesNum);
     });
 
     test('fetch returns all activities', () async {
@@ -73,7 +73,7 @@ void main() {
       await activityRepository.create(activity1);
 
       final updatedActivity = Activity(
-        id: 3,
+        id: activity1.id,
         name: 'Updated Activity',
         description: 'Updated Description',
         startTime: activity1.startTime,
