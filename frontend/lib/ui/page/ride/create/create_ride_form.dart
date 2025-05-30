@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/address.dart';
-import 'package:frontend/ui/page/find_ride/ride_location_selectors.dart';
 
 class CreateRideForm extends StatelessWidget {
   final Address? from;

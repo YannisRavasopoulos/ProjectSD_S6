@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
-import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/ui/page/ride/activity_selection_panel.dart';
-import 'package:frontend/ui/page/ride/ride_card.dart';
-import 'package:frontend/ui/page/ride/find_ride_viewmodel.dart';
+// import 'package:frontend/ui/page/ride/create/create_ride_form.dart';
+// import 'package:frontend/ui/page/ride/create/create_ride_success.dart';
+import 'package:frontend/ui/page/ride/create/create_ride_viewmodel.dart';
+import 'package:frontend/ui/page/ride/find/activity_selection_panel.dart';
 import 'package:frontend/ui/shared/datetime_selector.dart';
+import 'package:frontend/ui/shared/loading_button.dart';
 import 'package:frontend/ui/shared/text_address_selector.dart';
 
-class FindRideView extends StatelessWidget {
-  FindRideView({super.key, required this.viewModel});
+class CreateRideView extends StatelessWidget {
+  final CreateRideViewModel viewModel;
 
-  final FindRideViewModel viewModel;
+  const CreateRideView({super.key, required this.viewModel});
 
   void _onActivitySelected(Activity activity, BuildContext context) {
     viewModel.selectActivity(activity);
@@ -45,10 +46,6 @@ class FindRideView extends StatelessWidget {
     }
   }
 
-  void _onJoinRidePressed(Ride ride, BuildContext context) {
-    Navigator.pushReplacementNamed(context, '/join_ride', arguments: ride);
-  }
-
   static const List<String> _departureTimes = [
     'Now',
     'in 15 minutes',
@@ -62,16 +59,37 @@ class FindRideView extends StatelessWidget {
     'Select',
   ];
 
+  void _onCreateRidePressed(BuildContext context) async {
+    bool success = await viewModel.createRide();
+    if (success) {
+      // Navigate to success page or show success message
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ride created successfully!')),
+      );
+      Navigator.pushReplacementNamed(context, '/ride/success');
+    } else {
+      // Show error message
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(viewModel.errorMessage ?? 'Failed to create ride'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Find a Ride'),
-        backgroundColor: const Color.fromARGB(255, 23, 143, 117),
-      ),
+      appBar: AppBar(title: const Text("Create a Ride")),
       body: ListenableBuilder(
         listenable: viewModel,
         builder: (context, _) {
+          if (viewModel.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
           return Column(
             children: [
               Padding(
@@ -108,13 +126,13 @@ class FindRideView extends StatelessWidget {
                   children: [
                     const Expanded(child: Divider(thickness: 1)),
                     const SizedBox(width: 8),
-                    const Icon(Icons.flash_on, color: Colors.amber),
+                    const Icon(Icons.directions_car, color: Colors.lightGreen),
                     const SizedBox(width: 4),
                     const Text(
-                      'Insta-Ride',
+                      'Custom-Ride',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber,
+                        color: Colors.lightGreen,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -149,7 +167,6 @@ class FindRideView extends StatelessWidget {
                             child: DateTimeSelector(
                               key: viewModel.departureTimeSelectorKey,
                               labelText: 'Departure Time',
-                              controller: viewModel.departureTimeController,
                               options: _departureTimes,
                               onDateTimeSelected: viewModel.selectDepartureTime,
                               optionsToDateTime:
@@ -161,7 +178,6 @@ class FindRideView extends StatelessWidget {
                             child: DateTimeSelector(
                               key: viewModel.arrivalTimeSelectorKey,
                               labelText: 'Arrival Time',
-                              controller: viewModel.arrivalTimeController,
                               options: _arrivalTimes,
                               onDateTimeSelected: viewModel.selectArrivalTime,
                               optionsToDateTime: _arrivalTimeOptionsToDateTime,
@@ -173,58 +189,31 @@ class FindRideView extends StatelessWidget {
                   ),
                 ),
               ),
-              if (viewModel.isLoading)
-                Expanded(
-                  child: Center(child: const CircularProgressIndicator()),
-                )
-              else if (viewModel.errorMessage != null)
-                Center(
-                  child: Text(
-                    viewModel.errorMessage!,
-                    style: const TextStyle(color: Colors.red),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 16.0),
+                  Text(
+                    viewModel.isFormValid ? "" : "Please fill in all fields.",
                   ),
-                )
-              else
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(8.0),
-                    itemCount: viewModel.rides.length,
-                    itemBuilder: (context, index) {
-                      final ride = viewModel.rides[index];
-                      return RideCard(
-                        ride: ride,
-                        onJoinRidePressed:
-                            () => _onJoinRidePressed(ride, context),
-                      );
-                    },
+                  const SizedBox(height: 16.0),
+                  SizedBox(
+                    width: 200, // Set a fixed width or adjust as needed
+                    child: LoadingButton(
+                      isLoading: viewModel.isCreatingRide,
+                      onPressed:
+                          viewModel.isFormValid
+                              ? () => _onCreateRidePressed(context)
+                              : null,
+                      child: Text("Create Ride"),
+                    ),
                   ),
-                ),
+                ],
+              ),
             ],
           );
         },
-      ),
-      floatingActionButton: Align(
-        alignment: Alignment.bottomRight,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-              backgroundColor: const Color.fromARGB(255, 117, 202, 160),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/activities');
-              },
-              tooltip: 'Manage Activities',
-              child: const Icon(Icons.calendar_month),
-            ),
-            const SizedBox(height: 16),
-            FloatingActionButton(
-              heroTag: 'refreshBtn',
-              onPressed: viewModel.fetchRides,
-              child: const Icon(Icons.refresh),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/convert.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/ride.dart';
@@ -20,20 +21,8 @@ class FindRideViewModel extends ChangeNotifier {
   }) : _activityRepository = activityRepository,
        _rideRepository = rideRepository {
     // Listen for changes and update the model
-    departureTimeController.addListener(fetchRides);
-    arrivalTimeController.addListener(fetchRides);
-
     _init();
   }
-
-  // TODO: default values
-  final TextEditingController departureTimeController = TextEditingController();
-  final TextEditingController arrivalTimeController = TextEditingController();
-
-  Address? get fromAddress => _fromAddress;
-  Address? get toAddress => _toAddress;
-  String get departureTime => departureTimeController.text;
-  String get arrivalTime => arrivalTimeController.text;
 
   List<Activity> get activities => _activities;
   String? get errorMessage => _errorMessage;
@@ -84,20 +73,10 @@ class FindRideViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    departureTimeController.dispose();
-    arrivalTimeController.dispose();
+    // departureTimeController.dispose();
+    // arrivalTimeController.dispose();
     _activitiesSubscription?.cancel();
     super.dispose();
-  }
-
-  DateTime _timeOfDayToDateTime(TimeOfDay time) {
-    return DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-      time.hour,
-      time.minute,
-    );
   }
 
   Future<void> selectActivity(Activity activity) async {
@@ -108,14 +87,14 @@ class FindRideViewModel extends ChangeNotifier {
 
     departureTimeSelectorKey.currentState?.setDateTime(DateTime.now());
     arrivalTimeSelectorKey.currentState?.setDateTime(
-      _timeOfDayToDateTime(activity.startTime),
+      Convert.timeOfDayToDateTime(activity.startTime),
     );
 
     selectFromAddress(currentAddress);
     selectToAddress(activity.address);
 
     selectDepartureTime(DateTime.now());
-    selectArrivalTime(_timeOfDayToDateTime(activity.startTime));
+    selectArrivalTime(Convert.timeOfDayToDateTime(activity.startTime));
 
     await fetchRides();
   }
@@ -159,7 +138,7 @@ class FindRideViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      if (fromAddress == null || toAddress == null) {
+      if (_fromAddress == null || _toAddress == null) {
         _errorMessage = "Please provide valid source and destination.";
         return;
       }
@@ -171,8 +150,8 @@ class FindRideViewModel extends ChangeNotifier {
 
       _rides = await _rideRepository.fetchMatchingRides(
         RideRequest(
-          origin: fromAddress!,
-          destination: toAddress!,
+          origin: _fromAddress!,
+          destination: _toAddress!,
           departureTime: _departureTime!,
           arrivalTime: _arrivalTime!,
           originRadius: Distance.withRadius(1000),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
-import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
+import 'package:frontend/ui/page/ride/create/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/rides/ride_list_card.dart';
 import 'package:frontend/ui/page/rides/ride_deletion_dialog.dart';
-import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
+import 'package:frontend/ui/page/ride/create/create_ride_view.dart';
 
 class RidesView extends StatelessWidget {
   final RidesViewModel viewModel;

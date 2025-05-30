@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart' hide Route;
 import 'package:frontend/data/impl/impl_driver.dart';
 import 'package:frontend/data/impl/impl_passenger.dart';
-import 'package:frontend/data/impl/impl_ride_repository.dart';
 
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/pickup.dart';
@@ -49,7 +48,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.person),
             title: const Text('Find Ride'),
             onTap: () {
-              Navigator.pushNamed(context, '/find_ride');
+              Navigator.pushNamed(context, '/ride/find');
             },
           ),
           ListTile(
@@ -63,7 +62,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.add_circle_outline),
             title: const Text('Create Ride'),
             onTap: () {
-              Navigator.pushNamed(context, '/create_ride');
+              Navigator.pushNamed(context, '/ride/create');
             },
           ),
           ListTile(
