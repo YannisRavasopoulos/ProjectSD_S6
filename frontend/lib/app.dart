@@ -26,10 +26,10 @@ import 'package:frontend/ui/page/activities/create/create_activity_view.dart';
 import 'package:frontend/ui/page/activities/create/create_activity_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_view.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
-import 'package:frontend/ui/page/ride/create/create_ride_view.dart';
-import 'package:frontend/ui/page/ride/create/create_ride_viewmodel.dart';
-import 'package:frontend/ui/page/ride/find/find_ride_view.dart';
-import 'package:frontend/ui/page/ride/find/find_ride_viewmodel.dart';
+import 'package:frontend/ui/page/rides/create/create_ride_view.dart';
+import 'package:frontend/ui/page/rides/create/create_ride_viewmodel.dart';
+import 'package:frontend/ui/page/rides/find/find_ride_view.dart';
+import 'package:frontend/ui/page/rides/find/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_view.dart';
@@ -39,17 +39,17 @@ import 'package:frontend/ui/page/profile/profile_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
 import 'package:frontend/ui/page/report/report_view.dart';
 import 'package:frontend/ui/page/report/report_viewmodel.dart';
-import 'package:frontend/ui/page/ride/end/ride_ended_view.dart';
+import 'package:frontend/ui/page/rides/end/ride_ended_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_viewmodel.dart';
-import 'package:frontend/ui/page/pickup/confirm/confirm_pickup_view.dart';
-import 'package:frontend/ui/page/pickup/confirm/confirm_pickup_viewmodel.dart';
-import 'package:frontend/ui/page/ride/join/join_ride_view.dart';
-import 'package:frontend/ui/page/ride/join/join_ride_viewmodel.dart';
-import 'package:frontend/ui/page/pickup/arrange/arrange_pickup_view.dart';
-import 'package:frontend/ui/page/pickup/arrange/arrange_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/pickups/confirm/confirm_pickup_view.dart';
+import 'package:frontend/ui/page/pickups/confirm/confirm_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/rides/join/join_ride_view.dart';
+import 'package:frontend/ui/page/rides/join/join_ride_viewmodel.dart';
+import 'package:frontend/ui/page/pickups/arrange/arrange_pickup_view.dart';
+import 'package:frontend/ui/page/pickups/arrange/arrange_pickup_viewmodel.dart';
 
 // Repository Implementations
 import 'package:frontend/data/impl/impl_activity_repository.dart';
@@ -64,7 +64,7 @@ import 'package:frontend/data/impl/impl_address_repository.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/ui/page/ride/end/ride_ended_viewmodel.dart';
+import 'package:frontend/ui/page/rides/end/ride_ended_viewmodel.dart';
 
 class App extends StatelessWidget {
   final UserRepository _userRepository = ImplUserRepository();
@@ -158,10 +158,10 @@ class App extends StatelessWidget {
         '/home': (context) => HomeView(viewModel: homeViewModel),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
-        '/ride/find': (context) => FindRideView(viewModel: findRideViewModel),
-        '/ride/create':
+        '/rides/find': (context) => FindRideView(viewModel: findRideViewModel),
+        '/rides/create':
             (context) => CreateRideView(viewModel: createRideViewModel),
-        '/ride/end': (context) => RideEndedView(viewModel: rideEndedViewModel),
+        '/rides/end': (context) => RideEndedView(viewModel: rideEndedViewModel),
         '/activities':
             (context) => ActivitiesView(viewModel: activitiesViewModel),
         '/activities/create':
@@ -209,7 +209,7 @@ class App extends StatelessWidget {
                     ),
                   ),
             );
-          case "/ride/join":
+          case "/rides/join":
             final ride = settings.arguments as Ride;
             return MaterialPageRoute(
               builder:
@@ -221,7 +221,7 @@ class App extends StatelessWidget {
                     ),
                   ),
             );
-          case "/pickup/arrange":
+          case "/pickups/arrange":
             final pickupRequest = settings.arguments as PickupRequest;
             return MaterialPageRoute(
               builder:
@@ -233,7 +233,7 @@ class App extends StatelessWidget {
                     ),
                   ),
             );
-          case "/confirm_pickup":
+          case "/pickups/confirm":
             final pickup = settings.arguments as Pickup;
             return MaterialPageRoute(
               builder:

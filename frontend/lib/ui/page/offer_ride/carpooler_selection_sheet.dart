@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart' hide Route;
-import 'package:frontend/data/impl/impl_driver.dart';
-import 'package:frontend/data/impl/impl_vehicle.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/passenger.dart';

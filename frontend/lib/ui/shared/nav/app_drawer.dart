@@ -6,7 +6,7 @@ import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/route.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
-import 'package:frontend/ui/page/pickup/pickup_request_notification.dart';
+import 'package:frontend/ui/page/pickups/pickup_request_notification.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -38,7 +38,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.person),
             title: const Text('Find Ride'),
             onTap: () {
-              Navigator.pushNamed(context, '/ride/find');
+              Navigator.pushNamed(context, '/rides/find');
             },
           ),
           ListTile(
@@ -52,7 +52,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.add_circle_outline),
             title: const Text('Create Ride'),
             onTap: () {
-              Navigator.pushNamed(context, '/ride/create');
+              Navigator.pushNamed(context, '/rides/create');
             },
           ),
           ListTile(
@@ -99,7 +99,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.flag),
             title: const Text('Ride Ended'),
             onTap: () {
-              Navigator.pushNamed(context, '/ride/end');
+              Navigator.pushNamed(context, '/rides/end');
             },
           ),
         ],

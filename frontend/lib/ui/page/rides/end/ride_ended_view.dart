@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/page/ride/end/ride_ended_viewmodel.dart';
+import 'package:frontend/ui/page/rides/end/ride_ended_viewmodel.dart';
 
 class RideEndedView extends StatelessWidget {
   final RideEndedViewModel viewModel;

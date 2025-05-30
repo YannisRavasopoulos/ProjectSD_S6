@@ -105,7 +105,7 @@ class PickupRequestNotification extends StatelessWidget {
                   NotificationOverlay.dismiss();
                   Navigator.of(
                     context,
-                  ).pushNamed('/pickup/arrange', arguments: pickupRequest);
+                  ).pushNamed('/pickups/arrange', arguments: pickupRequest);
                 },
               ),
             ],

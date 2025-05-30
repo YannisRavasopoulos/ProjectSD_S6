@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/page/pickup/confirm/confirm_pickup_viewmodel.dart';
-import 'package:frontend/ui/page/pickup/pickup_details_view.dart';
+import 'package:frontend/ui/page/pickups/confirm/confirm_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/pickups/pickup_details_view.dart';
 
 class ConfirmPickupView extends StatelessWidget {
   final ConfirmPickupViewModel viewModel;

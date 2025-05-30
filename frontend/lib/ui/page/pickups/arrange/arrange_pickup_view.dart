@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/convert.dart';
 import 'package:frontend/data/model/address.dart';
-import 'package:frontend/ui/page/pickup/arrange/arrange_pickup_viewmodel.dart';
+import 'package:frontend/ui/page/pickups/arrange/arrange_pickup_viewmodel.dart';
 import 'package:frontend/ui/shared/address_selector.dart';
 
 class ArrangePickupView extends StatelessWidget {
