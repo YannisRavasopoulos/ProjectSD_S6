@@ -261,4 +261,20 @@ class ImplRideRepository implements RideRepository {
     // Create a pickup request
     return PickupRequest.fake();
   }
+
+  @override
+  Future<List<Ride>> fetchCreatedRides() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    // Return all rides created by the driver
+    return _createdRidesByDriver.values.expand((rides) => rides).toList();
+  }
+
+  @override
+  Stream<List<Ride>> watchCreatedRides() async* {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 1));
+      _ridesController.add(List.unmodifiable(_rides));
+      yield List.unmodifiable(_rides);
+    }
+  }
 }

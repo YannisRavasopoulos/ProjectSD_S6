@@ -34,6 +34,7 @@ import 'package:frontend/ui/page/rate/rate_viewmodel.dart';
 import 'package:frontend/ui/page/report/report_view.dart';
 import 'package:frontend/ui/page/report/report_viewmodel.dart';
 import 'package:frontend/ui/page/rides/end/ride_ended_view.dart';
+import 'package:frontend/ui/page/rides/rides_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_view.dart';
 import 'package:frontend/ui/page/sign_in/sign_in_viewmodel.dart';
 import 'package:frontend/ui/page/sign_up/sign_up_view.dart';
@@ -142,6 +143,10 @@ class App extends StatelessWidget {
         '/home': (context) => HomeView(viewModel: homeViewModel),
         '/rewards': (context) => RewardView(viewModel: rewardViewModel),
         '/profile': (context) => ProfileView(viewModel: profileViewModel),
+        "/rides":
+            (context) => RidesView(
+              viewModel: RidesViewModel(rideRepository: _rideRepository),
+            ),
         '/rides/find':
             (context) => FindRideView(
               viewModel: FindRideViewModel(

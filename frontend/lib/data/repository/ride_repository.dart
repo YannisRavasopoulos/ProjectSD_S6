@@ -49,4 +49,8 @@ abstract interface class RideRepository {
 
   /// Offer ride
   Future<PickupRequest> offer(Ride ride, User potentialPassenger);
+
+  Future<List<Ride>> fetchCreatedRides();
+
+  Stream<List<Ride>> watchCreatedRides();
 }
