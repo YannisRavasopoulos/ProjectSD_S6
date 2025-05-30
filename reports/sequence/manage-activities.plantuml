@@ -1,142 +1,88 @@
 @startuml
-actor User
+
+participant User
 participant HomeView
+participant Navigator
+participant LoopApp
+
 participant ActivitiesView
 participant ActivitiesViewModel
-participant ActivityRepository
+participant ActivityCard
+participant ActivityDeletionDialog
+
 participant CreateActivityView
 participant CreateActivityViewModel
 
-alt Main Flow: View and Create Activity
-    User -> HomeView: Selects "Activities"
+participant Activity
+participant ActivityRepository
 
-    activate HomeView
-    HomeView -> ActivitiesView: pushNamed('/activities')
-    deactivate HomeView
-    activate ActivitiesView
-    ActivitiesView -> ActivitiesViewModel: loadActivities()
-    activate ActivitiesViewModel
-    ActivitiesViewModel -> ActivityRepository: fetch()
-    activate ActivityRepository
-    ActivityRepository --> ActivitiesViewModel: List<Activity>
-    deactivate ActivityRepository
-    ActivitiesViewModel --> ActivitiesView: notifyListeners()
-    ActivitiesView -> ActivitiesView: Shows list of Activities
 
-    User -> ActivitiesView: Presses "Create"
-    ActivitiesView -> CreateActivityView: pushNamed('/activities/create')
-    deactivate ActivitiesView
-    activate CreateActivityView
-    CreateActivityView -> CreateActivityViewModel: (init)
-    activate CreateActivityViewModel
+activate LoopApp
+activate Navigator
+activate HomeView
+activate ActivitiesViewModel
 
-    User -> CreateActivityView: Fills details and presses "Create Activity"
-    CreateActivityView -> CreateActivityViewModel: createActivity()
-    CreateActivityViewModel -> ActivityRepository: create(Activity)
+== Manage Activities ==
+User -> HomeView: Presses "Activities"
+HomeView -> HomeView: onActivitiesPressed()
+HomeView -> Navigator: pushNamed("/activities")
+Navigator -> LoopApp: "/activities"
+LoopApp -> ActivitiesView: ActivitiesView(activitiesViewModel)
+activate ActivitiesView
+ActivitiesView --> LoopApp: return activitiesView
+LoopApp --> Navigator: return activitiesView
+Navigator -> ActivitiesView: build(context)
+User -> ActivitiesView: Selects "Create Activity"
+ActivitiesView -> Navigator: pushNamed("/create-activity")
+Navigator -> LoopApp: "/create-activity"
+LoopApp -> CreateActivityViewModel: CreateActivityViewModel(args)
+activate CreateActivityViewModel
+CreateActivityViewModel --> LoopApp: return createActivityViewModel
+LoopApp -> CreateActivityView: CreateActivityView(createActivityViewModel)
+activate CreateActivityView
+CreateActivityView --> LoopApp: return createActivityView
+LoopApp --> Navigator: return createActivityView
+Navigator -> CreateActivityView: build(context)
+User -> CreateActivityView: Fills in activity details and presses "Create"
+CreateActivityView -> CreateActivityViewModel: createActivity(activity)
+CreateActivityViewModel -> ActivityRepository: create(activity)
+alt Success
+    ActivityRepository --> CreateActivityViewModel: return createdActivity
+    CreateActivityViewModel -> ActivitiesViewModel: addActivity(createdActivity)
+    ActivitiesViewModel -> ActivitiesView: updateActivities()
+    ActivitiesView -> ActivitiesViewModel: fetchActivities()
+    ActivitiesViewModel -> ActivityRepository: fetchActivities()
+    ActivityRepository -> Activity: Activity(...)
+    activate Activity
+    Activity --> ActivityRepository: return activities
+    ActivityRepository --> ActivitiesViewModel: return activities
+    ActivitiesViewModel -> ActivitiesView: updateActivities(activities)
+else Failure
+    CreateActivityViewModel -> CreateActivityView: showError(errorMessage)
+end
+User -> ActivitiesView: Selects an activity and presses "Delete"
+ActivitiesView -> ActivityCard: ActivityCard(activity, onDeletePressed)
+activate ActivityCard
+ActivityCard --> ActivitiesView: return activityCard
+ActivityCard -> ActivityDeletionDialog: ActivityDeletionDialog(activity, onConfirmPressed, onCancelPressed)
+activate ActivityDeletionDialog
+ActivityDeletionDialog --> ActivityCard: return dialog
+ActivityCard -> ActivityCard: showDialog(dialog)
+alt Confirm
+User -> ActivityDeletionDialog: Presses "Confirm"
+ActivityDeletionDialog -> ActivityCard: onConfirmPressed()
+ActivityCard -> ActivitiesViewModel: deleteActivity(activity)
+ActivitiesViewModel -> ActivityRepository: delete(activity)
+alt Success
+    ActivityRepository --> ActivitiesViewModel: return ok
+    ActivitiesViewModel -> ActivitiesView: removeActivity(activity)
+end
+else Cancel
+    ActivityDeletionDialog -> ActivityCard: onCancelPressed()
+end
+deactivate ActivityDeletionDialog
 
-    activate ActivityRepository
-    ActivityRepository --> CreateActivityViewModel: success
-    deactivate ActivityRepository
-    CreateActivityViewModel --> CreateActivityView: notifyListeners()
-    CreateActivityView -> ActivitiesView: Navigator.pop(context, true)
-    deactivate CreateActivityViewModel
-    deactivate CreateActivityView
 
-    activate ActivitiesView
-    ActivitiesView -> ActivitiesViewModel: loadActivities()
-    ActivitiesViewModel -> ActivityRepository: fetch()
-    activate ActivityRepository
-    ActivityRepository --> ActivitiesViewModel: List<Activity>
-    deactivate ActivityRepository
-    ActivitiesViewModel --> ActivitiesView: notifyListeners()
-    ActivitiesView -> ActivitiesView: Updated list of Activities
-    deactivate ActivitiesViewModel
-    deactivate ActivitiesView
-end alt
 
-alt Alternative Flow: Invalid Data
-    activate CreateActivityView
-    activate CreateActivityViewModel
-    User -> CreateActivityView: Presses "Create Activity" with invalid data
-    CreateActivityView -> CreateActivityViewModel: createActivity()
-    CreateActivityViewModel --> CreateActivityView: notifyListeners()
-    User -> CreateActivityView: Corrects data and presses "Create Activity" again
-    CreateActivityView -> CreateActivityViewModel: createActivity()
-    CreateActivityViewModel -> ActivityRepository: create(Activity)
-    activate ActivityRepository
-    ActivityRepository --> CreateActivityViewModel: success
-    deactivate ActivityRepository
-    CreateActivityViewModel --> CreateActivityView: notifyListeners()
-    CreateActivityView -> ActivitiesView: Navigator.pop(context, true)
-    deactivate CreateActivityViewModel
-    deactivate CreateActivityView
 
-    activate ActivitiesView
-    ActivitiesView -> ActivitiesViewModel: loadActivities()
-    activate ActivitiesViewModel
-    ActivitiesViewModel -> ActivityRepository: fetch()
-    activate ActivityRepository
-    ActivityRepository --> ActivitiesViewModel: List<Activity>
-    deactivate ActivityRepository
-    ActivitiesViewModel --> ActivitiesView: notifyListeners()
-    ActivitiesView -> ActivitiesView: Updated list of Activities
-    deactivate ActivitiesViewModel
-    deactivate ActivitiesView
-end alt
-
-alt Alternative Flow: Edit Activity
-    activate ActivitiesView
-    User -> ActivitiesView: Presses "Edit" on Activity
-    ActivitiesView -> CreateActivityView: pushNamed('/activities/edit', arguments: activity)
-    deactivate ActivitiesView
-
-    activate CreateActivityView
-    CreateActivityView -> CreateActivityViewModel: (init with activity)
-    activate CreateActivityViewModel
-
-    User -> CreateActivityView: Changes details and presses "Update Activity"
-    CreateActivityView -> CreateActivityViewModel: editActivity()
-    CreateActivityViewModel -> ActivityRepository: update(Activity)
-
-    activate ActivityRepository
-    ActivityRepository --> CreateActivityViewModel: success
-    deactivate ActivityRepository
-    CreateActivityViewModel --> CreateActivityView: notifyListeners()
-    CreateActivityView -> ActivitiesView: Navigator.pop(context, true)
-    deactivate CreateActivityViewModel
-    deactivate CreateActivityView
-
-    activate ActivitiesView
-    ActivitiesView -> ActivitiesViewModel: loadActivities()
-    activate ActivitiesViewModel
-    ActivitiesViewModel -> ActivityRepository: fetch()
-    activate ActivityRepository
-    ActivityRepository --> ActivitiesViewModel: List<Activity>
-    deactivate ActivityRepository
-    ActivitiesViewModel --> ActivitiesView: notifyListeners()
-    ActivitiesView -> ActivitiesView: Updated list of Activities
-    deactivate ActivitiesViewModel
-    deactivate ActivitiesView
-end alt
-
-alt Alternative Flow: Delete Activity
-    activate ActivitiesView
-    User -> ActivitiesView: Presses "Delete" on Activity
-    ActivitiesView -> ActivityDeletionDialog: showDialog()
-    activate ActivityDeletionDialog
-    User -> ActivityDeletionDialog: Confirms deletion
-    ActivityDeletionDialog -> ActivitiesView: onConfirm()
-    deactivate ActivityDeletionDialog
-    ActivitiesView -> ActivitiesViewModel: deleteActivity(activity)
-    activate ActivitiesViewModel
-    ActivitiesViewModel -> ActivityRepository: delete(activity)
-    activate ActivityRepository
-    ActivityRepository --> ActivitiesViewModel: success
-    deactivate ActivityRepository
-    ActivitiesViewModel --> ActivitiesView: notifyListeners()
-    ActivitiesView -> ActivitiesView: Updated list of Activities
-    deactivate ActivitiesViewModel
-    deactivate ActivitiesView
-
-end alt
 @enduml
