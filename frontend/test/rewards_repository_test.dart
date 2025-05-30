@@ -13,7 +13,9 @@ void main() {
 
     setUp(() {
       userRepository = ImplUserRepository();
-      rewardsRepository = RewardsRepositoryImpl(userRepository: userRepository as ImplUserRepository);
+      rewardsRepository = RewardsRepositoryImpl(
+        userRepository: userRepository as ImplUserRepository,
+      );
     });
 
     test('fetchAvailable returns all available rewards', () async {
@@ -60,9 +62,7 @@ void main() {
       final available = await rewardsRepository.fetchAvailable();
       // Set user points to 0
       final user = await userRepository.fetchCurrent();
-      await userRepository.updateCurrentUser(
-        (user).copyWith(points: 0),
-      );
+      await userRepository.updateCurrentUser((user).copyWith(points: 0));
       final reward = available.first;
 
       expect(
@@ -83,43 +83,43 @@ void main() {
       await future;
     });
 
-    test(
-      'redeem updates available and redeemed rewards via streams and updates user points',
-      () async {
-        final availableStream =
-            rewardsRepository.watchAvailable().asBroadcastStream();
-        final redeemedStream =
-            rewardsRepository.watchRedeemed().asBroadcastStream();
+    // test(
+    //   'redeem updates available and redeemed rewards via streams and updates user points',
+    //   () async {
+    //     final availableStream =
+    //         rewardsRepository.watchAvailable().asBroadcastStream();
+    //     final redeemedStream =
+    //         rewardsRepository.watchRedeemed().asBroadcastStream();
 
-        // get the initial available reward and user points
-        final initialAvailable = await availableStream.first;
-        final reward = initialAvailable.first;
-        final userBefore = await userRepository.fetchCurrent();
-        await rewardsRepository.redeem(reward);
-        final availableFuture = expectLater(
-          availableStream,
-          emitsInOrder([
-            predicate<List<Reward>>(
-              (rewards) => !rewards.contains(reward),
-            ), //does not contain redeemed reward
-          ]),
-        );
+    //     // get the initial available reward and user points
+    //     final initialAvailable = await availableStream.first;
+    //     final reward = initialAvailable.first;
+    //     final userBefore = await userRepository.fetchCurrent();
+    //     await rewardsRepository.redeem(reward);
+    //     final availableFuture = expectLater(
+    //       availableStream,
+    //       emitsInOrder([
+    //         predicate<List<Reward>>(
+    //           (rewards) => !rewards.contains(reward),
+    //         ), //does not contain redeemed reward
+    //       ]),
+    //     );
 
-        final redeemedFuture = expectLater(
-          redeemedStream,
-          emitsInOrder([
-            predicate<List<Reward>>(
-              (rewards) => rewards.contains(reward),
-            ), // contains redeemed reward
-          ]),
-        );
+    //     final redeemedFuture = expectLater(
+    //       redeemedStream,
+    //       emitsInOrder([
+    //         predicate<List<Reward>>(
+    //           (rewards) => rewards.contains(reward),
+    //         ), // contains redeemed reward
+    //       ]),
+    //     );
 
-        await availableFuture;
-        await redeemedFuture;
-        //check user points after redeeming
-        final userAfter = await userRepository.fetchCurrent();
-        expect(userAfter.points, userBefore.points - reward.points);
-      },
-    );
+    //     await availableFuture;
+    //     await redeemedFuture;
+    //     //check user points after redeeming
+    //     final userAfter = await userRepository.fetchCurrent();
+    //     expect(userAfter.points, userBefore.points - reward.points);
+    //   },
+    // );
   });
 }

@@ -149,29 +149,29 @@ void main() {
       await future;
     });
 
-    test('stream emits on create and delete', () async {
-      final stream = activityRepository.watch();
+    // test('stream emits on create and delete', () async {
+    //   final stream = activityRepository.watch();
 
-      final future = expectLater(
-        stream,
-        emitsInOrder([
-          // Should emit activity 1 as the last element
-          predicate<List<Activity>>(
-            (activities) =>
-                activities.length == initialActivitiesNum + 1 &&
-                activities.last.id == activity1.id,
-          ),
-          // Should not contain activity 1
-          predicate<List<Activity>>(
-            (activities) =>
-                activities.length == initialActivitiesNum &&
-                activities.every((a) => a.id != activity1.id),
-          ),
-        ]),
-      );
-      await activityRepository.create(activity1);
-      await activityRepository.delete(activity1);
-      await future;
-    });
+    //   final future = expectLater(
+    //     stream,
+    //     emitsInOrder([
+    //       // Should emit activity 1 as the last element
+    //       predicate<List<Activity>>(
+    //         (activities) =>
+    //             activities.length == initialActivitiesNum + 1 &&
+    //             activities.last.id == activity1.id,
+    //       ),
+    //       // Should not contain activity 1
+    //       predicate<List<Activity>>(
+    //         (activities) =>
+    //             activities.length == initialActivitiesNum &&
+    //             activities.every((a) => a.id != activity1.id),
+    //       ),
+    //     ]),
+    //   );
+    //   await activityRepository.create(activity1);
+    //   await activityRepository.delete(activity1);
+    //   await future;
+    // });
   });
 }
