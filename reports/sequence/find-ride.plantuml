@@ -17,7 +17,7 @@ activate RideRepository
 activate Navigator
 activate HomeView
 
-== Find Ride ==
+
 Passenger -> HomeView: Presses "Find Ride"
 HomeView -> HomeView: onFindRidePressed()
 HomeView -> Navigator: pushNamed("/find-ride")
@@ -95,13 +95,27 @@ FindRideView -> RideCard: RideCard(ride, onJoinRidePressed: onJoinRidePressed)
 activate RideCard
 RideCard -> FindRideView: return rideCard
 else Activity Selection
-Passenger -> FindRideView: Presses "Select Activity"
-FindRideView -> FindRideView: onSelectActivityPressed()
-FindRideView -> ActivitySelectionPanel: ActivitySelectionPanel(activities)
-activate ActivitySelectionPanel
-ActivitySelectionPanel -> FindRideView: onActivitySelected(activity)
-Passenger -> ActivitySelectionPanel: Selects activity
-FindRideView -> FindRideViewModel: selectActivity(activity)
+    Passenger -> FindRideView: Presses "Select Activity"
+    FindRideView -> FindRideView: onSelectActivityPressed()
+    FindRideView -> ActivitySelectionPanel: ActivitySelectionPanel(activities)
+    activate ActivitySelectionPanel
+    ActivitySelectionPanel -> FindRideView: onActivitySelected(activity)
+    Passenger -> ActivitySelectionPanel: Selects activity
+    FindRideView -> FindRideViewModel: selectActivity(activity)
+    
+    FindRideViewModel -> FindRideViewModel: update form fields (from, to, times)
+    FindRideViewModel -> FindRideViewModel: fetchRides()
+    FindRideViewModel -> RideRepository: fetchMatchingRides(RideRequest)
+
+    RideRepository --> FindRideViewModel: matchingRides
+   
+    FindRideViewModel -> FindRideViewModel: onRidesUpdated(matchingRides)
+   
+  
+    FindRideView -> RideCard: RideCard(ride, onJoinRidePressed)
+   
+    RideCard -> FindRideView: return rideCard
+    deactivate RideCard
 end
 
 @enduml
