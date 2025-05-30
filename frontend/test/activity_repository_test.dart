@@ -156,13 +156,13 @@ void main() {
         stream,
         emitsInOrder([
           // Should emit activity 1 as the last element
-          predicate<List>(
+          predicate<List<Activity>>(
             (activities) =>
                 activities.length == initialActivitiesNum + 1 &&
                 activities.last.id == activity1.id,
           ),
           // Should not contain activity 1
-          predicate<List>(
+          predicate<List<Activity>>(
             (activities) =>
                 activities.length == initialActivitiesNum &&
                 activities.every((a) => a.id != activity1.id),

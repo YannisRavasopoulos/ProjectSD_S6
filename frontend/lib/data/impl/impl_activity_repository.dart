@@ -85,7 +85,7 @@ class ImplActivityRepository implements ActivityRepository {
   @override
   Stream<List<Activity>> watch() async* {
     try {
-      yield List.unmodifiable(_activities);
+      // yield List.unmodifiable(_activities);
       yield* _activitiesController.stream;
     } catch (e) {
       yield* Stream.error('Failed to watch activities: $e');
