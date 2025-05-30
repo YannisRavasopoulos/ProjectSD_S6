@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/passenger.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/ui/page/offer_ride/carpooler_selection_sheet.dart';
+import 'package:frontend/ui/page/rides/offer/carpooler_selection_sheet.dart';
 
 class CreatedRidesList extends StatelessWidget {
   final Address currentAddress;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/page/offer_ride/activities_list.dart';
-import 'package:frontend/ui/page/offer_ride/created_ride_list.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_mode_selector.dart';
-import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
+import 'package:frontend/ui/page/rides/offer/activities_list.dart';
+import 'package:frontend/ui/page/rides/offer/created_ride_list.dart';
+import 'package:frontend/ui/page/rides/offer/offer_ride_mode_selector.dart';
+import 'package:frontend/ui/page/rides/offer/offer_ride_viewmodel.dart';
 
 enum OfferRideMode { createdRides, activities }
 
