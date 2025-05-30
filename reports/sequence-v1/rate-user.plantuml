@@ -1,0 +1,91 @@
+@startuml
+actor User
+
+' Layers in horizontal order:
+participant RateUserPage
+participant RateUserViewModel
+participant RatingService_Frontend
+participant RatingService_Backend
+database DB
+
+
+
+User -> RateUserPage            : onRateUserClick()
+activate RateUserPage
+RateUserPage -> RateUserViewModel    : renderRatingForm()
+activate RateUserViewModel
+RateUserViewModel --> RateUserPage           : return form displayed
+deactivate RateUserViewModel
+deactivate RateUserPage
+
+
+    
+    alt Submit clicked
+        User -> RateUserPage    : onSubmitClick()
+        activate RateUserPage
+        RateUserPage -> RateUserViewModel : submitRating()
+        
+
+        activate RateUserViewModel
+     
+       
+        alt validation succeeds
+            RateUserViewModel -> RatingService_Frontend : createRating()
+           
+
+            activate RatingService_Frontend
+            RatingService_Frontend -> RatingService_Backend : callRatingRouter()
+            
+
+            activate RatingService_Backend
+            RatingService_Backend -> DB : queryInsertRating()
+            activate DB
+            DB --> RatingService_Backend : return success flag
+            deactivate DB
+            RatingService_Backend --> RatingService_Frontend : return success flag
+            deactivate RatingService_Backend
+
+            
+            RatingService_Frontend --> RateUserViewModel : return success
+            deactivate RatingService_Frontend
+
+            
+            RateUserViewModel --> RateUserPage : return success notification display
+            
+
+            else validation fails
+            RateUserViewModel -> RatingService_Frontend : createRating()
+           
+
+            activate RatingService_Frontend
+            RatingService_Frontend -> RatingService_Backend : callRatingRouter()
+           
+
+            activate RatingService_Backend
+            RatingService_Backend -> DB : queryInsertRating()
+            activate DB
+            DB --> RatingService_Backend : return fail flag
+            deactivate DB
+            RatingService_Backend --> RatingService_Frontend : return fail flag
+            deactivate RatingService_Backend
+
+            
+            RatingService_Frontend --> RateUserViewModel : return fail
+            deactivate RatingService_Frontend
+ 
+
+            RateUserViewModel --> RateUserPage : return error display message
+            deactivate RateUserViewModel
+            deactivate RateUserPage
+        end
+      else Cancel clicked
+        User -> RateUserPage    : onCancelClick()
+        activate RateUserPage
+        RateUserPage -> RateUserViewModel  : RateCancelled()
+        activate RateUserViewModel
+        RateUserViewModel --> RateUserPage   : return to previous page
+        deactivate RateUserViewModel
+        deactivate RateUserPage
+    end
+@enduml
+

@@ -1,0 +1,18 @@
+@startuml
+actor User
+boundary SignUpView
+control SignUpViewModel
+control AuthenticationService
+control BackendUserService
+database Database
+
+User -> SignUpView : onSignUpClick()
+SignUpView -> SignUpViewModel : signUp()
+SignUpViewModel -> AuthenticationService : createUser()
+AuthenticationService -> BackendUserService : createUser(name, email, password)
+BackendUserService -> Database : insert user
+Database --> BackendUserService : success
+BackendUserService --> AuthenticationService : success
+AuthenticationService --> SignUpViewModel : success
+SignUpViewModel --> SignUpView : success
+@enduml

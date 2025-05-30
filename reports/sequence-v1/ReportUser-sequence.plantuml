@@ -1,0 +1,91 @@
+@startuml
+autonumber
+actor User
+participant UserDetailsView
+participant ReportUserView
+participant ReportUserViewModel
+participant UserService_Frontend as UserService_FE
+participant UserService_Backend as UserService_BE
+participant Report
+database DB
+
+loop User attempts to report another user
+
+    User -> UserDetailsView: onReportClick()
+    activate UserDetailsView
+
+    UserDetailsView -> ReportUserView: createView()
+    deactivate UserDetailsView
+    activate ReportUserView
+
+    User -> ReportUserView: fillReportForm()
+    User -> ReportUserView: onConfirmReportClick()
+
+    ReportUserView -> ReportUserViewModel: submitReport()
+    deactivate ReportUserView
+    activate ReportUserViewModel
+
+    ReportUserViewModel -> UserService_FE: sendReportData()
+    activate UserService_FE
+
+    UserService_FE -> UserService_FE: validateReportData()
+
+    UserService_FE -> UserService_BE: /report/create
+    activate UserService_BE
+
+    UserService_BE -> Report: createReport()
+    activate Report
+    Report --> UserService_BE: return: Report
+    deactivate Report
+
+    UserService_BE -> DB: insertReport()
+    activate DB
+    DB --> UserService_BE: return: success
+    deactivate DB
+
+    UserService_BE -> UserService_BE: processReport()
+    UserService_BE -> DB: assignPenalty()
+    DB --> UserService_BE: return: penaltyApplied
+    deactivate UserService_BE
+
+    UserService_BE --> UserService_FE: return: success
+    deactivate UserService_BE
+
+    UserService_FE --> ReportUserViewModel: return: success
+    deactivate UserService_FE
+
+    ReportUserViewModel -> UserDetailsView: showSuccessMessage()
+    deactivate ReportUserViewModel
+    activate UserDetailsView
+
+    UserDetailsView -> User: displaySuccess()
+    deactivate UserDetailsView
+
+    alt Report Rejection
+        UserService_BE -> UserService_BE: rejectReport()
+        UserService_BE --> UserService_FE: return: rejected
+        deactivate UserService_BE
+
+        UserService_FE --> ReportUserViewModel: return: rejected
+        deactivate UserService_FE
+
+        ReportUserViewModel -> UserDetailsView: showRejectionMessage("Report rejected")
+        deactivate ReportUserViewModel
+        activate UserDetailsView
+
+        UserDetailsView -> User: displayMessage("Report rejected")
+        deactivate UserDetailsView
+    end alt
+
+    alt Cancel report
+        User -> ReportUserView: onCancelClick()
+        activate ReportUserView
+        ReportUserView -> ReportUserViewModel: cancelReport()
+        activate ReportUserViewModel
+        ReportUserViewModel -> ReportUserView: returnToForm()
+        deactivate ReportUserViewModel
+        deactivate ReportUserView
+    end alt
+
+end loop
+@enduml

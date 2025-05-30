@@ -1,0 +1,79 @@
+@startuml
+actor Driver
+
+participant RideView
+participant PickupFormView
+participant ArrangePickupViewModel
+participant PickupService_Frontend
+participant PickupService_Backend
+database DB
+participant Carpooler
+
+Driver -> RideView: onArrangePickupClick()
+activate RideView
+RideView -> PickupFormView: navigateTo()
+activate PickupFormView
+
+
+PickupFormView -> PickupFormView: createForm()
+
+
+PickupFormView --> RideView: return: form
+deactivate PickupFormView
+
+
+
+alt Confirm Clicked
+    Driver -> PickupFormView: onConfirmClick()
+    activate PickupFormView
+    PickupFormView -> ArrangePickupViewModel: submitData()
+    
+
+    activate ArrangePickupViewModel
+    ArrangePickupViewModel -> ArrangePickupViewModel: validateInput()
+    
+    alt Valid Data
+        ArrangePickupViewModel -> PickupService_Frontend: createPickupRequest()
+        activate PickupService_Frontend
+        
+        PickupService_Frontend -> PickupService_Backend: submitPickupDetails()
+        activate PickupService_Backend
+        
+        PickupService_Backend -> DB: insertPickupDetails()
+        activate DB
+        DB --> PickupService_Backend: return: result
+        deactivate DB
+        
+        PickupService_Backend -> Carpooler: sendAcceptNotification()
+        PickupService_Backend --> PickupService_Frontend: return: creation success
+        deactivate PickupService_Backend
+        
+        PickupService_Frontend --> ArrangePickupViewModel: return: handled creation
+        deactivate PickupService_Frontend
+        
+        ArrangePickupViewModel --> PickupFormView: return: Confirmation
+       
+        PickupFormView --> RideView: return: Confirmation message
+        
+
+    else Invalid Data
+        ArrangePickupViewModel --> PickupFormView: return: Error
+        deactivate ArrangePickupViewModel
+     
+        PickupFormView --> RideView: return: Error message
+        deactivate PickupFormView
+    end
+
+else Cancel Clicked
+    Driver -> PickupFormView: onCancelClick()
+    activate PickupFormView
+    
+    PickupFormView --> RideView: return: Form closed
+    deactivate PickupFormView
+   
+    deactivate RideView
+    
+end
+
+deactivate ArrangePickupViewModel
+@enduml

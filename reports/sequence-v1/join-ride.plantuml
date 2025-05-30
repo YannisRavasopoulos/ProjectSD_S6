@@ -1,0 +1,66 @@
+@startuml
+actor Carpooler
+participant "RideDetailsView" as View
+participant "JoinRideViewModel" as ViewModel
+participant "RideService_Frontend" as RideService_Frontend
+participant "NotificationService" as NotificationService
+participant "ArrangePickupService_Frontend" as PickupService_Frontend
+participant "RideService_Backend" as RideService_Backend
+participant "Database" as DB
+
+Carpooler -> View: 1. oncClickJoinRide()
+activate View
+View -> ViewModel: 2. onJoinRideClicked(ride_id)
+activate ViewModel
+
+box "Main Course of Events (Success Path)"
+  ViewModel -> RideService_Frontend: 3. addCarpoolerToRide(ride_id, carpooler_id)
+  activate RideService_Frontend
+
+  RideService_Frontend -> RideService_Backend: 4. getRide(ride_id)
+  activate RideService_Backend
+  RideService_Backend -> DB: 5. queryRideById(ride_id)
+  activate DB
+  DB --> RideService_Backend: 6. ride
+  deactivate DB
+  RideService_Backend --> RideService_Frontend: 7. ride
+  deactivate RideService_Backend
+
+  RideService_Frontend -> DB: 8. addMember(carpooler_id)
+  RideService_Frontend -> RideService_Backend: 9. updateRide(ride_id, ride)
+  activate RideService_Backend
+  RideService_Backend -> DB: 10. saveRide(ride_id, ride)
+  activate DB
+  DB --> RideService_Backend: 11. updatedRide
+  deactivate DB
+  RideService_Backend --> RideService_Frontend: 12. updatedRide
+  deactivate RideService_Backend
+
+  RideService_Frontend -> NotificationService: 13. notifyDriver(ride.driverId, carpooler_id)
+  activate NotificationService
+  NotificationService --> RideService_Frontend: 14. success
+  deactivate NotificationService
+  deactivate RideService_Frontend
+
+  ViewModel -> PickupService_Frontend: 15. arrangePickup(ride_id, carpooler_id)
+  activate PickupService_Frontend
+end box
+
+box "Success Continuation"
+  PickupService_Frontend --> ViewModel: 16. success
+  deactivate PickupService_Frontend
+  ViewModel -> View: 17. showSuccessMessage()
+  ViewModel -> View: 18. showRideInfo(ride_id)
+end box
+
+alt Arrange Pickup Failure
+  box "Alternative Course (Failure)"
+    PickupService_Frontend --> ViewModel: 16b. failure
+    deactivate PickupService_Frontend
+    ViewModel -> View: 17b. showFailureMessage()
+  end box
+end
+
+deactivate ViewModel
+deactivate View
+@enduml

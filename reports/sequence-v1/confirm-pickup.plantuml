@@ -1,0 +1,94 @@
+@startuml
+actor Carpooler
+
+participant PickupDetailsPage
+participant ConfirmPickupViewModel
+participant PickupService_Frontend
+participant PickupService_Backend
+database DB
+
+Carpooler -> PickupDetailsPage : onViewPickupRequest()
+activate PickupDetailsPage
+PickupDetailsPage -> ConfirmPickupViewModel : loadPickupDetails()
+activate ConfirmPickupViewModel
+
+ConfirmPickupViewModel -> PickupService_Frontend : getPickupDetails()
+activate PickupService_Frontend
+
+PickupService_Frontend -> PickupService_Backend : fetchPickupDetails()
+activate PickupService_Backend
+
+PickupService_Backend -> DB : queryPickupDetails()
+activate DB
+DB --> PickupService_Backend : return pickup data
+deactivate DB
+
+PickupService_Backend --> PickupService_Frontend : return fetched pickup
+deactivate PickupService_Backend
+
+PickupService_Frontend --> ConfirmPickupViewModel : return updated pickup data
+deactivate PickupService_Frontend
+
+ConfirmPickupViewModel --> PickupDetailsPage : return pickup data
+deactivate ConfirmPickupViewModel
+
+
+
+alt Carpooler Confirms
+    Carpooler -> PickupDetailsPage : onConfirmClick()
+    
+    PickupDetailsPage -> ConfirmPickupViewModel : ConfirmPickup()
+    activate ConfirmPickupViewModel
+    
+    ConfirmPickupViewModel -> PickupService_Frontend : sendConfirmRequest()
+    activate PickupService_Frontend
+    
+    PickupService_Frontend -> PickupService_Backend : confirmPickupConfirmance()
+    activate PickupService_Backend
+    
+    PickupService_Backend -> DB : updateStatusToConfirmed()
+    activate DB
+    DB --> PickupService_Backend : return success
+    deactivate DB
+    
+    PickupService_Backend --> PickupService_Frontend : return confirm flag
+    deactivate PickupService_Backend
+    
+    PickupService_Frontend --> ConfirmPickupViewModel : return Confirmance
+    deactivate PickupService_Frontend
+    
+    ConfirmPickupViewModel --> PickupDetailsPage : return confirmation
+    deactivate ConfirmPickupViewModel
+    
+    
+
+    
+else Carpooler rejects
+    Carpooler -> PickupDetailsPage : onRejectClick()
+  
+    PickupDetailsPage -> ConfirmPickupViewModel : rejectPickup()
+    activate ConfirmPickupViewModel
+    
+    ConfirmPickupViewModel -> PickupService_Frontend : sendRejectRequest()
+    activate PickupService_Frontend
+    
+    PickupService_Frontend -> PickupService_Backend : confirmPickupRejection()
+    activate PickupService_Backend
+    
+    PickupService_Backend -> DB : updateStatusToRejected()
+    activate DB
+    DB --> PickupService_Backend : return success
+    deactivate DB
+    
+    PickupService_Backend --> PickupService_Frontend : return reject flag
+    deactivate PickupService_Backend
+    
+    PickupService_Frontend --> ConfirmPickupViewModel : return rejection
+    deactivate PickupService_Frontend
+    
+    ConfirmPickupViewModel --> PickupDetailsPage : return rejection
+    deactivate ConfirmPickupViewModel
+   
+    deactivate PickupDetailsPage
+end
+@enduml

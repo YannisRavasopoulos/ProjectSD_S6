@@ -1,0 +1,23 @@
+@startuml
+actor User
+boundary SignInView
+control SignInViewModel
+control AuthenticationService
+control AuthenticationRouter
+control BackendAuthenticationService
+control BackendUserService
+control Navigator
+database Database
+
+User -> SignInView : onSignInClick()
+SignInView -> SignInViewModel : signIn()
+SignInViewModel -> AuthenticationService : login()
+AuthenticationService -> AuthenticationRouter : "/auth/login"
+AuthenticationRouter -> BackendAuthenticationService : login()
+BackendAuthenticationService -> BackendUserService : getUser(email)
+BackendUserService -> Database : query
+Database --> BackendUserService : return user
+BackendUserService --> BackendAuthenticationService : return user
+BackendAuthenticationService --> AuthenticationService : return token
+
+@enduml

@@ -1,0 +1,94 @@
+@startuml
+actor User
+participant "AccountView" as AV
+participant "PastRidesView" as PRV
+participant "PastRidesViewModel" as PRVM
+participant "RideService_Frontend" as RSF
+participant "RideService_Backend" as RSB
+database "DB" as DB
+participant "RideDetailsView" as RDV
+participant "RideDetailsViewModel" as RDVM
+participant "ConfirmationDialog" as CD
+
+== View Past Rides ==
+User -> AV: onPastRidesClick()
+activate AV
+AV -> PRV: navigatePastRidesScreen()
+deactivate AV
+activate PRV
+PRV -> PRVM: requestRideDetails()
+activate PRVM
+PRVM -> RSF: fetchPastRides()
+activate RSF
+RSF -> RSB: GET /rides
+activate RSB
+RSB -> DB: query()
+activate DB
+DB --> RSB: returnPastRidesData()
+deactivate DB
+RSB --> RSF: returnPastRidesData()
+deactivate RSB
+RSF --> PRVM: returnPastRidesData()
+deactivate RSF
+PRVM --> PRV: updateRidesDetails()
+deactivate PRVM
+deactivate PRV
+
+User -> PRV: onRidesClick()
+activate PRV
+PRV -> RDV: navigateRideDetailsScreen()
+deactivate PRV
+activate RDV
+RDV -> RDVM: requestRideDetails()
+activate RDVM
+RDVM -> RSF: fetchRideDetails()
+activate RSF
+RSF -> RSB: GET /rides/{id}
+activate RSB
+RSB -> DB: query()
+activate DB
+DB --> RSB: returnDetails()
+deactivate DB
+RSB --> RSF: returnDetails()
+deactivate RSB
+RSF --> RDVM: returnDetails()
+deactivate RSF
+RDVM --> RDV: updateRideDetails()
+deactivate RDVM
+deactivate RDV
+
+== Delete Ride ==
+User -> PRV: deleteButton()
+activate PRV
+PRV -> CD: notifyHistory()
+activate CD
+CD -> User: returnConfirmDialog()
+deactivate CD
+alt Confirm Delete
+    User -> CD: confirmButton()
+    activate CD
+    CD -> PRVM: deleteRide()
+    activate PRVM
+    PRVM -> RSF: deleteRide()
+    activate RSF
+    RSF -> RSB: DELETE /rides/{id}
+    activate RSB
+    RSB -> DB: query()
+    activate DB
+    DB --> RSB: deleteSuccess()
+    deactivate DB
+    RSB --> RSF: deleteSuccess()
+    deactivate RSB
+    RSF --> PRVM: deleteSuccess()
+    deactivate RSF
+    PRVM --> PRV: showMessage()
+    deactivate PRVM
+    deactivate PRV
+else Cancel Delete
+    User -> CD: cancelButton()
+    activate CD
+    CD --> PRV: returnPastRides()
+    deactivate CD
+    deactivate PRV
+end
+@enduml

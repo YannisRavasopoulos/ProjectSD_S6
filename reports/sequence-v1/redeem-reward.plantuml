@@ -1,0 +1,122 @@
+@startuml
+actor User
+
+participant HomeView
+participant RedeemRewardPage
+participant RedeemRewardViewModel
+participant RewardService_Frontend
+participant RewardService_Backend
+database DB
+
+
+User -> HomeView : onRedeemRewardClick()
+activate HomeView
+HomeView -> RedeemRewardPage : directTo()
+deactivate HomeView
+activate RedeemRewardPage
+
+
+
+RedeemRewardPage -> RedeemRewardViewModel : loadRewards()
+activate RedeemRewardViewModel
+
+RedeemRewardViewModel -> RewardService_Frontend : getUserPoints()
+
+activate RewardService_Frontend
+RewardService_Frontend -> RewardService_Backend : getUserPointsAPIRequest()
+
+activate RewardService_Backend
+RewardService_Backend -> DB : queryUserPoints()
+activate DB
+DB --> RewardService_Backend : return points
+deactivate DB
+RewardService_Backend --> RewardService_Frontend : return points
+deactivate RewardService_Backend
+
+RewardService_Frontend --> RedeemRewardViewModel : return points
+deactivate RewardService_Frontend
+
+
+RedeemRewardViewModel -> RewardService_Frontend : getAvailableRewards()
+
+activate RewardService_Frontend
+RewardService_Frontend -> RewardService_Backend : getAvailableRewardsAPIRequest()
+
+activate RewardService_Backend
+RewardService_Backend -> DB : queryRewards()
+activate DB
+DB --> RewardService_Backend : return rewardList
+deactivate DB
+RewardService_Backend --> RewardService_Frontend : return rewardList
+deactivate RewardService_Backend
+
+RewardService_Frontend --> RedeemRewardViewModel : return rewardList
+deactivate RewardService_Frontend
+
+
+
+alt rewards available
+    RedeemRewardViewModel --> RedeemRewardPage : return points and rewardList
+   
+else no rewards available
+    RedeemRewardViewModel --> RedeemRewardPage : return "No rewards available"
+     deactivate RedeemRewardViewModel
+  
+
+    
+end
+deactivate RedeemRewardPage
+
+
+alt User selects reward
+    User -> RedeemRewardPage : onSelectReward()
+    activate RedeemRewardPage
+    RedeemRewardPage -> RedeemRewardViewModel : redeemReward()
+    
+
+    activate RedeemRewardViewModel
+    RedeemRewardViewModel -> RewardService_Frontend : redeemReward()
+    
+
+    activate RewardService_Frontend
+    RewardService_Frontend -> RewardService_Backend : redeemReward()
+    deactivate RewardService_Frontend
+
+    activate RewardService_Backend
+    RewardService_Backend -> DB : updateRedemption()
+    activate DB
+    DB --> RewardService_Backend : return redemptionCode or error
+    deactivate DB
+    RewardService_Backend --> RewardService_Frontend : return redemptionResult
+    deactivate RewardService_Backend
+
+    activate RewardService_Frontend
+    RewardService_Frontend --> RedeemRewardViewModel : return redemptionResult
+    deactivate RewardService_Frontend
+
+    
+
+    
+    alt success
+        RedeemRewardViewModel --> RedeemRewardPage : return redemptionCode
+    
+    else insufficient points
+        RedeemRewardViewModel --> RedeemRewardPage : return "Not enough points"
+            deactivate RedeemRewardViewModel
+            deactivate RedeemRewardPage
+    end
+
+else User cancels
+    User -> RedeemRewardPage : onBackClick()
+    activate RedeemRewardPage
+    
+    RedeemRewardPage --> HomeView : return to home
+deactivate RedeemRewardPage   
+activate HomeView
+    
+    deactivate HomeView
+
+
+ 
+end
+@enduml
