@@ -53,12 +53,12 @@ RateViewModel --> RateView: notifyListeners()
 
 User -> RateView: Presses "Submit Rating"
 RateView -> RateViewModel: submitRating(rated)
-RateViewModel -> RatingRepository: watch(rated)
-
-RatingRepository --> RateViewModel: Stream<List<Rating>>
-
 RateViewModel -> RatingRepository: create(Rating(fromUser, toUser, stars, comment))
 
+RatingRepository -> Rating: new Rating(...)
+activate Rating
+Rating --> RatingRepository: return rating
+deactivate Rating
 RatingRepository --> RateViewModel: return
 
 
