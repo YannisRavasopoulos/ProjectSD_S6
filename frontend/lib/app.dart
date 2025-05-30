@@ -1,6 +1,5 @@
 // External libraries
 import 'package:flutter/material.dart' hide Route;
-import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/route.dart';
@@ -19,7 +18,6 @@ import 'package:frontend/data/repository/reward_repository.dart';
 // Pages
 // import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
-// import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/activities/activities_view.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 import 'package:frontend/ui/page/activities/create/create_activity_view.dart';
@@ -133,10 +131,6 @@ class App extends StatelessWidget {
   );
 
   // late final OfferRideViewModel offerRideViewModel = OfferRideViewModel(
-  //   rideRepository: _rideRepository,
-  // );
-
-  // late final RidesViewModel ridesViewModel = RidesViewModel(
   //   rideRepository: _rideRepository,
   // );
 
