@@ -150,6 +150,7 @@ class FindRideViewModel extends ChangeNotifier {
 
       _rides = await _rideRepository.fetchMatchingRides(
         RideRequest(
+          id: 0,
           origin: _fromAddress!,
           destination: _toAddress!,
           departureTime: _departureTime!,

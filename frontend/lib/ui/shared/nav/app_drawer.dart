@@ -69,13 +69,15 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Pickup Request Notification'),
             onTap: () {
               final pickupRequest = PickupRequest(
+                id: 0,
                 passenger: Passenger.test(),
                 address: Address.fake(),
                 time: DateTime.now(),
                 ride: Ride(
-                  driver: Driver.test(),
+                  id: 0,
+                  driver: Driver.fake(),
                   passengers: [],
-                  route: Route(start: Address.fake(), end: Address.fake()),
+                  route: Route.fake(),
                   departureTime: DateTime.now(),
                   estimatedArrivalTime: DateTime.now().add(
                     Duration(minutes: 30),
