@@ -33,7 +33,8 @@ class TextAddressSelectorState extends State<TextAddressSelector> {
 
   @override
   void dispose() {
-    _textController.dispose();
+    // TODO
+    // _textController.dispose();
     super.dispose();
   }
 

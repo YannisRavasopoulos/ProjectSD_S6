@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
 
-class PickupAcknowledgementNotification extends StatelessWidget {
+class PickupArrangedNotification extends StatelessWidget {
   final Pickup pickup;
 
-  const PickupAcknowledgementNotification({super.key, required this.pickup});
+  const PickupArrangedNotification({super.key, required this.pickup});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class PickupAcknowledgementNotification extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Pickup Acknowledged',
+                  'Pickup Arranged',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -50,7 +50,7 @@ class PickupAcknowledgementNotification extends StatelessWidget {
                   style: const TextStyle(fontSize: 11),
                 ),
                 Text(
-                  'Driver has acknowledged your pickup.',
+                  'Driver has arranged a pickup.',
                   style: const TextStyle(fontSize: 11),
                 ),
               ],
@@ -61,7 +61,7 @@ class PickupAcknowledgementNotification extends StatelessWidget {
               NotificationOverlay.dismiss();
               Navigator.of(
                 context,
-              ).pushNamed('/confirm_pickup', arguments: {'pickup': pickup});
+              ).pushNamed('/confirm_pickup', arguments: pickup);
             },
             child: const Text('Proceed'),
           ),

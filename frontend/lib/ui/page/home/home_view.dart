@@ -69,7 +69,7 @@ class _HomeView extends State<HomeView> with TickerProviderStateMixin {
                     markers: [
                       HereMarker(widget.viewModel.currentLocation),
                       if (widget.viewModel.destination != null)
-                        DestinationMarker(widget.viewModel.destination),
+                        DestinationMarker(widget.viewModel.destination!),
                     ],
                   ),
                 ],

@@ -9,7 +9,7 @@ import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/route.dart';
 import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
-import 'package:frontend/ui/page/confirm_pickup/pickup_acknowledgement_notification.dart';
+import 'package:frontend/ui/page/confirm_pickup/pickup_arranged_notification.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});

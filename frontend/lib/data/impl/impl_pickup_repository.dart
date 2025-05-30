@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:math';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/pickup_request.dart';
+import 'package:frontend/data/model/place.dart';
 import 'package:frontend/data/repository/pickup_repository.dart';
+import 'package:latlong2/latlong.dart';
 
 class ImplPickupRepository implements PickupRepository {
   final List<PickupRequest> _pickupRequests =
@@ -27,11 +31,15 @@ class ImplPickupRepository implements PickupRepository {
     _pickupRequests.add(request);
     _requestsController.add(List.from(_pickupRequests));
 
+    // Pick a random address from the list
+    final random = Random();
+    final nearbyAddress = places[random.nextInt(places.length)];
+
     // dummy returning pickup instance - testing purposes
     final pickup = Pickup(
       ride: request.ride,
       passenger: request.passenger,
-      address: request.address,
+      address: nearbyAddress.address,
       time: request.time,
     );
 

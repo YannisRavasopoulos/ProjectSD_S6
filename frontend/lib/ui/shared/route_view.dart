@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_map/flutter_map.dart';
+import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/route.dart';
 import 'package:frontend/ui/shared/map/destination_marker.dart';
 import 'package:frontend/ui/shared/map/here_marker.dart';
 import 'package:frontend/ui/shared/map/open_street_maps_tile_layer.dart';
+import 'package:frontend/ui/shared/map/pickup_marker.dart';
 import 'package:latlong2/latlong.dart';
 
 class RouteView extends StatelessWidget {
   final Route route;
+  final List<Pickup> pickups;
 
-  const RouteView({super.key, required this.route});
+  const RouteView({super.key, required this.route, this.pickups = const []});
 
   LatLng midpoint() {
     final start = LatLng(
@@ -30,6 +33,8 @@ class RouteView extends StatelessWidget {
   Widget build(BuildContext context) {
     print(route.start.coordinates);
     print(route.end.coordinates);
+
+    print(pickups);
 
     return FlutterMap(
       options: MapOptions(
@@ -61,6 +66,14 @@ class RouteView extends StatelessWidget {
           markers: [
             HereMarker(route.start.coordinates),
             DestinationMarker(route.end.coordinates),
+            ...pickups.map(
+              (pickup) => PickupMarker(
+                LatLng(
+                  pickup.address.coordinates.latitude,
+                  pickup.address.coordinates.longitude,
+                ),
+              ),
+            ),
           ],
         ),
       ],
