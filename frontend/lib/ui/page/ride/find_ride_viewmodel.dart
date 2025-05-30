@@ -2,43 +2,36 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
+import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/repository/activity_repository.dart';
 import 'package:frontend/data/repository/address_repository.dart';
 import 'package:frontend/data/repository/ride_repository.dart';
+import 'package:frontend/ui/shared/datetime_selector.dart';
+import 'package:frontend/ui/shared/text_address_selector.dart';
 import 'package:latlong2/latlong.dart';
 
 class FindRideViewModel extends ChangeNotifier {
   FindRideViewModel({
     required ActivityRepository activityRepository,
     required RideRepository rideRepository,
-    required AddressRepository addressRepository,
+    required this.addressRepository,
   }) : _activityRepository = activityRepository,
-       _rideRepository = rideRepository,
-       _addressRepository = addressRepository {
+       _rideRepository = rideRepository {
     // Listen for changes and update the model
-    fromLocationController.addListener(fetchRides);
-    toLocationController.addListener(fetchRides);
     departureTimeController.addListener(fetchRides);
     arrivalTimeController.addListener(fetchRides);
 
     _init();
   }
 
-  final TextEditingController fromLocationController = TextEditingController();
-  final TextEditingController toLocationController = TextEditingController();
-
   // TODO: default values
-  final TextEditingController departureTimeController = TextEditingController(
-    text: "Now",
-  );
-  final TextEditingController arrivalTimeController = TextEditingController(
-    text: "Soonest",
-  );
+  final TextEditingController departureTimeController = TextEditingController();
+  final TextEditingController arrivalTimeController = TextEditingController();
 
-  String get fromLocation => fromLocationController.text;
-  String get toLocation => toLocationController.text;
+  Address? get fromAddress => _fromAddress;
+  Address? get toAddress => _toAddress;
   String get departureTime => departureTimeController.text;
   String get arrivalTime => arrivalTimeController.text;
 
@@ -46,6 +39,10 @@ class FindRideViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   List<Ride> get rides => _rides;
   bool get isLoading => _isLoading;
+  Address? _fromAddress;
+  Address? _toAddress;
+  DateTime? _departureTime;
+  DateTime? _arrivalTime;
 
   StreamSubscription<List<Activity>>? _activitiesSubscription;
   List<Activity> _activities = [];
@@ -53,9 +50,21 @@ class FindRideViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
 
+  final GlobalKey<TextAddressSelectorState> fromAddressSelectorKey =
+      GlobalKey<TextAddressSelectorState>();
+
+  final GlobalKey<TextAddressSelectorState> toAddressSelectorKey =
+      GlobalKey<TextAddressSelectorState>();
+
+  final GlobalKey<DateTimeSelectorState> departureTimeSelectorKey =
+      GlobalKey<DateTimeSelectorState>();
+
+  final GlobalKey<DateTimeSelectorState> arrivalTimeSelectorKey =
+      GlobalKey<DateTimeSelectorState>();
+
   final RideRepository _rideRepository;
   final ActivityRepository _activityRepository;
-  final AddressRepository _addressRepository;
+  final AddressRepository addressRepository;
 
   void _onActivitiesUpdated(List<Activity> activities) {
     _activities = activities;
@@ -75,27 +84,63 @@ class FindRideViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    fromLocationController.dispose();
-    toLocationController.dispose();
     departureTimeController.dispose();
     arrivalTimeController.dispose();
     _activitiesSubscription?.cancel();
     super.dispose();
   }
 
-  String _timeOfDayToString(TimeOfDay t) {
-    final now = DateTime.now();
-    return DateTime(now.year, now.month, now.day, t.hour, t.minute).toString();
+  DateTime _timeOfDayToDateTime(TimeOfDay time) {
+    return DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      time.hour,
+      time.minute,
+    );
   }
 
   Future<void> selectActivity(Activity activity) async {
-    var currentAddress = await _addressRepository.fetchCurrent();
+    var currentAddress = await addressRepository.fetchCurrent();
 
-    // From should be the current location of the user
-    fromLocationController.text = currentAddress.toString();
-    toLocationController.text = activity.address.toString();
-    departureTimeController.text = "Now";
-    arrivalTimeController.text = _timeOfDayToString(activity.startTime);
+    fromAddressSelectorKey.currentState?.setAddress(currentAddress);
+    toAddressSelectorKey.currentState?.setAddress(activity.address);
+
+    departureTimeSelectorKey.currentState?.setDateTime(DateTime.now());
+    arrivalTimeSelectorKey.currentState?.setDateTime(
+      _timeOfDayToDateTime(activity.startTime),
+    );
+
+    selectFromAddress(currentAddress);
+    selectToAddress(activity.address);
+
+    selectDepartureTime(DateTime.now());
+    selectArrivalTime(_timeOfDayToDateTime(activity.startTime));
+
+    await fetchRides();
+  }
+
+  Future<void> selectFromAddress(Address address) async {
+    print("Selected from address: $address");
+    _fromAddress = address;
+    await fetchRides();
+  }
+
+  Future<void> selectToAddress(Address address) async {
+    print("Selected to address: $address");
+    _toAddress = address;
+    await fetchRides();
+  }
+
+  Future<void> selectDepartureTime(DateTime? time) async {
+    print("Selected departure time: $time");
+    _departureTime = time;
+    await fetchRides();
+  }
+
+  Future<void> selectArrivalTime(DateTime? time) async {
+    print("Selected arrival time: $time");
+    _arrivalTime = time;
     await fetchRides();
   }
 
@@ -114,19 +159,22 @@ class FindRideViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      var source = await _addressRepository.fetchForQuery(fromLocation);
-      var destination = await _addressRepository.fetchForQuery(toLocation);
-
-      if (source.isEmpty || destination.isEmpty) {
+      if (fromAddress == null || toAddress == null) {
         _errorMessage = "Please provide valid source and destination.";
         return;
       }
+
+      if (_departureTime == null || _arrivalTime == null) {
+        _errorMessage = "Please select valid departure and arrival times.";
+        return;
+      }
+
       _rides = await _rideRepository.fetchMatchingRides(
         RideRequest(
-          origin: source[0],
-          destination: destination[0],
-          departureTime: DateTime.now(),
-          arrivalTime: DateTime.now().add(const Duration(hours: 1)),
+          origin: fromAddress!,
+          destination: toAddress!,
+          departureTime: _departureTime!,
+          arrivalTime: _arrivalTime!,
           originRadius: Distance.withRadius(1000),
           destinationRadius: Distance.withRadius(1000),
           departureWindow: const Duration(minutes: 15),

@@ -23,12 +23,12 @@ import 'package:frontend/data/repository/reward_repository.dart';
 // import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
 import 'package:frontend/ui/page/activities/activities_view.dart';
 import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
-import 'package:frontend/ui/page/activities/create_activity_view.dart';
-import 'package:frontend/ui/page/activities/create_activity_viewmodel.dart';
+import 'package:frontend/ui/page/activities/create/create_activity_view.dart';
+import 'package:frontend/ui/page/activities/create/create_activity_viewmodel.dart';
 import 'package:frontend/ui/page/rate/rate_view.dart';
 import 'package:frontend/ui/page/forgot_password/forgot_password_view.dart';
-import 'package:frontend/ui/page/find_ride/find_ride_view.dart';
-import 'package:frontend/ui/page/find_ride/find_ride_viewmodel.dart';
+import 'package:frontend/ui/page/ride/find_ride_view.dart';
+import 'package:frontend/ui/page/ride/find_ride_viewmodel.dart';
 import 'package:frontend/ui/page/home/home_view.dart';
 import 'package:frontend/ui/page/home/home_viewmodel.dart';
 import 'package:frontend/ui/page/rewards/rewards_view.dart';
@@ -62,7 +62,6 @@ import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/ride.dart';
 
 class App extends StatelessWidget {
-  // Replace mocks with implementations
   final UserRepository _userRepository = ImplUserRepository();
   final ActivityRepository _activityRepository = ImplActivityRepository();
   final RideRepository _rideRepository = ImplRideRepository();
@@ -126,7 +125,7 @@ class App extends StatelessWidget {
   //   rideRepository: _rideRepository,
   // );
 
-  final bool isLoggedIn = false;
+  final bool isLoggedIn = true;
 
   @override
   Widget build(BuildContext context) {
