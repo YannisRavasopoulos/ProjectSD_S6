@@ -12,8 +12,6 @@ void main() {
   group('ReportRepository', () {
     late ReportRepository reportRepository;
     late UserRepository userRepository;
-    late Report report1;
-    late Report report2;
     late User testUser;
 
     setUp(() {

@@ -20,6 +20,7 @@ void main() {
       activityRepository = ImplActivityRepository();
       initialActivitiesNum = 2; //assuming there are 2 initial activities in the repository
       address1 = Address(
+        id: initialActivitiesNum + 1,
         coordinates: LatLng(0.0, 0.0),
         city: 'City1',
         street: 'Street1',
@@ -27,6 +28,7 @@ void main() {
         postalCode: '11111',
       );
       address2 = Address(
+        id: initialActivitiesNum + 2,
         coordinates: LatLng(1.0, 1.0),
         city: 'City2',
         street: 'Street2',
@@ -34,7 +36,7 @@ void main() {
         postalCode: '22222',
       );
       activity1 = Activity(
-        id: 3,
+        id: initialActivitiesNum+3,
         name: 'Test Activity 1',
         description: 'Test Description 1',
         startTime: TimeOfDay(hour: 10, minute: 0),

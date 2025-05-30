@@ -4,7 +4,7 @@ import 'package:frontend/data/model/rating.dart';
 import 'package:frontend/data/model/user.dart';
 
 void main() {
-  group('ImplRatingRepository', () {
+  group('RatingRepository', () {
     late ImplRatingRepository ratingRepository;
     late User john;
     late User emma;
