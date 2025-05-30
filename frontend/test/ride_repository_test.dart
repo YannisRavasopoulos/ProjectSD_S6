@@ -244,11 +244,20 @@ void main() {
     });
 
     test('cancel removes a ride', () async {
+      await rideRepository.clearHistory(); // Ensure a clean state
+
       await rideRepository.create(testRide);
-      await rideRepository.cancel(testRide);
-      final rides = await rideRepository.fetchAllRides();
-      expect(rides.any((r) => r.id == testRide.id), isFalse);
+      final allRidesBeforeCancel = await rideRepository.fetchAllRides();
+      final createdRide = allRidesBeforeCancel.firstWhere(
+        (r) => r.driver.id == testDriver.id && r.route.id == testRide.route.id,
+      );
+
+      await rideRepository.cancel(createdRide);
+
+      final allRidesAfterCancel = await rideRepository.fetchAllRides();
+      expect(allRidesAfterCancel.any((r) => r.id == createdRide.id), isFalse);
     });
+
 
 
   });
