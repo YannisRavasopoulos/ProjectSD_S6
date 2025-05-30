@@ -20,8 +20,8 @@ activate HomeView
 == Find Ride ==
 Passenger -> HomeView: Presses "Find Ride"
 HomeView -> HomeView: onFindRidePressed()
-HomeView -> Navigator: pushNamed("/find-ride")
-Navigator -> LoopApp: "/find-ride"
+HomeView -> Navigator: pushNamed("/rides/find")
+Navigator -> LoopApp: "/rides/find"
 LoopApp -> FindRideView: FindRideView(findRideViewModel)
 activate FindRideView
 FindRideView -> RideCard: RideCard(ride, onJoinRidePressed: onJoinRidePressed)

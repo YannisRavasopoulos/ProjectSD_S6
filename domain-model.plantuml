@@ -1,0 +1,154 @@
+@startuml
+
+skinparam linetype ortho
+skinparam nodesep 80
+
+object User {
+    +firstName: String
+    +lastName: String
+    +points: int
+    +name: String
+}
+
+object Driver {
+    +vehicle: Vehicle
+}
+
+
+object Vehicle {
+    +description: String
+    +capacity: int
+}
+
+Driver *-- Vehicle
+
+object Passenger
+
+object Address {
+    +coordinates
+    +city: String
+    +street: String
+    +number: int
+    +postalCode: String
+}
+
+object Place {
+    +name: String
+    +address: Address
+}
+
+Place *-- Address
+
+
+object Route {
+    +start: Address
+    +end: Address
+}
+
+Route *-- Address
+
+object Ride {
+    +driver: Driver
+    +passengers: List<Passenger>
+    +route: Route
+    +departureTime: DateTime
+    +estimatedArrivalTime: DateTime
+    +estimatedDuration: Duration
+    +totalSeats: int
+    +availableSeats: int
+}
+
+Ride *-- Driver
+Ride o-- Passenger
+Ride *-- Route
+
+object RideRequest {
+    +origin: Address
+    +destination: Address
+    +departureTime: DateTime
+    +arrivalTime: DateTime
+    +originRadius: Distance
+    +destinationRadius: Distance
+    +departureWindow: Duration
+    +arrivalWindow: Duration
+}
+
+RideRequest *-- Address
+
+object PickupRequest {
+    +ride: Ride
+    +passenger: Passenger
+    +address: Address
+    +time: DateTime
+}
+
+PickupRequest -- Ride
+PickupRequest *-- Passenger
+PickupRequest *-- Address
+
+object Pickup {
+    +ride: Ride
+    +passenger: Passenger
+    +address: Address
+    +time: DateTime
+}
+
+Pickup -- Ride
+Pickup *-- Passenger
+Pickup *-- Address
+
+object Activity {
+    +name: String
+    +startTime: TimeOfDay
+    +description: String
+    +address: Address
+}
+
+Activity *-- Address
+
+object Rating {
+    +fromUser: User
+    +toUser: User
+    +stars: int
+    +comment: String
+}
+
+Rating -- User
+
+object Reward {
+    +points: int
+    +title: String
+    +description: String
+}
+
+Reward -- User
+
+object RedeemedReward {
+    +redemptionCode: String
+}
+
+object Report {
+    +reason: ReportReason
+    +receiver: User
+    +status: ReportStatus
+    +details: String
+}
+
+Report -- User
+
+object ReportReason {
+}
+
+object ReportStatus {
+}
+
+Report *-- ReportReason
+Report *-- ReportStatus
+
+' Inheritance
+Driver --|> User
+Passenger --|> User
+RedeemedReward --|> Reward
+
+
+@enduml
