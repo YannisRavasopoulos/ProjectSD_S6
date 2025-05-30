@@ -10,6 +10,7 @@ participant "System"
 
 alt Main Flow: Arrange Pickup
     Driver -> View : Selects "Arrange Pickup"
+    activate Repo 
     activate View
     View -> VM : selectAddress(address), selectTime(time)
     activate VM
@@ -18,9 +19,7 @@ alt Main Flow: Arrange Pickup
     VM -> VM : Validate(address and time)
     VM -> Repo : acceptPickupRequest(pickupRequest, pickup)
     deactivate VM
-    activate Repo
     Repo --> View : SendPickup()
-    deactivate Repo
     View -> View : ShowNotification()
     Passenger -> Request : OnPressAcceptPickup()
     activate Request
@@ -29,7 +28,7 @@ alt Main Flow: Arrange Pickup
     activate System
     System --> View : Show success message
     deactivate System
-     deactivate View
+    deactivate View
 end
 
 alt Invalid address/time
@@ -56,9 +55,7 @@ alt Alternative Flow: Pickup Rejection
     VM -> VM : Validate(address and time)
     VM -> Repo : acceptPickupRequest(pickupRequest, pickup)
     deactivate VM
-    activate Repo
     Repo --> View : SendPickup()
-    deactivate Repo
     View -> View : ShowNotification()
     Passenger -> System : OnPresssRejectPickup()
     activate System
@@ -68,7 +65,7 @@ alt Alternative Flow: Pickup Rejection
     activate Offer
     deactivate View
     deactivate Offer
-
+    deactivate Repo
 end
 
 @enduml
