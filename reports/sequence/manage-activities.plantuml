@@ -1,0 +1,83 @@
+@startuml
+actor User
+participant HomeView
+participant ActivitiesView
+participant ActivitiesViewModel
+participant ActivityRepository
+participant CreateActivityView
+participant CreateActivityViewModel
+
+alt Main Flow: View and Create Activity
+    User -> HomeView: Selects "Activities"
+    HomeView -> ActivitiesView: pushNamed('/activities')
+    ActivitiesView -> ActivitiesViewModel: loadActivities()
+    ActivitiesViewModel -> ActivityRepository: fetch()
+    ActivityRepository --> ActivitiesViewModel: List<Activity>
+    ActivitiesViewModel --> ActivitiesView: notifyListeners()
+    ActivitiesView -> ActivitiesView: Shows list of Activities
+
+    User -> ActivitiesView: Presses "Create"
+    ActivitiesView -> CreateActivityView: pushNamed('/activities/create')
+    CreateActivityView -> CreateActivityViewModel: (init)
+
+    User -> CreateActivityView: Fills details and presses "Create Activity"
+    CreateActivityView -> CreateActivityViewModel: createActivity()
+    CreateActivityViewModel -> ActivityRepository: create(Activity)
+    ActivityRepository --> CreateActivityViewModel: success
+    CreateActivityViewModel --> CreateActivityView: notifyListeners()
+    CreateActivityView -> ActivitiesView: Navigator.pop(context, true)
+    ActivitiesView -> ActivitiesViewModel: loadActivities()
+    ActivitiesViewModel -> ActivityRepository: fetch()
+    ActivityRepository --> ActivitiesViewModel: List<Activity>
+    ActivitiesViewModel --> ActivitiesView: notifyListeners()
+    ActivitiesView -> ActivititesView: Updated list of Activities
+end alt
+
+alt Alternative Flow: Invalid Data
+    User -> CreateActivityView: Presses "Create Activity" with invalid data
+    CreateActivityView -> CreateActivityViewModel: createActivity()
+    CreateActivityViewModel --> CreateActivityView: notifyListeners()
+
+    User -> CreateActivityView: Corrects data and presses "Create Activity" again
+    CreateActivityView -> CreateActivityViewModel: createActivity()
+    CreateActivityViewModel -> ActivityRepository: create(Activity)
+    ActivityRepository --> CreateActivityViewModel: success
+    CreateActivityViewModel --> CreateActivityView: notifyListeners()
+    CreateActivityView -> ActivitiesView: Navigator.pop(context, true)
+    ActivitiesView -> ActivitiesViewModel: loadActivities()
+    ActivitiesViewModel -> ActivityRepository: fetch()
+    ActivityRepository --> ActivitiesViewModel: List<Activity>
+    ActivitiesViewModel --> ActivitiesView: notifyListeners()
+    ActivitiesView -> ActivitiesView: Updated list of Activities
+end alt
+
+alt Alternative Flow: Edit Activity
+    User -> ActivitiesView: Presses "Edit" on Activity
+    ActivitiesView -> CreateActivityView: pushNamed('/activities/edit', arguments: activity)
+    CreateActivityView -> CreateActivityViewModel: (init with activity)
+
+    User -> CreateActivityView: Changes details and presses "Update Activity"
+    CreateActivityView -> CreateActivityViewModel: editActivity()
+    CreateActivityViewModel -> ActivityRepository: update(Activity)
+    ActivityRepository --> CreateActivityViewModel: success
+    CreateActivityViewModel --> CreateActivityView: notifyListeners()
+    CreateActivityView -> ActivitiesView: Navigator.pop(context, true)
+    ActivitiesView -> ActivitiesViewModel: loadActivities()
+    ActivitiesViewModel -> ActivityRepository: fetch()
+    ActivityRepository --> ActivitiesViewModel: List<Activity>
+    ActivitiesViewModel --> ActivitiesView: notifyListeners()
+    ActivitiesView -> ActivitiesView: Updated list of Activities
+end alt
+
+alt Alternative Flow: Delete Activity
+    User -> ActivitiesView: Presses "Delete" on Activity
+    ActivitiesView -> ActivityDeletionDialog: showDialog()
+    User -> ActivityDeletionDialog: Confirms deletion
+    ActivityDeletionDialog -> ActivitiesView: onConfirm()
+    ActivitiesView -> ActivitiesViewModel: deleteActivity(activity)
+    ActivitiesViewModel -> ActivityRepository: delete(activity)
+    ActivityRepository --> ActivitiesViewModel: success
+    ActivitiesViewModel --> ActivitiesView: notifyListeners()
+    ActivitiesView -> ActivitiesView: Updated list of Activities
+end alt
+@enduml
