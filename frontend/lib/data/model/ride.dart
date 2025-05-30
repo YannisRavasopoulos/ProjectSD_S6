@@ -15,7 +15,7 @@ class Ride extends Model {
   int get availableSeats => totalSeats - passengers.length - 1;
 
   Ride({
-    required super.id,
+    super.id = 0,
     required this.driver,
     required this.passengers,
     required this.route,

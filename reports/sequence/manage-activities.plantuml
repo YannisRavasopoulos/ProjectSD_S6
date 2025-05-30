@@ -9,10 +9,10 @@ participant CreateActivityViewModel
 
 alt Main Flow: View and Create Activity
     User -> HomeView: Selects "Activities"
+
     activate HomeView
     HomeView -> ActivitiesView: pushNamed('/activities')
     deactivate HomeView
-
     activate ActivitiesView
     ActivitiesView -> ActivitiesViewModel: loadActivities()
     activate ActivitiesViewModel
@@ -26,7 +26,6 @@ alt Main Flow: View and Create Activity
     User -> ActivitiesView: Presses "Create"
     ActivitiesView -> CreateActivityView: pushNamed('/activities/create')
     deactivate ActivitiesView
-
     activate CreateActivityView
     CreateActivityView -> CreateActivityViewModel: (init)
     activate CreateActivityViewModel
@@ -34,6 +33,7 @@ alt Main Flow: View and Create Activity
     User -> CreateActivityView: Fills details and presses "Create Activity"
     CreateActivityView -> CreateActivityViewModel: createActivity()
     CreateActivityViewModel -> ActivityRepository: create(Activity)
+
     activate ActivityRepository
     ActivityRepository --> CreateActivityViewModel: success
     deactivate ActivityRepository
@@ -97,6 +97,7 @@ alt Alternative Flow: Edit Activity
     User -> CreateActivityView: Changes details and presses "Update Activity"
     CreateActivityView -> CreateActivityViewModel: editActivity()
     CreateActivityViewModel -> ActivityRepository: update(Activity)
+
     activate ActivityRepository
     ActivityRepository --> CreateActivityViewModel: success
     deactivate ActivityRepository
@@ -136,5 +137,6 @@ alt Alternative Flow: Delete Activity
     ActivitiesView -> ActivitiesView: Updated list of Activities
     deactivate ActivitiesViewModel
     deactivate ActivitiesView
+
 end alt
 @enduml

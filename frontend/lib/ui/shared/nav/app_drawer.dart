@@ -2,13 +2,11 @@ import 'package:flutter/material.dart' hide Route;
 import 'package:frontend/data/model/address.dart';
 import 'package:frontend/data/model/driver.dart';
 import 'package:frontend/data/model/passenger.dart';
-import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/route.dart';
-import 'package:frontend/ui/page/arrange_pickup/pickup_request_notification.dart';
 import 'package:frontend/ui/notification/notification_overlay.dart';
-import 'package:frontend/ui/page/confirm_pickup/pickup_arranged_notification.dart';
+import 'package:frontend/ui/page/pickups/pickup_request_notification.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -40,7 +38,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.person),
             title: const Text('Find Ride'),
             onTap: () {
-              Navigator.pushNamed(context, '/ride/find');
+              Navigator.pushNamed(context, '/rides/find');
             },
           ),
           ListTile(
@@ -54,14 +52,14 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.add_circle_outline),
             title: const Text('Create Ride'),
             onTap: () {
-              Navigator.pushNamed(context, '/ride/create');
+              Navigator.pushNamed(context, '/rides/create');
             },
           ),
           ListTile(
             leading: const Icon(Icons.directions_car),
             title: const Text('Offer Ride'),
             onTap: () {
-              Navigator.pushNamed(context, '/offer_ride');
+              Navigator.pushNamed(context, '/rides/offer');
             },
           ),
           ListTile(
@@ -70,7 +68,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               final pickupRequest = PickupRequest(
                 id: 0,
-                passenger: Passenger.test(),
+                passenger: Passenger.fake(),
                 address: Address.fake(),
                 time: DateTime.now(),
                 ride: Ride(
@@ -97,42 +95,11 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
-          // ListTile(
-          //   leading: const Icon(Icons.bug_report),
-          //   title: const Text('Confirm Pickup Notification (Test)'),
-          //   onTap: () {
-          //     final pickup = Pickup(
-          //       passenger: ImplPassenger.test(),
-          //       address: Address.fake(),
-          //       time: DateTime.now(),
-          //       ride: Ride(
-          //         driver: ImplDriver.test(),
-          //         passengers: [],
-          //         route: Route(end: Address.fake(), start: Address.fake()),
-          //         departureTime: DateTime.now(),
-          //         estimatedArrivalTime: DateTime.now().add(
-          //           Duration(minutes: 90),
-          //         ),
-          //         totalSeats: 4,
-          //         estimatedDuration: Duration(minutes: 90),
-          //       ),
-          //     );
-
-          //     // Close the drawer
-          //     Navigator.pop(context);
-
-          //     // Show the notification
-          //     NotificationOverlay.show(
-          //       context,
-          //       PickupAcknowledgementNotification(pickup: pickup),
-          //     );
-          //   },
-          // ),
           ListTile(
             leading: const Icon(Icons.flag),
             title: const Text('Ride Ended'),
             onTap: () {
-              Navigator.pushNamed(context, '/ride_ended');
+              Navigator.pushNamed(context, '/rides/end');
             },
           ),
         ],
