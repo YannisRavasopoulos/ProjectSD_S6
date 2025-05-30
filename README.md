@@ -31,30 +31,3 @@ Also make sure `unzip`, `xz`, `wget`, `grep` and `openjdk-21` are installed. Mak
 7. Click this the plus icon on the bottom right.
 
 8. Select "Create Android Emulator".
-
-## Backend
-
-- [FastAPI](https://fastapi.tiangolo.com/)
-- Everything is in [backend/](backend)
-- For features use backend/feature-name branch
-
-### Install dependencies
-
-```bash
-$ cd backend/
-$ python -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-```
-
-### Run the server
-
-```bash
-$ cd backend/
-$ source venv/bin/activate
-$ uvicorn app.main:app --reload --port 8000
-```
-
-## Reports
-
-- Everything is in [reports/](reports)
