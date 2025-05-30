@@ -213,11 +213,14 @@ class FindRideView extends StatelessWidget {
                 Navigator.of(context).pushNamed('/activities');
               },
               tooltip: 'Manage Activities',
+              heroTag: 'manageActivitiesButton',
               child: const Icon(Icons.calendar_month),
             ),
             const SizedBox(height: 16),
             FloatingActionButton(
               onPressed: viewModel.fetchRides,
+              tooltip: 'Refresh Rides',
+              heroTag: 'refreshRidesButton',
               child: const Icon(Icons.refresh),
             ),
           ],

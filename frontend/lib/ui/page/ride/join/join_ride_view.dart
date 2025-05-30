@@ -1,32 +1,32 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/ui/notification/notification_overlay.dart';
-import 'package:frontend/ui/page/confirm_pickup/pickup_acknowledgement_notification.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:frontend/ui/page/ride/join/join_ride_viewmodel.dart';
-import 'package:frontend/ui/page/ride/join/detail_row.dart';
+import 'package:frontend/ui/shared/route_view.dart';
 
 class JoinRideView extends StatelessWidget {
   final JoinRideViewModel viewModel;
 
   const JoinRideView({super.key, required this.viewModel});
 
+  void _onProceedPressed() async {}
+
+  void _onJoinRidePressed() async {
+    final pickupRequest = await viewModel.joinRide();
+    if (pickupRequest != null) {
+      // Handle successful join ride
+      // For example, navigate to the next screen or show a success message
+    } else {
+      // Handle error
+      // For example, show an error message
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    viewModel.joinRide();
-
     return Scaffold(
       appBar: AppBar(title: const Text('Joining Ride'), elevation: 0),
       body: AnimatedBuilder(
         animation: viewModel,
         builder: (context, _) {
-          if (viewModel.pickup != null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              NotificationOverlay.show(
-                context,
-                PickupAcknowledgementNotification(pickup: viewModel.pickup!),
-              );
-            });
-          }
-
           if (viewModel.isLoading) {
             return Center(
               child: Column(
@@ -44,100 +44,132 @@ class JoinRideView extends StatelessWidget {
           }
 
           return Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.white, Color(0xFFF5F5F5)],
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 200,
+                  child: RouteView(route: viewModel.ride.route),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
+                          const Icon(Icons.directions_car, color: Colors.blue),
+                          const SizedBox(width: 8),
                           Text(
                             'Ride Details',
-                            style: Theme.of(context).textTheme.headlineSmall
-                                ?.copyWith(fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          const SizedBox(height: 24),
-                          DetailRow(
-                            icon: Icons.person,
-                            label: 'Driver',
-                            value: viewModel.ride.driver.name,
-                          ),
-                          const SizedBox(height: 16),
-                          DetailRow(
-                            icon: Icons.directions_car,
-                            label: 'Vehicle',
-                            value: viewModel.ride.driver.vehicle.description,
-                          ),
-                          const SizedBox(height: 16),
-                          DetailRow(
-                            icon: Icons.location_on,
-                            label: 'From',
-                            value: viewModel.ride.route.start.toString(),
-                          ),
-                          const SizedBox(height: 16),
-                          DetailRow(
-                            icon: Icons.location_on,
-                            label: 'To',
-                            value: viewModel.ride.route.end.toString(),
-                          ),
-                          const SizedBox(height: 16),
-                          DetailRow(
-                            icon: Icons.access_time,
-                            label: 'Departure',
-                            value: viewModel.ride.departureTime.toString(),
-                          ),
-                          const SizedBox(height: 16),
-                          DetailRow(
-                            icon: Icons.event_seat,
-                            label: 'Available Seats',
-                            value:
-                                '${viewModel.ride.availableSeats}/${viewModel.ride.totalSeats}',
-                          ),
-                          // Add the progress indicator here
-                          const SizedBox(height: 32),
-                          const Center(child: CircularProgressIndicator()),
                         ],
                       ),
-                    ),
-                  ),
-                  const Spacer(),
-                  if (viewModel.errorMessage != null)
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade100,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
+                      const SizedBox(height: 16),
+                      Row(
                         children: [
-                          const Icon(Icons.error_outline, color: Colors.red),
+                          const Icon(Icons.location_on, color: Colors.green),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              viewModel.errorMessage!,
-                              style: const TextStyle(color: Colors.red),
+                              'From: ${viewModel.ride.route.start.toString()}',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                ],
-              ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.flag, color: Colors.red),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'To: ${viewModel.ride.route.end.toString()}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.access_time, color: Colors.orange),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Departure: ${viewModel.ride.departureTime}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.timer, color: Colors.purple),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Estimated Duration: ${viewModel.ride.estimatedDuration}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.person, color: Colors.blueGrey),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Driver: ${viewModel.ride.driver.name}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      if (viewModel.hasJoinedRide &&
+                          !viewModel.isArrangingPickup) ...[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Driver arranged pickup!',
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(color: Colors.green),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: _onProceedPressed,
+                              child: const Text('Proceed'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                      ] else if (viewModel.hasJoinedRide &&
+                          viewModel.isArrangingPickup) ...[
+                        Column(
+                          children: [
+                            const Center(child: CircularProgressIndicator()),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Waiting for driver to arrange pickup...',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                      ] else ...[
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: _onJoinRidePressed,
+                            child: const Text('Join Ride'),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
             ),
           );
         },

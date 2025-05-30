@@ -12,12 +12,8 @@ import 'package:frontend/data/repository/report_repository.dart';
 import 'package:frontend/data/repository/reward_repository.dart';
 
 // Pages
-// import 'package:frontend/ui/page/activities/activities_view.dart';
-// import 'package:frontend/ui/page/activities/activities_viewmodel.dart';
 // import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_view.dart';
 // import 'package:frontend/ui/page/arrange_pickup/arrange_pickup_viewmodel.dart';
-// import 'package:frontend/ui/page/create_ride/create_ride_view.dart';
-// import 'package:frontend/ui/page/create_ride/create_ride_viewmodel.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_view.dart';
 // import 'package:frontend/ui/page/offer_ride/offer_ride_viewmodel.dart';
 // import 'package:frontend/ui/page/rides/rides_viewmodel.dart';
