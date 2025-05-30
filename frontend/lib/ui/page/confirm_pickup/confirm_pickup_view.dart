@@ -83,10 +83,7 @@ class ConfirmPickupView extends StatelessWidget {
                               await Future.delayed(
                                 const Duration(milliseconds: 500),
                               );
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/home',
-                                (route) => false,
-                              );
+                              Navigator.of(context).pop();
                             }
                           },
                         ),
@@ -107,10 +104,7 @@ class ConfirmPickupView extends StatelessWidget {
                               await Future.delayed(
                                 const Duration(milliseconds: 500),
                               );
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/home',
-                                (route) => false,
-                              );
+                              Navigator.of(context).pop();
                             }
                           },
                         ),

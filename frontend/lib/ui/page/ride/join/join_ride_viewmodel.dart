@@ -13,9 +13,13 @@ class JoinRideViewModel extends ChangeNotifier {
   final RideRepository rideRepository;
   final PickupRepository pickupRepository;
 
+  bool _isArrangingPickup = false;
+  bool _hasJoinedRide = false;
   bool isLoading = false;
   String? errorMessage;
   Pickup? pickup;
+  bool get isArrangingPickup => _isArrangingPickup;
+  bool get hasJoinedRide => _hasJoinedRide;
 
   JoinRideViewModel({
     required this.ride,
@@ -24,12 +28,16 @@ class JoinRideViewModel extends ChangeNotifier {
   });
 
   Future<PickupRequest?> joinRide() async {
-    isLoading = true;
     errorMessage = null;
     notifyListeners();
 
     try {
       await rideRepository.join(ride);
+      _hasJoinedRide = true;
+      _isArrangingPickup = true;
+
+      notifyListeners();
+
       final pickupRequest = PickupRequest(
         ride: ride,
         passenger: ImplPassenger.test(),
@@ -37,6 +45,7 @@ class JoinRideViewModel extends ChangeNotifier {
         time: DateTime.now(),
       );
       pickup = await pickupRepository.requestPickup(pickupRequest);
+      _isArrangingPickup = false;
       isLoading = false;
       notifyListeners();
       return pickupRequest;
