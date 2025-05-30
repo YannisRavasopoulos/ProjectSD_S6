@@ -1,0 +1,61 @@
+@startuml Join Ride
+actor Passenger
+alt Pickup Accepted
+    Passenger -> JoinRideView : Presses "Join Ride"
+    activate JoinRideView
+    JoinRideView -> JoinRideViewModel : joinRide()
+    activate JoinRideViewModel
+    JoinRideViewModel -> RideRepository : join(ride)
+    activate RideRepository
+    RideRepository --> JoinRideViewModel : Ride joined confirmation
+    JoinRideViewModel -> PickupRepository : requestPickup(PickupRequest)
+    activate PickupRepository
+    PickupRepository --> JoinRideViewModel : Pickup created
+    JoinRideViewModel --> JoinRideView : notifyListeners()
+    deactivate JoinRideViewModel
+    JoinRideView -> NotificationOverlay : Show PickupArrangedNotification
+    activate NotificationOverlay
+    NotificationOverlay --> JoinRideView : Notification displayed
+    deactivate NotificationOverlay
+    Passenger -> JoinRideView : Presses "Proceed"
+    JoinRideView -> PickupArrangedNotification : Navigate to Pickup Details
+    activate PickupArrangedNotification
+    Passenger -> PickupArrangedNotification : Presses "Accept"
+    PickupArrangedNotification -> PickupRepository : confirmPickup()
+    PickupRepository --> PickupArrangedNotification : Pickup confirmed
+    PickupArrangedNotification -> JoinRideView : Show success message
+    deactivate PickupArrangedNotification
+    JoinRideView --> MainScreen : Return to main screen
+    activate MainScreen
+    deactivate JoinRideView
+    deactivate MainScreen
+end
+
+alt Pickup Declined
+    Passenger -> PickupArrangedNotification : Presses "Decline"
+    activate PickupArrangedNotification
+    PickupArrangedNotification -> PickupRepository : declinePickup()
+    PickupRepository --> PickupArrangedNotification : Pickup declined
+    PickupArrangedNotification --> MainScreen : Return to main screen
+    activate MainScreen
+    deactivate PickupArrangedNotification
+    deactivate MainScreen
+end
+
+alt Arrange Pickup Failure
+    JoinRideViewModel --> JoinRideView : errorMessage
+    activate JoinRideViewModel
+    activate JoinRideView
+    deactivate JoinRideViewModel
+    JoinRideView --> FindRideScreen : Show failure message
+    deactivate JoinRideView
+    activate FindRideScreen
+    FindRideScreen -> RideDetailsScreen : Return to Ride Details
+    deactivate FindRideScreen
+    activate RideDetailsScreen
+    deactivate PickupRepository
+    deactivate RideRepository
+    deactivate RideDetailsScreen
+end
+
+@enduml
