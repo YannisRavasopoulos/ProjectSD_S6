@@ -21,7 +21,7 @@ void main() {
 
     test('updateCurrentUser updates the user', () async {
       final user = await userRepository.fetchCurrent();
-      final updatedUser = (user as ImplUser).copyWith(points: 123);
+      final updatedUser = (user).copyWith(points: 123);
       await userRepository.updateCurrentUser(updatedUser);
       final fetched = await userRepository.fetchCurrent();
       expect(fetched.points, 123);
@@ -29,7 +29,7 @@ void main() {
 
     test('watchCurrent emits user updates', () async {
       final user = await userRepository.fetchCurrent();
-      final updatedUser = (user as ImplUser).copyWith(points: 456);
+      final updatedUser = (user).copyWith(points: 456);
 
       final stream = userRepository.watchCurrent();
       final future = expectLater(

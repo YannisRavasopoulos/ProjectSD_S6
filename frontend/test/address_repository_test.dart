@@ -1,13 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/data/impl/impl_address_repository.dart';
-import 'package:frontend/data/model/address.dart';
-import 'package:frontend/data/model/user.dart';
+
 import 'package:frontend/data/repository/address_repository.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:frontend/data/impl/impl_user_repository.dart'; // <-- Import ImplUser
+
 
 void main() {
-  group('ImplAddressRepository', () {
+  group('AddressRepository', () {
     
     late AddressRepository addressRepository;
     
@@ -15,11 +14,6 @@ void main() {
       addressRepository = ImplAddressRepository();
      
     });
-
-    
-
-    
-
     test('fetchForQuery returns addresses matching query', () async {
       final results = await addressRepository.fetchForQuery('castle');
       expect(results, isNotEmpty);
@@ -53,8 +47,5 @@ void main() {
       expect(results.first.city, 'Patras');
       expect(results.first.street.toLowerCase(), contains('panachaiko'));
   });
-   
-
-   
   });
 }
