@@ -5,6 +5,7 @@ import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/ui/page/ride/create/create_ride_viewmodel.dart';
 import 'package:frontend/ui/page/ride/find/activity_selection_panel.dart';
 import 'package:frontend/ui/shared/datetime_selector.dart';
+import 'package:frontend/ui/shared/loading_button.dart';
 import 'package:frontend/ui/shared/text_address_selector.dart';
 
 class CreateRideView extends StatelessWidget {
@@ -58,9 +59,24 @@ class CreateRideView extends StatelessWidget {
     'Select',
   ];
 
-  void _onCreateRidePressed() async {
-    // TODO
-    viewModel.createRide();
+  void _onCreateRidePressed(BuildContext context) async {
+    bool success = await viewModel.createRide();
+    if (success) {
+      // Navigate to success page or show success message
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ride created successfully!')),
+      );
+      // Navigator.pushReplacementNamed(context, '/ride/success');
+    } else {
+      // Show error message
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(viewModel.errorMessage ?? 'Failed to create ride'),
+        ),
+      );
+    }
   }
 
   @override
@@ -173,13 +189,27 @@ class CreateRideView extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: Center(
-                  child: FilledButton(
-                    onPressed: _onCreateRidePressed,
-                    child: Text("Create Ride"),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 16.0),
+                  Text(
+                    viewModel.isFormValid ? "" : "Please fill in all fields.",
                   ),
-                ),
+                  const SizedBox(height: 16.0),
+                  SizedBox(
+                    width: 200, // Set a fixed width or adjust as needed
+                    child: LoadingButton(
+                      isLoading: viewModel.isCreatingRide,
+                      onPressed:
+                          viewModel.isFormValid
+                              ? () => _onCreateRidePressed(context)
+                              : null,
+                      child: Text("Create Ride"),
+                    ),
+                  ),
+                ],
               ),
             ],
           );

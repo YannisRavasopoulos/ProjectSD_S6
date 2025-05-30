@@ -217,7 +217,6 @@ class FindRideView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             FloatingActionButton(
-              heroTag: 'refreshBtn',
               onPressed: viewModel.fetchRides,
               child: const Icon(Icons.refresh),
             ),

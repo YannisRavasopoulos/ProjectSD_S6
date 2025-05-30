@@ -29,10 +29,18 @@ class CreateRideViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   List<Ride> get rides => _rides;
   bool get isLoading => _isLoading;
+  bool get isFormValid =>
+      _fromAddress != null &&
+      _toAddress != null &&
+      _departureTime != null &&
+      _arrivalTime != null;
+  bool get isCreatingRide => _isCreatingRide;
+
   Address? _fromAddress;
   Address? _toAddress;
   DateTime? _departureTime;
   DateTime? _arrivalTime;
+  bool _isCreatingRide = false;
 
   StreamSubscription<List<Activity>>? _activitiesSubscription;
   List<Activity> _activities = [];
@@ -98,21 +106,25 @@ class CreateRideViewModel extends ChangeNotifier {
   Future<void> selectFromAddress(Address address) async {
     print("Selected from address: $address");
     _fromAddress = address;
+    notifyListeners();
   }
 
   Future<void> selectToAddress(Address address) async {
     print("Selected to address: $address");
     _toAddress = address;
+    notifyListeners();
   }
 
   Future<void> selectDepartureTime(DateTime? time) async {
     print("Selected departure time: $time");
     _departureTime = time;
+    notifyListeners();
   }
 
   Future<void> selectArrivalTime(DateTime? time) async {
     print("Selected arrival time: $time");
     _arrivalTime = time;
+    notifyListeners();
   }
 
   Future<void> fetchActivities() async {
@@ -125,8 +137,42 @@ class CreateRideViewModel extends ChangeNotifier {
   }
 
   Future<bool> createRide() async {
-    // TODO
-    return false;
+    if (_fromAddress == null || _toAddress == null || _departureTime == null) {
+      _errorMessage = "Please fill in all fields.";
+      notifyListeners();
+      return false;
+    }
+
+    _isCreatingRide = true;
+    notifyListeners();
+
+    try {
+      final ride = Ride(
+        driver: ImplDriver(
+          id: 0,
+          firstName: "Test",
+          lastName: "Driver",
+          vehicle: ImplVehicle(id: 1, description: "Test Car", capacity: 4),
+          points: 100,
+        ),
+        passengers: [],
+        departureTime: _departureTime!,
+        estimatedArrivalTime:
+            _arrivalTime ?? _departureTime!.add(Duration(hours: 1)),
+        estimatedDuration: Duration(hours: 1),
+        totalSeats: 4, // Default capacity
+        route: Route(start: _fromAddress!, end: _toAddress!),
+      );
+
+      await _rideRepository.create(ride);
+      return true;
+    } catch (e) {
+      _errorMessage = "Failed to create ride: $e";
+      return false;
+    } finally {
+      _isCreatingRide = false;
+      notifyListeners();
+    }
   }
 
   // final RideRepository rideRepository;
