@@ -218,6 +218,9 @@ class App extends StatelessWidget {
                       ratingRepository: _ratingRepository,
                       userRepository: _userRepository,
                       rated: rated,
+                    ),
+                  ),
+            );
           case "/ride/join":
             final ride = settings.arguments as Ride;
             return MaterialPageRoute(
