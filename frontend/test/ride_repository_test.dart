@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/data/impl/impl_ride_repository.dart';
+import 'package:frontend/data/model/pickup_request.dart';
 import 'package:frontend/data/model/ride.dart';
 import 'package:frontend/data/model/ride_request.dart';
 import 'package:frontend/data/model/driver.dart';
@@ -46,7 +47,7 @@ void main() {
       );
 
       testDriver = Driver(
-        id: 1,
+        id: 1, //arbitrary ID unimportant
         firstName: 'DriverFirst',
         lastName: 'DriverLast',
         points: 100,
@@ -257,8 +258,44 @@ void main() {
       final allRidesAfterCancel = await rideRepository.fetchAllRides();
       expect(allRidesAfterCancel.any((r) => r.id == createdRide.id), isFalse);
     });
+    test('offer adds a passenger to the ride and returns a PickupRequest', () async {
+      await rideRepository.create(testRide);
+      final createdRide = (await rideRepository.fetchAllRides()).last;
+
+      final result = await rideRepository.offer(createdRide, testPassenger);
+
+      expect(result, isA<PickupRequest>());
+      expect(createdRide.passengers.length, 1);
+      expect(createdRide.passengers.first.firstName, testPassenger.firstName);
+    });
+    test('fetchCreatedRides returns rides created by a driver', () async {
+      await rideRepository.create(testRide);
+      final createdRides = await rideRepository.fetchCreatedRides();
+
+      expect(createdRides, isA<List<Ride>>());
+      expect(createdRides.isNotEmpty, isTrue);
+      expect(createdRides.last.driver.id, testDriver.id);
+
+     
+    });
+    test('watchCreatedRides emits created rides periodically', () async {
+      await rideRepository.create(testRide);
+      final stream = rideRepository.watchCreatedRides();
+
+      expectLater(
+        stream,
+        emits(
+          predicate<List<Ride>>(
+            (rides) => rides.isNotEmpty && rides.last.driver.id == testDriver.id
+          ),
+        ),
+      );
+    });
+
+
 
 
 
   });
+  
 }
