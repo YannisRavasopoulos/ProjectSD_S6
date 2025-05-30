@@ -1,59 +1,80 @@
 @startuml
-actor User
 
 actor User
-participant RateView
-participant RateViewModel
-participant Rating
-participant RatingRepository
+
 participant Navigator
 participant LoopApp
+participant RateView
+participant RateViewModel
+participant UserRepository
+participant RatingRepository
 
-activate Navigator
+== Rate User ==
+
 activate LoopApp
+activate UserRepository
 activate RatingRepository
-
-==Rate User==
-
-Navigator --> LoopApp: "/rate", {rated}
-LoopApp -> RateViewModel: RateViewModel(rateRepository, rated)
-activate RateViewModel
-RateViewModel --> LoopApp: return rateViewModel
-LoopApp -> RateView: RateView(rateViewModel)
+User -> RateView: Navigates to "Rate" screen
 activate RateView
-RateView --> LoopApp: return rateView
-LoopApp --> Navigator: return rateView
+
+
+RateView -> Navigator: pushNamed("/rate", arguments: rated)
+activate Navigator
+Navigator -> LoopApp: Route "/rate" with rated user
+
+LoopApp -> RateViewModel: Create RateViewModel(ratingRepository, userRepository, rated)
+activate RateViewModel
+RateViewModel -> UserRepository: fetchCurrent()
+
+UserRepository --> RateViewModel: return currentUser
+
+RateViewModel -> RatingRepository: watch(currentUser)
+
+RatingRepository --> RateViewModel: Stream<List<Rating>>
+
+LoopApp -> RateView: Create RateView(rateViewModel)
+
+LoopApp --> Navigator: return RateView
+
 Navigator -> RateView: build(context)
-User -> RateView: Selects rating
-RateView -> RateView: onRatingSelected(rating)
 
 
-' User -> RateView: Selects report reason
-' ReportView -> RateView: ReasonSelected(reason)
-' opt
-'     User -> ReportView: Enter description
-'     ReportView -> ReportView: onDescriptionChanged(description)
-' end
-' User -> ReportView: Presses "Submit"
-' ReportView -> ReportView: onSubmitPressed()
-' ReportView -> ReportConfirmationDialog: ReportConfirmationDialog(report, onConfirm, onCancel)
-' activate ReportConfirmationDialog
-' alt Confirm
-'     ReportConfirmationDialog -> ReportView: onConfirm()
-'     ReportView -> ReportViewModel: submitReport()
-'     ReportViewModel -> Report: Report(reportee, reason, description)
-'     activate Report
-'     Report --> ReportViewModel: return report
-'     ReportViewModel -> ReportRepository: createReport(report)
-'     ReportRepository --> ReportViewModel
-'     ReportViewModel --> ReportView
-'     ReportView -> ReportView: onReportSubmitted()
-'     ReportView -> ReportView: showSuccessMessage()
-'     deactivate Report
-' else Cancel
-'     ReportConfirmationDialog -> ReportView: onCancel()
-'     deactivate ReportConfirmationDialog
-'     ReportView -> Navigator: pop()
-' end
+User -> RateView: Selects rating (stars)
+
+RateView -> RateViewModel: setRating(value)
+
+RateViewModel --> RateView: notifyListeners()
+
+
+opt Enter comment
+User -> RateView: Enters comment
+RateView -> RateViewModel: setComment(value)
+RateViewModel --> RateView: notifyListeners()
+end
+
+User -> RateView: Presses "Submit Rating"
+RateView -> RateViewModel: submitRating(rated)
+RateViewModel -> RatingRepository: create(Rating(fromUser, toUser, stars, comment))
+
+RatingRepository -> Rating: new Rating(...)
+activate Rating
+Rating --> RatingRepository: return rating
+RatingRepository --> RateViewModel: return
+
+
+alt Rating successfully created
+    RateViewModel --> RateView: notifyListeners() (isSuccess = true)
+    RateView -> RateView: showDialog("Your rating has been submitted successfully.")
+    User -> RateView: Presses "OK"
+    RateView --> Navigator: pop() (close dialog)
+    RateView --> Navigator: pop() (return to previous screen)
+    deactivate Navigator
+else Error
+    RateViewModel --> RateView: notifyListeners() (errorMessage)
+    RateView -> RateView: show error message
+end
+deactivate Rating
+deactivate RateViewModel
+deactivate RateView
 
 @enduml
