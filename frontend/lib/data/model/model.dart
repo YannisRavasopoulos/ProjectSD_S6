@@ -1,4 +1,6 @@
-abstract interface class Model {
-  int get id;
-  DateTime get createdAt;
+abstract class Model {
+  final int id;
+  final DateTime createdAt = DateTime.now();
+
+  Model({required this.id});
 }

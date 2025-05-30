@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/model.dart';
 
-class Activity {
-  final int id;
+class Activity extends Model {
   final String name;
   final TimeOfDay startTime;
   final String description;
   final Address address;
 
   Activity({
-    required this.id,
+    required super.id,
     required this.name,
     required this.startTime,
     required this.description,

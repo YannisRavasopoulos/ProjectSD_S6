@@ -5,20 +5,20 @@ class Driver extends User {
   final Vehicle vehicle;
 
   Driver({
-    required int id,
-    required String firstName,
-    required String lastName,
-    required int points,
+    required super.id,
+    required super.firstName,
+    required super.lastName,
+    required super.points,
     required this.vehicle,
-  }) : super(id: id, firstName: firstName, lastName: lastName, points: points);
+  });
 
-  factory Driver.test() {
+  factory Driver.fake() {
     return Driver(
       id: 0,
       firstName: 'John',
       lastName: 'Doe',
       points: 100,
-      vehicle: Vehicle.test(),
+      vehicle: Vehicle.fake(),
     );
   }
 }

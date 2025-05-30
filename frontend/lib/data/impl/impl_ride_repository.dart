@@ -13,6 +13,7 @@ class ImplRideRepository implements RideRepository {
   // --- Hardcoded rides ---
   final List<Ride> _rides = [
     Ride(
+      id: 1,
       driver: Driver(
         id: 1,
         firstName: 'Alice',
@@ -30,6 +31,7 @@ class ImplRideRepository implements RideRepository {
       totalSeats: 4,
     ),
     Ride(
+      id: 2,
       driver: Driver(
         id: 2,
         firstName: 'John',
@@ -52,6 +54,7 @@ class ImplRideRepository implements RideRepository {
   // --- Hardcoded ride history ---
   final List<Ride> _rideHistory = [
     Ride(
+      id: 3,
       driver: Driver(
         id: 3,
         firstName: 'Crocodillo',

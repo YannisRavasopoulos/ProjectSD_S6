@@ -12,6 +12,7 @@ final List<Place> places = [
   Place(
     name: 'Apollon Theatre',
     address: Address(
+      id: 1,
       coordinates: LatLng(38.246630, 21.735500),
       city: 'Patras',
       street: 'Othonos-Amalias Avenue',
@@ -22,6 +23,7 @@ final List<Place> places = [
   Place(
     name: 'Georgiou I Square',
     address: Address(
+      id: 2,
       coordinates: LatLng(38.246200, 21.735100),
       city: 'Patras',
       street: 'Maizonos Street',
@@ -32,6 +34,7 @@ final List<Place> places = [
   Place(
     name: 'Patras Castle',
     address: Address(
+      id: 3,
       coordinates: LatLng(38.245000, 21.741800),
       city: 'Patras',
       street: 'Near Panachaiko Mountain',
@@ -42,6 +45,7 @@ final List<Place> places = [
   Place(
     name: 'Patras Lighthouse',
     address: Address(
+      id: 4,
       coordinates: LatLng(38.245120, 21.725690),
       city: 'Patras',
       street: 'Trion Navarchon Street',
@@ -52,6 +56,7 @@ final List<Place> places = [
   Place(
     name: 'Archaeological Museum of Patras',
     address: Address(
+      id: 5,
       coordinates: LatLng(38.263344, 21.752354),
       city: 'Patras',
       street: 'Amerikis Street & Patras-Athens National Road',
@@ -62,6 +67,7 @@ final List<Place> places = [
   Place(
     name: 'Pampeloponnisiako Stadium',
     address: Address(
+      id: 6,
       coordinates: LatLng(38.221806, 21.752189),
       city: 'Patras',
       street: 'Patron-Klaous Street',
@@ -72,6 +78,7 @@ final List<Place> places = [
   Place(
     name: 'City Hall of Patras',
     address: Address(
+      id: 7,
       coordinates: LatLng(38.245480, 21.733240),
       city: 'Patras',
       street: 'Maizonos Street',
@@ -82,6 +89,7 @@ final List<Place> places = [
   Place(
     name: 'Patras Land Registry',
     address: Address(
+      id: 8,
       coordinates: LatLng(38.244640, 21.730690),
       city: 'Patras',
       street: 'Miaouli Street',
@@ -92,6 +100,7 @@ final List<Place> places = [
   Place(
     name: 'Ethnikis Antistaseos Square',
     address: Address(
+      id: 9,
       coordinates: LatLng(38.249200, 21.737500),
       city: 'Patras',
       street:
@@ -103,6 +112,7 @@ final List<Place> places = [
   Place(
     name: 'Kostas Davourlis Stadium',
     address: Address(
+      id: 10,
       coordinates: LatLng(38.261700, 21.745800),
       city: 'Patras',
       street: 'Agyia Area',

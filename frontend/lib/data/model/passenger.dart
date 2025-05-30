@@ -8,7 +8,6 @@ class Passenger extends User {
     required super.firstName,
     required super.lastName,
     required super.points,
-    DateTime? createdAt,
   });
 
   factory Passenger.test() {

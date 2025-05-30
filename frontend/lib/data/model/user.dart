@@ -1,12 +1,13 @@
-class User {
-  final int id;
+import 'package:frontend/data/model/model.dart';
+
+class User extends Model {
   final String firstName;
   final String lastName;
   final int points;
   String get name => '$firstName $lastName';
 
   User({
-    required this.id,
+    required super.id,
     required this.firstName,
     required this.lastName,
     required this.points,

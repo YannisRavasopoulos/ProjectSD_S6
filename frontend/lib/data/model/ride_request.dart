@@ -1,7 +1,8 @@
 import 'package:frontend/data/model/address.dart';
+import 'package:frontend/data/model/model.dart';
 import 'package:latlong2/latlong.dart';
 
-class RideRequest {
+class RideRequest extends Model {
   final Address origin;
   final Address destination;
   final DateTime departureTime;
@@ -12,6 +13,7 @@ class RideRequest {
   final Duration arrivalWindow; // same for arrival
 
   RideRequest({
+    required super.id,
     required this.origin,
     required this.destination,
     required this.departureTime,

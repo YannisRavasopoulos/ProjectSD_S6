@@ -38,6 +38,7 @@ class ImplReportRepository implements ReportRepository {
   }) {
     try {
       var report = Report(
+        id: 0,
         receiver: receiver,
         reason: reason,
         details: details,

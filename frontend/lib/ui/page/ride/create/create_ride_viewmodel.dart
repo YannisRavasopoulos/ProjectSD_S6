@@ -145,23 +145,7 @@ class CreateRideViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final ride = Ride(
-        driver: Driver(
-          id: 0,
-          firstName: "Test",
-          lastName: "Driver",
-          vehicle: Vehicle(id: 1, description: "Test Car", capacity: 4),
-          points: 100,
-        ),
-        passengers: [],
-        departureTime: _departureTime!,
-        estimatedArrivalTime:
-            _arrivalTime ?? _departureTime!.add(Duration(hours: 1)),
-        estimatedDuration: Duration(hours: 1),
-        totalSeats: 4, // Default capacity
-        route: Route(start: _fromAddress!, end: _toAddress!),
-      );
-
+      final ride = Ride.fake();
       await _rideRepository.create(ride);
       return true;
     } catch (e) {

@@ -37,6 +37,7 @@ class ImplPickupRepository implements PickupRepository {
 
     // dummy returning pickup instance - testing purposes
     final pickup = Pickup(
+      id: 0,
       ride: request.ride,
       passenger: request.passenger,
       address: nearbyAddress.address,

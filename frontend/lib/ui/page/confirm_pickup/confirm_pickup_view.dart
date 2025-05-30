@@ -55,30 +55,29 @@ class ConfirmPickupView extends StatelessWidget {
                         ),
                       ),
                       // Route view
-                      if (viewModel.pickup.ride.route != null)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Route:',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Route:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
-                              const SizedBox(height: 4),
-                              SizedBox(
-                                height: 300,
-                                child: RouteView(
-                                  route: viewModel.pickup.ride.route,
-                                  pickups: [viewModel.pickup],
-                                ),
+                            ),
+                            const SizedBox(height: 4),
+                            SizedBox(
+                              height: 300,
+                              child: RouteView(
+                                route: viewModel.pickup.ride.route,
+                                pickups: [viewModel.pickup],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
+                      ),
                       if (viewModel.errorMessage != null)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),

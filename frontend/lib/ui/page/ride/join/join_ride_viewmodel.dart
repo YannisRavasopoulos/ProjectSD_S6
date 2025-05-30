@@ -38,6 +38,7 @@ class JoinRideViewModel extends ChangeNotifier {
       notifyListeners();
 
       final pickupRequest = PickupRequest(
+        id: 0,
         ride: ride,
         passenger: Passenger.test(),
         address: Address.fake(),

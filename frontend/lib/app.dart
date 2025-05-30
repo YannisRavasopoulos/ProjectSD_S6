@@ -121,13 +121,8 @@ class App extends StatelessWidget {
     ride: Ride(
       id: 0,
       driver:
-          Driver.test(), // Placeholder, should be replaced with actual driver
-      route: Route(
-        start:
-            Address.fake(), // Placeholder, should be replaced with actual address
-        end:
-            Address.fake(), // Placeholder, should be replaced with actual route
-      ),
+          Driver.fake(), // Placeholder, should be replaced with actual driver
+      route: Route.fake(),
       passengers: [],
       departureTime: DateTime.now().subtract(Duration(hours: 1)),
       estimatedArrivalTime: DateTime.now(),
