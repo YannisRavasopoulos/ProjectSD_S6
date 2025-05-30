@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/model/activity.dart';
 import 'package:frontend/data/model/ride.dart';
-import 'package:frontend/ui/page/ride/find/activity_selection_panel.dart';
+import 'package:frontend/ui/page/ride/activity_selection_panel.dart';
 import 'package:frontend/ui/page/ride/find/ride_card.dart';
 import 'package:frontend/ui/page/ride/find/find_ride_viewmodel.dart';
 import 'package:frontend/ui/shared/datetime_selector.dart';
