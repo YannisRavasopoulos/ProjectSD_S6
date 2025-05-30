@@ -27,7 +27,7 @@ activate FindRideView
 FindRideView -> RideCard: RideCard(ride, onJoinRidePressed: onJoinRidePressed)
 activate RideCard
 RideCard --> FindRideView: return rideCard
-deactivate RideCard
+
 FindRideView --> LoopApp: return findRideView
 LoopApp --> Navigator: return findRideView
 Navigator --> FindRideView: build(context)
@@ -35,73 +35,86 @@ Navigator --> FindRideView: build(context)
 alt Insta Ride
 Passenger -> FindRideView: Enters source location
 FindRideView -> FindRideView: onSourceLocationChanged()
+deactivate RideCard
 FindRideView -> FindRideViewModel: selectSourceLocation()
 FindRideViewModel -> FindRideViewModel: updateRides()
 FindRideViewModel -> RideRepository: fetchMatchingRides(...)
 RideRepository -> Ride: Ride(...)
 activate Ride
 Ride --> RideRepository: return ride
-deactivate Ride
 RideRepository --> FindRideViewModel: matchingRides
+
+
 FindRideViewModel -> FindRideViewModel: onRidesUpdated(matchingRides)
 
 FindRideView -> RideCard: RideCard(ride, onJoinRidePressed: onJoinRidePressed)
 activate RideCard
 RideCard -> FindRideView: return rideCard
-deactivate RideCard
+
 Passenger -> FindRideView: Enters destination location
+deactivate Ride
 FindRideView -> FindRideView: onDestinationLocationChanged()
 FindRideView -> FindRideViewModel: selectDestinationLocation()
 FindRideViewModel -> FindRideViewModel: updateRides()
 FindRideViewModel -> RideRepository: fetchMatchingRides(...)
 deactivate Ride
 RideRepository -> Ride: Ride(...)
+deactivate RideCard
 activate Ride
 Ride --> RideRepository: return ride
-deactivate Ride
 RideRepository --> FindRideViewModel: matchingRides
+
+
 FindRideViewModel -> FindRideViewModel: onRidesUpdated(matchingRides)
+
 
 FindRideView -> RideCard: RideCard(ride, onJoinRidePressed: onJoinRidePressed)
 activate RideCard
 RideCard -> FindRideView: return rideCard
-deactivate RideCard
+
 
 Passenger -> FindRideView: Enters departure time
+deactivate Ride
 FindRideView -> FindRideView: onDepartureTimeChanged()
 FindRideView -> FindRideViewModel: selectDepartureTime()
 FindRideViewModel -> FindRideViewModel: updateRides()
 FindRideViewModel -> RideRepository: fetchMatchingRides(...)
 
 RideRepository -> Ride: Ride(...)
+deactivate RideCard
 activate Ride
 Ride --> RideRepository: return ride
-deactivate Ride
 RideRepository --> FindRideViewModel: matchingRides
+
+
 FindRideViewModel -> FindRideViewModel: onRidesUpdated(matchingRides)
 
 FindRideView -> RideCard: RideCard(ride, onJoinRidePressed: onJoinRidePressed)
 activate RideCard
 RideCard -> FindRideView: return rideCard
-deactivate RideCard
+
 Passenger -> FindRideView: Enters arrival time
+deactivate Ride
 FindRideView -> FindRideView: onArrivalTimeChanged()
 FindRideView -> FindRideViewModel: selectArrivalTime()
 FindRideViewModel -> FindRideViewModel: updateRides()
 FindRideViewModel -> RideRepository: fetchMatchingRides(...)
 
 RideRepository -> Ride: Ride(...)
+deactivate RideCard
 activate Ride
 Ride --> RideRepository: return ride
-deactivate Ride
 RideRepository --> FindRideViewModel: matchingRides
+
+
 FindRideViewModel -> FindRideViewModel: onRidesUpdated(matchingRides)
 
 FindRideView -> RideCard: RideCard(ride, onJoinRidePressed: onJoinRidePressed)
 activate RideCard
 RideCard -> FindRideView: return rideCard
-   deactivate RideCard
+
 else Activity Selection
+    deactivate Ride
     Passenger -> FindRideView: Presses "Select Activity"
     FindRideView -> FindRideView: onSelectActivityPressed()
     FindRideView -> ActivitySelectionPanel: ActivitySelectionPanel(activities)
@@ -109,15 +122,17 @@ else Activity Selection
     ActivitySelectionPanel -> FindRideView: onActivitySelected(activity)
    
     Passenger -> ActivitySelectionPanel: Selects activity
+    deactivate RideCard
     ActivitySelectionPanel --> FindRideView: return selectedActivity
-     deactivate ActivitySelectionPanel
+     
     FindRideView -> FindRideViewModel: selectActivity(activity)
 
     
     FindRideViewModel -> FindRideViewModel: update form fields (from, to, times)
     FindRideViewModel -> FindRideViewModel: fetchRides()
+    deactivate ActivitySelectionPanel
     FindRideViewModel -> RideRepository: fetchMatchingRides(RideRequest)
-
+    
     RideRepository --> FindRideViewModel: matchingRides
    
     FindRideViewModel -> FindRideViewModel: onRidesUpdated(matchingRides)
