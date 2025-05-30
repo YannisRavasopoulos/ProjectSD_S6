@@ -12,12 +12,7 @@ void main() {
     setUp(() {
       ratingRepository = ImplRatingRepository();
       john = User(id: 0, firstName: "John", lastName: "Doe", points: 150);
-      emma = User(
-        id: 101,
-        firstName: "Emma",
-        lastName: "Watson",
-        points: 120,
-      );
+      emma = User(id: 101, firstName: "Emma", lastName: "Watson", points: 120);
     });
     test('initial ratings are present for john', () async {
       final ratings = await ratingRepository.fetch(john);
@@ -69,10 +64,10 @@ void main() {
         comment: "Duplicate",
       );
       await ratingRepository.create(rating);
-      expect(
+      await expectLater(
         () async =>
             await ratingRepository.create(rating), //create the rating again
-        throwsA(isA<Exception>()),
+        throwsException,
       );
     });
 
@@ -116,11 +111,11 @@ void main() {
         comment: "Duplicate rating",
       );
 
-    expect(
-      () async => await ratingRepository.create(duplicateRating),
-      throwsA(isA<Exception>()),
-    );
-  });
+      expect(
+        () async => await ratingRepository.create(duplicateRating),
+        throwsException,
+      );
+    });
     test('watch emits ratings updates', () async {
       final newUser = User(
         id: 201,

@@ -67,27 +67,28 @@ class ImplRatingRepository implements RatingRepository {
 
   @override
   Future<void> create(Rating rating) async {
-    try {
-      if (rating.stars < 1 || rating.stars > 5) {
-        return Future.error('Rating stars must be between 1 and 5');
-      }
-
-      // Check if rating already exists
-      final existingRating = _ratings.any(
-        (r) =>
-            r.fromUser.id == rating.fromUser.id &&
-            r.toUser.id == rating.toUser.id,
-      );
-
-      if (existingRating) {
-        return Future.error('Rating already exists for this user pair');
-      }
-
-      _ratings.add(rating);
-      _notifyListeners(rating.toUser);
-    } catch (e) {
-      return Future.error('Failed to create rating: $e');
+    if (rating.stars < 1 || rating.stars > 5) {
+      return Future.error('Rating stars must be between 1 and 5');
     }
+
+    final index = _ratings.indexWhere((r) => r.id == rating.id);
+    if (index != -1) {
+      throw Exception('Rating with this ID already exists');
+    }
+
+    // Check if rating already exists
+    final existingRating = _ratings.any(
+      (r) =>
+          r.fromUser.id == rating.fromUser.id &&
+          r.toUser.id == rating.toUser.id,
+    );
+
+    if (existingRating) {
+      throw Exception('Rating already exists for this user pair');
+    }
+
+    _ratings.add(rating);
+    _notifyListeners(rating.toUser);
   }
 
   @override
