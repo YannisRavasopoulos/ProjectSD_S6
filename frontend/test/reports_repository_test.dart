@@ -25,18 +25,8 @@ void main() {
         lastName: 'User',
         points: 100,
       );
-      report1 = Report(
-        receiver: testUser, // Assuming fetchCurrent returns a User
-        reason: ReportReason.spam,
-        status: ReportStatus.pending,
-        details: 'Spam report',
-      );
-      report2 = Report(
-        receiver: testUser, // Assuming fetchCurrent returns a User
-        reason: ReportReason.harassment,
-        status: ReportStatus.pending,
-        details: 'Spam report',
-      );
+     
+     
     });
 
     test('create adds a report', () async {
