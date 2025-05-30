@@ -59,7 +59,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.directions_car),
             title: const Text('Offer Ride'),
             onTap: () {
-              Navigator.pushNamed(context, '/offer_ride');
+              Navigator.pushNamed(context, '/rides/offer');
             },
           ),
           ListTile(
