@@ -210,7 +210,6 @@ class FindRideView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             FloatingActionButton(
-              heroTag: 'activitiesBtn',
               backgroundColor: const Color.fromARGB(255, 117, 202, 160),
               onPressed: () {
                 Navigator.of(context).pushNamed('/activities');

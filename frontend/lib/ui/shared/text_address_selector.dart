@@ -37,12 +37,10 @@ class TextAddressSelectorState extends State<TextAddressSelector> {
     super.dispose();
   }
 
-  // Add this method to allow programmatic setting
   void setAddress(Address address) {
     setState(() {
       textController.text = address.toString();
     });
-    widget.onAddressSelected(address);
   }
 
   Future<Address?> _showAddressSelector(BuildContext context) async {

@@ -121,13 +121,13 @@ class FindRideViewModel extends ChangeNotifier {
   }
 
   Future<void> selectFromAddress(Address address) async {
-    print("Selected source address: $address");
+    print("Selected from address: $address");
     _fromAddress = address;
     await fetchRides();
   }
 
   Future<void> selectToAddress(Address address) async {
-    print("Selected destination address: $address");
+    print("Selected to address: $address");
     _toAddress = address;
     await fetchRides();
   }
