@@ -258,18 +258,11 @@ class App extends StatelessWidget {
         // }
 
         if (settings.name == '/confirm_pickup') {
-          final args = settings.arguments as Map<String, dynamic>?;
-
-          if (args == null || !args.containsKey('pickup')) {
-            return null;
-          }
-
-          final pickup = args['pickup'] as Pickup;
+          final pickup = settings.arguments as Pickup;
 
           return MaterialPageRoute(
             builder:
                 (context) => ConfirmPickupView(
-                  pickup: pickup,
                   viewModel: ConfirmPickupViewModel(
                     pickupRepository: _pickupRepository,
                     pickup: pickup,

@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/model/pickup.dart';
 import 'package:frontend/ui/page/confirm_pickup/confirm_pickup_viewmodel.dart';
 
 class ConfirmPickupView extends StatelessWidget {
-  final Pickup pickup;
   final ConfirmPickupViewModel viewModel;
 
-  const ConfirmPickupView({
-    super.key,
-    required this.pickup,
-    required this.viewModel,
-  });
+  const ConfirmPickupView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +38,19 @@ class ConfirmPickupView extends StatelessWidget {
                     const SizedBox(height: 16),
                     ListTile(
                       leading: const Icon(Icons.location_on),
-                      title: Text('Location: ${pickup.address.toString()}'),
+                      title: Text(
+                        'Location: ${viewModel.pickup.address.toString()}',
+                      ),
                     ),
                     ListTile(
                       leading: const Icon(Icons.access_time),
-                      title: Text('Time: ${pickup.time}'),
+                      title: Text('Time: ${viewModel.pickup.time}'),
                     ),
                     ListTile(
                       leading: const Icon(Icons.person),
-                      title: Text('Driver: ${pickup.ride.driver.name}'),
+                      title: Text(
+                        'Driver: ${viewModel.pickup.ride.driver.name}',
+                      ),
                     ),
                     if (viewModel.errorMessage != null)
                       Padding(

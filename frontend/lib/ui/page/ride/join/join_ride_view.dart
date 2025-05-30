@@ -7,16 +7,18 @@ class JoinRideView extends StatelessWidget {
 
   const JoinRideView({super.key, required this.viewModel});
 
-  void _onProceedPressed() async {}
+  void _onProceedPressed(BuildContext context) async {
+    Navigator.of(
+      context,
+    ).pushNamed('/confirm_pickup', arguments: viewModel.pickup);
+  }
 
   void _onJoinRidePressed() async {
     final pickupRequest = await viewModel.joinRide();
     if (pickupRequest != null) {
       // Handle successful join ride
-      // For example, navigate to the next screen or show a success message
     } else {
       // Handle error
-      // For example, show an error message
     }
   }
 
@@ -140,7 +142,7 @@ class JoinRideView extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             ElevatedButton(
-                              onPressed: _onProceedPressed,
+                              onPressed: () => _onProceedPressed(context),
                               child: const Text('Proceed'),
                             ),
                           ],
