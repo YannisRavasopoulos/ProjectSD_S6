@@ -1,56 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/impl/impl_report_repository.dart';
 import 'package:frontend/data/model/report_reason.dart';
 import 'package:frontend/data/model/user.dart';
 import 'package:frontend/data/repository/report_repository.dart';
-import 'dart:math';
 
 class ReportViewModel extends ChangeNotifier {
-  final ReportRepository reportRepository;
+  bool _isSubmitting = false;
+  String? _errorMessage;
+  ReportReason? _reason;
+  final ReportRepository _reportRepository;
+
+  final TextEditingController descriptionController = TextEditingController();
   final User reported;
 
-  bool _isLoading = false;
-  String? _errorMessage;
-  bool _submitted = false;
-
-  bool get isLoading => _isLoading;
+  bool get isSubmitting => _isSubmitting;
+  String get description => descriptionController.text;
+  ReportReason? get reason => _reason;
   String? get errorMessage => _errorMessage;
-  bool get submitted => _submitted;
+  bool get canSubmit => _reason != null;
 
-  ReportViewModel({required this.reportRepository, required this.reported});
+  ReportViewModel({
+    required ReportRepository reportRepository,
+    required this.reported,
+  }) : _reportRepository = reportRepository;
 
-  Future<void> submitReport({
-    required String reporterId,
-    required String reportedUserId,
-    required String rideId,
-    required ReportReason reason,
-    required String details,
-  }) async {
-    _isLoading = true;
-    _errorMessage = null;
-    _submitted = false;
+  void selectReason(ReportReason reason) {
+    _reason = reason;
+    notifyListeners();
+  }
+
+  Future<bool> submitReport() async {
+    _isSubmitting = true;
     notifyListeners();
 
     try {
-      final report = ImplReport(
-        id: Random().nextInt(1000000),
-        reason: reason,
-        details: details,
-        createdAt: DateTime.now(),
+      await Future.delayed(const Duration(seconds: 1));
+      await _reportRepository.create(
+        reason: reason!,
+        receiver: reported,
+        details: description,
       );
-      await reportRepository.create(report);
-      _submitted = true;
+      return true;
     } catch (e) {
       _errorMessage = 'Failed to submit report: $e';
+      return false;
     } finally {
-      _isLoading = false;
+      _isSubmitting = false;
       notifyListeners();
     }
-  }
-
-  void reset() {
-    _submitted = false;
-    _errorMessage = null;
-    notifyListeners();
   }
 }
